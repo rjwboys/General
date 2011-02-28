@@ -592,12 +592,12 @@ public class General extends JavaPlugin {
 			long timeRelative = lstn.getRelativeTime(world);
 			long timeStart = lstn.getStartTime(world);
 	
-			if(args.length < 2) {
+			if(args.length < 1) {
 					int hours = (int)((time / 1000+8) % 24);
 					int minutes = (((int)(time % 1000)) / 1000) * 60;
 					Messaging.send("&cTime: "+hours+":"+minutes);
-			} else if (args.length == 2) {
-				String cmd = args[1];
+			} else if (args.length == 1) {
+				String cmd = args[0];
 				if (Misc.is(cmd, "help")) {
 					Messaging.send("&c-------- /time help --------");
 					Messaging.send("&c/time &f-&c Shows relative time");
