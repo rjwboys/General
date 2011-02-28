@@ -44,7 +44,7 @@ public class Items {
      */
     public static void setName(String id, String name) {
 		General.items.put(id, name);
-		General.Items.setString(id, name);
+		General.itemsp.setString(id, name);
     }
 
     /**

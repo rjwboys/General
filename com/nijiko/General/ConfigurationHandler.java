@@ -11,12 +11,15 @@ public class ConfigurationHandler extends DefaultConfiguration {
     private Configuration config;
 
     public ConfigurationHandler(Configuration config) {
-	this.config = config;
+    	this.config = config;
     }
 
     public void load() {
-	this.health = this.config.getBoolean("playerlist.show-health", this.health);
-	this.coords = this.config.getBoolean("playerlist.show-coords", this.coords);
-	this.commands = this.config.getBoolean("help.inject-commands", this.commands);
+    	if(this.config != null) {
+    		this.config.load();
+    		this.health = this.config.getBoolean("playerlist.show-health", this.health);
+    		this.coords = this.config.getBoolean("playerlist.show-coords", this.coords);
+    		this.commands = this.config.getBoolean("help.inject-commands", this.commands);
+    	}
     }
 }
