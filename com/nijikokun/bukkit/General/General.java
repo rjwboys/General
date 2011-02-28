@@ -81,39 +81,39 @@ public class General extends JavaPlugin {
     public General(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
         super(pluginLoader, instance, desc, folder, plugin, cLoader);
 
-	// Start Registration
-	folder.mkdirs();
-
-	// Attempt
-	if(!(new File(getDataFolder(), "config.yml").exists())) {
-	    DefaultConfiguration("config.yml");
-	}
-
-	// Gogo
-	this.config = new ConfigurationHandler(getConfiguration());
-	getConfiguration().load();
-	this.config.load();
-
-	// Register
-        registerEvents();
-
-	log.info(Messaging.bracketize(name) + " version " + Messaging.bracketize(version) + " ("+codename+") loaded");
+		// Start Registration
+		folder.mkdirs();
+	
+		// Attempt
+		if(!(new File(getDataFolder(), "config.yml").exists())) {
+			DefaultConfiguration("config.yml");
+		}
+	
+		// Gogo
+		this.config = new ConfigurationHandler(getConfiguration());
+		getConfiguration().load();
+		this.config.load();
+	
+		// Register
+			registerEvents();
+	
+		log.info(Messaging.bracketize(name) + " version " + Messaging.bracketize(version) + " ("+codename+") loaded");
     }
 
     public void onDisable() {
-	log.info(Messaging.bracketize(name) + " version " + Messaging.bracketize(version) + " ("+codename+") disabled");
+		log.info(Messaging.bracketize(name) + " version " + Messaging.bracketize(version) + " ("+codename+") disabled");
     }
 
     public void onEnable() {
-	Motd = new File(getDataFolder() + File.separator + "general.motd");
-	Items = new iProperty("items.db");
-
-	try { Motd.createNewFile(); } catch (IOException ex) { }
-
-	// Setup
-	setupCommands();
-	setupPermissions();
-	setupItems();
+		Motd = new File(getDataFolder() + File.separator + "general.motd");
+		Items = new iProperty("items.db");
+	
+		try { Motd.createNewFile(); } catch (IOException ex) { }
+	
+		// Setup
+		setupCommands();
+		setupPermissions();
+		setupItems();
     }
 
     private void registerEvents() {
@@ -122,16 +122,16 @@ public class General extends JavaPlugin {
     }
 
     public void setupCommands() {
-	try {
-	    BufferedReader in = new BufferedReader(new FileReader(getDataFolder() + File.separator + "general.help"));
-	    String str;
-
-	    while ((str = in.readLine()) != null) {
-		l.Commands.add(str);
-	    }
-
-	    in.close();
-	} catch (IOException e) { }
+		try {
+			BufferedReader in = new BufferedReader(new FileReader(getDataFolder() + File.separator + "general.help"));
+			String str;
+	
+			while ((str = in.readLine()) != null) {
+			l.Commands.add(str);
+			}
+	
+			in.close();
+		} catch (IOException e) { }
     }
 
     public void registerCommands() {

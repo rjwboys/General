@@ -38,35 +38,35 @@ public class iControl {
     private Configuration config;
 
     public iControl(Configuration config) {
-	this.config = config;
+		this.config = config;
     }
 
     public void load() {
-	List<String> userKeys = this.config.getKeys("permissions.users");
-	Set Permissions = new HashSet();
-	List permissions;
-
-	if (userKeys != null) {
-	    for (String key : userKeys) {
-		Permissions = new HashSet();
-		permissions = this.config.getStringList("users." + key + ".permissions", null);
-
-		if (permissions.size() > 0) {
-		    Permissions.addAll(permissions);
+		List<String> userKeys = this.config.getKeys("permissions.users");
+		Set Permissions = new HashSet();
+		List permissions;
+	
+		if (userKeys != null) {
+			for (String key : userKeys) {
+				Permissions = new HashSet();
+				permissions = this.config.getStringList("users." + key + ".permissions", null);
+		
+				if (permissions.size() > 0) {
+					Permissions.addAll(permissions);
+				}
+		
+				this.UserPermissions.put(key.toLowerCase(), Permissions);
+			}
 		}
-
-		this.UserPermissions.put(key.toLowerCase(), Permissions);
-	    }
-	}
     }
 
     public boolean permission(String controller, Player player) {
-	Set Permissions = (Set) this.UserPermissions.get(player.getName().toLowerCase());
-
-	if (Permissions == null) {
-	    return false;
-	}
-
-	return Permissions.contains(controller);
+		Set Permissions = (Set) this.UserPermissions.get(player.getName().toLowerCase());
+	
+		if (Permissions == null) {
+			return false;
+		}
+	
+		return Permissions.contains(controller);
     }
 }
