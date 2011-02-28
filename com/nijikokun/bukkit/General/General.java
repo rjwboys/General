@@ -52,8 +52,8 @@ public class General extends JavaPlugin {
      * Central Data pertaining directly to the plugin name & versioning.
      */
     public static String name = "General";
-    public static String codename = "Mafia";
-    public static String version = "2.0";
+    public static String codename = "Hindenburg";
+    public static String version = "2.2";
 
     /**
      * Listener for the plugin system.
@@ -71,7 +71,7 @@ public class General extends JavaPlugin {
     public static iProperty itemsp;
     private final DefaultConfiguration config;
     public static File Motd;
-    public static Permissions Permissions = null;
+    public static Permissions permissions = null;
 
     /*
      * Variables
@@ -153,12 +153,12 @@ public class General extends JavaPlugin {
     public void setupPermissions() {
 		Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
 	
-		if(this.Permissions == null) {
+		if(this.permissions == null) {
 			if(test != null) {
-			this.Permissions = (Permissions)test;
+				this.permissions = (Permissions)test;
 			} else {
-			log.info(Messaging.bracketize(name) + " Permission system not enabled. Disabling plugin.");
-			this.getServer().getPluginManager().disablePlugin(this);
+				log.info(Messaging.bracketize(name) + " Permission system not enabled. Disabling plugin.");
+				this.getServer().getPluginManager().disablePlugin(this);
 			}
 		}
     }
@@ -173,7 +173,7 @@ public class General extends JavaPlugin {
 		try {
 			mappedItems = itemsp.returnMap();
 		} catch (Exception ex) {
-			System.out.println(Messaging.bracketize(name + " Flatfile") + " could not open items.db!");
+			log.warning(Messaging.bracketize(name + " Flatfile") + " could not open items.db!");
 		}
 	
 		if(mappedItems != null) {
@@ -239,8 +239,8 @@ public class General extends JavaPlugin {
 				try {
 					page = Integer.parseInt(args[1]);
 				} catch (NumberFormatException ex) {
-					Messaging.send("&cNot a valid page number.");// event.setCancelled(true);
-					return false;
+					Messaging.send("&c;Not a valid page number.");// event.setCancelled(true);
+					return true;
 				}
 			}
 	
@@ -261,12 +261,12 @@ public class General extends JavaPlugin {
 //		}
 	
 		if(Misc.isEither(base, "rlidb","reloaditems")) {
-			if (!General.Permissions.Security.permission(player, "general.reloaditems")) {
-				return false;
+			if (!General.permissions.Security.permission(player, "general.reloaditems")) {
+				return true;
 			}
 	
 		   setupItems();
-		   Messaging.send("&eItems.db reloaded.");
+		   Messaging.send("&e;Items.db reloaded.");
 		}
 	
 		// Disabled for now because I have no idea what m or o are. --celticminstrel
@@ -318,20 +318,20 @@ public class General extends JavaPlugin {
 		}
 	
 		if (Misc.isEither(base, "tp", "teleport")) {
-			if (!General.Permissions.Security.permission(player, "general.teleport")) {
-				return false;
+			if (!General.permissions.Security.permission(player, "general.teleport")) {
+				return true;
 			}
 	
 			if (args.length == 2) {
 				String to = args[1];
 		
 				if (to.equalsIgnoreCase("*")) {
-					Messaging.send("&cIncorrect usage of wildchar *");
+					Messaging.send("&c;Incorrect usage of wildchar *");
 				} else if (to.contains(",")) {
-					Messaging.send("&cIncorrect usage of multiple players.");
+					Messaging.send("&c;Incorrect usage of multiple players.");
 				} else {
 					if (!lstn.teleport(player.getName(), to)) {
-						Messaging.send("&cCannot find destination player: &f" + to);
+						Messaging.send("&c;Cannot find destination player: &f" + to);
 					}
 				}
 			} else if (args.length == 3) {
@@ -339,45 +339,45 @@ public class General extends JavaPlugin {
 				String to = args[2];
 		
 				if (to.equalsIgnoreCase("*")) {
-					Messaging.send("&cIncorrect usage of wildchar *");
+					Messaging.send("&c;Incorrect usage of wildchar *");
 				} else if (to.contains(",")) {
-					Messaging.send("&cIncorrect usage of multiple players.");
+					Messaging.send("&c;Incorrect usage of multiple players.");
 				} else {
 					if (!lstn.teleport(who, to)) {
-						Messaging.send("&cCould not teleport " + who + " to " + to + ".");
+						Messaging.send("&c;Could not teleport " + who + " to " + to + ".");
 					}
 				}
 			} else {
-				Messaging.send("&c------ &f/tp help&c ------");
-				Messaging.send("&c/tp [player] &f-&c Teleport to a player");
-				Messaging.send("&c/tp [player] [to] &f-&c Teleport player to another player");
-				Messaging.send("&c/tp [player,...] [to] &f-&c Teleport players to another player");
-				Messaging.send("&c/tp * [to] &f-&c Teleport everyone to another player");
+				Messaging.send("&c;------ &f/tp help&c ------");
+				Messaging.send("&c;/tp [player] &f-&c Teleport to a player");
+				Messaging.send("&c;/tp [player] [to] &f-&c Teleport player to another player");
+				Messaging.send("&c;/tp [player,...] [to] &f-&c Teleport players to another player");
+				Messaging.send("&c;/tp * [to] &f-&c Teleport everyone to another player");
 			}
 		}
 	
 		if (Misc.isEither(base, "s", "tphere")) {
-			if (!General.Permissions.Security.permission(player, "general.teleport.here")) {
-				return false;
+			if (!General.permissions.Security.permission(player, "general.teleport.here")) {
+				return true;
 			}
 	
 			if (args.length < 2) {
-				Messaging.send("&cCorrect usage is:&f /s [player] &cor&f /tphere [player]");
-				return false;
+				Messaging.send("&c;Correct usage is:&f /s [player] &cor&f /tphere [player]");
+				return true;
 			}
 	
 			Player who = Misc.playerMatch(args[1]);
 	
 			if (who != null) {
 				if (who.getName().equalsIgnoreCase(player.getName())) {
-					Messaging.send("&cWow look at that! You teleported yourself to yourself!");
+					Messaging.send("&c;Wow look at that! You teleported yourself to yourself!");
 					return true;
 				}
 		
 				log.info(player.getName() + " teleported " + who.getName() + " to their self.");
 				who.teleportTo(player.getLocation());
 			} else {
-				Messaging.send("&cCan't find user " + args[1] + ".");
+				Messaging.send("&c;Can't find user " + args[1] + ".");
 			}
 		}
 	
@@ -409,7 +409,7 @@ public class General extends JavaPlugin {
 				Messaging.send("&7You have been marked as back.");
 				lstn.unAFK(player);
 			} else {
-			Messaging.send("&7You are now currently marked as away.");
+			Messaging.send("&7;You are now currently marked as away.");
 				String reason = "AFK";
 		
 				if(args.length >= 2) {
@@ -422,9 +422,9 @@ public class General extends JavaPlugin {
 	
 		if(Misc.isEither(base, "msg", "tell")) {
 			if (args.length < 3) {
-				Messaging.send("&cCorrect usage is: /msg [player] [message]");
+				Messaging.send("&c;Correct usage is: /msg [player] [message]");
 				//event.setCancelled(true);
-				return false;
+				return true;
 			}
 	
 			Player who = Misc.playerMatch(args[1]);
@@ -433,29 +433,29 @@ public class General extends JavaPlugin {
 				if (who.getName().equals(player.getName())) {
 					Messaging.send("&cYou can't message yourself!");
 					//event.setCancelled(true);
-					return false;
+					return true;
 				}
 		
 				Messaging.send("(MSG) <" + player.getName() + "> " + Misc.combineSplit(2, args, " "));
 				Messaging.send(who, "(MSG) <" + player.getName() + "> " + Misc.combineSplit(2, args, " "));
 		
 				if (lstn.isAFK(who)) {
-					Messaging.send("&7This player is currently away.");
-					Messaging.send("&7Reason: " + lstn.AFK.get(player));
+					Messaging.send("&7;This player is currently away.");
+					Messaging.send("&7;Reason: " + lstn.AFK.get(player));
 				}
 			} else {
-				Messaging.send("&cCouldn't find player " + args[1]);
+				Messaging.send("&c;Couldn't find player " + args[1]);
 			}
 		}
 	
 		if (Misc.isEither(base, "i", "give") || Misc.is(base, "item")) {
-			if (!General.Permissions.Security.permission(player, "general.items")) {
-				return false;
+			if (!General.permissions.Security.permission(player, "general.items")) {
+				return true;
 			}
 	
 			if (args.length < 2) {
-				Messaging.send("&cCorrect usage is: /i [item(:type)|player] [item(:type)|amount] (amount)");
-				return false;
+				Messaging.send("&c;Correct usage is: /i [item(:type)|player] [item(:type)|amount] (amount)");
+				return true;
 			}
 	
 			int itemId = 0;
@@ -513,13 +513,13 @@ public class General extends JavaPlugin {
 			}
 	
 			if (itemId == -1 || itemId == 0) {
-				Messaging.send("&cInvalid item.");
+				Messaging.send("&c;Invalid item.");
 				return true;
 			}
 	
 			if (dataType != -1) {
 				if (!Items.validateType(itemId, dataType)) {
-					Messaging.send("&f" + dataType + "&c is not a valid data type for &f" + Items.name(itemId, -1) + "&c.");
+					Messaging.send("&f;" + dataType + "&c; is not a valid data type for &f;" + Items.name(itemId, -1) + "&c;.");
 					return true;
 				}
 			}
@@ -573,9 +573,9 @@ public class General extends JavaPlugin {
 			}
 	
 			if (who.getName().equals(player.getName())) {
-				Messaging.send(who, "&2Enjoy! Giving &f" + amount + "&2 of &f" + Items.name(itemId, dataType) + "&2.");
+				Messaging.send(who, "&2;Enjoy! Giving &f;" + amount + "&2; of &f;" + Items.name(itemId, dataType) + "&2;.");
 			} else {
-				Messaging.send(who, "&2Enjoy the gift! &f" + amount + "&2 of &f" + Items.name(itemId, dataType) + "&2. c:!");
+				Messaging.send(who, "&2;Enjoy the gift! &f;" + amount + "&2; of &f;" + Items.name(itemId, dataType) + "&2;;. c:!");
 			}
 	
 			//event.setCancelled(true);
@@ -583,8 +583,8 @@ public class General extends JavaPlugin {
 		}
 	
 		if(Misc.is(base, "time")) {
-			if (!General.Permissions.Security.permission(player, "general.time")) {
-				return false;
+			if (!General.permissions.Security.permission(player, "general.time")) {
+				return true;
 			}
 			//World world = sender instanceof Player ? ((Player) sender).getWorld() : plugin.getServer().getWorlds().get(0);
 	
@@ -599,21 +599,21 @@ public class General extends JavaPlugin {
 			} else if (args.length == 1) {
 				String cmd = args[0];
 				if (Misc.is(cmd, "help")) {
-					Messaging.send("&c-------- /time help --------");
-					Messaging.send("&c/time &f-&c Shows relative time");
-					Messaging.send("&c/time day &f-&c Turns time to day");
-					Messaging.send("&c/time night &f-&c Turns time to night");
-					Messaging.send("&c/time raw &f-&c Shows raw time");
-					Messaging.send("&c/time =13000 &f-&c Sets raw time");
-					Messaging.send("&c/time +500 &f-&c Adds to raw time");
-					Messaging.send("&c/time -500 &f-&c Subtracts from raw time");
-					Messaging.send("&c/time 12 &f-&c Set relative time");
+					Messaging.send("&c;-------- /time help --------");
+					Messaging.send("&c;/time &f;-&c; Shows relative time");
+					Messaging.send("&c;/time day &f;-&c; Turns time to day");
+					Messaging.send("&c;/time night &f;-&c; Turns time to night");
+					Messaging.send("&c;/time raw &f;-&c; Shows raw time");
+					Messaging.send("&c;/time =13000 &f;-&c; Sets raw time");
+					Messaging.send("&c;/time +500 &f;-&c; Adds to raw time");
+					Messaging.send("&c;/time -500 &f;-&c; Subtracts from raw time");
+					Messaging.send("&c;/time 12 &f;-&c; Set relative time");
 				} else if (Misc.is(cmd, "day")) {
 					lstn.setTime(world, timeStart);
 				} else if (Misc.is(cmd, "night")) {
 					lstn.setTime(world, timeStart+13000);
 				} else if (Misc.is(cmd, "raw")) {
-					Messaging.send("&cRaw:  " + time);
+					Messaging.send("&c;Raw:  " + time);
 				} else if (cmd.startsWith("=")) {
 					try {
 						lstn.setTime(world, Long.parseLong(cmd.substring(1)));
@@ -633,15 +633,15 @@ public class General extends JavaPlugin {
 					} catch(NumberFormatException ex) { }
 				}
 			} else {
-				Messaging.send("&cCorrect usage is: /time [day|night|raw|([=|+|-]time)] (rawtime)");
-				Messaging.send("&c/time &f-&c Shows relative time");
-				Messaging.send("&c/time day &f-&c Turns time to day");
-				Messaging.send("&c/time night &f-&c Turns time to night");
-				Messaging.send("&c/time raw &f-&c Shows raw time");
-				Messaging.send("&c/time =13000 &f-&c Sets raw time");
-				Messaging.send("&c/time +500 &f-&c Adds to raw time");
-				Messaging.send("&c/time -500 &f-&c Subtracts from raw time");
-				Messaging.send("&c/time 12 &f-&c Set relative time");
+				Messaging.send("&c;Correct usage is: /time [day|night|raw|([=|+|-]time)] (rawtime)");
+				Messaging.send("&c;/time &f;-&c; Shows relative time");
+				Messaging.send("&c;/time day &f;-&c; Turns time to day");
+				Messaging.send("&c;/time night &f;-&c; Turns time to night");
+				Messaging.send("&c;/time raw &f;-&c; Shows raw time");
+				Messaging.send("&c;/time =13000 &f;-&c; Sets raw time");
+				Messaging.send("&c;/time +500 &f;-&c; Adds to raw time");
+				Messaging.send("&c;/time -500 &f;-&c; Subtracts from raw time");
+				Messaging.send("&c;/time 12 &f;-&c; Set relative time");
 			}
 	
 			return true;
@@ -649,8 +649,8 @@ public class General extends JavaPlugin {
 	
 		if(Misc.isEither(base, "/layerlist", "online") || Misc.is(base, "who")) {
 			if(args.length == 2) {
-				if (!General.Permissions.Security.permission(player, "general.player-info")) {
-					return false;
+				if (!General.permissions.Security.permission(player, "general.player-info")) {
+					return true;
 				}
 		
 				Player lookup = Misc.playerMatch(args[1]);
@@ -664,8 +664,8 @@ public class General extends JavaPlugin {
 					int length = 10;
 					int bars = Math.round(health/2);
 					int remainder = length-bars;
-					String hb_color = ((bars >= 7) ? "&2" : ((bars < 7 && bars >= 3) ? "&e" : ((bars < 3) ? "&c" : "&2")));
-					bar = " &f["+ hb_color + Misc.repeat('|', bars) + "&7" + Misc.repeat('|', remainder) + "&f]";
+					String hb_color = ((bars >= 7) ? "&2;" : ((bars < 7 && bars >= 3) ? "&e;" : ((bars < 3) ? "&c;" : "&2;")));
+					bar = " &f;["+ hb_color + Misc.repeat('|', bars) + "&7;" + Misc.repeat('|', remainder) + "&f;]";
 				}
 		
 				if(General.coords) {
@@ -675,18 +675,18 @@ public class General extends JavaPlugin {
 					location = x+"x, "+y+"y, "+z+"z";
 				}
 		
-				Messaging.send("&f------------------------------------------------");
-				Messaging.send("&e Player &f["+name+"/"+displayName+"]&e Info:");
-				Messaging.send("&f------------------------------------------------");
-				Messaging.send("&6 Username: &f" + name + ((General.health) ? bar : ""));
+				Messaging.send("&f;------------------------------------------------");
+				Messaging.send("&e; Player &f;["+name+"/"+displayName+"]&e; Info:");
+				Messaging.send("&f;------------------------------------------------");
+				Messaging.send("&6; Username: &f;" + name + ((General.health) ? bar : ""));
 		
 				if(General.coords) {
-					Messaging.send("&6 -&e Location: &f" + location);
+					Messaging.send("&6; -&e; Location: &f;" + location);
 				}
 		
-				Messaging.send("&6 -&e Status: &f" + ((lstn.isAFK(lookup)) ? "AFK ("+lstn.AFK.get(lookup)+")" : "Around."));
+				Messaging.send("&6; -&e; Status: &f;" + ((lstn.isAFK(lookup)) ? "AFK ("+lstn.AFK.get(lookup)+")" : "Around."));
 		
-				Messaging.send("&f------------------------------------------------");
+				Messaging.send("&f;------------------------------------------------");
 			} else {
 				ArrayList<Player> olist = new ArrayList<Player>();
 				Player[] players = new Player[]{};
@@ -703,8 +703,8 @@ public class General extends JavaPlugin {
 				players = olist.toArray(players);
 		
 				if(players.length <= 1 || olist.isEmpty()) {
-					Messaging.send("&ePlayer list (1):");
-					Messaging.send("&f - Just you.");
+					Messaging.send("&e;Player list (1):");
+					Messaging.send("&f; - Just you.");
 					Messaging.send(" ");
 				} else {
 					int online = players.length;
@@ -730,7 +730,7 @@ public class General extends JavaPlugin {
 					// Guess list was smaller than 5.
 					list.add(currently);
 		
-					Messaging.send("&ePlayers list ("+on+"):");
+					Messaging.send("&e;Players list ("+on+"):");
 		
 					for(String line : list) {
 						Messaging.send(line);
@@ -740,6 +740,6 @@ public class General extends JavaPlugin {
 				}
 			}
 		}
-		return false;
+		return true;
     }
 }
