@@ -60,11 +60,6 @@ commands:
       - msg
     usage: |
            /<command> <player> <message>
-  setspawn:
-    permission:
-    description:
-    aliases:
-    usage:
   spawn:
     permission:
     description:

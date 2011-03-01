@@ -1,20 +1,3 @@
 playerlist:
   show-health: false
   show-coords: false
-  
-######
-# WARNING!
-######
-# You can REALLY REALLY screw up the plugin if you mess up
-# the syntax of the below commands. If for some reason this
-# happens, and you mess everything up...
-# **JUST COMPLETELY DELETE THIS FILE**
-# The next time you start your server this file will be
-# re-generated and working again.
-######
-commands:
-  playerlist:
-    enabled: true
-    aliases:
-      - pl
-      - who
