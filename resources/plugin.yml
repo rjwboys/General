@@ -4,10 +4,10 @@ authors:
   - Celtic Minstrel
   - Plutonium239
   - Nijikokun
-version: 3.0
+version: 2.3
 commands:
   playerlist:
-    description: Lists the players that are online.
+    description: Displays all players that are online.
     permission: general.playerlist
     aliases:
       - online
@@ -16,7 +16,7 @@ commands:
            Example: /<command> - Lists all online players.
   who:
     permission:
-    description:
+    description: Displays information about a player.
     aliases:
     usage: |
            /<command> [player]
@@ -24,7 +24,7 @@ commands:
            Example: /<command> [player] - Gives information about [player]
   time:
     permission:
-    description:
+    description: Displays or modifies current world time.
     aliases:
     usage: |
            /<command> [day|night|dusk|dawn|=|+|-]
@@ -38,36 +38,36 @@ commands:
            Example: /<command> =500 - Sets relative time equal to.
   give:
     permission:
-    description:
+    description: Users to give yourself or another player an item.
     aliases:
       - i
       - item
     usage:
   compass:
     permission:
-    description:
+    description: Displays your current compass heading.
     aliases:
     usage:
   getpos:
     permission:
-    description:
+    description: Displays detailed information about your position.
     aliases:
     usage:
   tell:
     permission:
-    description:
+    description: Sends another player a private message.
     aliases:
       - msg
     usage: |
            /<command> <player> <message>
   spawn:
     permission:
-    description:
+    description: Teleports you to the spawn location of your current world.
     aliases:
-    usage:
+    usage: /<command>
   teleport:
     permission:
-    description:
+    description: Teleports a/multiple/all player(s) to another players location.
     aliases:
     usage: |
            /<command> [player|player,player,...|*] [player]
@@ -75,3 +75,10 @@ commands:
            /<command> [player] [player2] - Teleports player to player2.
            /<command> * [player] - Teleport everyone to player.
            /<command> [player,player,...] [player] - Teleport several to player.
+  teleporthere:
+    permission:
+    description: Teleports a player to your location.
+    aliases:
+      - tphere
+    usage: |
+           /<command> [player]
