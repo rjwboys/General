@@ -29,4 +29,28 @@ public class Teleport
         
         return true;
     }
+    
+    public static boolean teleportManyPlayersToPlayer(String many, Player destination)
+    {
+        String[] players = many.split(",");
+        
+        for (String name : players)
+        {
+            Player player = Toolbox.playerMatch(name);
+            
+            if ((player == null) || (destination == null))
+            {
+                continue;
+            }
+            else
+            {
+                if (!player.equals(destination))
+                {
+                    player.teleportTo(destination.getLocation());
+                }
+            }
+        }
+        
+        return true;
+    }
 }

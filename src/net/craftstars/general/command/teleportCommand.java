@@ -64,7 +64,7 @@ public class teleportCommand extends GeneralCommand
             
             if (args[0].contains(","))
             {
-                this.teleportManyTo(plugin, args[0], destination);
+                Teleport.teleportManyPlayersToPlayer(args[0], destination);
                 
                 Messaging.send(sender, "Teleported several players!");
                 
@@ -94,28 +94,5 @@ public class teleportCommand extends GeneralCommand
         
         return true;
     }
-    
-    private boolean teleportManyTo(General plugin, String many, Player to)
-    {
-        String[] players = many.split(",");
-        
-        for (String name : players)
-        {
-            Player player = Toolbox.playerMatch(name);
-            
-            if ((player == null) || (to == null))
-            {
-                continue;
-            }
-            else
-            {
-                if (!player.equals(to))
-                {
-                    player.teleportTo(to.getLocation());
-                }
-            }
-        }
-        
-        return true;
-    }
+
 }
