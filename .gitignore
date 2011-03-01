@@ -2,6 +2,7 @@
 /.project
 /.settings
 /nbproject
+/bin
 /target
 /lib/*
 /build.number
