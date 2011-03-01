@@ -9,6 +9,7 @@ public class PluginLogger
 	private final String pluginName;
 	private String pluginVersion;
 	private final boolean debugMode;
+    private static String codename = "Hindenburg";
 	
 	private PluginLogger(String pluginName, boolean debugMode)
 	{
@@ -79,7 +80,7 @@ public class PluginLogger
 	
 	private String formatMessage(String msg)
 	{
-		return "["+this.pluginName+"-"+this.pluginVersion+"] "+msg;
+		return "["+this.pluginName+"-"+this.pluginVersion+"-"+this.codename+"] "+msg;
 	}
 	
 	private String formatDebugMessage(String msg)

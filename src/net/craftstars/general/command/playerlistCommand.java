@@ -14,7 +14,7 @@ public class playerlistCommand extends GeneralCommand
 	{
 		String[] players = this.getPlayerList(plugin);
 		
-		Messaging.send(sender, "&e;Online Players ("+players.length+"):");
+		Messaging.send(sender, "&eOnline Players ("+players.length+"):");
 		
 		StringBuilder playerList = new StringBuilder();
 		for (int i = 0; i < players.length; i++)

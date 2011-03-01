@@ -70,16 +70,16 @@ public class Messaging {
 	 * @return <code>String</code> - The parsed string after conversion.
 	 */
 	public static String parse(String original) {
-		return colorize(original.replaceAll("(&([a-z0-9]));", "\u00A7$2"));
+		return colorize(original.replaceAll("(&([a-z0-9]))", "\u00A7$2").replace("&&","&"));
 	}
 
 	/**
-	 * Converts color codes into the simoleon code. Sort of a HTML format color code tag.
+	 * Converts color codes into the simoleon code. Sort of a HTML entity format color code tag.
 	 * <p>
 	 * Color codes allowed: black, navy, green, teal, red, purple, gold, silver, gray, blue, lime, aqua, rose, pink, yellow, white.</p>
 	 * Example:
 	 * <blockquote<pre>
-	 * Messaging.colorize("Hello &lt;green>world!"); // returns: Hello ยง2world!
+	 * Messaging.colorize("Hello &amp;green;world!"); // returns: Hello ค2world!
 	 * </pre></blockquote>
 	 *
 	 * @param original Original string to be parsed against group of color names.

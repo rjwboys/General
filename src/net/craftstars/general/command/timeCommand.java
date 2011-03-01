@@ -27,22 +27,22 @@ public class timeCommand extends GeneralCommand
 			
 			if (arg.equalsIgnoreCase("day"))
 			{
-				this.world.setTime(this.getStartTime(world));
+				this.world.setTime(this.getStartTime());
 				Messaging.send(sender, "Time set to day!");
 			}
 			else if (arg.equalsIgnoreCase("night"))
 			{
-				this.world.setTime(this.getStartTime(world)+13800);
+				this.world.setTime(this.getStartTime()+13800);
 				Messaging.send(sender, "Time set to night!");
 			}
 			else if (arg.equalsIgnoreCase("dusk"))
 			{
-				this.world.setTime(this.getStartTime(world)+12000);
+				this.world.setTime(this.getStartTime()+12000);
 				Messaging.send(sender, "Time set to dusk!");
 			}
 			else if (arg.equalsIgnoreCase("dawn"))
 			{
-				this.world.setTime(this.getStartTime(world)+22200);
+				this.world.setTime(this.getStartTime()+22200);
 				Messaging.send(sender, "Time set to dawn!");
 			}
 			else if (arg.startsWith("="))
@@ -85,19 +85,19 @@ public class timeCommand extends GeneralCommand
 		return true;
 	}
 	
-	private long getTime(World world)
+	private long getTime()
 	{
 		return world.getTime();
 	}
 	
-	private long getRelativeTime(World world)
+	private long getRelativeTime()
 	{
-        return (this.getTime(world) % 24000);
+        return (this.getTime() % 24000);
     }
 	
-	private long getStartTime(World world)
+	private long getStartTime()
 	{
-        return (this.getTime(world)-this.getRelativeTime(world));
+        return (this.getTime()-this.getRelativeTime());
     }
 	
 	public String getFriendlyTime(int time)

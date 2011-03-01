@@ -16,9 +16,9 @@ public class giveCommand extends GeneralCommand
 	public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args)
 	{
 		// TODO: Rewrite this. [Plutonium239]
-		if (args.length < 2)
+		if (args.length < 1)
 		{
-			Messaging.send(sender, "&c;Usage: /give [item(:type)|player] [item(:type)|amount] (amount)");
+			Messaging.send(sender, "&cUsage: /give [item(:type)|player] [item(:type)|amount] (amount)");
 			
 			return true;
 		}
@@ -78,13 +78,13 @@ public class giveCommand extends GeneralCommand
 		}
 
 		if (itemId == -1 || itemId == 0) {
-			Messaging.send("&c;Invalid item.");
+			Messaging.send("&cInvalid item.");
 			return true;
 		}
 
 		if (dataType != -1) {
 			if (!Items.validateType(itemId, dataType)) {
-				Messaging.send("&f;" + dataType + "&c; is not a valid data type for &f;" + Items.name(itemId, -1) + "&c;.");
+				Messaging.send("&f" + dataType + "&c is not a valid data type for &f" + Items.name(itemId, -1) + "&c.");
 				return true;
 			}
 		}
@@ -138,9 +138,9 @@ public class giveCommand extends GeneralCommand
 		}
 
 		if (who.getName().equals(sender.getName())) {
-			Messaging.send(who, "&2;Enjoy! Giving &f;" + amount + "&2; of &f;" + Items.name(itemId, dataType) + "&2;.");
+			Messaging.send(who, "&2Enjoy! Giving &f" + amount + "&2 of &f" + Items.name(itemId, dataType) + "&2.");
 		} else {
-			Messaging.send(who, "&2;Enjoy the gift! &f;" + amount + "&2; of &f;" + Items.name(itemId, dataType) + "&2;;. c:!");
+			Messaging.send(who, "&2Enjoy the gift! &f" + amount + "&2 of &f" + Items.name(itemId, dataType) + "&2!");
 		}
 		
 		return true;

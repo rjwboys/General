@@ -3,6 +3,7 @@ main: net.craftstars.general.General
 authors:
   - Celtic Minstrel
   - Plutonium239
+  - Nijikokun
 version: 3.0
 commands:
   playerlist:

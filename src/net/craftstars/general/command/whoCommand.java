@@ -35,17 +35,17 @@ public class whoCommand extends GeneralCommand
 		
 		if (player != null)
 		{
-			Messaging.send(sender, "&f;------------------------------------------------");
-			Messaging.send(sender, "&e; Player &f;["+this.name+"]&e; Info");
-			Messaging.send(sender, "&f;------------------------------------------------");
-			Messaging.send(sender, "&6; Username: &f;" + this.name);
-			Messaging.send(sender, "&6; DisplayName: &f;" + this.displayName);
+			Messaging.send(sender, "&f------------------------------------------------");
+			Messaging.send(sender, "&e Player &f["+this.name+"]&e Info");
+			Messaging.send(sender, "&f------------------------------------------------");
+			Messaging.send(sender, "&6 Username: &f" + this.name);
+			Messaging.send(sender, "&6 DisplayName: &f" + this.displayName);
 			// TODO: Hide health and location with a config option? [Plutonium239]
-			Messaging.send(sender, "&6; -&e; Health: &f;" + this.bar);
-			Messaging.send(sender, "&6; -&e; Location: &f;" + this.location);
+			Messaging.send(sender, "&6 -&e Health: &f" + this.bar);
+			Messaging.send(sender, "&6 -&e Location: &f" + this.location);
 			// TODO: AFK System [Plutonium239]
-			Messaging.send(sender, "&6; -&e; Status: &f;" + "Around.");
-			Messaging.send(sender, "&f;------------------------------------------------");
+			Messaging.send(sender, "&6 -&e Status: &f" + "Around.");
+			Messaging.send(sender, "&f------------------------------------------------");
 		}
 		else
 		{
@@ -75,8 +75,8 @@ public class whoCommand extends GeneralCommand
 		int length = 10;
 		int bars = Math.round(health/2);
 		int remainder = length-bars;
-		String hb_color = ((bars >= 7) ? "&2;" : ((bars < 7 && bars >= 3) ? "&e;" : ((bars < 3) ? "&c;" : "&2;")));
-		this.bar = " &f;["+ hb_color + Toolbox.repeat('|', bars) + "&7;" + Toolbox.repeat('|', remainder) + "&f;]";
+		String hb_color = ((bars >= 7) ? "&2" : ((bars < 7 && bars >= 3) ? "&e" : ((bars < 3) ? "&c" : "&2")));
+		this.bar = " &f["+ hb_color + Toolbox.repeat('|', bars) + "&7" + Toolbox.repeat('|', remainder) + "&f]";
 		
 		int x = (int)player.getLocation().getX();
 		int y = (int)player.getLocation().getY();
