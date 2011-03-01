@@ -1,0 +1,44 @@
+name: General
+main: net.craftstars.general.General
+authors:
+  - Celtic Minstrel
+  - Plutonium239
+version: 3.0
+commands:
+  playerlist:
+    description: Lists the players that are online.
+    permission: general.playerlist
+    aliases:
+      - online
+    usage: |
+           /<command>
+           Example: /<command> - Lists all online players.
+  who:
+    permission:
+    description:
+    aliases:
+    usage: |
+           /<command> [player]
+           Example: /<command> - Gives information about you.
+           Example: /<command> [player] - Gives information about [player]
+  time:
+    permission:
+    description:
+    aliases:
+    usage: |
+           /<command> [day|night|dusk|dawn|=|+|-]
+           Example: /<command> - Gets current time.
+           Example: /<command> day - Sets time to day.
+           Example: /<command> night - Sets time to night.
+           Example: /<command> dusk - Sets time to dusk.
+           Example: /<command> dawn - Sets time to dawn.
+           Example: /<command> +500 - Sets relative time forward.
+           Example: /<command> -500 - Sets relative time backward.
+           Example: /<command> =500 - Sets relative time equal to.
+  give:
+    permission:
+    description:
+    aliases:
+      - i
+      - item
+    usage:

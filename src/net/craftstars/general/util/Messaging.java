@@ -1,4 +1,6 @@
-package com.nijikokun.bukkit.General;
+package net.craftstars.general.util;
+
+import net.craftstars.general.General;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -163,7 +165,7 @@ public class Messaging {
 	 * @param message - The message to be sent.
 	 */
 	public static void broadcast(String message) {
-		for (Player p : iListen.plugin.getServer().getOnlinePlayers()) {
+		for (Player p : General.plugin.getServer().getOnlinePlayers()) {
 			p.sendMessage(parse(message));
 		}
 	}

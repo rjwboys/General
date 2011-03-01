@@ -1,5 +1,4 @@
-package com.nijikokun.bukkit.General;
-
+package net.craftstars.general.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,13 +36,14 @@ import java.util.logging.Logger;
  *
  * @author Nijiko
  */
-public final class iProperty {
+// TODO: rewrite this [Plutonium239]
+public final class PropertyFile {
 
     private static final Logger log = Logger.getLogger("Minecraft");
     private Properties properties;
     private String fileName;
 
-    public iProperty(String fileName) {
+    public PropertyFile(String fileName) {
 		this.fileName = fileName;
 		this.properties = new Properties();
 		File file = new File(fileName);
@@ -72,7 +72,7 @@ public final class iProperty {
     }
 
     public Map<String, String> returnMap() throws Exception {
-		Map<String, String> map = new HashMap();
+		Map<String, String> map = new HashMap<String, String>();
 		BufferedReader reader = new BufferedReader(new FileReader(this.fileName));
 		String line;
 		while ((line = reader.readLine()) != null) {
