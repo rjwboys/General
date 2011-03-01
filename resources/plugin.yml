@@ -65,6 +65,11 @@ commands:
     description:
     aliases:
     usage:
+  spawn:
+    permission:
+    description:
+    aliases:
+    usage:
   teleport:
     permission:
     description:
