@@ -70,7 +70,8 @@ public class Messaging {
      * @return <code>String</code> - The parsed string after conversion.
      */
     public static String parse(String original) {
-        return colorize(original.replaceAll("(&([a-z0-9]))", "\u00A7$2").replace("&&","&"));
+        original = colorize(original);
+        return original.replaceAll("(&([a-f0-9]))", "\u00A7$2").replace("&&","&");
     }
 
     /**

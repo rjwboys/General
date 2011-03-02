@@ -48,16 +48,17 @@ public class General extends JavaPlugin
         General.itemsp = new PropertyFile("items.db");
         this.setupItems();
         
-        setupPermissions();
+        String permType = setupPermissions();
         
-        General.logger.info("[Codename: "+General.codename+"] Plugin successfully loaded!");
+        General.logger.info("[Codename: "+General.codename+"] Plugin successfully loaded! Using ["+permType+"] permissions.");
     }
     
-    private void setupPermissions() {
+    private String setupPermissions() {
     	String permType = "unknown";
     	try {
     		try {
-    			permType = config.getString("permissions.system");
+    		    permType = config.getNode("permissions").getString("system");
+    		    permType.isEmpty(); // To trigger NPE if applicable. <_< Why? Avoiding duplication. [celticminstrel]
     		} catch(Exception ex) {
     			permType = "Basic";
     		}
@@ -70,6 +71,7 @@ public class General extends JavaPlugin
             General.logger.error("There was a big problem loading permissions system ["
             		+permType+"]! Please report this error!");
         }
+        return permType;
 	}
 
 	public void onDisable()
@@ -124,6 +126,7 @@ public class General extends JavaPlugin
         catch (Exception ex)
         {
             General.logger.error("There was a big problem executing command ["+command.getName()+"]! Please report this error!");
+            ex.printStackTrace();
         }
         
         return false;

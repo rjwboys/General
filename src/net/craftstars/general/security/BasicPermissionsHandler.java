@@ -9,9 +9,13 @@ public class BasicPermissionsHandler implements
 		PermissionsHandler {
 
 	public boolean hasPermission(Player who, String what) {
-		if(General.plugin.config.getList("permissions.ops-only").contains(what))
-			return who.isOp();
-		return true;
+	    try {
+	        if(General.plugin.config.getNode("permissions").getList("ops-only").contains(what))
+	            return who.isOp();
+	        return true;
+	    } catch (NullPointerException ex) {
+	        return false;
+	    }
 	}
 
 }
