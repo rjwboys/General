@@ -10,8 +10,9 @@ public class Items {
      * Returns the name of the item stored in the hashmap or the item name stored in the items.txt
      * file in the hMod folder.
      * 
-     * @param id
-     * @return
+     * @param id Item ID
+     * @param data Item data value
+     * @return Canonical name
      */
     public static String name(int id, int data) {
         String longKey = Toolbox.string(id) + "," + Toolbox.string(data);
@@ -33,7 +34,7 @@ public class Items {
     /**
      * Validate the string for an item
      * 
-     * @param item
+     * @param item A string representing an item, either by name or by ID.
      * @return -1 if false, id if true.
      */
     public static int[] validate(String item) {
@@ -87,7 +88,7 @@ public class Items {
     /**
      * Validate the string for an item
      * 
-     * @param item
+     * @param item A string representing an item.
      * @return -1 if false, type if true.
      */
     public static int validateGrabType(String item) {

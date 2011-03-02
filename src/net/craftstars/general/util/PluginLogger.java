@@ -10,6 +10,7 @@ public class PluginLogger {
     private String pluginVersion;
     private final boolean debugMode;
 
+    @SuppressWarnings("hiding")
     private PluginLogger(String pluginName, boolean debugMode) {
         this.pluginName = pluginName;
         this.pluginVersion = "0.0";
@@ -72,7 +73,7 @@ public class PluginLogger {
         return this.formatMessage("") + "[DEBUG] " + msg;
     }
 
-    public void setPluginVersion(String pluginVersion) {
+    public void setPluginVersion(@SuppressWarnings("hiding") String pluginVersion) {
         this.pluginVersion = pluginVersion;
     }
 }

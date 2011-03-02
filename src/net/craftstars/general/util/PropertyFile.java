@@ -41,7 +41,7 @@ public final class PropertyFile {
     private Properties properties;
     private String fileName;
 
-    public PropertyFile(String fileName) {
+    public PropertyFile(@SuppressWarnings("hiding") String fileName) {
         this.fileName = fileName;
         this.properties = new Properties();
         File file = new File(fileName);

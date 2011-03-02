@@ -137,7 +137,7 @@ public class Messaging {
      * 
      * @param player The player we wish to save for later.
      */
-    public static void save(Player player) {
+    public static void save(@SuppressWarnings("hiding") Player player) {
         Messaging.player = player;
     }
 
@@ -155,7 +155,7 @@ public class Messaging {
      * @param player Player we are sending the message to.
      * @param message The message to be sent.
      */
-    public static void send(Player player, String message) {
+    public static void send(@SuppressWarnings("hiding") Player player, String message) {
         player.sendMessage(parse(message));
     }
 

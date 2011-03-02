@@ -62,6 +62,8 @@ public class Toolbox {
     /**
      * Turns "SomeName" into "Some Name" or "MyABC" into "My ABC". (Inserts a space before a capital
      * letter unless it is at the beginning of the string or preceded by a capital letter.)
+     * @param str The string to expand.
+     * @return The expanded string.
      */
     public static String camelToPhrase(String str) {
         String newStr = "";

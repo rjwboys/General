@@ -53,14 +53,14 @@ public class whoCommand extends GeneralCommand {
     }
 
     private void getPlayerInfo(String playerName) {
-        Player player = Toolbox.playerMatch(playerName);
+        Player who = Toolbox.playerMatch(playerName);
 
-        if(player != null) {
-            this.getPlayerInfo(player);
+        if(who != null) {
+            this.getPlayerInfo(who);
         }
     }
 
-    private void getPlayerInfo(Player player) {
+    private void getPlayerInfo(@SuppressWarnings("hiding") Player player) {
         this.player = player;
         this.name = player.getName();
         this.displayName = player.getDisplayName();
