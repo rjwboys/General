@@ -62,13 +62,17 @@ public class General extends JavaPlugin {
             } catch(Exception ex) {
                 permType = "Basic";
             }
-            do { // This loop will never run more than twice.
-                Class<? extends PermissionsHandler> clazz = this.getClass().getClassLoader().loadClass(
-                        "net.craftstars.general.security." + permType + "PermissionsHandler")
+            Class<? extends PermissionsHandler> clazz = this.getClass().getClassLoader().loadClass(
+                    "net.craftstars.general.security." + permType + "PermissionsHandler")
+                    .asSubclass(PermissionsHandler.class);
+            permissions = (PermissionsHandler) clazz.newInstance();
+            if(permissions == null || !permissions.wasLoaded()) {
+                General.logger.info("["+permType+"] permissions not detected; falling back to [Basic] permissions.");
+                clazz = this.getClass().getClassLoader().loadClass(
+                        "net.craftstars.general.security.BasicPermissionsHandler")
                         .asSubclass(PermissionsHandler.class);
                 permissions = (PermissionsHandler) clazz.newInstance();
-                permType = "Basic";
-            } while(permissions != null && permissions.wasLoaded());
+            }
         } catch(Exception ex) {
             General.logger.error("There was a big problem loading permissions system [" + permType
                     + "]! Please report this error!");

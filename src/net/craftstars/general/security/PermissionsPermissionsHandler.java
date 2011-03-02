@@ -24,9 +24,6 @@ public class PermissionsPermissionsHandler implements PermissionsHandler {
                 this.permissions = ((Permissions) test).getHandler();
                 this.wasLoaded = true;
             }
-            else {
-                General.logger.info("Permissions not detected; falling back to [Basic] permissions.");
-            }
         }
     }
     
