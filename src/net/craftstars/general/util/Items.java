@@ -1,11 +1,60 @@
 
 package net.craftstars.general.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Material;
 
 import net.craftstars.general.General;
 
 public class Items {
+    public static HashMap<String, String> items;
+    public static PropertyFile itemsp;
+    public static void setup() {
+        itemsp = new PropertyFile("items.db");
+        Map<String, String> mappedItems = null;
+        items = new HashMap<String, String>();
+
+        try {
+            mappedItems = itemsp.returnMap();
+        } catch(Exception ex) {
+            General.logger.warn("Could not open items.db!");
+        }
+
+        if(mappedItems != null) {
+            for(Object item : mappedItems.keySet()) {
+                String left = (String) item;
+                String right = (String) mappedItems.get(item);
+                String id = left.trim();
+                String itemName;
+                // log.info("Found " + left + "=" + right + " in items.db");
+                if(id.matches("[0-9]+") || id.matches("[0-9]+,[0-9]+")) {
+                    // log.info("matches");
+                    if(right.contains(",")) {
+                        String[] synonyms = right.split(",");
+                        itemName = synonyms[0].replaceAll("\\s", "");
+                        items.put(id, itemName);
+                        // log.info("Added " + id + "=" + itemName);
+                        for(int i = 1; i < synonyms.length; i++) {
+                            itemName = synonyms[i].replaceAll("\\s", "");
+                            items.put(itemName, id);
+                            // log.info("Added " + itemName + "=" + id);
+                        }
+                    } else {
+                        itemName = right.replaceAll("\\s", "");
+                        items.put(id, itemName);
+                        // log.info("Added " + id + "=" + itemName);
+                    }
+                } else {
+                    itemName = left.replaceAll("\\s", "");
+                    id = right.trim();
+                    items.put(itemName, id);
+                    // log.info("Added " + itemName + "=" + id);
+                }
+            }
+        }
+    }
     /**
      * Returns the name of the item stored in the hashmap or the item name stored in the items.txt
      * file in the hMod folder.
@@ -16,10 +65,10 @@ public class Items {
      */
     public static String name(int id, int data) {
         String longKey = Toolbox.string(id) + "," + Toolbox.string(data);
-        if(General.items.containsKey(Toolbox.string(id))) {
-            return Toolbox.camelToPhrase(General.items.get(Toolbox.string(id)));
-        } else if(data >= 0 && General.items.containsKey(longKey)) {
-            return Toolbox.camelToPhrase(General.items.get(longKey));
+        if(items.containsKey(Toolbox.string(id))) {
+            return Toolbox.camelToPhrase(items.get(Toolbox.string(id)));
+        } else if(data >= 0 && items.containsKey(longKey)) {
+            return Toolbox.camelToPhrase(items.get(longKey));
         }
 
         for(Material item : Material.values()) {
@@ -44,11 +93,11 @@ public class Items {
             ret[0] = Integer.valueOf(item);
         } catch(NumberFormatException e) {
             String val = "";
-            for(String id : General.items.keySet()) {
+            for(String id : items.keySet()) {
                 if(id.equalsIgnoreCase(item)) {
-                    val = General.items.get(id);
+                    val = items.get(id);
                     // General.log.info("Equals key: " + item + "=" + val);
-                } else if(General.items.get(id).equalsIgnoreCase(item)) {
+                } else if(items.get(id).equalsIgnoreCase(item)) {
                     val = id;
                     // General.log.info("Equals val: " + val + "=" + item);
                 }
@@ -98,8 +147,8 @@ public class Items {
         try {
             itemId = Integer.valueOf(item);
         } catch(NumberFormatException e) {
-            for(String id : General.items.keySet()) {
-                if(General.items.get(id).equalsIgnoreCase(item)) {
+            for(String id : items.keySet()) {
+                if(items.get(id).equalsIgnoreCase(item)) {
                     if(id.contains(",")) {
                         itemId = Integer.valueOf(id.split(",")[0]);
                         itemType = Integer.valueOf(id.split(",")[1]);

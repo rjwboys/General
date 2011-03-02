@@ -9,6 +9,7 @@ import java.util.Map;
 
 import net.craftstars.general.command.GeneralCommand;
 import net.craftstars.general.security.PermissionsHandler;
+import net.craftstars.general.util.Items;
 import net.craftstars.general.util.PluginLogger;
 import net.craftstars.general.util.PropertyFile;
 
@@ -34,9 +35,6 @@ public class General extends JavaPlugin {
     // [celticminstrel]
     public PermissionsHandler permissions;
 
-    public static HashMap<String, String> items;
-    public static PropertyFile itemsp;
-
     public General() {
         if(plugin != null) General.logger.warn("Seems to have loaded twice for some reason.");
         plugin = this;
@@ -49,8 +47,7 @@ public class General extends JavaPlugin {
         this.config = this.getConfiguration();
         this.loadConfiguration();
 
-        General.itemsp = new PropertyFile("items.db");
-        this.setupItems();
+        Items.setup();
 
         String permType = setupPermissions();
 
@@ -139,53 +136,5 @@ public class General extends JavaPlugin {
         }
 
         return false;
-    }
-
-    /**
-     * Setup Items
-     */
-    public void setupItems() {
-
-        Map<String, String> mappedItems = null;
-        items = new HashMap<String, String>();
-
-        try {
-            mappedItems = itemsp.returnMap();
-        } catch(Exception ex) {
-            General.logger.warn("Could not open items.db!");
-        }
-
-        if(mappedItems != null) {
-            for(Object item : mappedItems.keySet()) {
-                String left = (String) item;
-                String right = (String) mappedItems.get(item);
-                String id = left.trim();
-                String itemName;
-                // log.info("Found " + left + "=" + right + " in items.db");
-                if(id.matches("[0-9]+") || id.matches("[0-9]+,[0-9]+")) {
-                    // log.info("matches");
-                    if(right.contains(",")) {
-                        String[] synonyms = right.split(",");
-                        itemName = synonyms[0].replaceAll("\\s", "");
-                        items.put(id, itemName);
-                        // log.info("Added " + id + "=" + itemName);
-                        for(int i = 1; i < synonyms.length; i++) {
-                            itemName = synonyms[i].replaceAll("\\s", "");
-                            items.put(itemName, id);
-                            // log.info("Added " + itemName + "=" + id);
-                        }
-                    } else {
-                        itemName = right.replaceAll("\\s", "");
-                        items.put(id, itemName);
-                        // log.info("Added " + id + "=" + itemName);
-                    }
-                } else {
-                    itemName = left.replaceAll("\\s", "");
-                    id = right.trim();
-                    items.put(itemName, id);
-                    // log.info("Added " + itemName + "=" + id);
-                }
-            }
-        }
     }
 }
