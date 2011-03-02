@@ -1,3 +1,4 @@
+
 package net.craftstars.general.util;
 
 import java.io.BufferedReader;
@@ -13,27 +14,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * iConomy v1.x
- * Copyright (C) 2010  Nijikokun <nijikokun@gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * iConomy v1.x Copyright (C) 2010 Nijikokun <nijikokun@gmail.com>
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 2 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
  */
 /**
  * iProperty
- *
+ * 
  * Reads & Writes properties files.
- *
+ * 
  * @author Nijiko
  */
 // TODO: rewrite this [Plutonium239]
@@ -47,8 +45,8 @@ public final class PropertyFile {
         this.fileName = fileName;
         this.properties = new Properties();
         File file = new File(fileName);
-    
-        if (file.exists()) {
+
+        if(file.exists()) {
             load();
         } else {
             save();
@@ -58,7 +56,7 @@ public final class PropertyFile {
     public void load() {
         try {
             this.properties.load(new FileInputStream(this.fileName));
-        } catch (IOException ex) {
+        } catch(IOException ex) {
             log.log(Level.SEVERE, "Unable to load " + this.fileName, ex);
         }
     }
@@ -66,7 +64,7 @@ public final class PropertyFile {
     public void save() {
         try {
             this.properties.store(new FileOutputStream(this.fileName), "Minecraft Properties File");
-        } catch (IOException ex) {
+        } catch(IOException ex) {
             log.log(Level.SEVERE, "Unable to save " + this.fileName, ex);
         }
     }
@@ -75,11 +73,11 @@ public final class PropertyFile {
         Map<String, String> map = new HashMap<String, String>();
         BufferedReader reader = new BufferedReader(new FileReader(this.fileName));
         String line;
-        while ((line = reader.readLine()) != null) {
-            if (line.trim().length() == 0) {
+        while( (line = reader.readLine()) != null) {
+            if(line.trim().length() == 0) {
                 continue;
             }
-            if (line.charAt(0) == '#') {
+            if(line.charAt(0) == '#') {
                 continue;
             }
             int delimPosition = line.indexOf('=');
@@ -101,15 +99,15 @@ public final class PropertyFile {
     }
 
     public String getString(String key) {
-        if (this.properties.containsKey(key)) {
+        if(this.properties.containsKey(key)) {
             return this.properties.getProperty(key);
         }
-    
+
         return "";
     }
 
     public String getString(String key, String value) {
-        if (this.properties.containsKey(key)) {
+        if(this.properties.containsKey(key)) {
             return this.properties.getProperty(key);
         }
         setString(key, value);
@@ -122,18 +120,18 @@ public final class PropertyFile {
     }
 
     public int getInt(String key) {
-        if (this.properties.containsKey(key)) {
+        if(this.properties.containsKey(key)) {
             return Integer.parseInt(this.properties.getProperty(key));
         }
-    
+
         return 0;
     }
 
     public int getInt(String key, int value) {
-        if (this.properties.containsKey(key)) {
+        if(this.properties.containsKey(key)) {
             return Integer.parseInt(this.properties.getProperty(key));
         }
-    
+
         setInt(key, value);
         return value;
     }
@@ -144,18 +142,18 @@ public final class PropertyFile {
     }
 
     public double getDouble(String key) {
-        if (this.properties.containsKey(key)) {
+        if(this.properties.containsKey(key)) {
             return Double.parseDouble(this.properties.getProperty(key));
         }
-    
+
         return 0;
     }
 
     public double getDouble(String key, double value) {
-        if (this.properties.containsKey(key)) {
+        if(this.properties.containsKey(key)) {
             return Double.parseDouble(this.properties.getProperty(key));
         }
-    
+
         setDouble(key, value);
         return value;
     }
@@ -166,18 +164,18 @@ public final class PropertyFile {
     }
 
     public long getLong(String key) {
-        if (this.properties.containsKey(key)) {
+        if(this.properties.containsKey(key)) {
             return Long.parseLong(this.properties.getProperty(key));
         }
-    
+
         return 0;
     }
 
     public long getLong(String key, long value) {
-        if (this.properties.containsKey(key)) {
+        if(this.properties.containsKey(key)) {
             return Long.parseLong(this.properties.getProperty(key));
         }
-    
+
         setLong(key, value);
         return value;
     }
@@ -188,18 +186,18 @@ public final class PropertyFile {
     }
 
     public boolean getBoolean(String key) {
-        if (this.properties.containsKey(key)) {
+        if(this.properties.containsKey(key)) {
             return Boolean.parseBoolean(this.properties.getProperty(key));
         }
-    
+
         return false;
     }
 
     public boolean getBoolean(String key, boolean value) {
-        if (this.properties.containsKey(key)) {
+        if(this.properties.containsKey(key)) {
             return Boolean.parseBoolean(this.properties.getProperty(key));
         }
-    
+
         setBoolean(key, value);
         return value;
     }

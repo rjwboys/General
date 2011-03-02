@@ -1,3 +1,4 @@
+
 package net.craftstars.general.command;
 
 import org.bukkit.command.Command;
@@ -6,51 +7,44 @@ import org.bukkit.entity.Player;
 import net.craftstars.general.General;
 import net.craftstars.general.util.Messaging;
 
-public class playerlistCommand extends GeneralCommand
-{
-    
+public class playerlistCommand extends GeneralCommand {
+
     @Override
-    public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args)
-    {
+    public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
+            String[] args) {
         if(!plugin.permissions.hasPermission(sender, "general.playerlist")) {
             Messaging.send(sender, "&rose;You don't have permission to do that.");
             return false;
         }
         String[] players = this.getPlayerList(plugin);
-        
-        Messaging.send(sender, "&eOnline Players ("+players.length+"):");
-        
+
+        Messaging.send(sender, "&eOnline Players (" + players.length + "):");
+
         StringBuilder playerList = new StringBuilder();
-        for (int i = 0; i < players.length; i++)
-        {
+        for(int i = 0; i < players.length; i++) {
             playerList.append(players[i]);
-            if (((i + 1) % 4) == 0)
-            {
+            if( ( (i + 1) % 4) == 0) {
                 Messaging.send(sender, playerList.toString());
                 playerList.setLength(0);
-            }
-            else if ((i + 1) != players.length)
-            {
+            } else if( (i + 1) != players.length) {
                 playerList.append(", ");
             }
         }
-        
+
         Messaging.send(sender, playerList.toString());
-        
+
         return true;
     }
-    
-    private String[] getPlayerList(General plugin)
-    {
+
+    private String[] getPlayerList(General plugin) {
         Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
         String[] players = new String[onlinePlayers.length];
-        
-        for (int i = 0; i < onlinePlayers.length; i++)
-        {
+
+        for(int i = 0; i < onlinePlayers.length; i++) {
             players[i] = onlinePlayers[i].getName();
         }
-        
+
         return players;
     }
-    
+
 }

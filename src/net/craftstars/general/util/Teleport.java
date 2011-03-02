@@ -1,56 +1,46 @@
+
 package net.craftstars.general.util;
 
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
 
-public class Teleport
-{
+public class Teleport {
     private static General plugin = General.plugin;
-    
-    public static boolean teleportPlayerToPlayer(Player who, Player destination)
-    {
+
+    public static boolean teleportPlayerToPlayer(Player who, Player destination) {
         who.teleportTo(destination.getLocation());
-        
+
         return true;
     }
-    
-    public static boolean teleportAllToPlayer(Player destination)
-    {
+
+    public static boolean teleportAllToPlayer(Player destination) {
         Player[] players = Teleport.plugin.getServer().getOnlinePlayers();
-        
-        for (Player player : players)
-        {
-            if (!player.equals(destination))
-            {
+
+        for(Player player : players) {
+            if(!player.equals(destination)) {
                 player.teleportTo(destination.getLocation());
             }
         }
-        
+
         return true;
     }
-    
-    public static boolean teleportManyPlayersToPlayer(String many, Player destination)
-    {
+
+    public static boolean teleportManyPlayersToPlayer(String many, Player destination) {
         String[] players = many.split(",");
-        
-        for (String name : players)
-        {
+
+        for(String name : players) {
             Player player = Toolbox.playerMatch(name);
-            
-            if ((player == null) || (destination == null))
-            {
+
+            if( (player == null) || (destination == null)) {
                 continue;
-            }
-            else
-            {
-                if (!player.equals(destination))
-                {
+            } else {
+                if(!player.equals(destination)) {
                     player.teleportTo(destination.getLocation());
                 }
             }
         }
-        
+
         return true;
     }
 }
