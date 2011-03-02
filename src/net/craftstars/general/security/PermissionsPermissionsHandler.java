@@ -1,3 +1,4 @@
+
 package net.craftstars.general.security;
 
 import org.bukkit.entity.Player;
@@ -13,20 +14,20 @@ import net.craftstars.general.security.PermissionsHandler;
 public class PermissionsPermissionsHandler implements PermissionsHandler {
     private PermissionHandler permissions = null;
     private boolean wasLoaded = false;
-    
+
     public PermissionsPermissionsHandler() {
         Plugin test = General.plugin.getServer().getPluginManager().getPlugin("Permissions");
         PluginDescriptionFile pdfFile = General.plugin.getDescription();
-            
-        if (this.permissions == null) {
-            if (test!= null) {
+
+        if(this.permissions == null) {
+            if(test != null) {
                 General.plugin.getServer().getPluginManager().enablePlugin(test);
                 this.permissions = ((Permissions) test).getHandler();
                 this.wasLoaded = true;
             }
         }
     }
-    
+
     public boolean hasPermission(Player who, String what) {
         return this.permissions.has(who, what);
     }

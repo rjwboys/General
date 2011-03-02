@@ -23,10 +23,15 @@ public class General extends JavaPlugin {
     public static final boolean DEBUG = true;
     public static final String codename = "Hindenburg";
 
-    public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG); // NOTE: Was private. Should be changed back? [celticminstrel]
+    public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG); // NOTE: Was
+                                                                                        // private.
+                                                                                        // Should be
+                                                                                        // changed
+                                                                                        // back?
+                                                                                        // [celticminstrel]
 
     public Configuration config; // NOTE: This was private. Should it be changed back?
-                                 // [celticminstrel]
+    // [celticminstrel]
     public PermissionsHandler permissions;
 
     public static HashMap<String, String> items;
@@ -58,7 +63,7 @@ public class General extends JavaPlugin {
             try {
                 permType = config.getNode("permissions").getString("system");
                 permType.isEmpty(); // To trigger NPE if applicable. <_< Why? Avoiding duplication.
-                                    // [celticminstrel]
+                // [celticminstrel]
             } catch(Exception ex) {
                 permType = "Basic";
             }
@@ -67,10 +72,11 @@ public class General extends JavaPlugin {
                     .asSubclass(PermissionsHandler.class);
             permissions = (PermissionsHandler) clazz.newInstance();
             if(permissions == null || !permissions.wasLoaded()) {
-                General.logger.info("["+permType+"] permissions not detected; falling back to [Basic] permissions.");
+                General.logger.info("[" + permType
+                        + "] permissions not detected; falling back to [Basic] permissions.");
                 clazz = this.getClass().getClassLoader().loadClass(
-                        "net.craftstars.general.security.BasicPermissionsHandler")
-                        .asSubclass(PermissionsHandler.class);
+                        "net.craftstars.general.security.BasicPermissionsHandler").asSubclass(
+                        PermissionsHandler.class);
                 permissions = (PermissionsHandler) clazz.newInstance();
             }
         } catch(Exception ex) {
