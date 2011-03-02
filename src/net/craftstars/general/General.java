@@ -23,7 +23,7 @@ public class General extends JavaPlugin {
     public static final boolean DEBUG = true;
     public static final String codename = "Hindenburg";
 
-    protected static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG);
+    public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG); // NOTE: Was private. Should be changed back? [celticminstrel]
 
     public Configuration config; // NOTE: This was private. Should it be changed back?
                                  // [celticminstrel]
@@ -62,10 +62,13 @@ public class General extends JavaPlugin {
             } catch(Exception ex) {
                 permType = "Basic";
             }
-            Class<? extends PermissionsHandler> clazz = this.getClass().getClassLoader().loadClass(
-                    "net.craftstars.general.security." + permType + "PermissionsHandler")
-                    .asSubclass(PermissionsHandler.class);
-            permissions = (PermissionsHandler) clazz.newInstance();
+            do { // This loop will never run more than twice.
+                Class<? extends PermissionsHandler> clazz = this.getClass().getClassLoader().loadClass(
+                        "net.craftstars.general.security." + permType + "PermissionsHandler")
+                        .asSubclass(PermissionsHandler.class);
+                permissions = (PermissionsHandler) clazz.newInstance();
+                permType = "Basic";
+            } while(permissions != null && permissions.wasLoaded());
         } catch(Exception ex) {
             General.logger.error("There was a big problem loading permissions system [" + permType
                     + "]! Please report this error!");

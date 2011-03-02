@@ -18,4 +18,8 @@ public class BasicPermissionsHandler implements PermissionsHandler {
         }
     }
 
+    public boolean wasLoaded() {
+        return true;
+    }
+
 }
