@@ -7,3 +7,4 @@
 /lib/*
 /build.number
 .*.sw[a-p]
+.DS_Store

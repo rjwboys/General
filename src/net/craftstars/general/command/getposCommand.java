@@ -12,6 +12,10 @@ public class getposCommand extends GeneralCommand
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args)
     {
+        if(!plugin.permissions.hasPermission(sender, "general.getpos")) {
+            Messaging.send(sender, "&rose;You don't have permission to do that.");
+            return false;
+        }
         Messaging.send(sender, "Pos X: " + sender.getLocation().getX() + " Y: " + sender.getLocation().getY() + " Z: " + sender.getLocation().getZ());
         Messaging.send(sender, "Rotation: " + sender.getLocation().getYaw() + " Pitch: " + sender.getLocation().getPitch());
         

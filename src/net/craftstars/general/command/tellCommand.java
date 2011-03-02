@@ -13,6 +13,10 @@ public class tellCommand extends GeneralCommand
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args)
     {
+        if(!plugin.permissions.hasPermission(sender, "general.tell")) {
+            Messaging.send(sender, "&rose;You don't have permission to do that.");
+            return false;
+        }
         if (args.length < 2)
         {
             return false;

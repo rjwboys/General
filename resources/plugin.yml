@@ -75,10 +75,11 @@ commands:
            /<command> [player] [player2] - Teleports player to player2.
            /<command> * [player] - Teleport everyone to player.
            /<command> [player,player,...] [player] - Teleport several to player.
-  teleporthere:
+  summon:
     permission:
     description: Teleports a player to your location.
     aliases:
       - tphere
+      - teleporthere
     usage: |
            /<command> [player]

@@ -1,3 +1,13 @@
+
+permissions:
+  system: Basic
+  ops-only:
+   - general.give
+   - general.teleport
+   - general.summon
+   - general.time.set
+   - general.getpos
+
 playerlist:
   show-health: false
   show-coords: false

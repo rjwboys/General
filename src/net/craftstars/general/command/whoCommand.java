@@ -18,6 +18,10 @@ public class whoCommand extends GeneralCommand
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args)
     {
+        if(!plugin.permissions.hasPermission(sender, "general.who")) {
+            Messaging.send(sender, "&rose;You don't have permission to do that.");
+            return false;
+        }
         if (args.length < 1)
         {
             // No argument, using sender as target.

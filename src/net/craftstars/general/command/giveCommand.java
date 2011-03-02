@@ -16,6 +16,11 @@ public class giveCommand extends GeneralCommand
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args)
     {
         // TODO: Rewrite this. [Plutonium239]
+        if(!plugin.permissions.hasPermission(sender, "general.give")) {
+            Messaging.send(sender, "&rose;You don't have permission to do that.");
+            return false;
+        }
+        
         if (args.length < 1)
         {
             Messaging.send(sender, "&cUsage: /give [item(:type)|player] [item(:type)|amount] (amount)");

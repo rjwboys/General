@@ -160,7 +160,7 @@ public class Messaging {
     }
 
     /**
-     * Brodcast a message to every player online.
+     * Broadcast a message to every player online.
      *
      * @param message - The message to be sent.
      */

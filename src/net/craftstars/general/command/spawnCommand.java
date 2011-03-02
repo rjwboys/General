@@ -13,6 +13,10 @@ public class spawnCommand extends GeneralCommand
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args)
     {
+        if(!plugin.permissions.hasPermission(sender, "general.spawn")) {
+            Messaging.send(sender, "&rose;You don't have permission to do that.");
+            return false;
+        }
         Location spawnLocation = sender.getWorld().getSpawnLocation();
         
         sender.teleportTo(spawnLocation);

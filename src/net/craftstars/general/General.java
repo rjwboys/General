@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.craftstars.general.command.GeneralCommand;
+import net.craftstars.general.security.PermissionsHandler;
 import net.craftstars.general.util.PluginLogger;
 import net.craftstars.general.util.PropertyFile;
 
@@ -17,20 +18,23 @@ import org.bukkit.util.config.Configuration;
 
 public class General extends JavaPlugin
 {
-    public static General plugin;
+    public static General plugin = null;
     
     public static final boolean DEBUG = true;
     public static final String codename = "Hindenburg";
     
     protected static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG);
     
-    private Configuration config;
+    public Configuration config; // NOTE: This was private. Should it be changed back? [celticminstrel]
+    public PermissionsHandler permissions;
     
     public static HashMap<String, String> items;
     public static PropertyFile itemsp;
     
     public General()
     {
+    	if(plugin != null)
+    		General.logger.warn("Seems to have loaded twice for some reason.");
         plugin = this;
     }
     
@@ -44,10 +48,31 @@ public class General extends JavaPlugin
         General.itemsp = new PropertyFile("items.db");
         this.setupItems();
         
+        setupPermissions();
+        
         General.logger.info("[Codename: "+General.codename+"] Plugin successfully loaded!");
     }
     
-    public void onDisable()
+    private void setupPermissions() {
+    	String permType = "unknown";
+    	try {
+    		try {
+    			permType = config.getString("permissions.system");
+    		} catch(Exception ex) {
+    			permType = "Basic";
+    		}
+            Class<? extends PermissionsHandler> clazz = this.getClass()
+            	.getClassLoader()
+            	.loadClass("net.craftstars.general.security."+permType+"PermissionsHandler")
+            	.asSubclass(PermissionsHandler.class);
+            permissions = (PermissionsHandler) clazz.newInstance();
+        } catch (Exception ex) {
+            General.logger.error("There was a big problem loading permissions system ["
+            		+permType+"]! Please report this error!");
+        }
+	}
+
+	public void onDisable()
     {
         General.logger.info("Plugin disabled!");
     }
@@ -74,7 +99,7 @@ public class General extends JavaPlugin
                 out.close();
                 defaultConfig.close();
                 this.config.load();
-                General.logger.info("Default configuration created successfully! You can now stop the server and edit plugin/General/config.yml.");
+                General.logger.info("Default configuration created successfully! You can now stop the server and edit plugins/General/config.yml.");
             }
         }
         catch (Exception ex)
@@ -88,7 +113,10 @@ public class General extends JavaPlugin
     {
         try
         {
-            Class<? extends GeneralCommand> clazz = this.getClass().getClassLoader().loadClass("net.craftstars.general.command."+command.getName()+"Command").asSubclass(GeneralCommand.class);
+            Class<? extends GeneralCommand> clazz = this.getClass()
+            	.getClassLoader()
+            	.loadClass("net.craftstars.general.command."+command.getName()+"Command")
+            	.asSubclass(GeneralCommand.class);
             GeneralCommand commandInstance = (GeneralCommand) clazz.newInstance();
             
             return commandInstance.runCommand(this, sender, command, commandLabel, args);
@@ -106,8 +134,7 @@ public class General extends JavaPlugin
      */
     public void setupItems() {
         
-        @SuppressWarnings("rawtypes")
-        Map mappedItems = null;
+        Map<String,String> mappedItems = null;
         items = new HashMap<String, String>();
     
         try {

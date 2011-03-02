@@ -16,12 +16,20 @@ public class timeCommand extends GeneralCommand
     {
         if (args.length < 1)
         {
-            // No arguments, assuming get current time for current world.
-            int time = (int)sender.getWorld().getTime();
-            Messaging.send(sender, "Time: "+this.getFriendlyTime(time)+" ("+time+")");
+        	if(plugin.permissions.hasPermission(sender, "general.time")) {
+        		// No arguments, assuming get current time for current world.
+        		int time = (int)sender.getWorld().getTime();
+        		Messaging.send(sender, "Time: "+this.getFriendlyTime(time)+" ("+time+")");
+        	} else {
+        	    Messaging.send(sender, "&rose;You don't have permission to do that.");
+        	}
         }
         else
         {
+            if(!plugin.permissions.hasPermission(sender, "general.time.set")) {
+                Messaging.send(sender, "&rose;You don't have permission to do that.");
+                return false;
+            }
             String arg = args[0];
             this.world = sender.getWorld();
             
