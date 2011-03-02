@@ -40,8 +40,9 @@ public class General extends JavaPlugin {
     public General() {
         if(plugin != null) General.logger.warn("Seems to have loaded twice for some reason.");
         plugin = this;
+        General.logger.info("Loaded.");
     }
-
+    
     public void onEnable() {
         General.logger.setPluginVersion(this.getDescription().getVersion());
 
