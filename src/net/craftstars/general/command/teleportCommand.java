@@ -16,7 +16,7 @@ public class teleportCommand extends GeneralCommand {
             String[] args) {
         if(!plugin.permissions.hasPermission(sender, "general.teleport")) {
             Messaging.send(sender, "&rose;You don't have permission to do that.");
-            return false;
+            return true;
         }
         if(args.length < 1) {
             return false;

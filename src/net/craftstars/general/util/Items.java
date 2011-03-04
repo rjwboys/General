@@ -1,60 +1,230 @@
 
 package net.craftstars.general.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.Material;
+import org.bukkit.util.config.Configuration;
+import org.bukkit.util.config.ConfigurationNode;
 
 import net.craftstars.general.General;
 
 public class Items {
-    public static HashMap<String, String> items;
-    public static PropertyFile itemsp;
-    public static void setup() {
-        itemsp = new PropertyFile("items.db");
-        Map<String, String> mappedItems = null;
-        items = new HashMap<String, String>();
+    public static class ItemID implements Comparable<ItemID> {
+        public int ID;
+        public int data;
+        public boolean dataMatters;
 
+        ItemID(Integer id, Integer d) {
+            if(id == null) this.ID = 0;
+            else this.ID = id;
+            if(d == null) {
+                this.data = 0;
+                this.dataMatters = false;
+            } else {
+                this.data = d;
+                this.dataMatters = true;
+            }
+        }
+
+        public int compareTo(ItemID arg) {
+            ItemID other = (ItemID) arg;
+            if(!dataMatters) return new Integer(ID).compareTo(other.ID);
+            else {
+                if(ID < other.ID) return -1;
+                else if(ID > other.ID) return 1;
+                else return new Integer(data).compareTo(other.data);
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            // System.out.println(this.toString()+" is hashed; result: "+Integer.toString((ID << 8)
+            // + (data & 0xFF)));
+            return (ID << 8) + (data & 0xFF);
+        }
+        
+        @Override
+        public boolean equals(Object other){
+            if(other instanceof ItemID) return 0 == this.compareTo((ItemID) other);
+            else return false;
+        }
+
+        public String toString() {
+            return Integer.toString(ID) + ":" + Integer.toString(data);
+        }
+    }
+
+    private static class VariantsMap {
+        @SuppressWarnings("hiding")
+        private ConfigurationNode variants;
+
+        VariantsMap(ConfigurationNode var) {
+            variants = var;
+        }
+
+        public int findVariant(int id, String data) {
+            ConfigurationNode thisItem = variants.getNode("item" + Integer.toString(id));
+            if(thisItem == null) return -1;
+            int i = 0;
+            List<String> thisVariant;
+            do {
+                thisVariant = thisItem.getStringList("type" + Integer.toString(i), null);
+                if(thisVariant.contains(data)) return i;
+                i++;
+            } while(!thisVariant.isEmpty());
+            return -1;
+        }
+    }
+
+    private static HashMap<String, ItemID> aliases;
+    private static HashMap<ItemID, String> names;
+    private static VariantsMap variants;
+    private static List<Integer> dmg;
+    public static String lastDataError;
+
+    // private static List<Integer> nostk;
+    // private static List<Integer> smstk;
+
+    private static Configuration loadConfig() {
+        Configuration itemsyml = null;
         try {
-            mappedItems = itemsp.returnMap();
+            File dataFolder = General.plugin.getDataFolder();
+            if(!dataFolder.exists()) dataFolder.mkdirs();
+            File configFile = new File(dataFolder, "items.yml");
+
+            if(!configFile.exists()) {
+                General.logger
+                        .info("Configuration file does not exist. Attempting to create default one...");
+                InputStream defaultConfig = General.plugin.getClass().getResourceAsStream(
+                        File.separator + "items.yml");
+                FileWriter out = new FileWriter(configFile);
+                for(int i = 0; (i = defaultConfig.read()) > 0;)
+                    out.write(i);
+                out.flush();
+                out.close();
+                defaultConfig.close();
+            }
+            itemsyml = new Configuration(configFile);
+            itemsyml.load();
+        } catch(Exception ex) {
+            General.logger.warn(
+                    "Could not read and/or write items.yml! Continuing with default values!", ex);
+        }
+        return itemsyml;
+    }
+
+    public static void setup() {
+        Properties itemsdb = new Properties();
+        Configuration itemsyml = loadConfig();
+        try {
+            itemsdb.load(new FileInputStream("items.db"));
         } catch(Exception ex) {
             General.logger.warn("Could not open items.db!");
         }
+        aliases = new HashMap<String, ItemID>();
+        names = new HashMap<ItemID, String>();
+        dmg = itemsyml.getIntList("damageable", null);
+        // variants = new HashMap<Integer, HashMap<Integer, List<String>>>();
+        // nostk = itemsyml.getIntList("unstackable", null);
+        // smstk = itemsyml.getIntList("smallstacks", null);
 
-        if(mappedItems != null) {
-            for(Object item : mappedItems.keySet()) {
-                String left = (String) item;
-                String right = (String) mappedItems.get(item);
-                String id = left.trim();
-                String itemName;
-                // log.info("Found " + left + "=" + right + " in items.db");
-                if(id.matches("[0-9]+") || id.matches("[0-9]+,[0-9]+")) {
-                    // log.info("matches");
-                    if(right.contains(",")) {
-                        String[] synonyms = right.split(",");
-                        itemName = synonyms[0].replaceAll("\\s", "");
-                        items.put(id, itemName);
-                        // log.info("Added " + id + "=" + itemName);
-                        for(int i = 1; i < synonyms.length; i++) {
-                            itemName = synonyms[i].replaceAll("\\s", "");
-                            items.put(itemName, id);
-                            // log.info("Added " + itemName + "=" + id);
-                        }
-                    } else {
-                        itemName = right.replaceAll("\\s", "");
-                        items.put(id, itemName);
-                        // log.info("Added " + id + "=" + itemName);
-                    }
+        // This loads in the item names from items.yml
+        loadItemNames(itemsyml);
+
+        // Now load the aliases from items.db
+        try {
+            loadItemAliases(itemsdb);
+        } catch(NumberFormatException x) {
+            General.logger.error(x.getMessage());
+        }
+
+        // And then the variant names
+        loadItemVariantNames(itemsyml);
+
+        // TODO: Load the "hooks" as well.
+    }
+
+    private static void loadItemVariantNames(Configuration itemsyml) {
+        variants = new VariantsMap(itemsyml.getNode("variants"));
+    }
+
+    private static void loadItemAliases(Properties itemsdb) {
+        Pattern itemPat = Pattern.compile("([0-9]+)(?:[.,:/|]([0-9]+))?");
+        for(String alias : itemsdb.stringPropertyNames()) {
+            ItemID val;
+            String code = itemsdb.getProperty(alias);
+            Matcher m = itemPat.matcher(code);
+            if(!m.matches()) continue;
+            int num = 0, data;
+            boolean problem = false;
+            try {
+                num = Integer.valueOf(m.group(1));
+            } catch(NumberFormatException x) {
+                problem = true;
+            }
+            if(m.groupCount() > 1 && m.group(2) != null) {
+                try {
+                    data = Integer.valueOf(m.group(2));
+                } catch(NumberFormatException x) {
+                    General.logger.warn("Invalid items.db assignment '" + m.group(1) + ":"
+                            + m.group(2) + "'.");
+                    continue;
+                }
+                val = new ItemID(num, data);
+            } else if(problem) {
+                General.logger.warn("Invalid items.db assignment '" + m.group(1) + "'.");
+                continue;
+            } else val = new ItemID(num, null);
+            aliases.put(alias, val);
+        }
+    }
+
+    private static void loadItemNames(Configuration itemsyml) {
+        int invalids = 0;
+        String lastInvalid = null;
+        List<String> keys = itemsyml.getKeys("names");
+        if(keys == null) {
+            General.logger.warn("The names section of items.yml is missing or invalid.");
+        } else {
+            for(String id : keys) {
+                int num;
+                ItemID key;
+                String name;
+                try {
+                    num = Integer.valueOf(id.substring(4));
+                } catch(NumberFormatException x) {
+                    lastInvalid = id;
+                    invalids++;
+                    continue;
+                }
+                List<String> list = itemsyml.getStringList("names." + id, null);
+                if(list.isEmpty()) {
+                    name = itemsyml.getString("names." + id);
+                    key = new ItemID(num, null);
+                    names.put(key, name);
                 } else {
-                    itemName = left.replaceAll("\\s", "");
-                    id = right.trim();
-                    items.put(itemName, id);
-                    // log.info("Added " + itemName + "=" + id);
+                    for(int i = 0; i < list.size(); i++) {
+                        name = list.get(i);
+                        key = new ItemID(num, i);
+                        names.put(key, name);
+                    }
                 }
             }
         }
+        if(invalids > 0) General.logger.warn("Invalid keys in the names section of items.yml (eg "
+                + lastInvalid + ")");
     }
+
     /**
      * Returns the name of the item stored in the hashmap or the item name stored in the items.txt
      * file in the hMod folder.
@@ -63,12 +233,10 @@ public class Items {
      * @param data Item data value
      * @return Canonical name
      */
-    public static String name(int id, int data) {
-        String longKey = Toolbox.string(id) + "," + Toolbox.string(data);
-        if(items.containsKey(Toolbox.string(id))) {
-            return Toolbox.camelToPhrase(items.get(Toolbox.string(id)));
-        } else if(data >= 0 && items.containsKey(longKey)) {
-            return Toolbox.camelToPhrase(items.get(longKey));
+    public static String name(Integer id, Integer data) {
+        ItemID longKey = new ItemID(id, data);
+        if(names.containsKey(longKey)) {
+            return names.get(longKey);
         }
 
         for(Material item : Material.values()) {
@@ -77,51 +245,117 @@ public class Items {
             }
         }
 
-        return Toolbox.camelToPhrase(Toolbox.string(id));
+        if(data == null) return Toolbox.string(id) + ":" + Toolbox.string(data);
+
+        return Toolbox.string(id);
     }
 
     /**
      * Validate the string for an item
      * 
+     * Valid formats:
+     * <ul>
+     * <li>[ID]</li>
+     * <li>[alias]</li>
+     * <li>[richalias]</li>
+     * <li>[ID]:[data]</li>
+     * <li>[alias]:[data]</li>
+     * <li>[ID]:[variant]</li>
+     * <li>[alias]:[variant]</li>
+     * <li>[hook]:[subset]</li>
+     * </ul>
+     * 
+     * Where : can be any of .,:/| and the variables are as follows:
+     * <dl>
+     * <dt>[ID]</dt>
+     * <dd>the numeric ID of an item</dd>
+     * <dt>[alias]</dt>
+     * <dd>an alias for the item, as defined in items.db</dd>
+     * <dt>[richalias]</dt>
+     * <dd>an alias for the item combined with a data value, as defined in items.db</dd>
+     * <dt>[data]</dt>
+     * <dd>the numeric data value for the item</dd>
+     * <dt>[variant]</dt>
+     * <dd>a variant name for the item, as defined in the variants section of items.yml</dd>
+     * <dt>[hook]</dt>
+     * <dd>a hook name, as defined in the hooks section of items.yml</dd>
+     * <dt>[subset]</dt>
+     * <dd>a subset name, as defined in the hooks section of items.yml</dd>
+     * </dl>
+     * 
      * @param item A string representing an item, either by name or by ID.
-     * @return -1 if false, id if true.
+     * @return null if false, the 2-part ID if true; a data value of -1 if the item is valid but the
+     *         data isn't
      */
-    public static int[] validate(String item) {
-        int[] ret = new int[] {-1, 0};
+    public static ItemID validate(String item) {
+        ItemID ret;
+        // First figure out what the data and ID are.
+        if(Pattern.matches("([a-zA-Z0-9]+)", item)) {
+            ret = validateShortItem(item);
+            // Since no data was explicitly supplied, we can assume that a -1 in the data means none
+            // was found.
+            if(ret.data == -1) ret.data = 0;
+        } else {
+            // Pattern itemPat = Pattern.compile("([a-z0-9]+)[.,:/\\|]([a-z0-9]+)",
+            // Pattern.CASE_INSENSITIVE);
+            // Matcher m = itemPat.matcher(item);
+            String[] parts = item.split("[.,:/\\|]");
+            ret = validateLongItem(parts[0], parts[1]);
+        }
 
+        // Was a valid data/id obtained? If not, we're done; it's invalid.
+        if(ret.ID < 0) ret.data = -1;
+        if(ret.data < 0) return ret;
+
+        // Make sure it's the ID of a valid item.
+        Material check = Material.getMaterial(ret.ID);
+        if(check == null) return new ItemID(-1, -1);
+
+        // Make sure the damage value is valid.
+        // if(dmg.contains(ret.ID)) {
+        // if(ret.data > check.getMaxDurability()) return new ItemID(ret.ID, -1);
+        // } else {
+        // // MaterialData md = check.getNewData(0);
+        // }
+
+        return ret;
+    }
+
+    private static ItemID validateLongItem(String item, String data) {
+        ItemID ret = validateShortItem(item);
+        if(ret.data >= 0) { // This means a "richalias" was used, which includes the data value.
+            ret.data = -1; // No data value is valid with a "richalias".
+        } else if(ret.ID < 0) { // If it wasn't valid as a short item, check the hooks.
+            // TODO: stuff
+        } else {
+            try {
+                ret.data = Integer.valueOf(data);
+            } catch(NumberFormatException x) {
+                ret.data = variants.findVariant(ret.ID, data);
+            }
+        }
+        if(ret.data < 0) lastDataError = data;
+        return ret;
+    }
+
+    private static ItemID validateShortItem(String item) {
+        ItemID ret = new ItemID(-1, -1);
         try {
-            ret[0] = Integer.valueOf(item);
-        } catch(NumberFormatException e) {
-            String val = "";
-            for(String id : items.keySet()) {
-                if(id.equalsIgnoreCase(item)) {
-                    val = items.get(id);
-                    // General.log.info("Equals key: " + item + "=" + val);
-                } else if(items.get(id).equalsIgnoreCase(item)) {
-                    val = id;
-                    // General.log.info("Equals val: " + val + "=" + item);
+            ret.ID = Integer.valueOf(item);
+        } catch(NumberFormatException x) {
+            for(String alias : aliases.keySet()) {
+                if(!alias.equalsIgnoreCase(item)) continue;
+                ItemID code = aliases.get(alias);
+                ret.ID = code.ID;
+                if(code.dataMatters) ret.data = code.data;
+            }
+            if(ret.ID == -1) {
+                for(Material material : Material.values()) {
+                    if(material.toString().equalsIgnoreCase(item)) ret.ID = material.getId();
                 }
             }
-            // General.log.info("Resultant name: " + (val.isEmpty()?"<empty>":val));
-            if(val.contains(",")) {
-                String[] split = val.split(",");
-                ret[0] = Integer.valueOf(split[0]);
-                ret[1] = Integer.valueOf(split[1]);
-            } else {
-                ret[0] = Integer.valueOf(val);
-            }
-
-            if(ret[0] == -1) {
-                return ret;
-            }
         }
-
-        if(!checkID(ret[0])) {
-            ret[0] = -1;
-            return ret;
-        } else {
-            return ret;
-        }
+        return ret;
     }
 
     public static boolean checkID(int id) {
@@ -130,117 +364,10 @@ public class Items {
                 return true;
             }
         }
-
-        return false;
-    }
-
-    /**
-     * Validate the string for an item
-     * 
-     * @param item A string representing an item.
-     * @return -1 if false, type if true.
-     */
-    public static int validateGrabType(String item) {
-        int itemId = -1;
-        int itemType = -1;
-
-        try {
-            itemId = Integer.valueOf(item);
-        } catch(NumberFormatException e) {
-            for(String id : items.keySet()) {
-                if(items.get(id).equalsIgnoreCase(item)) {
-                    if(id.contains(",")) {
-                        itemId = Integer.valueOf(id.split(",")[0]);
-                        itemType = Integer.valueOf(id.split(",")[1]);
-                    }
-                }
-            }
-
-            if(itemId == -1) {
-                return -1;
-            }
-        }
-
-        if(!checkID(itemId)) {
-            return -1;
-        } else if(!validateType(itemId, itemType)) {
-            return -1;
-        } else {
-            return itemType;
-        }
-    }
-
-    public static boolean validateType(int id, int type) {
-        if(type == -1 || type == 0) {
-            return true;
-        }
-
-        if(id == 35 || id == 351 || id == 63) {
-            if(type >= 0 && type <= 15) {
-                return true;
-            }
-        }
-
-        if(id == 17) {
-            if(type >= 0 && type <= 2) {
-                return true;
-            }
-        }
-
-        if(id == 91 || id == 86 || id == 67 || id == 53 || id == 77 || id == 71 || id == 64) {
-            if(type >= 0 && type <= 3) {
-                return true;
-            }
-        }
-
-        if(id == 66) {
-            if(type >= 0 && type <= 9) {
-                return true;
-            }
-        }
-
-        if(id == 68) {
-            if(type >= 2 && type <= 5) {
-                return true;
-            }
-        }
-
-        if(id == 263) {
-            if(type == 0 || type == 1) {
-                return true;
-            }
-        }
-
-        if(isDamageable(id)) {
-            return true;
-        }
-
         return false;
     }
 
     public static boolean isDamageable(int id) {
-        // tools (including lighters and fishing poles) and armour
-        if(id >= 256 && id <= 259) return true;
-        if(id >= 267 && id <= 279) return true;
-        if(id >= 283 && id <= 286) return true;
-        if(id >= 290 && id <= 294) return true;
-        if(id >= 298 && id <= 317) return true;
-        if(id == 346) return true;
-        return false;
-    }
-
-    public static boolean isStackable(int id) {
-        // false for tools (including buckets, bow, and lighters, but not fishing poles), food,
-        // armour, minecarts, boats, doors, and signs.
-        if(id >= 256 && id <= 261) return false;
-        if(id >= 267 && id <= 279) return false;
-        if(id >= 282 && id <= 286) return false;
-        if(id >= 290 && id <= 294) return false;
-        if(id >= 297 && id <= 317) return false;
-        if(id >= 322 && id <= 330) return false;
-        if(id == 319 || id == 320 || id == 349 || id == 350) return false;
-        if(id == 333 || id == 335 || id == 343 || id == 342) return false;
-        if(id == 354 || id == 2256 || id == 2257) return false;
-        return true;
+        return dmg.contains(id);
     }
 }

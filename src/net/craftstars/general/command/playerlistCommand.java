@@ -14,7 +14,7 @@ public class playerlistCommand extends GeneralCommand {
             String[] args) {
         if(!plugin.permissions.hasPermission(sender, "general.playerlist")) {
             Messaging.send(sender, "&rose;You don't have permission to do that.");
-            return false;
+            return true;
         }
         String[] players = this.getPlayerList(plugin);
 

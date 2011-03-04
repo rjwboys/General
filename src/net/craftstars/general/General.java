@@ -11,7 +11,6 @@ import net.craftstars.general.command.GeneralCommand;
 import net.craftstars.general.security.PermissionsHandler;
 import net.craftstars.general.util.Items;
 import net.craftstars.general.util.PluginLogger;
-import net.craftstars.general.util.PropertyFile;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -22,14 +21,14 @@ public class General extends JavaPlugin {
     public static General plugin = null;
 
     public static final boolean DEBUG = true;
-    public static final String codename = "Hindenburg";
+    public static final String codename = "Bach";
 
     public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG); // NOTE: Was
-                                                                                        // private.
-                                                                                        // Should be
-                                                                                        // changed
-                                                                                        // back?
-                                                                                        // [celticminstrel]
+    // private.
+    // Should be
+    // changed
+    // back?
+    // [celticminstrel]
 
     public Configuration config; // NOTE: This was private. Should it be changed back?
     // [celticminstrel]
@@ -40,7 +39,7 @@ public class General extends JavaPlugin {
         plugin = this;
         General.logger.info("Loaded.");
     }
-    
+
     public void onEnable() {
         General.logger.setPluginVersion(this.getDescription().getVersion());
 
@@ -93,9 +92,7 @@ public class General extends JavaPlugin {
 
         try {
             File dataFolder = this.getDataFolder();
-
             if(!dataFolder.exists()) dataFolder.mkdirs();
-
             File configFile = new File(dataFolder, "config.yml");
 
             if(!configFile.exists()) {
@@ -110,8 +107,8 @@ public class General extends JavaPlugin {
                 out.close();
                 defaultConfig.close();
                 this.config.load();
-                General.logger
-                        .info("Default configuration created successfully! You can now stop the server and edit plugins/General/config.yml.");
+                General.logger.info("Default configuration created successfully! You can now "
+                        + "stop the server and edit plugins/General/config.yml.");
             }
         } catch(Exception ex) {
             General.logger.warn(
@@ -127,7 +124,6 @@ public class General extends JavaPlugin {
                     "net.craftstars.general.command." + command.getName() + "Command").asSubclass(
                     GeneralCommand.class);
             GeneralCommand commandInstance = (GeneralCommand) clazz.newInstance();
-
             return commandInstance.runCommand(this, sender, command, commandLabel, args);
         } catch(Exception ex) {
             General.logger.error("There was a big problem executing command [" + command.getName()

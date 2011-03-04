@@ -1,20 +1,21 @@
 # General Plugin for CraftBukkit #
-## Version 2.3 (Hindenburg)
+## Version 3.0 [Bach]
 ### README
 - - -
 This is the first draft of this README. It's not done. Build instructions coming soon.
 
-This version of the plugin is **NOT STABLE** therefore **DONT USE IT** yet.
+This version of the plugin is probably stable, but use at your own risk.
 
 Available Permissions nodes:
+
 * general.time
+* general.time.set
 * general.teleport
 * general.summon
 * general.playerlist
 * general.who
 * general.give
 * general.spawn
-* general.spawn.set (currently unused since /setspawn is unavailable)
-* general.compass
-* general.getpos
+* general.spawn.set
+* general.getpos (this also controls access to /compass and /where)
 * general.tell

@@ -25,7 +25,7 @@ public class timeCommand extends GeneralCommand {
         } else {
             if(!plugin.permissions.hasPermission(sender, "general.time.set")) {
                 Messaging.send(sender, "&rose;You don't have permission to do that.");
-                return false;
+                return true;
             }
             String arg = args[0];
             this.world = sender.getWorld();

@@ -16,7 +16,7 @@ public class summonCommand extends GeneralCommand {
             String[] args) {
         if(!plugin.permissions.hasPermission(sender, "general.summon")) {
             Messaging.send(sender, "&rose;You don't have permission to do that.");
-            return false;
+            return true;
         }
         if(args.length < 1) {
             return false;

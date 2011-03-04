@@ -15,7 +15,7 @@ public class tellCommand extends GeneralCommand {
             String[] args) {
         if(!plugin.permissions.hasPermission(sender, "general.tell")) {
             Messaging.send(sender, "&rose;You don't have permission to do that.");
-            return false;
+            return true;
         }
         if(args.length < 2) {
             return false;

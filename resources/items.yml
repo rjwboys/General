@@ -1,0 +1,323 @@
+
+
+names:
+  item0: Air
+  item1: Stone
+  item2: Grass
+  item3: Dirt
+  item4: Cobblestone
+  item5: Wooden Plank
+  item6: Sapling
+  item7: Bedrock
+  item8: Flowing Water
+  item9: Stationary Water
+  item10: Flowing Lava
+  item11: Stationary Lava
+  item12: Sand
+  item13: Gravel
+  item14: Gold Ore
+  item15: Iron Ore
+  item16: Coal Ore
+  item17:
+   - Oak Log
+   - Pine Log
+   - Birch Log
+  item18: Leaves
+  item19: Sponge
+  item20: Glass
+  item21: Lapis Lazuli Ore
+  item22: Lapis Lazuli Block
+  item23: Dispenser
+  item24: Sandstone
+  item25: Note Block
+  item26: Bed
+  item35:
+   - White Wool
+   - Orange Wool
+   - Magenta Wool
+   - Light Blue Wool
+   - Yellow Wool
+   - Lime Wool
+   - Pink Wool
+   - Gray Wool
+   - Light Gray Wool
+   - Cyan Wool
+   - Purple Wool
+   - Blue Wool
+   - Brown Wool
+   - Green Wool
+   - Red Wool
+   - Black Wool
+  item37: Dandelion
+  item38: Rose
+  item39: Mushroom
+  item40: Toadstool
+  item41: Gold Block
+  item42: Iron Block
+  item43:
+   - Double Stone Slab
+   - Double Sandstone Slab
+   - Double Wood Slab
+   - Double Cobblestone Slab
+  item44:
+   - Stone Slab
+   - Sandstone Slab
+   - Wood Slab
+   - Cobblestone Slab
+  item45: Brick Block
+  item46: TNT
+  item47: Bookshelf
+  item48: Moss Stone
+  item49: Obsidian
+  item50: Torch
+  item51: Fire
+  item52: Monster Spawner
+  item53: Wooden Stairs
+  item54: Chest
+  item55: Redstone Wire
+  item56: Diamond Ore
+  item57: Diamond Block
+  item58: Crafting Table
+  item59: Crops
+  item60: Farmland
+  item61: Furnace
+  item62: Burning Furnace
+  item63: Sign Post
+  item64: Wooden Door Block
+  item65: Ladder
+  item66: Rails
+  item67: Cobblestone Stairs
+  item68: Wall Sign
+  item69: Lever
+  item70: Stone Pressure Plate
+  item71: Iron Door Block
+  item72: Wooden Pressure Plate
+  item73: Redstone Ore
+  item74: Glowing Redstone Ore
+  item75: Unlit Redstone Torch
+  item76: Redstone Torch
+  item77: Button
+  item78: Snow
+  item79: Ice
+  item80: Snow Block
+  item81: Cactus
+  item82: Clay Block
+  item83: Sugar Cane Block
+  item84: Jukebox
+  item85: Fence
+  item86: Pumpkin
+  item87: Netherrack
+  item88: Soul Sand
+  item89: Glowstone
+  item90: Portal
+  item91: Jack-o-lantern
+  item92: Cake Block
+  item93: Unlit Redstone Repeater Block
+  item94: Redstone Repeater Block
+  item256: Iron Shovel
+  item257: Iron Pickaxe
+  item258: Iron Axe
+  item259: Flint and Steel
+  item260: Apple
+  item261: Bow
+  item262: Arrow
+  item263: 
+   - Coal
+   - Charcoal
+  item264: Diamond
+  item265: Iron Ingot
+  item266: Gold Ingot
+  item267: Iron Sword
+  item268: Wooden Sword
+  item269: Wooden Shovel
+  item270: Wooden Pickaxe
+  item271: Wooden Axe
+  item272: Stone Sword
+  item273: Stone Shovel
+  item274: Stone Pickaxe
+  item275: Stone Axe
+  item276: Diamond Sword
+  item277: Diamond Shovel
+  item278: Diamond Pickaxe
+  item279: Diamond Axe
+  item280: Stick
+  item281: Bowl
+  item282: Mushroom Stew
+  item283: Golden Sword
+  item284: Golden Shovel
+  item285: Golden Pickaxe
+  item286: Golden Axe
+  item287: String
+  item288: Feather
+  item289: Gunpowder
+  item290: Wooden Hoe
+  item291: Stone Hoe
+  item292: Iron Hoe
+  item293: Diamond Hoe
+  item294: Golden Hoe
+  item295: Seeds
+  item296: Wheat
+  item297: Bread
+  item298: Leather Cap
+  item299: Leather Tunic
+  item300: Leather Pants
+  item301: Leather Boots
+  item302: Chainmail Helmet
+  item303: Chainmail Chestplate
+  item304: Chainmail Leggings
+  item305: Chainmail Boots
+  item306: Iron Helmet
+  item307: Iron Chestplate
+  item308: Iron Leggings
+  item309: Iron Boots
+  item310: Diamond Helmet
+  item311: Diamond Chestplate
+  item312: Diamond Leggings
+  item313: Diamond Boots
+  item314: Gold Helmet
+  item315: Gold Chestplate
+  item316: Gold Leggings
+  item317: Gold Boots
+  item318: Flint
+  item319: Raw Porkchop
+  item320: Cooked Porkchop
+  item321: Painting
+  item322: Golden Apple
+  item323: Sign
+  item324: Wooden Door
+  item325: Bucket
+  item326: Water Bucket
+  item327: Lava Bucket
+  item328: Minecart
+  item329: Saddle
+  item330: Iron door
+  item331: Redstone
+  item332: Snowball
+  item333: Boat
+  item334: Leather
+  item335: Milk
+  item336: Brick
+  item337: Clay
+  item338: Sugar Canes
+  item339: Paper
+  item340: Book
+  item341: Slimeball
+  item342: Minecart with Chest
+  item343: Minecart with Furnace
+  item344: Egg
+  item345: Compass
+  item346: Fishing Rod
+  item347: Clock
+  item348: Glowstone Dust
+  item349: Raw Fish
+  item350: Cooked Fish
+  item351:
+   - Ink Sac
+   - Rose Red
+   - Cactus Green
+   - Cocoa Beans
+   - Lapis Lazuli
+   - Purple Dye
+   - Cyan Dye
+   - Light Gray Dye
+   - Gray Dye
+   - Pink Dye
+   - Lime Dye
+   - Dandelion Yellow
+   - Light Blue Dye
+   - Magenta Dye
+   - Orange Dye
+   - Bone Meal
+  item352: Bone
+  item353: Sugar
+  item354: Cake
+  item355: Bed
+  item356: Redstone Repeater
+  item2256: Gold Music Disc
+  item2257: Green Music Disc
+
+variants:
+  item17:
+    type0: [oak]
+    type1: [pine, red, redwood]
+    type2: [birch, white]
+  item35:
+    type0: [white]
+    type1: [orange]
+    type2: [magenta, lightpurple]
+    type3: [lightblue, blue]
+    type4: [yellow, dandelion]
+    type5: [lime, lightgreen]
+    type6: [pink, lightred]
+    type7: [gray, grey, darkgrey, darkgray]
+    type8: [silver, lightgray, lightgrey]
+    type9: [cyan]
+    type10: [purple, darkpurple]
+    type11: [navy, darkblue, lapis, lazuli, lapislazuli]
+    type12: [brown, cocoa, chocolate]
+    type13: [green, darkgreen, cactus]
+    type14: [red, darkred, rose]
+    type15: [black]
+  item43:
+    type0: [stone]
+    type1: [sandstone]
+    type2: [wood, wooden]
+    type3: [cobble, cobblestone]
+  item43:
+    type0: [stone]
+    type1: [sandstone]
+    type2: [wood, wooden]
+    type3: [cobble, cobblestone]
+  item351:
+    type0: [black, ink]
+    type1: [rose, red, darkred]
+    type2: [cactus, green, darkgreen]
+    type3: [brown, cocoa, chocolate]
+    type4: [navy, darkblue, lapis, lazuli, lapislazuli]
+    type5: [purple, darkpurple]
+    type6: [cyan]
+    type7: [silver, lightgray, lightgrey]
+    type8: [gray, grey, darkgrey, darkgray]
+    type9: [pink, lightred]
+    type10: [lime, lightgreen]
+    type11: [dandelion, yellow]
+    type12: [lightblue, blue]
+    type13: [magenta, lightpurple]
+    type14: [orange]
+    type15: [white]
+
+hooks:
+  block:
+    gold: '41'
+  ore:
+    gold: '14'
+  pick:
+    gold: '285'
+  axe:
+    gold: '286'
+  hoe:
+    gold: '294'
+  shovel:
+    gold: '284'
+  sword:
+    gold: '283'
+  helm:
+    gold: '314'
+  plate:
+    gold: '315'
+  pants:
+    gold: '316'
+  boots:
+    gold: '317'
+  bucket:
+    lava: '327'
+  dust:
+    redstone: '331'
+  ball:
+    snow: '332'
+  record:
+    gold: '2256'
+
+damageable: [256, 257, 258, 259, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 283, 284, 285, 286, 290, 291, 292, 293, 294, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 346]
+#unstackable: [256, 257, 258, 259, 260, 261, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 282, 283, 284, 285, 286, 290, 291, 292, 293, 294, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 319, 320, 322, 323, 324, 325, 326, 327, 328, 329, 330, 333, 335, 342, 343, 349, 350, 354, 2256, 2257]
+#smallstacks: [332, 344]

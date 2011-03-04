@@ -4,7 +4,7 @@ authors:
   - Celtic Minstrel
   - Plutonium239
   - Nijikokun
-version: 2.2
+version: 3.0
 commands:
   playerlist:
     description: Displays all players that are online.
@@ -43,15 +43,18 @@ commands:
       - i
       - item
     usage:
-  compass:
-    permission:
-    description: Displays your current compass heading.
-    aliases:
-    usage:
+#  compass:
+#    permission:
+#    description: Displays your current compass heading.
+#    aliases:
+#    usage:
   getpos:
     permission:
     description: Displays detailed information about your position.
     aliases:
+      - compass
+      - where
+      - pos
     usage:
   tell:
     permission:
@@ -64,7 +67,7 @@ commands:
     permission:
     description: Teleports you to the spawn location of your current world.
     aliases:
-    usage: /<command>
+    usage: /<command> [set] - If set is specified, sets spawn to your current location. Otherwise teleports you to spawn.
   teleport:
     permission:
     description: Teleports a/multiple/all player(s) to another players location.
