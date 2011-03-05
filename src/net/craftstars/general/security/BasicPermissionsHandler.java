@@ -27,4 +27,8 @@ public class BasicPermissionsHandler implements PermissionsHandler {
         return false;
     }
 
+    public String getVersion() {
+        return "(isOp)";
+    }
+
 }

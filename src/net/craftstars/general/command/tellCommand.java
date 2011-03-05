@@ -15,7 +15,7 @@ public class tellCommand extends GeneralCommand {
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
         if(Toolbox.lacksPermission(plugin, sender, "general.tell")) return true;
-        if(args.length < 2) return false;
+        if(args.length < 2) return Toolbox.USAGE;
         Player who = Toolbox.getPlayer(args[0], sender);
         if(who != null) {
             if(who.getName().equals(sender.getName())) {
@@ -40,7 +40,7 @@ public class tellCommand extends GeneralCommand {
     @Override
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
-        if(args.length < 2) return false;
+        if(args.length < 2) return Toolbox.USAGE;
         Player who = Toolbox.getPlayer(args[0],sender);
         if(who != null) {
             Messaging.send(sender,"&gray;(whisper)   to <" + who.getName() + "> " + this.getMessage(args));

@@ -78,7 +78,9 @@ public class General extends JavaPlugin {
         } catch(Exception ex) {
             General.logger.error("There was a big problem loading permissions system [" + permType
                     + "]! Please report this error!");
+            ex.printStackTrace();
         }
+        if(permissions != null) permType = permType + " " + permissions.getVersion();
         return permType;
     }
 

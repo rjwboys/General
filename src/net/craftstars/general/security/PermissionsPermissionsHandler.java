@@ -3,7 +3,6 @@ package net.craftstars.general.security;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
 
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
@@ -14,18 +13,19 @@ import net.craftstars.general.security.PermissionsHandler;
 public class PermissionsPermissionsHandler implements PermissionsHandler {
     private PermissionHandler permissions = null;
     private boolean wasLoaded = false;
+    private final String version;
 
     public PermissionsPermissionsHandler() {
         Plugin test = General.plugin.getServer().getPluginManager().getPlugin("Permissions");
-        PluginDescriptionFile pdfFile = General.plugin.getDescription();
 
-        if(this.permissions == null) {
-            if(test != null) {
+        if(test != null) {
+            if(this.permissions == null) {
                 General.plugin.getServer().getPluginManager().enablePlugin(test);
                 this.permissions = ((Permissions) test).getHandler();
                 this.wasLoaded = true;
             }
-        }
+            this.version = test.getDescription().getVersion();
+        } else this.version = "0.0";
     }
 
     public boolean hasPermission(Player who, String what) {
@@ -41,4 +41,7 @@ public class PermissionsPermissionsHandler implements PermissionsHandler {
         return this.permissions.inGroup(who.getWorld().getName(), who.getName(), which);
     }
 
+    public String getVersion() {
+        return version;
+    }
 }

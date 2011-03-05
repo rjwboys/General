@@ -27,7 +27,7 @@ public class giveCommand extends GeneralCommand {
             return true;
         }
 
-        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return false;
+        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
 
         who = sender;
         item = null;
@@ -64,7 +64,7 @@ public class giveCommand extends GeneralCommand {
             }
         break;
         default:
-            return false;
+            return Toolbox.USAGE;
         }
 
         if(item.ID == -1) {
@@ -134,7 +134,7 @@ public class giveCommand extends GeneralCommand {
     @Override
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
-        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return false;
+        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
 
         who = null;
         item = null;
@@ -144,7 +144,7 @@ public class giveCommand extends GeneralCommand {
         case 2:
             who = Toolbox.playerMatch(args[0]);
             if(who == null) {
-                return false;
+                return Toolbox.USAGE;
             } else {
                 item = Items.validate(args[1]);
             }
@@ -160,7 +160,7 @@ public class giveCommand extends GeneralCommand {
             }
         break;
         default:
-            return false;
+            return Toolbox.USAGE;
         }
 
         if(item.ID == -1) {

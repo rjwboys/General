@@ -135,7 +135,7 @@ public class Messaging {
      * @param player Player we are sending the message to.
      * @param message The message to be sent.
      */
-    public static void send(@SuppressWarnings("hiding") CommandSender player, String message) {
+    public static void send(CommandSender player, String message) {
         player.sendMessage(parse(message));
     }
 

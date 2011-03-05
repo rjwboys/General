@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PluginLogger {
-    private final Logger logger = Logger.getLogger("Minecraft");
+    private final Logger logger = Logger.getLogger("Minecraft.General");
     private final String pluginName;
     private String pluginVersion;
     private final boolean debugMode;
@@ -75,5 +75,9 @@ public class PluginLogger {
 
     public void setPluginVersion(@SuppressWarnings("hiding") String pluginVersion) {
         this.pluginVersion = pluginVersion;
+    }
+    
+    public Logger getInternal() {
+        return logger;
     }
 }

@@ -24,12 +24,12 @@ public class whoCommand extends GeneralCommand {
             this.getPlayerInfo(sender);
         } else if(args.length >= 1) {
             if(args[0].equals("help"))
-                return false;
+                return Toolbox.USAGE;
             if(Toolbox.lacksPermission(plugin, sender, "general.who")) return true;
             Player who = Toolbox.getPlayer(args[0], sender);
             if(who == null) return true;
             this.getPlayerInfo(who);
-        } else return false;
+        } else return Toolbox.USAGE;
         showPlayerInfo(sender);
         return true;
     }
@@ -74,9 +74,9 @@ public class whoCommand extends GeneralCommand {
     @Override
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
-        if(args.length != 1) return false;
+        if(args.length != 1) return Toolbox.USAGE;
         if(args[0].equals("help"))
-            return false;
+            return Toolbox.USAGE;
         Player who = Toolbox.getPlayer(args[0], sender);
         if(who == null) return true;
         this.getPlayerInfo(who);

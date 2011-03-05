@@ -36,6 +36,8 @@
       <classpath>
         <pathelement location="${lib}/${craftbukkit.jar}"/>
         <pathelement location="${lib}/${permissions.jar}"/>
+        <pathelement location="${lib}/${worldedit.jar}"/>
+        <pathelement location="${lib}/${groupmanager.jar}"/>
       </classpath>
     </javac>
   </target>

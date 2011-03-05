@@ -24,7 +24,7 @@ public class timeCommand extends GeneralCommand {
             return true;
         } else if(args.length < 3) {
             if(Toolbox.lacksPermission(plugin, sender, "general.time")) return true;
-            if(args[0].equalsIgnoreCase("help")) return false;
+            if(args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
             
             int i = args.length - 1;
             this.world = General.plugin.getServer().getWorld(args[i]);
@@ -41,11 +41,11 @@ public class timeCommand extends GeneralCommand {
                 return true;
             }
             return setTime(sender, time);
-        } else return false;
+        } else return Toolbox.USAGE;
     }
 
     private boolean setTime(CommandSender sender, String time) {
-        // TODO: Add midday, midnight, and human-friendly time (=4pm, +4s, +4m, etc)
+        // TODO: Add human-friendly time (=4pm, +4s, +4m, etc)
         if(time.equalsIgnoreCase("day")) {
             this.world.setTime(this.getStartTime());
             Messaging.send(sender,"Time set to day!");
@@ -54,12 +54,20 @@ public class timeCommand extends GeneralCommand {
             this.world.setTime(this.getStartTime() + 13800);
             Messaging.send(sender,"Time set to night!");
             return true;
-        } else if(Toolbox.equalsOne("dusk", "sunset", "evening")) {
+        } else if(Toolbox.equalsOne(time, "dusk", "sunset", "evening")) {
             this.world.setTime(this.getStartTime() + 12000);
             Messaging.send(sender,"Time set to dusk!");
             return true;
-        } else if(Toolbox.equalsOne("dawn", "sunrise", "morning")) {
+        } else if(Toolbox.equalsOne(time, "dawn", "sunrise", "morning")) {
             this.world.setTime(this.getStartTime() + 22200);
+            Messaging.send(sender,"Time set to dawn!");
+            return true;
+        } else if(Toolbox.equalsOne(time, "midday", "noon")) {
+            this.world.setTime(this.getStartTime() + 6000);
+            Messaging.send(sender,"Time set to dawn!");
+            return true;
+        } else if(Toolbox.equalsOne("midnight")) {
+            this.world.setTime(this.getStartTime() + 18000);
             Messaging.send(sender,"Time set to dawn!");
             return true;
         } else if(time.startsWith("=")) {
@@ -68,7 +76,7 @@ public class timeCommand extends GeneralCommand {
                 this.world.setTime(Long.valueOf(t));
                 Messaging.send(sender,"Time set to " + t + " ticks!");
             } catch(Exception ex) {
-                return false;
+                return Toolbox.USAGE;
             }
         } else if(time.startsWith("+")) {
             try {
@@ -77,7 +85,7 @@ public class timeCommand extends GeneralCommand {
                 this.world.setTime(now + Long.parseLong(t));
                 Messaging.send(sender,"Time advanced by " + t + " ticks!");
             } catch(Exception ex) {
-                return false;
+                return Toolbox.USAGE;
             }
         } else if(time.startsWith("-")) {
             try {
@@ -86,10 +94,10 @@ public class timeCommand extends GeneralCommand {
                 this.world.setTime(now - Long.parseLong(t));
                 Messaging.send(sender,"Time setback by " + t + " ticks!");
             } catch(Exception ex) {
-                return false;
+                return Toolbox.USAGE;
             }
         }
-        return false;
+        return Toolbox.USAGE;
     }
 
     private void showTime(CommandSender sender) {
@@ -124,9 +132,9 @@ public class timeCommand extends GeneralCommand {
     @Override
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
-        if(args.length < 1 || args.length > 2) return false;
+        if(args.length < 1 || args.length > 2) return Toolbox.USAGE;
         else if(args.length == 1) {
-            if(args[0].equalsIgnoreCase("help")) return false;
+            if(args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
             this.world = Toolbox.getWorld(args[0], sender);
             if(this.world != null) {
                 showTime(sender);

@@ -16,7 +16,7 @@ public class summonCommand extends GeneralCommand {
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
         if(Toolbox.lacksPermission(plugin, sender, "general.summon")) return true;
-        if(args.length < 1) return false;
+        if(args.length < 1) return Toolbox.USAGE;
 
         Player player = Toolbox.getPlayer(args[0], sender);
         if(player == null) return true;

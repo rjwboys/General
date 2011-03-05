@@ -6,6 +6,19 @@ This is the first draft of this README. It's not done. Build instructions coming
 
 This version of the plugin is probably stable, but use at your own risk.
 
+Commands:
+
+* /who
+* /time
+* /tell
+* /teleport
+* /summon
+* /spawn
+* /online
+* /give
+* /getpos
+* /compass
+
 Available Permissions nodes:
 
 * general.time

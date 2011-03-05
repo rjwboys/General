@@ -96,7 +96,7 @@ public class teleportCommand extends GeneralCommand {
         }
         break;
         default:
-            return false;
+            return Toolbox.USAGE;
         }
         return true;
     }
@@ -146,7 +146,7 @@ public class teleportCommand extends GeneralCommand {
         }
         break;
         default:
-            return false;
+            return Toolbox.USAGE;
         }
         return true;
     }

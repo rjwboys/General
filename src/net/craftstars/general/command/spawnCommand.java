@@ -37,7 +37,7 @@ public class spawnCommand extends GeneralCommand {
                 doSet(args[0], sender, args[1], args[2], args[3]);
             break;
             default:
-                return false;
+                return Toolbox.USAGE;
             }
         } else {
             switch(args.length) {
@@ -45,7 +45,7 @@ public class spawnCommand extends GeneralCommand {
                 doTeleport(sender);
             break;
             case 1:
-                if(args[0].equalsIgnoreCase("help")) return false; // /spawn help
+                if(args[0].equalsIgnoreCase("help")) return Toolbox.USAGE; // /spawn help
                 else if(args[0].equalsIgnoreCase("show")) { // /spawn show
                     doShow(sender.getWorld(), sender);
                 } else if(args[0].equalsIgnoreCase("set")) { // /spawn set
@@ -62,20 +62,20 @@ public class spawnCommand extends GeneralCommand {
                     doSet(sender, args[1]);
                 } else if(args[1].equalsIgnoreCase("show")) { // /spawn <world> show
                     doShow(args[0], sender);
-                } else return false;
+                } else return Toolbox.USAGE;
             break;
             case 4: // /spawn set <x> <y> <z>
-                if(!args[0].equalsIgnoreCase("set")) return false;
+                if(!args[0].equalsIgnoreCase("set")) return Toolbox.USAGE;
                 if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
                 doSet(sender, sender, args[1], args[2], args[3]);
             break;
             case 5: // /spawn <world> set <x> <y> <z>
-                if(!args[1].equalsIgnoreCase("set")) return false;
+                if(!args[1].equalsIgnoreCase("set")) return Toolbox.USAGE;
                 if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
                 doSet(args[0], sender, args[2], args[3], args[3]);
             break;
             default:
-                return false;
+                return Toolbox.USAGE;
             }
         }
         return true;
@@ -93,12 +93,12 @@ public class spawnCommand extends GeneralCommand {
                 doSet(args[0], sender, args[1], args[2], args[3]);
             break;
             default:
-                return false;
+                return Toolbox.USAGE;
             }
         } else {
             switch(args.length) {
             case 1:
-                if(args[0].equalsIgnoreCase("help")) return false; // spawn help
+                if(args[0].equalsIgnoreCase("help")) return Toolbox.USAGE; // spawn help
                 else { // spawn <player>
                     doTeleport(args[0], sender);
                 }
@@ -108,14 +108,14 @@ public class spawnCommand extends GeneralCommand {
                     doSet(sender, args[1]);
                 } else if(args[1].equalsIgnoreCase("show")) { // /spawn <world> show
                     doShow(args[0], sender);
-                } else return false;
+                } else return Toolbox.USAGE;
             break;
             case 5: // spawn <world> set <x> <y> <z>
-                if(!args[1].equalsIgnoreCase("set")) return false;
+                if(!args[1].equalsIgnoreCase("set")) return Toolbox.USAGE;
                 doSet(args[0], sender, args[2], args[3], args[4]);
             break;
             default:
-                return false;
+                return Toolbox.USAGE;
             }
         }
         return true;
