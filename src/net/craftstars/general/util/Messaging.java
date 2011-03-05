@@ -4,6 +4,7 @@ package net.craftstars.general.util;
 import net.craftstars.general.General;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -29,9 +30,6 @@ import org.bukkit.entity.Player;
  * @author Nijikokun <nijikokun@gmail.com>
  */
 public class Messaging {
-
-    public static Player player = null;
-
     /**
      * Converts a list of arguments into points.
      * 
@@ -124,24 +122,6 @@ public class Messaging {
     }
 
     /**
-     * Save the player to be sent messages later. Ease of use sending messages. <br />
-     * <br />
-     * Example: <blockquote>
-     * 
-     * <pre>
-     * Messaging.save(player);
-     * Messaging.send(&quot;This will go to the player saved.&quot;);
-     * </pre>
-     * 
-     * </blockquote>
-     * 
-     * @param player The player we wish to save for later.
-     */
-    public static void save(@SuppressWarnings("hiding") Player player) {
-        Messaging.player = player;
-    }
-
-    /**
      * Sends a message to a specific player. <br />
      * <br />
      * Example: <blockquote>
@@ -155,18 +135,8 @@ public class Messaging {
      * @param player Player we are sending the message to.
      * @param message The message to be sent.
      */
-    public static void send(@SuppressWarnings("hiding") Player player, String message) {
+    public static void send(@SuppressWarnings("hiding") CommandSender player, String message) {
         player.sendMessage(parse(message));
-    }
-
-    /**
-     * Sends a message to the stored player.
-     * 
-     * @param message The message to be sent.
-     * @see Messaging#save(Player)
-     */
-    public static void send(String message) {
-        if(Messaging.player != null) player.sendMessage(parse(message));
     }
 
     /**

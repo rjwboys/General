@@ -3,9 +3,11 @@ package net.craftstars.general.command;
 
 import net.craftstars.general.General;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.World;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class timeCommand extends GeneralCommand {
@@ -15,57 +17,84 @@ public class timeCommand extends GeneralCommand {
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
         if(args.length < 1) {
-            if(plugin.permissions.hasPermission(sender, "general.time")) {
-                // No arguments, assuming get current time for current world.
-                int time = (int) sender.getWorld().getTime();
-                Messaging.send(sender, "Time: " + this.getFriendlyTime(time) + " (" + time + ")");
-            } else {
-                Messaging.send(sender, "&rose;You don't have permission to do that.");
-            }
-        } else {
-            if(!plugin.permissions.hasPermission(sender, "general.time.set")) {
-                Messaging.send(sender, "&rose;You don't have permission to do that.");
+            if(Toolbox.lacksPermission(plugin, sender, "general.time")) return true;
+            // No arguments, assuming get current time for current world.
+            this.world = sender.getWorld();
+            showTime(sender);
+            return true;
+        } else if(args.length < 3) {
+            if(Toolbox.lacksPermission(plugin, sender, "general.time")) return true;
+            if(args[0].equalsIgnoreCase("help")) return false;
+            
+            int i = args.length - 1;
+            this.world = General.plugin.getServer().getWorld(args[i]);
+            if(i == 0 && this.world != null) {
+                showTime(sender);
                 return true;
             }
-            String arg = args[0];
-            this.world = sender.getWorld();
+            
+            if(Toolbox.lacksPermission(plugin, sender, "general.time.set")) return true;
+            String time = args[0];
+            if(args.length == 1) this.world = sender.getWorld();
+            if(this.world == null) {
+                Toolbox.getWorld(args[i], sender);
+                return true;
+            }
+            return setTime(sender, time);
+        } else return false;
+    }
 
-            if(arg.equalsIgnoreCase("day")) {
-                this.world.setTime(this.getStartTime());
-                Messaging.send(sender, "Time set to day!");
-            } else if(arg.equalsIgnoreCase("night")) {
-                this.world.setTime(this.getStartTime() + 13800);
-                Messaging.send(sender, "Time set to night!");
-            } else if(arg.equalsIgnoreCase("dusk")) {
-                this.world.setTime(this.getStartTime() + 12000);
-                Messaging.send(sender, "Time set to dusk!");
-            } else if(arg.equalsIgnoreCase("dawn")) {
-                this.world.setTime(this.getStartTime() + 22200);
-                Messaging.send(sender, "Time set to dawn!");
-            } else if(arg.startsWith("=")) {
-                try {
-                    this.world.setTime(Long.parseLong(arg.substring(1)));
-                } catch(Exception ex) {
-                    return false;
-                }
-            } else if(arg.startsWith("+")) {
-                try {
-                    long time = this.world.getTime();
-                    this.world.setTime(time + Long.parseLong(arg.substring(1)));
-                } catch(Exception ex) {
-                    return false;
-                }
-            } else if(arg.startsWith("-")) {
-                try {
-                    long time = this.world.getTime();
-                    this.world.setTime(time - Long.parseLong(arg.substring(1)));
-                } catch(Exception ex) {
-                    return false;
-                }
+    private boolean setTime(CommandSender sender, String time) {
+        // TODO: Add midday, midnight, and human-friendly time (=4pm, +4s, +4m, etc)
+        if(time.equalsIgnoreCase("day")) {
+            this.world.setTime(this.getStartTime());
+            Messaging.send(sender,"Time set to day!");
+            return true;
+        } else if(time.equalsIgnoreCase("night")) {
+            this.world.setTime(this.getStartTime() + 13800);
+            Messaging.send(sender,"Time set to night!");
+            return true;
+        } else if(Toolbox.equalsOne("dusk", "sunset", "evening")) {
+            this.world.setTime(this.getStartTime() + 12000);
+            Messaging.send(sender,"Time set to dusk!");
+            return true;
+        } else if(Toolbox.equalsOne("dawn", "sunrise", "morning")) {
+            this.world.setTime(this.getStartTime() + 22200);
+            Messaging.send(sender,"Time set to dawn!");
+            return true;
+        } else if(time.startsWith("=")) {
+            try {
+                String t = time.substring(1);
+                this.world.setTime(Long.valueOf(t));
+                Messaging.send(sender,"Time set to " + t + " ticks!");
+            } catch(Exception ex) {
+                return false;
+            }
+        } else if(time.startsWith("+")) {
+            try {
+                long now = this.world.getTime();
+                String t = time.substring(1);
+                this.world.setTime(now + Long.parseLong(t));
+                Messaging.send(sender,"Time advanced by " + t + " ticks!");
+            } catch(Exception ex) {
+                return false;
+            }
+        } else if(time.startsWith("-")) {
+            try {
+                long now = this.world.getTime();
+                String t = time.substring(1);
+                this.world.setTime(now - Long.parseLong(t));
+                Messaging.send(sender,"Time setback by " + t + " ticks!");
+            } catch(Exception ex) {
+                return false;
             }
         }
+        return false;
+    }
 
-        return true;
+    private void showTime(CommandSender sender) {
+        int time = (int) this.world.getTime();
+        Messaging.send(sender,"Time: " + this.getFriendlyTime(time) + " (" + time + ")");
     }
 
     private long getTime() {
@@ -89,6 +118,27 @@ public class timeCommand extends GeneralCommand {
             return "Dawn";
         } else {
             return "Day";
+        }
+    }
+
+    @Override
+    public boolean fromConsole(General plugin, CommandSender sender, Command command,
+            String commandLabel, String[] args) {
+        if(args.length < 1 || args.length > 2) return false;
+        else if(args.length == 1) {
+            if(args[0].equalsIgnoreCase("help")) return false;
+            this.world = Toolbox.getWorld(args[0], sender);
+            if(this.world != null) {
+                showTime(sender);
+            }
+            return true;
+        } else {
+            String time = args[0];
+            if(this.world == null) {
+                Toolbox.getWorld(args[1], sender);
+                return true;
+            }
+            return setTime(sender, time);
         }
     }
 }

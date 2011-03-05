@@ -4,8 +4,6 @@ package net.craftstars.general;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import net.craftstars.general.command.GeneralCommand;
 import net.craftstars.general.security.PermissionsHandler;
@@ -40,6 +38,7 @@ public class General extends JavaPlugin {
         General.logger.info("Loaded.");
     }
 
+    @Override
     public void onEnable() {
         General.logger.setPluginVersion(this.getDescription().getVersion());
 
@@ -83,6 +82,7 @@ public class General extends JavaPlugin {
         return permType;
     }
 
+    @Override
     public void onDisable() {
         General.logger.info("Plugin disabled!");
     }

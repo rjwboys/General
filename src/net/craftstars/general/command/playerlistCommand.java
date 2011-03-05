@@ -2,37 +2,22 @@
 package net.craftstars.general.command;
 
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Toolbox;
 
 public class playerlistCommand extends GeneralCommand {
 
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(!plugin.permissions.hasPermission(sender, "general.playerlist")) {
-            Messaging.send(sender, "&rose;You don't have permission to do that.");
-            return true;
-        }
+        if(Toolbox.lacksPermission(plugin, sender, "general.playerlist")) return true;
         String[] players = this.getPlayerList(plugin);
-
         Messaging.send(sender, "&eOnline Players (" + players.length + "):");
-
-        StringBuilder playerList = new StringBuilder();
-        for(int i = 0; i < players.length; i++) {
-            playerList.append(players[i]);
-            if( ( (i + 1) % 4) == 0) {
-                Messaging.send(sender, playerList.toString());
-                playerList.setLength(0);
-            } else if( (i + 1) != players.length) {
-                playerList.append(", ");
-            }
-        }
-
-        Messaging.send(sender, playerList.toString());
-
+        doListing(plugin, sender, players);
         return true;
     }
 
@@ -46,5 +31,27 @@ public class playerlistCommand extends GeneralCommand {
 
         return players;
     }
+    
+    private void doListing(General plugin, CommandSender fromWhom, String[] players) {
+        StringBuilder playerList = new StringBuilder();
+        for(int i = 0; i < players.length; i++) {
+            playerList.append(players[i]);
+            if( ( (i + 1) % 4) == 0) {
+                Messaging.send(fromWhom,playerList.toString());
+                playerList.setLength(0);
+            } else if( (i + 1) != players.length) {
+                playerList.append(", ");
+            }
+        }
+        Messaging.send(fromWhom,playerList.toString());
+    }
 
+    @Override
+    public boolean fromConsole(General plugin, CommandSender sender, Command command,
+            String commandLabel, String[] args) {
+        String[] players = this.getPlayerList(plugin);
+        Messaging.send(sender,"&eOnline Players (" + players.length + "):");
+        doListing(plugin, sender, players);
+        return true;
+    }
 }

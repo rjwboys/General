@@ -17,7 +17,7 @@ commands:
   who:
     permission:
     description: Displays information about a player.
-    aliases:
+    aliases: [whoami]
     usage: |
            /<command> [player]
            Example: /<command> - Gives information about you.
@@ -27,7 +27,7 @@ commands:
     description: Displays or modifies current world time.
     aliases:
     usage: |
-           /<command> [day|night|dusk|dawn|=|+|-]
+           /<command> [day|night|dusk|dawn|=num|+num|-num] [world]
            Example: /<command> - Gets current time.
            Example: /<command> day - Sets time to day.
            Example: /<command> night - Sets time to night.
@@ -42,12 +42,11 @@ commands:
     aliases:
       - i
       - item
-    usage:
-#  compass:
-#    permission:
-#    description: Displays your current compass heading.
-#    aliases:
-#    usage:
+    usage: |
+           /<command> [player] item[:data] [amount]
+           item   --> Either the ID of an item, or a known name for it; no spaces
+           data   --> The damage value of a tool, the data value of the item, or a known name for the data value
+           amount --> How much to get; 1 is default, 0 means a full stack
   getpos:
     permission:
     description: Displays detailed information about your position.
@@ -55,34 +54,44 @@ commands:
       - compass
       - where
       - pos
-    usage:
+      - coords
+    usage: /<command> [compass|coords]
   tell:
     permission:
     description: Sends another player a private message.
     aliases:
       - msg
-    usage: |
-           /<command> <player> <message>
+      - pm
+      - whisper
+    usage: /<command> <player> <message>
   spawn:
     permission:
     description: Teleports you to the spawn location of your current world.
     aliases:
-    usage: /<command> [set] - If set is specified, sets spawn to your current location. Otherwise teleports you to spawn.
+    usage: |
+           /<command> [player]           - Teleports you or another player to spawn.
+           /<command> set                - Sets spawn to your current location.
+           /<command> set player         - Sets spawn to the current location of the specified player.
+           /<command> [world] set x y z  - Sets spawn to the specified location.
+           /<command> [world] show       - Displays the current spawn location
+           /setspawn player
+           /setspawn [world] x y z
+           The parameters in brackets are optional unless the command is used from the console.
   teleport:
     permission:
     description: Teleports a/multiple/all player(s) to another players location.
     aliases:
     usage: |
-           /<command> [player|player,player,...|*] [player]
+           /<command> [player|player,player,...|*] player
            /<command> [player] - Teleports you to player.
            /<command> [player] [player2] - Teleports player to player2.
            /<command> * [player] - Teleport everyone to player.
-           /<command> [player,player,...] [player] - Teleport several to player.
+           /<command> [player,player,...] player - Teleport several to player.
+           /<command> [player] x y z - Teleport you or someone else to a specific location.
   summon:
     permission:
     description: Teleports a player to your location.
     aliases:
       - tphere
       - teleporthere
-    usage: |
-           /<command> [player]
+    usage: /<command> [player]

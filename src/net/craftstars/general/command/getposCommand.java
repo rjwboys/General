@@ -2,10 +2,12 @@
 package net.craftstars.general.command;
 
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Toolbox;
 
 public class getposCommand extends GeneralCommand {
     private enum Alias {
@@ -15,29 +17,47 @@ public class getposCommand extends GeneralCommand {
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(!plugin.permissions.hasPermission(sender, "general.getpos")) {
-            Messaging.send(sender, "&rose;You don't have permission to do that.");
+        if(Toolbox.lacksPermission(plugin, sender, "general.getpos")) return true;
+        if(args.length == 0) {
+            showPos(sender, sender, commandLabel);
             return true;
-        }
+        } else if(args.length == 1) {
+            if(Toolbox.equalsOne(args[0], "compass", "coords")) {
+                showPos(sender, sender, args[0]);
+                return true;
+            }
+            if(Toolbox.lacksPermission(plugin, sender, "general.getpos.other")) return true;
+            Player who = Toolbox.getPlayer(args[0], sender);
+            if(who != null) showPos(sender, who, commandLabel);
+            return true;
+        } else if(args.length == 2) {
+            if(Toolbox.lacksPermission(plugin, sender, "general.getpos.other")) return true;
+            Player who = Toolbox.getPlayer(args[1], sender);
+            if(who != null) 
+                showPos(sender, who, commandLabel.equalsIgnoreCase("getpos") ? args[0] : commandLabel);
+            return true;
+        } else return false;
+    }
+
+    private void showPos(CommandSender sender, Player whose, String subcmd) {
         Alias which = Alias.MAIN;
-        if(commandLabel.equalsIgnoreCase("compass") || (args.length >= 1 && args[0].equalsIgnoreCase("compass"))) which = Alias.COMPASS;
-        else if(commandLabel.equalsIgnoreCase("where") || (args.length >= 1 && args[0].equalsIgnoreCase("where"))) which = Alias.WHERE;
-        double degrees = getRotation(sender);
-        General.logger.debug("Handling command /"+commandLabel+", which is getpos variant " + which.toString() + ".");
+        if(Toolbox.equalsOne(subcmd,"compass"))
+            which = Alias.COMPASS;
+        else if((Toolbox.equalsOne(subcmd,"where","pos","coords")))
+            which = Alias.WHERE;
+        double degrees = getRotation(whose);
         switch(which) {
         case MAIN:
         case WHERE:
-            Messaging.send(sender, "Pos X: " + sender.getLocation().getX() + " Y: "
-                    + sender.getLocation().getY() + " Z: " + sender.getLocation().getZ());
+            Messaging.send(sender, "Pos X: " + whose.getLocation().getX() + " Y: "
+                    + whose.getLocation().getY() + " Z: " + whose.getLocation().getZ());
             if(which != Alias.MAIN) break;
-            Messaging.send(sender, "Rotation: " + sender.getLocation().getYaw() + " Pitch: "
-                    + sender.getLocation().getPitch());
+            Messaging.send(whose, "Rotation: " + whose.getLocation().getYaw() + " Pitch: "
+                    + whose.getLocation().getPitch());
         case COMPASS:
             Messaging.send(sender, "Compass: " + this.getDirection(degrees)
                     + (which == Alias.MAIN ? " (" + (Math.round(degrees * 10) / 10.0) + ")" : ""));
         }
-
-        return true;
     }
 
     private double getRotation(Player sender) {
@@ -60,5 +80,21 @@ public class getposCommand extends GeneralCommand {
         else if(292.5 <= degrees && degrees < 337.5) return "NW";
         else if(337.5 <= degrees && degrees < 360.0) return "N";
         else return "ERR";
+    }
+
+    @Override
+    public boolean fromConsole(General plugin, CommandSender sender, Command command,
+            String commandLabel, String[] args) {
+        if(args.length < 1 || args.length > 2) return false;
+        if(args.length == 1) {
+            Player who = Toolbox.getPlayer(args[0], sender);
+            if(who != null) showPos(sender, who, commandLabel);
+            return true;
+        } else if(args.length == 2) {
+            Player who = Toolbox.getPlayer(args[1], sender);
+            if(who != null) 
+                showPos(sender, who, commandLabel.equalsIgnoreCase("getpos") ? args[0] : commandLabel);
+            return true;
+        } else return false;
     }
 }

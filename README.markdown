@@ -11,11 +11,18 @@ Available Permissions nodes:
 * general.time
 * general.time.set
 * general.teleport
+* general.teleport.other (to teleport one player to another where neither is you)
+* general.teleport.coords (to teleport to specific locations)
+* general.teleport.other.mass (to teleport many people at once)
 * general.summon
 * general.playerlist
 * general.who
 * general.give
+* general.give.infinite
 * general.spawn
 * general.spawn.set
+* general.spawn.other (to teleport someone other than yourself to the spawn point)
 * general.getpos (this also controls access to /compass and /where)
+* general.getpos.other
 * general.tell
+* general.admin (allows access to the /general administrative command)

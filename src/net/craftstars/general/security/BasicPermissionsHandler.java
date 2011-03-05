@@ -22,4 +22,9 @@ public class BasicPermissionsHandler implements PermissionsHandler {
         return true;
     }
 
+    public boolean inGroup(Player who, String which) {
+        if(which == ".isop") return who.isOp();
+        return false;
+    }
+
 }

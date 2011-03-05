@@ -6,11 +6,14 @@
 permissions:
   system: Basic
   ops-only:
-   - general.give
+   - general.time.set
    - general.teleport
    - general.summon
-   - general.time.set
-   - general.getpos
+   - general.give
+   - general.give.infinite
+   - general.spawn.set
+   - general.getpos.other
+   - general.admin
 
 # This section lets you restrict certain items to particular groups in the /give command.
 # The group '.isop' is understood as meaning the person must be an op to request that item.

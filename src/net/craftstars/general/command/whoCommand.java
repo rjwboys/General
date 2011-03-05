@@ -6,10 +6,10 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class whoCommand extends GeneralCommand {
-    private Player player;
     private String name;
     private String displayName;
     private String bar;
@@ -18,50 +18,37 @@ public class whoCommand extends GeneralCommand {
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(!plugin.permissions.hasPermission(sender, "general.who")) {
-            Messaging.send(sender, "&rose;You don't have permission to do that.");
-            return true;
-        }
-        if(args.length < 1) {
+        if(args.length < 1 || commandLabel.equalsIgnoreCase("whoami")) {
             // No argument, using sender as target.
             this.getPlayerInfo(sender);
         } else if(args.length >= 1) {
-            if(args[0].equals("help")) {
+            if(args[0].equals("help"))
                 return false;
-            }
-
-            this.getPlayerInfo(args[0]);
-        }
-
-        if(player != null) {
-            Messaging.send(sender, "&f------------------------------------------------");
-            Messaging.send(sender, "&e Player &f[" + this.name + "]&e Info");
-            Messaging.send(sender, "&f------------------------------------------------");
-            Messaging.send(sender, "&6 Username: &f" + this.name);
-            Messaging.send(sender, "&6 DisplayName: &f" + this.displayName);
-            // TODO: Hide health and location with a config option? [Plutonium239]
-            Messaging.send(sender, "&6 -&e Health: &f" + this.bar);
-            Messaging.send(sender, "&6 -&e Location: &f" + this.location);
-            // TODO: AFK System [Plutonium239]
-            Messaging.send(sender, "&6 -&e Status: &f" + "Around.");
-            Messaging.send(sender, "&f------------------------------------------------");
-        } else {
-            Messaging.send(sender, "&4;ERROR&f;: Couldn't find player. Please try again.");
-        }
-
+            if(Toolbox.lacksPermission(plugin, sender, "general.who")) return true;
+            Player who = Toolbox.getPlayer(args[0], sender);
+            if(who == null) return true;
+            this.getPlayerInfo(who);
+        } else return false;
+        showPlayerInfo(sender);
         return true;
     }
 
-    private void getPlayerInfo(String playerName) {
-        Player who = Toolbox.playerMatch(playerName);
-
-        if(who != null) {
-            this.getPlayerInfo(who);
-        }
+    private void showPlayerInfo(CommandSender sender) {
+        Messaging.send(sender, "&f------------------------------------------------");
+        Messaging.send(sender, "&e Player &f[" + this.name + "]&e Info");
+        Messaging.send(sender, "&f------------------------------------------------");
+        Messaging.send(sender, "&6 Username: &f" + this.name);
+        Messaging.send(sender, "&6 DisplayName: &f" + this.displayName);
+        if(General.plugin.config.getBoolean("playerlist.show-health", true))
+            Messaging.send(sender, "&6 -&e Health: &f" + this.bar);
+        if(General.plugin.config.getBoolean("playerlist.show-coords", true))
+            Messaging.send(sender, "&6 -&e Location: &f" + this.location);
+        // TODO: AFK System [Plutonium239]
+        Messaging.send(sender, "&6 -&e Status: &f" + "Around.");
+        Messaging.send(sender, "&f------------------------------------------------");
     }
 
-    private void getPlayerInfo(@SuppressWarnings("hiding") Player player) {
-        this.player = player;
+    private void getPlayerInfo(Player player) {
         this.name = player.getName();
         this.displayName = player.getDisplayName();
 
@@ -78,6 +65,19 @@ public class whoCommand extends GeneralCommand {
         int y = (int) player.getLocation().getY();
         int z = (int) player.getLocation().getZ();
         this.location = x + "x, " + y + "y, " + z + "z";
+    }
+
+    @Override
+    public boolean fromConsole(General plugin, CommandSender sender, Command command,
+            String commandLabel, String[] args) {
+        if(args.length != 1) return false;
+        if(args[0].equals("help"))
+            return false;
+        Player who = Toolbox.getPlayer(args[0], sender);
+        if(who == null) return true;
+        this.getPlayerInfo(who);
+        showPlayerInfo(sender);
+        return true;
     }
 
 }

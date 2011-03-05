@@ -7,8 +7,10 @@
   <property name="classes" location="${target}/classes"/>
   <property name="artifacts" location="${target}/artifacts"/>
   
-  <property name="craftbukkit.jar" value="craftbukkit.jar"/>
-  <property name="permissions.jar" value="Permissions.jar"/>
+  <property name="craftbukkit.jar"  value="craftbukkit.jar"/>
+  <property name="permissions.jar"  value="Permissions.jar"/>
+  <property name="worldedit.jar"    value="WorldEdit.jar"/>
+  <property name="groupmanager.jar" value="GroupManager.jar"/>
   
   <target name="init">
     <mkdir dir="${lib}"/>
@@ -21,6 +23,12 @@
       dest="${lib}/craftbukkit.jar" usetimestamp="true"/>
     <get src="http://www.theyeticave.net/downloads/permissions/latest/Permissions.jar"
       dest="${lib}" usetimestamp="true"/>
+    <!-- This is to get latest for GroupManager and WorldEdit. Unfortunately, they don't have a nice convenient
+    way to get just the jar, so it's currently disabled.
+    <get src=""
+      dest="${lib}" usetimestamp="true"/>
+    <get src=""
+      dest="${lib}" usetimestamp="true"/> -->
   </target>
   
   <target name="compile" depends="get_latest_libs">

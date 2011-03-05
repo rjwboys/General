@@ -10,4 +10,6 @@ public interface PermissionsHandler {
     
     /** @return Whether the plugin was successfully loaded. */
     public boolean wasLoaded();
+    
+    public boolean inGroup(Player who, String which);
 }

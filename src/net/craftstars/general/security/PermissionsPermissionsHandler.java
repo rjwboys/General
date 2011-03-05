@@ -36,4 +36,8 @@ public class PermissionsPermissionsHandler implements PermissionsHandler {
         return wasLoaded;
     }
 
+    public boolean inGroup(Player who, String which) {
+        return this.permissions.inGroup(who.getWorld().getName(), who.getName(), which);
+    }
+
 }

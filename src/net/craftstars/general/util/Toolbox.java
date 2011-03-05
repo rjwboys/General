@@ -1,8 +1,13 @@
 
 package net.craftstars.general.util;
 
+import java.util.Formatter;
+
 import net.craftstars.general.General;
 
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Toolbox {
@@ -45,6 +50,13 @@ public class Toolbox {
 
         return lastPlayer;
     }
+    
+    public static boolean equalsOne(String what, String... choices) {
+        for(String thisOne : choices) {
+            if(what.equalsIgnoreCase(thisOne)) return true;
+        }
+        return false;
+    }
 
     public static String repeat(char c, int i) {
         String tst = "";
@@ -74,5 +86,46 @@ public class Toolbox {
         }
 
         return newStr;
+    }
+
+    public static Player getPlayer(String name, CommandSender fromWhom) {
+        Player who = Toolbox.playerMatch(name);
+        if(who == null) {
+            Formatter fmt = new Formatter();
+            String ifNone = fmt.format("&rose;There is no player named &f%s&rose;.", name).toString();
+            fromWhom.sendMessage(ifNone);
+        }
+        return who;
+    }
+
+    public static World getWorld(String name, CommandSender fromWhom) {
+        World theWorld = General.plugin.getServer().getWorld(name);
+        if(theWorld == null) {
+            Formatter fmt = new Formatter();
+            String ifNone = fmt.format("&rose;There is no world named &f%s&rose;.", name).toString();
+            Messaging.send(fromWhom,ifNone);
+        }
+        return theWorld;
+    }
+
+    public static boolean lacksPermission(General plugin, Player who, String permission) {
+        if(!plugin.permissions.hasPermission(who, permission)) {
+            Messaging.send(who, "&rose;You don't have permission to do that.");
+            return true;
+        }
+        return false;
+    }
+
+    public static Location getLocation(CommandSender fromWhom, World which, String xCoord, String yCoord, String zCoord) {
+        int x, y, z;
+        try {
+            x = Integer.valueOf(xCoord);
+            y = Integer.valueOf(yCoord);
+            z = Integer.valueOf(zCoord);
+            return new Location(which, x, y, z);
+        } catch(NumberFormatException ex) {
+            Messaging.send(fromWhom,"Invalid number.");
+            return null;
+        }
     }
 }
