@@ -17,7 +17,7 @@ commands:
   who:
     permission:
     description: Displays information about a player.
-    aliases: [whoami]
+    aliases: [whoami, playerinfo]
     usage: |
            /<command> [player]
            Example: /<command> - Gives information about you.
@@ -67,7 +67,7 @@ commands:
   spawn:
     permission:
     description: Teleports you to the spawn location of your current world.
-    aliases:
+    aliases: [setspawn]
     usage: |
            /<command> [player]           - Teleports you or another player to spawn.
            /<command> set                - Sets spawn to your current location.
@@ -80,7 +80,7 @@ commands:
   teleport:
     permission:
     description: Teleports a/multiple/all player(s) to another players location.
-    aliases:
+    aliases: [tp]
     usage: |
            /<command> [player|player,player,...|*] player
            /<command> [player] - Teleports you to player.

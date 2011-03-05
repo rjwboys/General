@@ -33,30 +33,30 @@ public class getposCommand extends GeneralCommand {
         } else if(args.length == 2) {
             if(Toolbox.lacksPermission(plugin, sender, "general.getpos.other")) return true;
             Player who = Toolbox.getPlayer(args[1], sender);
-            if(who != null) 
-                showPos(sender, who, commandLabel.equalsIgnoreCase("getpos") ? args[0] : commandLabel);
+            if(who != null) showPos(sender, who, commandLabel.equalsIgnoreCase("getpos") ? args[0]
+                    : commandLabel);
             return true;
         } else return false;
     }
 
     private void showPos(CommandSender sender, Player whose, String subcmd) {
         Alias which = Alias.MAIN;
-        if(Toolbox.equalsOne(subcmd,"compass"))
-            which = Alias.COMPASS;
-        else if((Toolbox.equalsOne(subcmd,"where","pos","coords")))
-            which = Alias.WHERE;
+        if(Toolbox.equalsOne(subcmd, "compass")) which = Alias.COMPASS;
+        else if( (Toolbox.equalsOne(subcmd, "where", "pos", "coords"))) which = Alias.WHERE;
         double degrees = getRotation(whose);
         switch(which) {
         case MAIN:
         case WHERE:
-            Messaging.send(sender, "Pos X: " + whose.getLocation().getX() + " Y: "
-                    + whose.getLocation().getY() + " Z: " + whose.getLocation().getZ());
+            Messaging.send(sender, "&ePos X: &f" + whose.getLocation().getX()
+                    + "&e Y: &f" + whose.getLocation().getY() + "&e Z: &f" + whose.getLocation().getZ()
+                    + (General.plugin.config.getBoolean("playerlist.show-world", false)
+                            ? "&e in '&f" + whose.getWorld().getName() + "&e'" : ""));
             if(which != Alias.MAIN) break;
-            Messaging.send(whose, "Rotation: " + whose.getLocation().getYaw() + " Pitch: "
+            Messaging.send(sender, "&eRotation: &f" + whose.getLocation().getYaw() + "&e Pitch: &f"
                     + whose.getLocation().getPitch());
         case COMPASS:
-            Messaging.send(sender, "Compass: " + this.getDirection(degrees)
-                    + (which == Alias.MAIN ? " (" + (Math.round(degrees * 10) / 10.0) + ")" : ""));
+            Messaging.send(sender, "&eCompass: &f" + this.getDirection(degrees)
+                    + (which == Alias.MAIN ? "&e (&f" + (Math.round(degrees * 10) / 10.0) + "&e)" : ""));
         }
     }
 
@@ -92,8 +92,8 @@ public class getposCommand extends GeneralCommand {
             return true;
         } else if(args.length == 2) {
             Player who = Toolbox.getPlayer(args[1], sender);
-            if(who != null) 
-                showPos(sender, who, commandLabel.equalsIgnoreCase("getpos") ? args[0] : commandLabel);
+            if(who != null) showPos(sender, who, commandLabel.equalsIgnoreCase("getpos") ? args[0]
+                    : commandLabel);
             return true;
         } else return false;
     }

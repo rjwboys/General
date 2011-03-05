@@ -14,6 +14,7 @@ public class whoCommand extends GeneralCommand {
     private String displayName;
     private String bar;
     private String location;
+    private String world;
 
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
@@ -43,6 +44,8 @@ public class whoCommand extends GeneralCommand {
             Messaging.send(sender, "&6 -&e Health: &f" + this.bar);
         if(General.plugin.config.getBoolean("playerlist.show-coords", true))
             Messaging.send(sender, "&6 -&e Location: &f" + this.location);
+        if(General.plugin.config.getBoolean("playerlist.show-world", false))
+            Messaging.send(sender, "&6 -&e World: &f" + this.world);
         // TODO: AFK System [Plutonium239]
         Messaging.send(sender, "&6 -&e Status: &f" + "Around.");
         Messaging.send(sender, "&f------------------------------------------------");
@@ -65,6 +68,7 @@ public class whoCommand extends GeneralCommand {
         int y = (int) player.getLocation().getY();
         int z = (int) player.getLocation().getZ();
         this.location = x + "x, " + y + "y, " + z + "z";
+        this.world = player.getWorld().getName();
     }
 
     @Override

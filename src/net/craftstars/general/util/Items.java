@@ -90,9 +90,8 @@ public class Items {
     private static VariantsMap variants;
     private static List<Integer> dmg;
     public static String lastDataError;
-
-    // private static List<Integer> nostk;
-    // private static List<Integer> smstk;
+    private static List<Integer> nostk;
+    private static List<Integer> smstk;
 
     private static Configuration loadConfig() {
         Configuration itemsyml = null;
@@ -133,9 +132,8 @@ public class Items {
         aliases = new HashMap<String, ItemID>();
         names = new HashMap<ItemID, String>();
         dmg = itemsyml.getIntList("damageable", null);
-        // variants = new HashMap<Integer, HashMap<Integer, List<String>>>();
-        // nostk = itemsyml.getIntList("unstackable", null);
-        // smstk = itemsyml.getIntList("smallstacks", null);
+        nostk = itemsyml.getIntList("unstackable", null);
+        smstk = itemsyml.getIntList("smallstacks", null);
 
         // This loads in the item names from items.yml
         loadItemNames(itemsyml);
@@ -368,5 +366,12 @@ public class Items {
 
     public static boolean isDamageable(int id) {
         return dmg.contains(id);
+    }
+
+    public static int maxStackSize(int id) {
+        //return Material.getMaterial(id).getMaxStackSize();
+        if(nostk.contains(id)) return 1;
+        else if(smstk.contains(id)) return 16;
+        else return 64;
     }
 }

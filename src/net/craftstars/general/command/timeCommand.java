@@ -134,10 +134,8 @@ public class timeCommand extends GeneralCommand {
             return true;
         } else {
             String time = args[0];
-            if(this.world == null) {
-                Toolbox.getWorld(args[1], sender);
-                return true;
-            }
+            this.world = Toolbox.getWorld(args[1], sender);
+            if(this.world == null) return true;
             return setTime(sender, time);
         }
     }

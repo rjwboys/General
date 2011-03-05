@@ -29,11 +29,12 @@ public class tellCommand extends GeneralCommand {
     }
 
     private String getMessage(String[] args) {
-        String message = null;
-        for(int i = 1; i < (args.length - 1); i++) {
-            message = message + args[i] + " ";
+        StringBuilder message = new StringBuilder();
+        for(int i = 1; i < args.length; i++) {
+            message.append(args[i]);
+            message.append(" ");
         }
-        return message;
+        return message.toString();
     }
 
     @Override

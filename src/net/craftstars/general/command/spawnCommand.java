@@ -20,13 +20,17 @@ public class spawnCommand extends GeneralCommand {
         if(Toolbox.lacksPermission(plugin, sender, "general.spawn")) return true;
         if(commandLabel.equalsIgnoreCase("setspawn")){
             switch(args.length) {
+            case 0:
+                if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
+                doSet(sender, sender);
+            break;
             case 1: // /setspawn <player>
                 if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
                 doSet(sender, args[0]);
             break;
             case 3: // /setspawn <x> <y> <z>
                 if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
-                doSet(sender, sender, args[1], args[2], args[3]);
+                doSet(sender, sender, args[0], args[1], args[2]);
             break;
             case 4: // /setspawn <world> <x> <y> <z>
                 if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
@@ -68,7 +72,7 @@ public class spawnCommand extends GeneralCommand {
             case 5: // /spawn <world> set <x> <y> <z>
                 if(!args[1].equalsIgnoreCase("set")) return false;
                 if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
-                doSet(args[0], sender, args[1], args[2], args[3]);
+                doSet(args[0], sender, args[2], args[3], args[3]);
             break;
             default:
                 return false;
@@ -82,7 +86,7 @@ public class spawnCommand extends GeneralCommand {
             String commandLabel, String[] args) {
         if(commandLabel.equalsIgnoreCase("setspawn")){
             switch(args.length) {
-            case 1: // /setspawn <player>
+            case 1: // setspawn <player>
                 doSet(sender, args[0]);
             break;
             case 4: // setspawn <world> <x> <y> <z>
@@ -106,9 +110,9 @@ public class spawnCommand extends GeneralCommand {
                     doShow(args[0], sender);
                 } else return false;
             break;
-            case 5: // /spawn <world> set <x> <y> <z>
+            case 5: // spawn <world> set <x> <y> <z>
                 if(!args[1].equalsIgnoreCase("set")) return false;
-                doSet(args[0], sender, args[1], args[2], args[3]);
+                doSet(args[0], sender, args[2], args[3], args[4]);
             break;
             default:
                 return false;
@@ -129,7 +133,8 @@ public class spawnCommand extends GeneralCommand {
     }
 
     private void doShow(String which, CommandSender toWhom) {
-        doShow(Toolbox.getWorld(which, toWhom), toWhom);
+        World theWorld = Toolbox.getWorld(which, toWhom);
+        if(theWorld != null) doShow(theWorld, toWhom);
     }
 
     private void doShow(World which, CommandSender toWhom) {
@@ -144,7 +149,7 @@ public class spawnCommand extends GeneralCommand {
             String zCoord) {
         World theWorld = ofWhom.getWorld();
         Location pos = Toolbox.getLocation(fromWhom, theWorld, xCoord, yCoord, zCoord);
-        if(pos != null) doSet(theWorld, fromWhom, pos, "&eSpawn position changed to &f(%d,%d,%d)",
+        if(pos != null) doSet(theWorld, fromWhom, pos, "&eSpawn position changed to &f(%2$d,%3$d,%4$d)",
                 "&rose;There was an error setting the spawn location. It has not been changed.");
     }
 
@@ -152,7 +157,8 @@ public class spawnCommand extends GeneralCommand {
             String zCoord) {
         World theWorld = Toolbox.getWorld(which, fromWhom);
         Location pos = Toolbox.getLocation(fromWhom, theWorld, xCoord, yCoord, zCoord);
-        if(pos != null) doSet(theWorld, fromWhom, pos, "&eSpawn position changed in %s to &f(%d,%d,%d)",
+        if(pos != null && theWorld != null)
+            doSet(theWorld, fromWhom, pos, "&eSpawn position in world '&f%s&e' changed to &f(%d,%d,%d)",
                 "&rose;There was an error setting the spawn location. It has not been changed.");
     }
 
@@ -163,6 +169,7 @@ public class spawnCommand extends GeneralCommand {
 
     private void doSet(CommandSender fromWhom, String toWhom) {
         Player who = Toolbox.getPlayer(toWhom, fromWhom);
+        if(who == null) return;
         doSet(who.getWorld(), fromWhom, who, "&eSpawn position changed to where " + toWhom + " is standing.",
                 "&rose;There was an error setting the spawn location. It has not been changed.");
     }
@@ -176,7 +183,7 @@ public class spawnCommand extends GeneralCommand {
     private void doSet(World which, CommandSender fromWhom, Location pos, String ifSet,
             String ifFail) {
         Formatter fmt = new Formatter();
-        ifSet = fmt.format(ifSet, pos.getBlockX(), pos.getBlockY(), pos.getBlockZ()).toString();
+        ifSet = fmt.format(ifSet, which.getName(), pos.getBlockX(), pos.getBlockY(), pos.getBlockZ()).toString();
         if(which.setSpawnLocation(pos.getBlockX(), pos.getBlockY(), pos.getBlockZ())) {
             Messaging.send(fromWhom,ifSet);
         } else {

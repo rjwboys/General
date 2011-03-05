@@ -1,7 +1,7 @@
 
 # The ops-only flag is used if the permissions system is set to Basic, and specifies which actions
 # should be restricted to ops. If any other permissions system is specified, it is ignored.
-# Valid permission systems: Basic, Permissions, GroupManager, Auto
+# Valid permission systems: Basic, Permissions, GroupManager, WorldEdit, Auto
 
 permissions:
   system: Basic
@@ -30,9 +30,6 @@ give:
     notitem: [26, 55, 59, 62, 63, 64, 68, 71, 74, 75, 83, 90, 93, 94]
     bedrock: [7]
     fluid: [8, 9, 10, 11]
-  notitem: Admins
-  bedrock: Admins
-  fluid: Moderator
 
 playerlist:
   show-health: false

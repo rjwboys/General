@@ -83,7 +83,7 @@ public class teleportCommand extends GeneralCommand {
             Player who = Toolbox.getPlayer(args[0], sender);
             if(who == null) return true;
             Location destination =
-                    Toolbox.getLocation(sender, who.getWorld(), args[0], args[1], args[2]);
+                    Toolbox.getLocation(sender, who.getWorld(), args[1], args[2], args[3]);
             if(destination == null) return true;
             if(!who.getName().equals(sender.getName())) {
                 if(Toolbox.lacksPermission(plugin, sender, "general.teleport.other")) return true;
@@ -136,13 +136,13 @@ public class teleportCommand extends GeneralCommand {
             Player who = Toolbox.getPlayer(args[0], sender);
             if(who == null) return true;
             Location destination =
-                    Toolbox.getLocation(sender, who.getWorld(), args[0], args[1], args[2]);
+                    Toolbox.getLocation(sender, who.getWorld(), args[1], args[2], args[3]);
             if(destination == null) return true;
-            Messaging.send(who, "&fYou have been teleported to &9(" + args[0] + "," + args[1]
-                        + "," + args[2] + ")&f!");
+            Messaging.send(who, "&fYou have been teleported to &9(" + args[1] + "," + args[2]
+                        + "," + args[3] + ")&f!");
             who.teleportTo(destination);
-            Messaging.send(sender, "&fTeleported &9" + who.getName() + "&f to &9(" + args[0] + ","
-                    + args[1] + "," + args[2] + ")&f!");
+            Messaging.send(sender, "&fTeleported &9" + who.getName() + "&f to &9(" + args[1] + ","
+                    + args[2] + "," + args[3] + ")&f!");
         }
         break;
         default:

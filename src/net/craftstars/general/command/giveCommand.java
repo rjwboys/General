@@ -3,7 +3,6 @@ package net.craftstars.general.command;
 
 import java.util.List;
 
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -44,7 +43,7 @@ public class giveCommand extends GeneralCommand {
                 who = sender;
                 item = Items.validate(args[0]);
                 try {
-                    amount = Integer.valueOf(args[2]);
+                    amount = Integer.valueOf(args[1]);
                 } catch(NumberFormatException x) {
                     Messaging.send(sender, "&rose;The amount must be an integer.");
                     return true;
@@ -81,9 +80,12 @@ public class giveCommand extends GeneralCommand {
 
         if(amount < 0 && Toolbox.lacksPermission(plugin, sender, "general.give.infinite")) return true;
         // Make sure this player is allowed this particular item
-        if(!canGetItem(sender)) return true;
+        if(!canGetItem(sender)) {
+            Messaging.send(sender, "&2You're not allowed to get &f" + Items.name(item.ID, item.data) + "&2.");
+            return true;
+        }
 
-        boolean isGift = who.getName().equals(sender.getName());
+        boolean isGift = !who.getName().equals(sender.getName());
         doGive(isGift);
         if(isGift) {
             Messaging.send(sender, "&2Gave &f" + amount + "&2 of &f"
@@ -96,19 +98,19 @@ public class giveCommand extends GeneralCommand {
     private boolean canGetItem(Player sender) {
         ConfigurationNode permissions = General.plugin.config.getNode("give");
         List<String> groups = permissions.getKeys("groups");
-        String needGroup = "";
         for(String group : groups) {
             List<Integer> items = permissions.getIntList("groups." + group, null);
             if(items.isEmpty()) continue;
-            if(items.contains(item.ID)) needGroup = permissions.getString(group);
+            if(items.contains(item.ID)) {
+                return General.plugin.permissions.hasPermission(sender, "general.give.group." + group);
+            }
         }
-        if(needGroup.isEmpty()) return true;
-        else return General.plugin.permissions.inGroup(sender, needGroup);
+        return true;
     }
 
     private void doGive(boolean isGift) {
         if(amount == 0) { // give one stack
-            amount = Material.getMaterial(item.ID).getMaxStackSize();
+            amount = Items.maxStackSize(item.ID);
         }
 
         int slot = who.getInventory().firstEmpty();
@@ -121,11 +123,11 @@ public class giveCommand extends GeneralCommand {
         }
 
         if(isGift) {
-            Messaging.send(who, "&2Enjoy! Giving &f" + amount + "&2 of &f"
-                    + Items.name(item.ID, item.data) + "&2.");
-        } else {
             Messaging.send(who, "&2Enjoy the gift! &f" + amount + "&2 of &f"
                     + Items.name(item.ID, item.data) + "&2!");
+        } else {
+            Messaging.send(who, "&2Enjoy! Giving &f" + amount + "&2 of &f"
+                    + Items.name(item.ID, item.data) + "&2.");
         }
     }
 

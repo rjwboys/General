@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Toolbox {
+    public static final boolean USAGE = true; // Change to false to spew out usage notes on incorrect syntax
     public static Player playerMatch(String name) {
         if(General.plugin.getServer().getOnlinePlayers().length < 1) {
             return null;
@@ -124,7 +125,7 @@ public class Toolbox {
             z = Integer.valueOf(zCoord);
             return new Location(which, x, y, z);
         } catch(NumberFormatException ex) {
-            Messaging.send(fromWhom,"Invalid number.");
+            Messaging.send(fromWhom,"&rose;Invalid number.");
             return null;
         }
     }

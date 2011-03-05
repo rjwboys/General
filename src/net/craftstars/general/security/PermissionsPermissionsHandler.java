@@ -37,6 +37,7 @@ public class PermissionsPermissionsHandler implements PermissionsHandler {
     }
 
     public boolean inGroup(Player who, String which) {
+        if(which == ".isop") return who.isOp();
         return this.permissions.inGroup(who.getWorld().getName(), who.getName(), which);
     }
 
