@@ -25,7 +25,10 @@ public class timeCommand extends CommandBase {
             return true;
         } else if(args.length < 3) {
             if(Toolbox.lacksPermission(plugin, sender, "general.time")) return true;
-            if(args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
+            if(args[0].equalsIgnoreCase("help")) {
+                showHelp(sender);
+                return true;
+            }
             
             int i = args.length - 1;
             this.world = General.plugin.getServer().getWorld(args[i]);
@@ -43,6 +46,14 @@ public class timeCommand extends CommandBase {
             }
             return setTime(sender, time);
         } else return Toolbox.USAGE;
+    }
+
+    private void showHelp(CommandSender sender) {
+        Messaging.send(sender, "&c/time day|night|nood|midday|midnight");
+        Messaging.send(sender, "&c/time dawn|sunrise|morning|dusk|sunset|evening");
+        Messaging.send(sender, "&c/time +&7[ticks]&f : Fast-forward time.");
+        Messaging.send(sender, "&c/time -&7[ticks]&f : Rewind time.");
+        Messaging.send(sender, "&c/time +&7[ticks]&f : Set time.");
     }
 
     private boolean setTime(CommandSender sender, String time) {
@@ -135,7 +146,10 @@ public class timeCommand extends CommandBase {
             String commandLabel, String[] args) {
         if(args.length < 1 || args.length > 2) return Toolbox.USAGE;
         else if(args.length == 1) {
-            if(args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
+            if(args[0].equalsIgnoreCase("help")) {
+                showHelp(sender);
+                return true;
+            }
             this.world = Toolbox.getWorld(args[0], sender);
             if(this.world != null) {
                 showTime(sender);

@@ -1,5 +1,5 @@
 # General Plugin for CraftBukkit #
-## Version 3.0 [Bach]
+## Version 3.1 [Wagner]
 ### README
 - - -
 This is the first draft of this README. It's not done. Build instructions coming soon.
@@ -32,7 +32,6 @@ Available Permissions nodes:
 * general.teleport.other (to teleport one player to another where neither is you)
 * general.teleport.coords (to teleport to specific locations)
 * general.teleport.other.mass (to teleport many people at once)
-* general.summon
 * general.playerlist
 * general.who
 * general.give

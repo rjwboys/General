@@ -15,7 +15,7 @@ commands:
            /<command>
            Example: /<command> - Lists all online players.
   who:
-    permission:
+    permission: general.who
     description: Displays information about a player.
     aliases: [whoami, playerinfo]
     usage: |
@@ -23,7 +23,7 @@ commands:
            Example: /<command> - Gives information about you.
            Example: /<command> [player] - Gives information about [player]
   time:
-    permission:
+    permission: general.time
     description: Displays or modifies current world time.
     aliases:
     usage: |
@@ -37,7 +37,7 @@ commands:
            Example: /<command> -500 - Sets relative time backward.
            Example: /<command> =500 - Sets relative time equal to.
   give:
-    permission:
+    permission: general.give
     description: Users to give yourself or another player an item.
     aliases:
       - i
@@ -48,7 +48,7 @@ commands:
            data   --> The damage value of a tool, the data value of the item, or a known name for the data value
            amount --> How much to get; 1 is default, 0 means a full stack
   getpos:
-    permission:
+    permission: general.getpos
     description: Displays detailed information about your position.
     aliases:
       - compass
@@ -57,7 +57,7 @@ commands:
       - coords
     usage: /<command> [compass|coords]
   tell:
-    permission:
+    permission: general.tell
     description: Sends another player a private message.
     aliases:
       - msg
@@ -65,7 +65,7 @@ commands:
       - whisper
     usage: /<command> <player> <message>
   spawn:
-    permission:
+    permission: general.spawn
     description: Teleports you to the spawn location of your current world.
     aliases: [setspawn]
     usage: |
@@ -78,7 +78,7 @@ commands:
            /setspawn [world] x y z
            The parameters in brackets are optional unless the command is used from the console.
   teleport:
-    permission:
+    permission: general.teleport
     description: Teleports a/multiple/all player(s) to another players location.
     aliases: [tp]
     usage: |
@@ -89,34 +89,35 @@ commands:
            /<command> [player,player,...] player - Teleport several to player.
            /<command> [player] x y z - Teleport you or someone else to a specific location.
   summon:
-    permission:
+    permission: /general.summon
     description: Teleports a player to your location.
     aliases:
       - tphere
       - teleporthere
+      - s
     usage: /<command> [player]
   clear:
-    permission:
+    permission: /general.clear
     description: Clears your inventory.
     aliases: [clean]
     usage: /<command> [player]
   take:
-    permission:
+    permission: general.take
     description: Removes something from your inventory.
     aliases:
     usage: /<command> [player] item[:data] [amount]
   heal:
-    permission:
+    permission: /general.heal
     description: Restores your health. (Can also reduce it if you give a negative amount.)
     aliases:
     usage: /heal [player] [amount]
-#  mspawn:
+#  mspawn: general.mspawn
 #    permission:
 #    description: Spawns a mob.
 #    aliases:
 #    usage: /mspawn
   general:
-    permission:
+    permission: general.admin
     description: Administrates the plugin.
     aliases:
     usage: /general reload|die|motd|help

@@ -32,6 +32,10 @@ public class giveCommand extends CommandBase {
 
         switch(args.length) {
         case 1: // /give <item>[:<data>]
+            if(args[0].equalsIgnoreCase("help")) {
+                showHelp(sender);
+                return true;
+            }
             item = Items.validate(args[0]);
         break;
         case 2: // /give <player> <item>[:<data>] OR /give <item>[:<data>] <amount>
@@ -139,6 +143,10 @@ public class giveCommand extends CommandBase {
         amount = 1;
 
         switch(args.length) {
+        case 1:
+            if(!args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
+            showHelp(sender);
+            return true;
         case 2:
             who = Toolbox.playerMatch(args[0]);
             if(who == null) {
@@ -175,5 +183,13 @@ public class giveCommand extends CommandBase {
         doGive(true);
 
         return true;
+    }
+
+    private void showHelp(CommandSender sender) {
+        Messaging.send(sender, "&c/give &7[item]&c (&7[amount]&c)&f : Gives something to you.");
+        Messaging.send(sender, "&c/give &7[player] [item]&c (&7[amount]&c)&f : Gives something to someone else.");
+        Messaging.send(sender, "&fAn amount of &7-1&f is an infinite stack; &70&f is one full stack.");
+        Messaging.send(sender, "&fThe &7[item]&f and &7[variant]&f both may be either a number or a name.");
+        Messaging.send(sender, "&fExample: &c/give Notch wool:red 5&f : Gives a stack of five red wool to Notch.");
     }
 }

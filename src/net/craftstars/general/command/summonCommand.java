@@ -16,7 +16,7 @@ public class summonCommand extends CommandBase {
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(Toolbox.lacksPermission(plugin, sender, "general.summon")) return true;
+        if(Toolbox.lacksPermission(plugin, sender, "general.teleport.other")) return true;
         if(args.length < 1) return Toolbox.USAGE;
 
         Player player = Toolbox.getPlayer(args[0], sender);
