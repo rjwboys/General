@@ -89,7 +89,7 @@ commands:
            /<command> [player,player,...] player - Teleport several to player.
            /<command> [player] x y z - Teleport you or someone else to a specific location.
   summon:
-    permission: /general.summon
+    permission: general.teleport.other
     description: Teleports a player to your location.
     aliases:
       - tphere
@@ -97,7 +97,7 @@ commands:
       - s
     usage: /<command> [player]
   clear:
-    permission: /general.clear
+    permission: general.clear
     description: Clears your inventory.
     aliases: [clean]
     usage: /<command> [player]
@@ -107,7 +107,7 @@ commands:
     aliases:
     usage: /<command> [player] item[:data] [amount]
   heal:
-    permission: /general.heal
+    permission: general.heal
     description: Restores your health. (Can also reduce it if you give a negative amount.)
     aliases:
     usage: /heal [player] [amount]
