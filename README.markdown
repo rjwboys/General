@@ -22,6 +22,7 @@ Commands:
 * /take
 * /heal
 * /mspawn (not implemented yet)
+* /general reload|help|motd
 
 Available Permissions nodes:
 
@@ -49,4 +50,4 @@ Available Permissions nodes:
 * general.take.other
 * general.heal
 * general.mspawn
-* general.admin (allows access to the /general administrative command)
+* general.admin (allows access to /general administrative commands)

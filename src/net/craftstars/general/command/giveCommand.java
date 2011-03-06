@@ -35,6 +35,7 @@ public class giveCommand extends CommandBase {
             item = Items.validate(args[0]);
         break;
         case 2: // /give <player> <item>[:<data>] OR /give <item>[:<data>] <amount>
+            // TODO: Consider '/give stone 1' - what if there is a player called stone? Is the ambiguity resolvable?
             who = Toolbox.playerMatch(args[0]);
             if(who == null) {
                 who = sender;

@@ -95,19 +95,23 @@ public class Messaging {
      * @return <code>String</code> - The parsed string after conversion.
      */
     public static String colorize(String original) {
-        return original.replace("&black;", ChatColor.BLACK.toString()).replace("&navy;",
-                ChatColor.DARK_BLUE.toString()).replace("&green;", ChatColor.DARK_GREEN.toString())
-                .replace("&teal;", ChatColor.DARK_AQUA.toString()).replace("&red;",
-                        ChatColor.DARK_RED.toString()).replace("&purple;",
-                        ChatColor.DARK_PURPLE.toString()).replace("&gold;",
-                        ChatColor.GOLD.toString()).replace("&silver;", ChatColor.GRAY.toString())
-                .replace("&gray;", ChatColor.DARK_GRAY.toString()).replace("&grey;",
-                        ChatColor.DARK_GRAY.toString())
-                .replace("&blue;", ChatColor.BLUE.toString()).replace("&lime;",
-                        ChatColor.GREEN.toString()).replace("&aqua;", ChatColor.AQUA.toString())
-                .replace("&rose;", ChatColor.RED.toString()).replace("&pink;",
-                        ChatColor.LIGHT_PURPLE.toString()).replace("&yellow;",
-                        ChatColor.YELLOW.toString()).replace("&white;", ChatColor.WHITE.toString());
+        return original.replace("&black;", ChatColor.BLACK.toString())
+                       .replace("&navy;", ChatColor.DARK_BLUE.toString())
+                       .replace("&green;", ChatColor.DARK_GREEN.toString())
+                       .replace("&teal;", ChatColor.DARK_AQUA.toString())
+                       .replace("&red;", ChatColor.DARK_RED.toString())
+                       .replace("&purple;", ChatColor.DARK_PURPLE.toString())
+                       .replace("&gold;", ChatColor.GOLD.toString())
+                       .replace("&silver;", ChatColor.GRAY.toString())
+                       .replace("&gray;", ChatColor.DARK_GRAY.toString())
+                       .replace("&grey;", ChatColor.DARK_GRAY.toString())
+                       .replace("&blue;", ChatColor.BLUE.toString())
+                       .replace("&lime;", ChatColor.GREEN.toString())
+                       .replace("&aqua;", ChatColor.AQUA.toString())
+                       .replace("&rose;", ChatColor.RED.toString())
+                       .replace("&pink;", ChatColor.LIGHT_PURPLE.toString())
+                       .replace("&yellow;", ChatColor.YELLOW.toString())
+                       .replace("&white;", ChatColor.WHITE.toString());
     }
 
     /**

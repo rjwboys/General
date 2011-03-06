@@ -115,8 +115,8 @@ commands:
 #    description: Spawns a mob.
 #    aliases:
 #    usage: /mspawn
-#  general:
-#    permission:
-#    description: Administrates the plugin.
-#    aliases:
-#    usage: /general reload|die
+  general:
+    permission:
+    description: Administrates the plugin.
+    aliases:
+    usage: /general reload|die|motd|help
