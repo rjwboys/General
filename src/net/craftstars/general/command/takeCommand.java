@@ -1,0 +1,136 @@
+
+package net.craftstars.general.command;
+
+import net.craftstars.general.CommandBase;
+import net.craftstars.general.General;
+import net.craftstars.general.util.Items;
+import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Toolbox;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+public class takeCommand extends CommandBase {
+    private Player who;
+    private Items.ItemID item;
+    private int amount;
+
+    @Override
+    public boolean fromConsole(General plugin, CommandSender sender, Command command,
+            String commandLabel, String[] args) {
+        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
+
+        who = null;
+        item = null;
+        amount = 1;
+
+        switch(args.length) {
+        case 2: // take <player> <item>[:<data>]
+            who = Toolbox.getPlayer(args[0],sender);
+            if(who == null) return true;
+            item = Items.validate(args[1]);
+        break;
+        case 3: // take <player> <item>[:<data>] <amount>
+            who = Toolbox.getPlayer(args[0], sender);
+            if(who == null) return true;
+            item = Items.validate(args[1]);
+            try {
+                amount = Integer.valueOf(args[2]);
+            } catch(NumberFormatException x) {
+                Messaging.send(sender, "&rose;The amount must be an integer.");
+                return true;
+            }
+        break;
+        default:
+            return Toolbox.USAGE;
+        }
+
+        if(item.ID == -1) {
+            Messaging.send(sender, "&rose;Invalid item.");
+            return true;
+        }
+
+        if(item.data == -1) {
+            Messaging.send(sender, "&f" + Items.lastDataError
+                    + "&rose; is not a valid data type for &f" + Items.name(item.ID, 0) + "&rose;.");
+            return true;
+        }
+
+        doTake();
+        return true;
+    }
+
+    @Override
+    public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
+            String[] args) {
+        if(Toolbox.lacksPermission(plugin, sender, "general.take")) return true;
+        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
+
+        who = sender;
+        item = null;
+        amount = 1;
+
+        switch(args.length) {
+        case 1: // /take <item>[:<data>]
+            item = Items.validate(args[0]);
+        break;
+        case 2: // /take <player> <item>[:<data>] OR /take <item>[:<data>] <amount>
+            who = Toolbox.playerMatch(args[0]);
+            if(who == null) {
+                who = sender;
+                item = Items.validate(args[0]);
+                try {
+                    amount = Integer.valueOf(args[1]);
+                } catch(NumberFormatException x) {
+                    Messaging.send(sender, "&rose;The amount must be an integer.");
+                    return true;
+                }
+            } else {
+                item = Items.validate(args[1]);
+            }
+        break;
+        case 3: // /take <player> <item>[:<data>] <amount>
+            who = Toolbox.getPlayer(args[0], sender);
+            if(who == null) return true;
+            item = Items.validate(args[1]);
+            try {
+                amount = Integer.valueOf(args[2]);
+            } catch(NumberFormatException x) {
+                Messaging.send(sender, "&rose;The amount must be an integer.");
+                return true;
+            }
+        break;
+        default:
+            return Toolbox.USAGE;
+        }
+
+        if(item.ID == -1) {
+            Messaging.send(sender, "&rose;Invalid item.");
+            return true;
+        }
+
+        if(item.data == -1) {
+            Messaging.send(sender, "&f" + Items.lastDataError
+                    + "&rose; is not a valid data type for &f" + Items.name(item.ID, 0) + "&rose;.");
+            return true;
+        }
+
+        doTake();
+        if(!sender.getName().equalsIgnoreCase(who.getName()))
+            Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + Items.name(item.ID, item.data)
+                    + "&2 from &f" + who.getName());
+        return true;
+    }
+
+    private void doTake() {
+        if(amount <= 0) {
+            who.getInventory().remove(item.ID);
+        } else {
+            who.getInventory().remove(new ItemStack(item.ID, amount, (byte) item.data));
+        }
+        Messaging.send(who, "&f" + (amount <= 0 ? "All" : amount) + "&2 of &f" + Items.name(item.ID, item.data)
+                + "&2 was taken from you.");
+    }
+}

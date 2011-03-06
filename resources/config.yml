@@ -8,11 +8,22 @@ permissions:
   ops-only:
    - general.time.set
    - general.teleport
+   - general.teleport.other
+   - general.teleport.coords
+   - general.teleport.other.mass
    - general.summon
    - general.give
    - general.give.infinite
+   - general.give.group.notitem
+   - general.give.group.bedrock
+   - general.give.group.fluid
    - general.spawn.set
+   - general.spawn.other
    - general.getpos.other
+   - general.clear.other
+   - general.take.other
+   - general.heal
+   - general.mspawn
    - general.admin
 
 # This section lets you restrict certain items to particular groups in the /give command.
@@ -34,3 +45,4 @@ give:
 playerlist:
   show-health: false
   show-coords: false
+  show-world: false

@@ -18,6 +18,10 @@ Commands:
 * /give
 * /getpos
 * /compass
+* /clear
+* /take
+* /heal
+* /mspawn (not implemented yet)
 
 Available Permissions nodes:
 
@@ -39,4 +43,10 @@ Available Permissions nodes:
 * general.getpos (this also controls access to /compass and /where)
 * general.getpos.other
 * general.tell
+* general.clear
+* general.clear.other
+* general.take
+* general.take.other
+* general.heal
+* general.mspawn
 * general.admin (allows access to the /general administrative command)

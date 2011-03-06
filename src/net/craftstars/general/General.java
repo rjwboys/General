@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
 
-import net.craftstars.general.command.GeneralCommand;
 import net.craftstars.general.security.PermissionsHandler;
 import net.craftstars.general.util.Items;
 import net.craftstars.general.util.PluginLogger;
@@ -41,7 +40,7 @@ public class General extends JavaPlugin {
     @Override
     public void onEnable() {
         General.logger.setPluginVersion(this.getDescription().getVersion());
-
+        
         this.config = this.getConfiguration();
         this.loadConfiguration();
 
@@ -122,10 +121,10 @@ public class General extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command command, String commandLabel,
             String[] args) {
         try {
-            Class<? extends GeneralCommand> clazz = this.getClass().getClassLoader().loadClass(
+            Class<? extends CommandBase> clazz = this.getClass().getClassLoader().loadClass(
                     "net.craftstars.general.command." + command.getName() + "Command").asSubclass(
-                    GeneralCommand.class);
-            GeneralCommand commandInstance = (GeneralCommand) clazz.newInstance();
+                    CommandBase.class);
+            CommandBase commandInstance = (CommandBase) clazz.newInstance();
             return commandInstance.runCommand(this, sender, command, commandLabel, args);
         } catch(Exception ex) {
             General.logger.error("There was a big problem executing command [" + command.getName()

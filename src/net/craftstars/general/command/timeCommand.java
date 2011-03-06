@@ -1,6 +1,7 @@
 
 package net.craftstars.general.command;
 
+import net.craftstars.general.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
@@ -10,7 +11,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class timeCommand extends GeneralCommand {
+public class timeCommand extends CommandBase {
     private World world;
 
     @Override

@@ -1,13 +1,12 @@
 
-package net.craftstars.general.command;
+package net.craftstars.general;
 
-import net.craftstars.general.General;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public abstract class GeneralCommand {
+public abstract class CommandBase {
     public boolean runCommand(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
         if(sender instanceof Player) {

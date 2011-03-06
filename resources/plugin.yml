@@ -95,3 +95,28 @@ commands:
       - tphere
       - teleporthere
     usage: /<command> [player]
+  clear:
+    permission:
+    description: Clears your inventory.
+    aliases: [clean]
+    usage: /<command> [player]
+  take:
+    permission:
+    description: Removes something from your inventory.
+    aliases:
+    usage: /<command> [player] item[:data] [amount]
+  heal:
+    permission:
+    description: Restores your health. (Can also reduce it if you give a negative amount.)
+    aliases:
+    usage: /heal [player] [amount]
+#  mspawn:
+#    permission:
+#    description: Spawns a mob.
+#    aliases:
+#    usage: /mspawn
+  general:
+    permission:
+    description: Administrates the plugin.
+    aliases:
+    usage: /general reload|die

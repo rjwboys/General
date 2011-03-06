@@ -5,11 +5,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import net.craftstars.general.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
-public class playerlistCommand extends GeneralCommand {
+public class playerlistCommand extends CommandBase {
 
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,

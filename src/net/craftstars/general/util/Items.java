@@ -296,8 +296,12 @@ public class Items {
             // Pattern itemPat = Pattern.compile("([a-z0-9]+)[.,:/\\|]([a-z0-9]+)",
             // Pattern.CASE_INSENSITIVE);
             // Matcher m = itemPat.matcher(item);
-            String[] parts = item.split("[.,:/\\|]");
-            ret = validateLongItem(parts[0], parts[1]);
+            try {
+                String[] parts = item.split("[.,:/\\|]");
+                ret = validateLongItem(parts[0], parts[1]);
+            } catch(ArrayIndexOutOfBoundsException x) {
+                return new ItemID(-1,-1);
+            }
         }
 
         // Was a valid data/id obtained? If not, we're done; it's invalid.

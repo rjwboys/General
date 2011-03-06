@@ -9,12 +9,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.ConfigurationNode;
 
+import net.craftstars.general.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.util.Items;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
-public class giveCommand extends GeneralCommand {
+public class giveCommand extends CommandBase {
     private Player who;
     private Items.ItemID item;
     private int amount;
@@ -22,11 +23,7 @@ public class giveCommand extends GeneralCommand {
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(!plugin.permissions.hasPermission(sender, "general.give")) {
-            Messaging.send(sender, "&rose;You don't have permission to do that.");
-            return true;
-        }
-
+        if(Toolbox.lacksPermission(plugin, sender, "general.give")) return true;
         if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
 
         who = sender;
@@ -119,7 +116,7 @@ public class giveCommand extends GeneralCommand {
             who.getWorld().dropItem(who.getLocation(),
                     new ItemStack(item.ID, amount, ((byte) item.data)));
         } else {
-            who.getInventory().addItem(new ItemStack(item.ID, amount, ((byte) item.data)));
+            who.getInventory().addItem(new ItemStack(item.ID, amount, (byte) item.data));
         }
 
         if(isGift) {
