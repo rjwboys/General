@@ -1,5 +1,5 @@
 <project name="General" default="dist" basedir=".">
-  
+
   <property name="src" location="src"/>
   <property name="resources" location="resources"/>
   <property name="lib" location="lib"/>
@@ -7,6 +7,7 @@
   <property name="classes" location="${target}/classes"/>
   <property name="artifacts" location="${target}/artifacts"/>
   
+  <taskdef resource="checkstyletask.properties" classpath="${lib}/checkstyle-5.3-all.jar"/>
   <property name="craftbukkit.jar"  value="craftbukkit.jar"/>
   <property name="permissions.jar"  value="Permissions.jar"/>
   <property name="worldedit.jar"    value="WorldEdit.jar"/>
@@ -52,6 +53,13 @@
   
   <target name="clean">
     <delete dir="${target}"/>
+  </target>
+  
+  <target name="checkstyle" depends="dist">
+    <checkstyle config="${lib}/checkstyle/checks.xml" failOnViolation="false">
+      <formatter type="xml" toFile="${artifacts}/checkstyle.xml"/>
+      <fileset dir="${src}" includes="**/*.java"/>
+    </checkstyle>
   </target>
   
 </project>
