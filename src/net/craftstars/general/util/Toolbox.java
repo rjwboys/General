@@ -94,7 +94,7 @@ public class Toolbox {
         if(who == null) {
             Formatter fmt = new Formatter();
             String ifNone = fmt.format("&rose;There is no player named &f%s&rose;.", name).toString();
-            fromWhom.sendMessage(ifNone);
+            Messaging.send(fromWhom,ifNone);
         }
         return who;
     }
