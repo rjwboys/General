@@ -1,5 +1,5 @@
 # General Plugin for CraftBukkit #
-## Version 3.1 [Wagner]
+## Version 3.1.1 [Wagner]
 ### README
 - - -
 This is the first draft of this README. It's not done. Build instructions coming soon.
