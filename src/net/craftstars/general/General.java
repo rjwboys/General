@@ -6,12 +6,17 @@ import java.io.FileWriter;
 import java.io.InputStream;
 
 import me.taylorkelly.help.Help;
+import net.craftstars.general.command.generalCommand;
 import net.craftstars.general.security.PermissionsHandler;
 import net.craftstars.general.util.Items;
 import net.craftstars.general.util.PluginLogger;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.Event;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.player.PlayerListener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
@@ -48,6 +53,12 @@ public class General extends JavaPlugin {
 
         Items.setup();
         String permType = setupPermissions();
+        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, new PlayerListener(){
+            @Override
+            public void onPlayerJoin(PlayerEvent event) {
+                generalCommand.showMotD(event.getPlayer());
+            }
+        }, Priority.Normal, this);
 
         General.logger.info("[Codename: " + General.codename
                 + "] Plugin successfully loaded! Using [" + permType + "] permissions.");

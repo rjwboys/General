@@ -41,14 +41,14 @@ public class Messaging {
      * @return <code>String</code> - The parsed string after converting arguments to variables
      *         (points)
      */
-    public static String argument(String original, String[] arguments, String[] points) {
+    public static String argument(String original, String[] arguments, Object[] points) {
         for(int i = 0; i < arguments.length; i++) {
             if(arguments[i].contains(",")) {
                 for(String arg : arguments[i].split(",")) {
-                    original = original.replace(arg, points[i]);
+                    original = original.replace(arg, points[i].toString());
                 }
             } else {
-                original = original.replace(arguments[i], points[i]);
+                original = original.replace(arguments[i], points[i].toString());
             }
         }
 
