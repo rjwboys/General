@@ -111,11 +111,11 @@ commands:
     description: Restores your health. (Can also reduce it if you give a negative amount.)
     aliases:
     usage: /heal [player] [amount]
-#  mspawn: general.mspawn
+#  mobspawn: general.mobspawn
 #    permission:
 #    description: Spawns a mob.
 #    aliases:
-#    usage: /mspawn
+#    usage: /mobspawn
   general:
     permission: general.admin
     description: Administrates the plugin.

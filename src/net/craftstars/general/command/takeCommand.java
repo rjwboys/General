@@ -1,6 +1,8 @@
 
 package net.craftstars.general.command;
 
+import java.util.Map;
+
 import net.craftstars.general.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.util.Items;
@@ -11,6 +13,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class takeCommand extends CommandBase {
     private Player who;
@@ -24,7 +27,7 @@ public class takeCommand extends CommandBase {
 
         who = null;
         item = null;
-        amount = 1;
+        amount = 0;
 
         switch(args.length) {
         case 2: // take <player> <item>[:<data>]
@@ -70,7 +73,7 @@ public class takeCommand extends CommandBase {
 
         who = sender;
         item = null;
-        amount = 1;
+        amount = 0;
 
         switch(args.length) {
         case 1: // /take <item>[:<data>]
@@ -125,12 +128,36 @@ public class takeCommand extends CommandBase {
     }
 
     private void doTake() {
+        int removed = 0;
         if(amount <= 0) {
             who.getInventory().remove(item.ID);
         } else {
-            who.getInventory().remove(new ItemStack(item.ID, amount, (byte) item.data));
+            PlayerInventory i = who.getInventory();
+            Map<Integer, ? extends ItemStack> items = i.all(item.ID);
+            for(int x : items.keySet()) {
+                ItemStack stk = items.get(x);
+                int n, d;
+                n = stk.getAmount();
+                try {
+                    d = stk.getData().getData();
+                } catch(NullPointerException ex) {
+                    d = stk.getDurability();
+                }
+                if(!Items.isDamageable(item.ID) && item.data != d) continue;
+                if(n > amount) {
+                    stk.setAmount(n - amount);
+                    removed += amount;
+                    amount = 0;
+                    break;
+                } else if(n <= amount) {
+                    amount -= n;
+                    removed += n;
+                    i.setItem(x, null);
+                }
+                if(amount <= 0) break;
+            }
         }
-        Messaging.send(who, "&f" + (amount <= 0 ? "All" : amount) + "&2 of &f" + Items.name(item.ID, item.data)
+        Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &f" + Items.name(item.ID, item.data)
                 + "&2 was taken from you.");
     }
 }

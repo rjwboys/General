@@ -21,7 +21,7 @@ Commands:
 * /clear
 * /take
 * /heal
-* /mspawn (not implemented yet)
+* /mobspawn (not implemented yet)
 * /general reload|help|motd
 
 Available Permissions nodes:

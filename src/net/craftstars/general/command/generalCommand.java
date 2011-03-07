@@ -109,6 +109,8 @@ public class generalCommand extends CommandBase {
                         "+ip,+a,&ip;",
                         "+balance,+$,&balance;",
                         "+online,+c,&online;",
+                        "+world,+w,&world;",
+                        "+time,+t,&time;",
                         "++"
                 },
                 new Object[]{
@@ -120,6 +122,8 @@ public class generalCommand extends CommandBase {
                         getLocation(sender),
                         getBalance(sender),
                         General.plugin.getServer().getOnlinePlayers().length,
+                        getWorld(sender),
+                        getTime(sender),
                         "+"
                 }
             );
@@ -140,6 +144,11 @@ public class generalCommand extends CommandBase {
         return 0;
     }
 
+    private static long getTime(CommandSender sender) {
+        if(sender instanceof Player) return ((Player) sender).getWorld().getTime();
+        return 0;
+    }
+
     private static String getLocation(CommandSender sender) {
         if(sender instanceof Player) {
             Formatter fmt = new Formatter();
@@ -147,6 +156,11 @@ public class generalCommand extends CommandBase {
             return fmt.format("%s(%d, %d, %d)", loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())
                       .toString();
         }
+        return "null";
+    }
+    
+    private static String getWorld(CommandSender sender) {
+        if(sender instanceof Player) return ((Player) sender).getWorld().getName();
         return "null";
     }
 
