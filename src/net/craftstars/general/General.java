@@ -53,13 +53,13 @@ public class General extends JavaPlugin {
 
         Items.setup();
         String permType = setupPermissions();
-        // TODO: Configuration option to disable MOTD
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, new PlayerListener(){
-            @Override
-            public void onPlayerJoin(PlayerEvent event) {
-                generalCommand.showMotD(event.getPlayer());
-            }
-        }, Priority.Normal, this);
+        if(config.getBoolean("show-motd", true))
+            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, new PlayerListener(){
+                @Override
+                public void onPlayerJoin(PlayerEvent event) {
+                    generalCommand.showMotD(event.getPlayer());
+                }
+            }, Priority.Normal, this);
 
         General.logger.info("[Codename: " + General.codename
                 + "] Plugin successfully loaded! Using [" + permType + "] permissions.");

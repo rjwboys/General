@@ -263,7 +263,7 @@ variants:
     type1: [sandstone]
     type2: [wood, wooden]
     type3: [cobble, cobblestone]
-  item43:
+  item44:
     type0: [stone]
     type1: [sandstone]
     type2: [wood, wooden]
