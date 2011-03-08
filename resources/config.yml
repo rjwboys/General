@@ -1,7 +1,7 @@
 
 # The ops-only flag is used if the permissions system is set to Basic, and specifies which actions
 # should be restricted to ops. If any other permissions system is specified, it is ignored.
-# Valid permission systems: Basic, Permissions, GroupManager, WorldEdit, Auto
+# Valid permission systems: Basic, Permissions, GroupManager, WorldEdit, CraftBukkit
 
 permissions:
   system: Basic
