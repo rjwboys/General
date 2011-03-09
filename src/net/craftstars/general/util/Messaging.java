@@ -73,7 +73,9 @@ public class Messaging {
      */
     public static String parse(String original) {
         original = colorize(original);
-        return original.replaceAll("(&([a-f0-9]))", "\u00A7$2").replace("&&", "&");
+        return original.replace("&&","~!@#$%^&*()")
+                       .replaceAll("(&([a-fA-F0-9]))", "\u00A7$2")
+                       .replace("~!@#$%^&*()", "&");
     }
 
     /**

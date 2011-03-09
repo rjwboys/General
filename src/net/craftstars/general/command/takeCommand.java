@@ -79,27 +79,26 @@ public class takeCommand extends CommandBase {
         case 1: // /take <item>[:<data>]
             item = Items.validate(args[0]);
         break;
-        case 2: // /take <player> <item>[:<data>] OR /take <item>[:<data>] <amount>
-            who = Toolbox.playerMatch(args[0]);
+        case 2: // /take <item>[:<data>] <amount> OR /give <item>[:<data>] <player>
+            item = Items.validate(args[0]);
+            who = Toolbox.playerMatch(args[1]);
             if(who == null) {
                 who = sender;
-                item = Items.validate(args[0]);
                 try {
                     amount = Integer.valueOf(args[1]);
                 } catch(NumberFormatException x) {
                     Messaging.send(sender, "&rose;The amount must be an integer.");
+                    Messaging.send(sender, "&rose;There is no player named &f" + args[1] + "&rose;.");
                     return true;
                 }
-            } else {
-                item = Items.validate(args[1]);
             }
         break;
-        case 3: // /take <player> <item>[:<data>] <amount>
-            who = Toolbox.getPlayer(args[0], sender);
+        case 3: // /take <item>[:<data>] <amount> <player>
+            who = Toolbox.getPlayer(args[2], sender);
             if(who == null) return true;
-            item = Items.validate(args[1]);
+            item = Items.validate(args[0]);
             try {
-                amount = Integer.valueOf(args[2]);
+                amount = Integer.valueOf(args[1]);
             } catch(NumberFormatException x) {
                 Messaging.send(sender, "&rose;The amount must be an integer.");
                 return true;

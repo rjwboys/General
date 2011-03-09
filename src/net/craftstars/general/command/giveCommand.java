@@ -38,28 +38,26 @@ public class giveCommand extends CommandBase {
             }
             item = Items.validate(args[0]);
         break;
-        case 2: // /give <player> <item>[:<data>] OR /give <item>[:<data>] <amount>
-            // TODO: Consider '/give stone 1' - what if there is a player called stone? Is the ambiguity resolvable?
-            who = Toolbox.playerMatch(args[0]);
+        case 2: // /give <item>[:<data>] <amount> OR /give <item>[:<data>] <player>
+            item = Items.validate(args[0]);
+            who = Toolbox.playerMatch(args[1]);
             if(who == null) {
                 who = sender;
-                item = Items.validate(args[0]);
                 try {
                     amount = Integer.valueOf(args[1]);
                 } catch(NumberFormatException x) {
                     Messaging.send(sender, "&rose;The amount must be an integer.");
+                    Messaging.send(sender, "&rose;There is no player named &f" + args[1] + "&rose;.");
                     return true;
                 }
-            } else {
-                item = Items.validate(args[1]);
             }
         break;
-        case 3: // /give <player> <item>[:<data>] <amount>
-            who = Toolbox.getPlayer(args[0], sender);
+        case 3: // /give <item>[:<data>] <amount> <player>
+            who = Toolbox.getPlayer(args[2], sender);
             if(who == null) return true;
-            item = Items.validate(args[1]);
+            item = Items.validate(args[0]);
             try {
-                amount = Integer.valueOf(args[2]);
+                amount = Integer.valueOf(args[1]);
             } catch(NumberFormatException x) {
                 Messaging.send(sender, "&rose;The amount must be an integer.");
                 return true;
@@ -121,9 +119,9 @@ public class giveCommand extends CommandBase {
 
         if(slot < 0) {
             who.getWorld().dropItem(who.getLocation(),
-                    new ItemStack(item.ID, amount, ((byte) item.data)));
+                    new ItemStack(item.ID, amount, (short) item.data));
         } else {
-            who.getInventory().addItem(new ItemStack(item.ID, amount, (byte) item.data));
+            who.getInventory().addItem(new ItemStack(item.ID, amount, (short) item.data));
         }
 
         if(isGift) {

@@ -12,6 +12,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -23,7 +26,7 @@ public class Items {
         public int data;
         public boolean dataMatters;
 
-        ItemID(Integer id, Integer d) {
+        public ItemID(Integer id, Integer d) {
             if(id == null) this.ID = 0;
             else this.ID = id;
             if(d == null) {
@@ -131,9 +134,13 @@ public class Items {
         }
         aliases = new HashMap<String, ItemID>();
         names = new HashMap<ItemID, String>();
-        dmg = itemsyml.getIntList("damageable", null);
-        nostk = itemsyml.getIntList("unstackable", null);
-        smstk = itemsyml.getIntList("smallstacks", null);
+        try {
+            dmg = itemsyml.getIntList("damageable", null);
+            nostk = itemsyml.getIntList("unstackable", null);
+            smstk = itemsyml.getIntList("smallstacks", null);
+        } catch(NullPointerException x) {
+            General.logger.warn("Information about damageable and stackable items missing.");
+        }
 
         // This loads in the item names from items.yml
         loadItemNames(itemsyml);
@@ -152,7 +159,11 @@ public class Items {
     }
 
     private static void loadItemVariantNames(Configuration itemsyml) {
-        variants = new VariantsMap(itemsyml.getNode("variants"));
+        try {
+            variants = new VariantsMap(itemsyml.getNode("variants"));
+        } catch(NullPointerException x) {
+            General.logger.warn("List of item variants is missing.");
+        }
     }
 
     private static void loadItemAliases(Properties itemsdb) {
@@ -189,7 +200,13 @@ public class Items {
     private static void loadItemNames(Configuration itemsyml) {
         int invalids = 0;
         String lastInvalid = null;
-        List<String> keys = itemsyml.getKeys("names");
+        List<String> keys;
+        try {
+            keys = itemsyml.getKeys("names");
+        } catch(NullPointerException x) {
+            General.logger.warn("Names of items are missing.");
+            return;
+        }
         if(keys == null) {
             General.logger.warn("The names section of items.yml is missing or invalid.");
         } else {
@@ -377,5 +394,30 @@ public class Items {
         if(nostk.contains(id)) return 1;
         else if(smstk.contains(id)) return 16;
         else return 64;
+    }
+    
+    public static void giveItem(Player who, ItemID x, Integer amount) {
+        PlayerInventory i = who.getInventory();
+        HashMap<Integer, ItemStack> excess = i.addItem(new ItemStack(x.ID, amount, (short) x.data));
+        General.logger.debug("Giving " + amount + " of " + x);
+        for(ItemStack leftover : excess.values()) {
+            if(i.getBoots().getType() == Material.AIR) {
+                i.setBoots(leftover);
+                continue;
+            }
+            if(i.getLeggings().getType() == Material.AIR) {
+                i.setLeggings(leftover);
+                continue;
+            }
+            if(i.getChestplate().getType() == Material.AIR) {
+                i.setChestplate(leftover);
+                continue;
+            }
+            if(i.getHelmet().getType() == Material.AIR) {
+                i.setHelmet(leftover);
+                continue;
+            }
+            who.getWorld().dropItemNaturally(who.getLocation(), leftover);
+        }
     }
 }

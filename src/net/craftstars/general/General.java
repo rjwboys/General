@@ -26,17 +26,12 @@ public class General extends JavaPlugin {
     public static General plugin = null;
 
     public static final boolean DEBUG = true;
-    public static final String codename = "Wagner";
+    public static final String codename = "Sibelius";
 
     public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG); // NOTE: Was
-    // private.
-    // Should be
-    // changed
-    // back?
-    // [celticminstrel]
+    // private. Should be changed back? [celticminstrel]
 
-    public Configuration config; // NOTE: This was private. Should it be changed back?
-    // [celticminstrel]
+    public Configuration config; // NOTE: This was private. Should it be changed back? [celticminstrel]
     public PermissionsHandler permissions;
 
     public General() {
@@ -215,7 +210,7 @@ public class General extends JavaPlugin {
             General.logger.warn(
                     "Could not read and/or write config.yml! Continuing with default values!", ex);
         }
-        kitCommand.reload();
+        kitCommand.loadKits();
     }
 
     @Override

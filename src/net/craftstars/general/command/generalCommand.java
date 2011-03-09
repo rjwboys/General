@@ -102,6 +102,7 @@ public class generalCommand extends CommandBase {
         return Messaging.argument(
                 original,
                 new String[]{
+                        "++",
                         "+dname,+d,&dname;",
                         "+name,+n,&name;",
                         "+location,+l,&location;",
@@ -111,15 +112,15 @@ public class generalCommand extends CommandBase {
                         "+online,+c,&online;",
                         "+world,+w,&world;",
                         "+time,+t,&time;",
-                        "++"
+                        "~!@#$%^&*()"
                 },
                 new Object[]{
+                        "~!@#$%^&*()",
                         getDisplayName(sender),
                         getName(sender),
                         getLocation(sender),
                         getHealth(sender),
                         getAddress(sender),
-                        getLocation(sender),
                         getBalance(sender),
                         General.plugin.getServer().getOnlinePlayers().length,
                         getWorld(sender),
@@ -145,7 +146,11 @@ public class generalCommand extends CommandBase {
     }
 
     private static long getTime(CommandSender sender) {
-        if(sender instanceof Player) return ((Player) sender).getWorld().getTime();
+        if(sender instanceof Player) {
+            long t = ((Player) sender).getWorld().getTime();
+            General.logger.debug("Time is " + t);
+            return t;
+        }
         return 0;
     }
 
@@ -153,8 +158,7 @@ public class generalCommand extends CommandBase {
         if(sender instanceof Player) {
             Formatter fmt = new Formatter();
             Location loc = ((Player) sender).getLocation();
-            return fmt.format("%s(%d, %d, %d)", loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())
-                      .toString();
+            return fmt.format("(%d, %d, %d)", loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).toString();
         }
         return "null";
     }

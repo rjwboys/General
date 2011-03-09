@@ -1,5 +1,5 @@
 # General Plugin for CraftBukkit #
-## Version 3.1.2 [Wagner]
+## Version 3.2 [Sibelius]
 ### README
 - - -
 This is the first draft of this README. It's not done. Build instructions coming soon.

@@ -9,6 +9,7 @@ import net.craftstars.general.util.Toolbox;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.PlayerInventory;
 
 public class clearCommand extends CommandBase {
     @Override
@@ -42,7 +43,12 @@ public class clearCommand extends CommandBase {
         if(fromWhom instanceof Player) {
             if( ((Player) fromWhom).getName().equalsIgnoreCase(who.getName())) selfClear = true;
         }
-        who.getInventory().clear();
+        PlayerInventory i = who.getInventory();
+        i.clear();
+        i.setBoots(null);
+        i.setLeggings(null);
+        i.setChestplate(null);
+        i.setHelmet(null);
         if(selfClear) {
             Messaging.send(who, "&2You have cleared your inventory.");
         } else {
