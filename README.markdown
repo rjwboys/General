@@ -37,6 +37,7 @@ Available Permissions nodes:
 * general.give
 * general.give.infinite
 * general.give.group.<groupname> (to restrict certain items)
+* general.give.group.other (to allow access to items not in a group) 
 * general.spawn
 * general.spawn.set
 * general.spawn.other (to teleport someone other than yourself to the spawn point)

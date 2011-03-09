@@ -99,7 +99,9 @@ public class giveCommand extends CommandBase {
 
     private boolean canGetItem(Player sender) {
         ConfigurationNode permissions = General.plugin.config.getNode("give");
+        if(permissions == null) return true;
         List<String> groups = permissions.getKeys("groups");
+        if(groups == null) return true;
         for(String group : groups) {
             List<Integer> items = permissions.getIntList("groups." + group, null);
             if(items.isEmpty()) continue;
@@ -107,7 +109,7 @@ public class giveCommand extends CommandBase {
                 return General.plugin.permissions.hasPermission(sender, "general.give.group." + group);
             }
         }
-        return true;
+        return permissions.getBoolean("others-for-all", true);
     }
 
     private void doGive(boolean isGift) {

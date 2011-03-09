@@ -48,7 +48,7 @@ public class kitCommand extends CommandBase {
                 Messaging.send(sender, "&cKit by the name of &e" + args[0] + "&c does not exist!");
             else {
 
-                if (General.plugin.permissions.hasPermission(sender, "general.kit." + args[0].toLowerCase())) {
+                if (!General.plugin.permissions.hasPermission(sender, "general.kit." + args[0].toLowerCase())) {
                     Messaging.send(sender, "&rose;You do not have permission for that kit.");
                     return true;
                 }

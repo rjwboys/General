@@ -7,6 +7,7 @@ import java.io.InputStream;
 
 import me.taylorkelly.help.Help;
 import net.craftstars.general.command.generalCommand;
+import net.craftstars.general.command.kitCommand;
 import net.craftstars.general.security.PermissionsHandler;
 import net.craftstars.general.util.Items;
 import net.craftstars.general.util.PluginLogger;
@@ -214,6 +215,7 @@ public class General extends JavaPlugin {
             General.logger.warn(
                     "Could not read and/or write config.yml! Continuing with default values!", ex);
         }
+        kitCommand.reload();
     }
 
     @Override
