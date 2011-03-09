@@ -93,7 +93,7 @@ public class kitCommand extends CommandBase {
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
@@ -121,7 +121,7 @@ public class kitCommand extends CommandBase {
                 GotKit check = new GotKit(sender, kit);
 
                 // Player did not request any kit previously
-                if (players.containsKey(check)) {
+                if(!canBypassDelay(sender) && players.containsKey(check)) {
                     long time = System.currentTimeMillis() / 1000;
                     long left = kit.delay - (time - players.get(check));
                     
@@ -143,6 +143,10 @@ public class kitCommand extends CommandBase {
     private boolean canGetKit(Player sender, String kit) {
         if(General.plugin.permissions.hasPermission(sender, "general.kit." + kit)) return true;
         return false;
+    }
+    
+    private boolean canBypassDelay(Player sender) {
+        return General.plugin.permissions.hasPermission(sender, "general.kit-now");
     }
     
     private void insertIntoPlayerList(GotKit what) {

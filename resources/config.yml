@@ -24,6 +24,7 @@ permissions:
    - general.take.other
    - general.heal
    - general.mobspawn
+   - general.kit-now
    - general.admin
 
 # This section lets you restrict certain items to particular groups in the /give command.

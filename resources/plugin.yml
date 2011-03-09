@@ -43,7 +43,7 @@ commands:
       - i
       - item
     usage: |
-           /<command> [player] item[:data] [amount]
+           /<command> item[:data] [amount] [player]
            item   --> Either the ID of an item, or a known name for it; no spaces
            data   --> The damage value of a tool, the data value of the item, or a known name for the data value
            amount --> How much to get; 1 is default, 0 means a full stack
@@ -105,7 +105,7 @@ commands:
     permission: general.take
     description: Removes something from your inventory.
     aliases:
-    usage: /<command> [player] item[:data] [amount]
+    usage: /<command> item[:data] [amount] [player]
   heal:
     permission: general.heal
     description: Restores your health. (Can also reduce it if you give a negative amount.)

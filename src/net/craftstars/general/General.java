@@ -84,7 +84,7 @@ public class General extends JavaPlugin {
                     "general.time.set");
             helpPlugin.registerCommand("time help", "Shows syntax for setting the time.", plugin,
                     "general.time.set");
-            helpPlugin.registerCommand("give|i(tem) ([player]) [item](:[variant]) ([amount])",
+            helpPlugin.registerCommand("give|i(tem) [item](:[variant]) ([amount]) ([player])",
                     "Gives [player] [amount] of [item].", plugin, "general.give");
             helpPlugin.registerCommand("getpos ([player])",
                     "Get the current position of [player].", plugin, "general.getpos");
@@ -129,7 +129,7 @@ public class General extends JavaPlugin {
             // "general.teleport.other.mass");
             helpPlugin.registerCommand("clear ([player])", "Clear's [player]'s inventory.", plugin,
                     "general.clear");
-            helpPlugin.registerCommand("take ([player]) [item](:[variant]) ([amount])",
+            helpPlugin.registerCommand("take [item](:[variant]) ([amount]) ([player])",
                     "Deletes something from [player]'s inventory.", plugin, "general.take");
             helpPlugin.registerCommand("heal ([player]) ([amount])",
                     "Heals [player] by [amount] hearts (0-10). If [amount] is omitted, full heal.",

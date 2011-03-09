@@ -49,5 +49,7 @@ Available Permissions nodes:
 * general.take
 * general.take.other
 * general.heal
-* general.mspawn
+* general.mobspawn
+* general.kit.<kitname>
+* general.kit-now (to bypass delays on kits)
 * general.admin (allows access to /general administrative commands)
