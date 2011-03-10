@@ -96,6 +96,8 @@ public class giveCommand extends CommandBase {
     }
 
     private boolean canGetItem(Player sender) {
+        if(General.plugin.permissions.hasPermission(sender, "general.give.any"))
+            return true;
         ConfigurationNode permissions = General.plugin.config.getNode("give");
         if(permissions == null) return true;
         List<String> groups = permissions.getKeys("groups");
@@ -143,23 +145,23 @@ public class giveCommand extends CommandBase {
         amount = 1;
 
         switch(args.length) {
-        case 1:
+        case 1: // give help
             if(!args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
             showHelp(sender);
             return true;
-        case 2:
-            who = Toolbox.playerMatch(args[0]);
+        case 2: // give <item> <player>
+            who = Toolbox.playerMatch(args[1]);
             if(who == null) {
                 return Toolbox.USAGE;
             } else {
-                item = Items.validate(args[1]);
+                item = Items.validate(args[0]);
             }
         break;
-        case 3:
-            who = Toolbox.playerMatch(args[0]);
-            item = Items.validate(args[1]);
+        case 3: // give <item> <amount> <player>
+            who = Toolbox.playerMatch(args[2]);
+            item = Items.validate(args[0]);
             try {
-                amount = Integer.valueOf(args[2]);
+                amount = Integer.valueOf(args[1]);
             } catch(NumberFormatException x) {
                 Messaging.send(sender, "&rose;The amount must be an integer.");
                 return true;

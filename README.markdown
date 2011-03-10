@@ -1,5 +1,5 @@
 # General Plugin for CraftBukkit #
-## Version 3.2 [Sibelius]
+## Version 3.2.1 [Sibelius]
 ### README
 - - -
 This is the first draft of this README. It's not done. Build instructions coming soon.
@@ -37,7 +37,7 @@ Available Permissions nodes:
 * general.give
 * general.give.infinite
 * general.give.group.<groupname> (to restrict certain items)
-* general.give.group.other (to allow access to items not in a group) 
+* general.give.any (to allow access to items not in a group if item whitelist mode is enabled) 
 * general.spawn
 * general.spawn.set
 * general.spawn.other (to teleport someone other than yourself to the spawn point)
