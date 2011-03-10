@@ -40,16 +40,14 @@ public class giveCommand extends CommandBase {
         break;
         case 2: // /give <item>[:<data>] <amount> OR /give <item>[:<data>] <player>
             item = Items.validate(args[0]);
-            who = Toolbox.playerMatch(args[1]);
-            if(who == null) {
+            try {
                 who = sender;
-                try {
-                    amount = Integer.valueOf(args[1]);
-                } catch(NumberFormatException x) {
-                    Messaging.send(sender, "&rose;The amount must be an integer.");
-                    Messaging.send(sender, "&rose;There is no player named &f" + args[1] + "&rose;.");
-                    return true;
-                }
+                amount = Integer.valueOf(args[1]);
+            } catch(NumberFormatException x) {
+                who = Toolbox.playerMatch(args[1]);
+                Messaging.send(sender, "&rose;The amount must be an integer.");
+                Messaging.send(sender, "&rose;There is no player named &f" + args[1] + "&rose;.");
+                return true;
             }
         break;
         case 3: // /give <item>[:<data>] <amount> <player>
