@@ -44,4 +44,8 @@ public class PermissionsPermissionsHandler implements PermissionsHandler {
     public String getVersion() {
         return version;
     }
+
+    public String getName() {
+        return "Permissions";
+    }
 }

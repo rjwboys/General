@@ -8,6 +8,8 @@ import java.io.InputStream;
 import me.taylorkelly.help.Help;
 import net.craftstars.general.command.generalCommand;
 import net.craftstars.general.command.kitCommand;
+import net.craftstars.general.money.EconomyBase;
+import net.craftstars.general.security.BasicPermissionsHandler;
 import net.craftstars.general.security.PermissionsHandler;
 import net.craftstars.general.util.Items;
 import net.craftstars.general.util.PluginLogger;
@@ -18,11 +20,25 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.server.PluginEvent;
+import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
 public class General extends JavaPlugin {
+    private class PluginListener extends ServerListener {
+        @Override
+        public void onPluginEnabled(PluginEvent event) {
+            if(!gotHelp && event.getPlugin() instanceof Help)
+                setupHelp();
+            else if (!gotRequestedPermissions)
+                setupPermissions(false);
+            else if (!gotRequestedEconomy)
+                setupPermissions(false);
+        }
+    }
+
     public static General plugin = null;
 
     public static final boolean DEBUG = true;
@@ -33,22 +49,26 @@ public class General extends JavaPlugin {
 
     public Configuration config; // NOTE: This was private. Should it be changed back? [celticminstrel]
     public PermissionsHandler permissions;
+    public EconomyBase economy;
+    private boolean gotRequestedPermissions, gotHelp, gotRequestedEconomy;
 
     public General() {
         if(plugin != null) General.logger.warn("Seems to have loaded twice for some reason.");
         plugin = this;
-        General.logger.info("Loaded.");
+        logger.info("Loaded.");
     }
 
-    @Override
+    //@Override
     public void onEnable() {
-        General.logger.setPluginVersion(this.getDescription().getVersion());
+        logger.setPluginVersion(this.getDescription().getVersion());
         
         this.config = this.getConfiguration();
         this.loadConfiguration();
 
         Items.setup();
-        String permType = setupPermissions();
+        //getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE, new PluginListener(), Priority.Monitor, this);
+        setupPermissions(true);
+        setupEconomy();
         if(config.getBoolean("show-motd", true))
             getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, new PlayerListener(){
                 @Override
@@ -57,8 +77,7 @@ public class General extends JavaPlugin {
                 }
             }, Priority.Normal, this);
 
-        General.logger.info("[Codename: " + General.codename
-                + "] Plugin successfully loaded! Using [" + permType + "] permissions.");
+        logger.info("[Codename: " + General.codename + "] Plugin successfully loaded!");
         
         setupHelp();
     }
@@ -67,10 +86,6 @@ public class General extends JavaPlugin {
         Plugin test = plugin.getServer().getPluginManager().getPlugin("Help");
         if (test != null) {
             Help helpPlugin = ((Help) test);
-            // Registers a main command. But all users will be able to see it
-            //helpPlugin.registerCommand("home help", "Help for all MyHome commands", plugin, true);
-            // Registers a secondary command to our plugin (MyHome), but the user has to have the permission to see it
-            //helpPlugin.registerCommand("home", "Go home young chap!", plugin, "myhome.home.basic.home");
             // TODO: Some of these help messages are too long; need to shorten them.
             // TODO: Some of the help should be moved to /<cmd> help; spawn and teleport, in particular.
             ////////////////////////////--------------------------------------------------
@@ -142,13 +157,45 @@ public class General extends JavaPlugin {
             // helpPlugin.registerCommand("mob(spawn)", "Spawns a mob.", plugin, "general.mobspawn");
             helpPlugin.registerCommand("help General", "Help for the General plugin.", plugin, true);
             logger.info("[Help " + helpPlugin.getDescription().getVersion() + "] support enabled.");
+            gotHelp = true;
         } else {
             logger.warn("[Help] isn't detected. No /help support; instead use /general help");
+            gotHelp = false;
         }
     }
+    
+    private void setupEconomy() {
+        gotRequestedEconomy = true;
+        String econType = "None";
+        try {
+            try {
+                String s = config.getNode("economy").getString("system");
+                if(s != null) econType = s;
+            } catch(Exception ex) {
+                econType = "None";
+            }
+            if(econType.equalsIgnoreCase("None")) return;
+            Class<? extends EconomyBase> clazz = this.getClass().getClassLoader().loadClass(
+                    "net.craftstars.general.money." + econType + "EconomyHandler")
+                    .asSubclass(EconomyBase.class);
+            economy = (EconomyBase) clazz.newInstance();
+            if(!economy.wasLoaded()) {
+                logger.info("[" + econType + "] not detected; economy support disabled.");
+                gotRequestedEconomy = false;
+            }
+        } catch(Exception ex) {
+            logger.error("There was a big problem loading economy system [" + econType
+                    + "]! Please report this error!");
+            ex.printStackTrace();
+            gotRequestedEconomy = false;
+        }
+        logger.info(" Using [" + economy.getName() + " " + economy.getVersion() + "] for economy.");
+    }
 
-    private String setupPermissions() {
+    private void setupPermissions(boolean firstTime) {
+        if(permissions != null && !(permissions instanceof BasicPermissionsHandler)) return;
         String permType = "unknown";
+        gotRequestedPermissions = true;
         try {
             try {
                 permType = config.getNode("permissions").getString("system");
@@ -161,24 +208,23 @@ public class General extends JavaPlugin {
                     "net.craftstars.general.security." + permType + "PermissionsHandler")
                     .asSubclass(PermissionsHandler.class);
             permissions = (PermissionsHandler) clazz.newInstance();
-            if(permissions == null || !permissions.wasLoaded()) {
-                General.logger.info("[" + permType
-                        + "] permissions not detected; falling back to [Basic] permissions.");
-                clazz = this.getClass().getClassLoader().loadClass(
-                        "net.craftstars.general.security.BasicPermissionsHandler").asSubclass(
-                        PermissionsHandler.class);
-                permissions = (PermissionsHandler) clazz.newInstance();
+            if(firstTime && (permissions == null || !permissions.wasLoaded())) {
+                logger.info("[" + permType + "] not detected; falling back to [Basic] permissions.");
+                permissions = new BasicPermissionsHandler();
+                gotRequestedPermissions = false;
             }
         } catch(Exception ex) {
-            General.logger.error("There was a big problem loading permissions system [" + permType
+            logger.error("There was a big problem loading permissions system [" + permType
                     + "]! Please report this error!");
             ex.printStackTrace();
+            if(!firstTime)
+                General.logger.error("Note: Using permissions [" + permissions.getName() + "]");
+            gotRequestedPermissions = false;
         }
-        if(permissions != null) permType = permType + " " + permissions.getVersion();
-        return permType;
+        logger.info(" Using [" + permissions.getName() + " " + permissions.getVersion() + "] for permissions.");
     }
 
-    @Override
+    //@Override
     public void onDisable() {
         General.logger.info("Plugin disabled!");
     }
@@ -192,10 +238,8 @@ public class General extends JavaPlugin {
             File configFile = new File(dataFolder, "config.yml");
 
             if(!configFile.exists()) {
-                General.logger
-                        .info("Configuration file does not exist. Attempting to create default one...");
-                InputStream defaultConfig = this.getClass().getResourceAsStream(
-                        File.separator + "config.yml");
+                General.logger.info("Configuration file does not exist. Attempting to create default one...");
+                InputStream defaultConfig = this.getClass().getResourceAsStream(File.separator + "config.yml");
                 FileWriter out = new FileWriter(configFile);
                 for(int i = 0; (i = defaultConfig.read()) > 0;)
                     out.write(i);
@@ -207,8 +251,7 @@ public class General extends JavaPlugin {
                         + "stop the server and edit plugins/General/config.yml.");
             }
         } catch(Exception ex) {
-            General.logger.warn(
-                    "Could not read and/or write config.yml! Continuing with default values!", ex);
+            General.logger.warn("Could not read and/or write config.yml! Continuing with default values!", ex);
         }
         kitCommand.loadKits();
     }
@@ -223,8 +266,11 @@ public class General extends JavaPlugin {
             CommandBase commandInstance = (CommandBase) clazz.newInstance();
             return commandInstance.runCommand(this, sender, command, commandLabel, args);
         } catch(Exception ex) {
-            General.logger.error("There was a big problem executing command [" + command.getName()
+            logger.error("There was a big problem executing command [" + command.getName()
                     + "]! Please report this error!");
+            String cmdStr = "Full command string: [" + commandLabel;
+            for(String x : args) cmdStr += " " + x;
+            logger.error(cmdStr);
             ex.printStackTrace();
         }
 

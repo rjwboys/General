@@ -13,6 +13,7 @@
   <property name="worldedit.jar"    value="WorldEdit.jar"/>
   <property name="groupmanager.jar" value="GroupManager.jar"/>
   <property name="help.jar" value="Help.jar"/>
+  <property name="iconomy.jar" value="iConomy.jar"/>
   
   <target name="init">
     <mkdir dir="${lib}"/>
@@ -43,6 +44,7 @@
         <pathelement location="${lib}/${worldedit.jar}"/>
         <pathelement location="${lib}/${groupmanager.jar}"/>
         <pathelement location="${lib}/${help.jar}"/>
+        <pathelement location="${lib}/${iconomy.jar}"/>
       </classpath>
     </javac>
   </target>

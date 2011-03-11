@@ -13,5 +13,7 @@ public interface PermissionsHandler {
     
     boolean inGroup(Player who, String which);
 
-    public String getVersion();
+    String getVersion();
+    
+    String getName();
 }

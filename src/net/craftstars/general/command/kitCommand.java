@@ -184,7 +184,6 @@ public class kitCommand extends CommandBase {
                         HashMap<ItemID,Integer> components = new HashMap<ItemID,Integer>();
                         //ItemID[] components = new ItemID[stuff.length];
                         //int[] amounts = new int[stuff.length];
-                        General.logger.debug(Arrays.asList(stuff).toString());
                         for(String item : stuff) {
                             int id, data = 0, n = 1;
                             Matcher m;

@@ -109,6 +109,7 @@ public class generalCommand extends CommandBase {
                         "+health,+h,&health;",
                         "+ip,+a,&ip;",
                         "+balance,+$,&balance;",
+                        "+currency,+m,&currency;",
                         "+online,+c,&online;",
                         "+world,+w,&world;",
                         "+time,+t,&time;",
@@ -122,6 +123,7 @@ public class generalCommand extends CommandBase {
                         getHealth(sender),
                         getAddress(sender),
                         getBalance(sender),
+                        getCurrency(),
                         General.plugin.getServer().getOnlinePlayers().length,
                         getWorld(sender),
                         getTime(sender),
@@ -130,14 +132,19 @@ public class generalCommand extends CommandBase {
             );
     }
     
+    private static Object getCurrency() {
+        if(General.plugin.economy == null) return "none";
+        return General.plugin.economy.getCurrency();
+    }
+
     private static String getAddress(CommandSender sender) {
         if(sender instanceof Player) return ((Player) sender).getAddress().getAddress().getHostAddress();
         return "127.0.0.1";
     }
 
-    private static int getBalance(CommandSender sender) {
-        // TODO: Get iConomy balance
-        return 0;
+    private static String getBalance(CommandSender sender) {
+        if(General.plugin.economy == null || !(sender instanceof Player)) return "0";
+        return General.plugin.economy.getBalanceForDisplay((Player) sender);
     }
 
     private static double getHealth(CommandSender sender) {

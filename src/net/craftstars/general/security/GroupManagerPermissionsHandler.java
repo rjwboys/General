@@ -44,4 +44,8 @@ public class GroupManagerPermissionsHandler implements PermissionsHandler {
         return wasLoaded;
     }
 
+    public String getName() {
+        return "GroupManager";
+    }
+
 }

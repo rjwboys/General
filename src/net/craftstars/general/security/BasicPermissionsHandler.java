@@ -31,4 +31,8 @@ public class BasicPermissionsHandler implements PermissionsHandler {
         return "(isOp)";
     }
 
+    public String getName() {
+        return "Basic";
+    }
+
 }

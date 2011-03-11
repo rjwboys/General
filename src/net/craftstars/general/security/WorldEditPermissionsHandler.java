@@ -49,4 +49,8 @@ public class WorldEditPermissionsHandler implements PermissionsHandler {
     public String getVersion() {
         return version;
     }
+
+    public String getName() {
+        return "WorldEdit";
+    }
 }

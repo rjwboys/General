@@ -24,6 +24,7 @@ permissions:
    - general.take.other
    - general.heal
    - general.mobspawn
+   - general.kit.<kitname>
    - general.kit-now
    - general.admin
 
@@ -53,3 +54,19 @@ playerlist:
 
 # If true, show the message of the day on login.
 show-motd: true
+
+# This section is for if you want economy enabled. Currently the only accepted option is system,
+# which should be either None or iConomy.
+
+economy:
+  system: None
+  commands:
+    timeset: 0
+    heal: 0
+    mobspawn: 0
+    kit: 0
+  items:
+    351: 0
+    276: 0
+    # etc
+    
