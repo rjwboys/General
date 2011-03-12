@@ -186,7 +186,7 @@ public class timeCommand extends CommandBase {
 
     private void showTime(CommandSender sender) {
         int time = (int) this.world.getTime();
-        Messaging.send(sender,"Time: " + this.getFriendlyTime(time) + " " + formatTime(time,TimeFormat.TWELVE_HOUR) + " (" + time + ")");
+        Messaging.send(sender,"Time: " + this.getFriendlyTime(time) + " " + formatTime(time,currentFormat) + " (" + time + ")");
     }
 
     private long getTime() {

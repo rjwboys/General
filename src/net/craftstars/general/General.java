@@ -4,6 +4,7 @@ package net.craftstars.general;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.util.HashMap;
 
 import me.taylorkelly.help.Help;
 import net.craftstars.general.command.generalCommand;
@@ -16,6 +17,7 @@ import net.craftstars.general.util.PluginLogger;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.player.PlayerEvent;
@@ -51,6 +53,24 @@ public class General extends JavaPlugin {
     public PermissionsHandler permissions;
     public EconomyBase economy;
     private boolean gotRequestedPermissions, gotHelp, gotRequestedEconomy;
+    private HashMap<String,String> playersAway = new HashMap<String,String>();
+    
+    public boolean isAway(Player who) {
+        return playersAway.containsKey(who.getName());
+    }
+    
+    public void goAway(Player who, String reason) {
+        playersAway.put(who.getName(), reason);
+    }
+    
+    public void unAway(Player who) {
+        playersAway.remove(who.getName());
+    }
+    
+    public String whyAway(Player who) {
+        if(isAway(who)) return playersAway.get(who.getName());
+        return "";
+    }
 
     public General() {
         if(plugin != null) General.logger.warn("Seems to have loaded twice for some reason.");

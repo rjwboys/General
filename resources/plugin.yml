@@ -126,3 +126,8 @@ commands:
     description: Administrates the plugin.
     aliases:
     usage: /general reload|die|motd|help
+  away:
+    permission: general.away
+    description: Sets your away message
+    aliases: [afk]
+    usage: /<command> [message]

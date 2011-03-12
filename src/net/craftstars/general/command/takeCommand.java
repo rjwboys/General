@@ -30,17 +30,17 @@ public class takeCommand extends CommandBase {
         amount = 0;
 
         switch(args.length) {
-        case 2: // take <player> <item>[:<data>]
-            who = Toolbox.getPlayer(args[0],sender);
+        case 2: // take <item>[:<data>] <player>
+            who = Toolbox.getPlayer(args[1],sender);
             if(who == null) return true;
-            item = Items.validate(args[1]);
+            item = Items.validate(args[0]);
         break;
         case 3: // take <player> <item>[:<data>] <amount>
-            who = Toolbox.getPlayer(args[0], sender);
+            who = Toolbox.getPlayer(args[2], sender);
             if(who == null) return true;
-            item = Items.validate(args[1]);
+            item = Items.validate(args[0]);
             try {
-                amount = Integer.valueOf(args[2]);
+                amount = Integer.valueOf(args[1]);
             } catch(NumberFormatException x) {
                 Messaging.send(sender, "&rose;The amount must be an integer.");
                 return true;
@@ -62,6 +62,8 @@ public class takeCommand extends CommandBase {
         }
 
         doTake();
+        Messaging.send(sender, "&2Took &f" + amount + "&2 of &f"
+                + Items.name(item.ID, item.data) + "&2 from &f" + who.getName() + "&2!");
         return true;
     }
 
@@ -81,16 +83,14 @@ public class takeCommand extends CommandBase {
         break;
         case 2: // /take <item>[:<data>] <amount> OR /give <item>[:<data>] <player>
             item = Items.validate(args[0]);
-            who = Toolbox.playerMatch(args[1]);
-            if(who == null) {
+            try {
                 who = sender;
-                try {
-                    amount = Integer.valueOf(args[1]);
-                } catch(NumberFormatException x) {
-                    Messaging.send(sender, "&rose;The amount must be an integer.");
-                    Messaging.send(sender, "&rose;There is no player named &f" + args[1] + "&rose;.");
-                    return true;
-                }
+                amount = Integer.valueOf(args[1]);
+            } catch(NumberFormatException x) {
+                who = Toolbox.playerMatch(args[1]);
+                Messaging.send(sender, "&rose;The amount must be an integer.");
+                Messaging.send(sender, "&rose;There is no player named &f" + args[1] + "&rose;.");
+                return true;
             }
         break;
         case 3: // /take <item>[:<data>] <amount> <player>

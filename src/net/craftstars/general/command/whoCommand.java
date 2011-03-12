@@ -16,6 +16,8 @@ public class whoCommand extends CommandBase {
     private String bar;
     private String location;
     private String world;
+    private String awayReason;
+    private boolean isAway;
 
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
@@ -47,8 +49,10 @@ public class whoCommand extends CommandBase {
             Messaging.send(sender, "&6 -&e Location: &f" + this.location);
         if(General.plugin.config.getBoolean("playerlist.show-world", false))
             Messaging.send(sender, "&6 -&e World: &f" + this.world);
-        // TODO: AFK System [Plutonium239]
-        Messaging.send(sender, "&6 -&e Status: &f" + "Around.");
+        if(this.isAway)
+            Messaging.send(sender, "&6 -&e Status: &f" + "Away (" + this.awayReason + ").");
+        else
+            Messaging.send(sender, "&6 -&e Status: &fAround.");
         Messaging.send(sender, "&f------------------------------------------------");
     }
 
@@ -70,6 +74,8 @@ public class whoCommand extends CommandBase {
         int z = (int) player.getLocation().getZ();
         this.location = x + "x, " + y + "y, " + z + "z";
         this.world = player.getWorld().getName();
+        this.isAway = General.plugin.isAway(player);
+        this.awayReason = General.plugin.whyAway(player).trim();
     }
 
     @Override

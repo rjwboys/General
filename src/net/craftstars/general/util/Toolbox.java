@@ -129,4 +129,13 @@ public class Toolbox {
             return null;
         }
     }
+
+    public static String combineSplit(String[] args, int startAt) {
+        StringBuilder message = new StringBuilder();
+        for(int i = startAt; i < args.length; i++) {
+            message.append(args[i]);
+            message.append(" ");
+        }
+        return message.toString();
+    }
 }

@@ -23,19 +23,14 @@ public class tellCommand extends CommandBase {
                 Messaging.send(sender, "&c;You can't message yourself!");
                 return true;
             }
-            Messaging.send(sender, "&gray;(whisper)   to <" + who.getName() + "> " + this.getMessage(args));
-            Messaging.send(who, "&gray;(whisper) from <" + sender.getName() + "> " + this.getMessage(args));
+            Messaging.send(sender, "&gray;(whisper)   to <" + who.getName() + "> " + Toolbox.combineSplit(args,1));
+            Messaging.send(who, "&gray;(whisper) from <" + sender.getName() + "> " + Toolbox.combineSplit(args,1));
+            if (General.plugin.isAway(who)) {
+                Messaging.send(sender,"&7" + who.getDisplayName() + " is currently away.");
+                Messaging.send(sender,"&7Reason: " + General.plugin.whyAway(who));
+            }
         }
         return true;
-    }
-
-    private String getMessage(String[] args) {
-        StringBuilder message = new StringBuilder();
-        for(int i = 1; i < args.length; i++) {
-            message.append(args[i]);
-            message.append(" ");
-        }
-        return message.toString();
     }
 
     @Override
@@ -44,8 +39,12 @@ public class tellCommand extends CommandBase {
         if(args.length < 2) return Toolbox.USAGE;
         Player who = Toolbox.getPlayer(args[0],sender);
         if(who != null) {
-            Messaging.send(sender,"&gray;(whisper)   to <" + who.getName() + "> " + this.getMessage(args));
-            Messaging.send(who, "(whisper) from [CONSOLE] " + this.getMessage(args));
+            Messaging.send(sender,"&gray;(whisper)   to <" + who.getName() + "> " + Toolbox.combineSplit(args,1));
+            Messaging.send(who, "(whisper) from [CONSOLE] " + Toolbox.combineSplit(args,1));
+            if (General.plugin.isAway(who)) {
+                Messaging.send(sender,"&7" + who.getDisplayName() + " is currently away.");
+                Messaging.send(sender,"&7Reason: " + General.plugin.whyAway(who));
+            }
         } else {
             Messaging.send(sender,"Couldn't find player " + args[0]);
         }

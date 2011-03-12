@@ -148,15 +148,13 @@ public class giveCommand extends CommandBase {
             showHelp(sender);
             return true;
         case 2: // give <item> <player>
-            who = Toolbox.playerMatch(args[1]);
-            if(who == null) {
-                return Toolbox.USAGE;
-            } else {
-                item = Items.validate(args[0]);
-            }
+            who = Toolbox.getPlayer(args[1],sender);
+            if(who == null) return true;
+            item = Items.validate(args[0]);
         break;
         case 3: // give <item> <amount> <player>
-            who = Toolbox.playerMatch(args[2]);
+            who = Toolbox.getPlayer(args[2], sender);
+            if(who == null) return true;
             item = Items.validate(args[0]);
             try {
                 amount = Integer.valueOf(args[1]);
@@ -181,6 +179,8 @@ public class giveCommand extends CommandBase {
         }
 
         doGive(true);
+        Messaging.send(sender, "&2Gave &f" + amount + "&2 of &f"
+                + Items.name(item.ID, item.data) + "&2 to &f" + who.getName() + "&2!");
 
         return true;
     }
