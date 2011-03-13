@@ -86,7 +86,7 @@ public class giveCommand extends CommandBase {
         boolean isGift = !who.getName().equals(sender.getName());
         doGive(isGift);
         if(isGift) {
-            Messaging.send(sender, "&2Gave &f" + amount + "&2 of &f"
+            Messaging.send(sender, "&2Gave &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f"
                     + Items.name(item.ID, item.data) + "&2 to &f" + who.getName() + "&2!");
         }
 
@@ -125,10 +125,10 @@ public class giveCommand extends CommandBase {
         }
 
         if(isGift) {
-            Messaging.send(who, "&2Enjoy the gift! &f" + amount + "&2 of &f"
+            Messaging.send(who, "&2Enjoy the gift! &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f"
                     + Items.name(item.ID, item.data) + "&2!");
         } else {
-            Messaging.send(who, "&2Enjoy! Giving &f" + amount + "&2 of &f"
+            Messaging.send(who, "&2Enjoy! Giving &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f"
                     + Items.name(item.ID, item.data) + "&2.");
         }
     }
@@ -179,7 +179,7 @@ public class giveCommand extends CommandBase {
         }
 
         doGive(true);
-        Messaging.send(sender, "&2Gave &f" + amount + "&2 of &f"
+        Messaging.send(sender, "&2Gave &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f"
                 + Items.name(item.ID, item.data) + "&2 to &f" + who.getName() + "&2!");
 
         return true;

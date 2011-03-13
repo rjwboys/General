@@ -127,6 +127,41 @@ public class timeCommand extends CommandBase {
         return hour + minutes;
     }
     
+    private String formatDuration(long time) {
+        long minutes = time % 1000, hours = time / 1000;
+        minutes *= 0.06;
+        Formatter fmtr = new Formatter();
+        if(minutes + hours == 0) return fmtr.format("%d ticks", time).toString();
+        if(minutes == 0) return fmtr.format("%d hours", hours).toString();
+        if(hours == 0) return fmtr.format("%d minutes", minutes).toString();
+        return fmtr.format("%d hours and %d minutes", hours, minutes).toString();
+    }
+    
+    //private static Pattern patDuration = Pattern.compile("(\\d*[hH])(\\d*[mM])");
+    private static Pattern patHour = Pattern.compile("(\\d+)[hH].*");
+    private static Pattern patMin  = Pattern.compile(".*?(\\d+)[mM]");
+    private long extractDuration(String time) {
+        if(time.isEmpty()) return 0;
+        General.logger.debug("Extracting time: " + time);
+        Matcher m;
+        boolean matched = false;
+        long hours = 0, minutes = 0;
+        m = patHour.matcher(time);
+        if(m.matches()) {
+            hours = Long.valueOf(m.group(1));
+            General.logger.debug("Got hours: " + hours);
+            matched = true;
+        }
+        m = patMin.matcher(time);
+        if(m.matches()) {
+            minutes = Long.valueOf(m.group(1));
+            General.logger.debug("Got minutes: " + minutes);
+            matched =  true;
+        }
+        if(matched) return (long) ((hours * 1000) + (((double) minutes) / 0.06));
+        return Long.valueOf(time);
+    }
+    
     private boolean setTime(CommandSender sender, String time) {
         // TODO: Add human-friendly time (=4pm, +4s, +4m, etc)
         if(time.equalsIgnoreCase("day")) { // 6am
@@ -156,19 +191,21 @@ public class timeCommand extends CommandBase {
         } else if(time.startsWith("+")) {
             try {
                 long now = this.world.getTime();
-                String t = time.substring(1);
-                this.world.setTime(now + Long.parseLong(t));
-                Messaging.send(sender,"Time advanced by " + t + " ticks!");
+                long ticks = extractDuration(time.substring(1));
+                this.world.setTime(now + ticks);
+                Messaging.send(sender,"Time advanced by " + formatDuration(ticks) + "!");
             } catch(Exception ex) {
+                ex.printStackTrace();
                 return Toolbox.USAGE;
             }
         } else if(time.startsWith("-")) {
             try {
                 long now = this.world.getTime();
-                String t = time.substring(1);
-                this.world.setTime(now - Long.parseLong(t));
-                Messaging.send(sender,"Time set back by " + t + " ticks!");
+                long ticks = extractDuration(time.substring(1));
+                this.world.setTime(now - ticks);
+                Messaging.send(sender,"Time set back by " + formatDuration(ticks) + "!");
             } catch(Exception ex) {
+                ex.printStackTrace();
                 return Toolbox.USAGE;
             }
         } else {
