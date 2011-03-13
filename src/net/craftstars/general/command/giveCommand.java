@@ -50,15 +50,22 @@ public class giveCommand extends CommandBase {
                 return true;
             }
         break;
-        case 3: // /give <item>[:<data>] <amount> <player>
-            who = Toolbox.getPlayer(args[2], sender);
-            if(who == null) return true;
-            item = Items.validate(args[0]);
+        case 3: // /give <item>[:<data>] <amount> <player> OR /give <player> <item>[:<data>] <amount>
             try {
-                amount = Integer.valueOf(args[1]);
-            } catch(NumberFormatException x) {
-                Messaging.send(sender, "&rose;The amount must be an integer.");
-                return true;
+                amount = Integer.valueOf(args[2]);
+                who = Toolbox.getPlayer(args[0], sender);
+                if(who == null) return true;
+                item = Items.validate(args[1]);
+            } catch(NumberFormatException ex) {
+                who = Toolbox.getPlayer(args[2], sender);
+                if(who == null) return true;
+                item = Items.validate(args[0]);
+                try {
+                    amount = Integer.valueOf(args[1]);
+                } catch(NumberFormatException x) {
+                    Messaging.send(sender, "&rose;The amount must be an integer.");
+                    return true;
+                }
             }
         break;
         default:
@@ -147,20 +154,27 @@ public class giveCommand extends CommandBase {
             if(!args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
             showHelp(sender);
             return true;
-        case 2: // give <item> <player>
+        case 2: // give <item>[:<data>] <player>
             who = Toolbox.getPlayer(args[1],sender);
             if(who == null) return true;
             item = Items.validate(args[0]);
         break;
-        case 3: // give <item> <amount> <player>
-            who = Toolbox.getPlayer(args[2], sender);
-            if(who == null) return true;
-            item = Items.validate(args[0]);
+        case 3: // give <item>[:<data>] <amount> <player> OR give <player> <item>[:<data>] <amount>
             try {
-                amount = Integer.valueOf(args[1]);
-            } catch(NumberFormatException x) {
-                Messaging.send(sender, "&rose;The amount must be an integer.");
-                return true;
+                amount = Integer.valueOf(args[2]);
+                who = Toolbox.getPlayer(args[0], sender);
+                if(who == null) return true;
+                item = Items.validate(args[1]);
+            } catch(NumberFormatException ex) {
+                who = Toolbox.getPlayer(args[2], sender);
+                if(who == null) return true;
+                item = Items.validate(args[0]);
+                try {
+                    amount = Integer.valueOf(args[1]);
+                } catch(NumberFormatException x) {
+                    Messaging.send(sender, "&rose;The amount must be an integer.");
+                    return true;
+                }
             }
         break;
         default:

@@ -42,6 +42,13 @@ public class timeCommand extends CommandBase {
             if(args[0].equalsIgnoreCase("help")) {
                 showHelp(sender);
                 return true;
+            } else if(args[0].equalsIgnoreCase("add")) {
+                this.world = sender.getWorld();
+                if(args[1].charAt(0) == '-') return setTime(sender, args[1]);
+                else return setTime(sender, '+' + args[1]);
+            } else if(args[1].equalsIgnoreCase("set")) {
+                this.world = sender.getWorld();
+                return setTime(sender, args[1]);
             }
             this.world = null;
             // This mega-if is to ensure that "no such world" messages are not displayed on valid input
@@ -153,7 +160,7 @@ public class timeCommand extends CommandBase {
                 if(suffix.equalsIgnoreCase("h"))
                     hour = twentyFourHourToTicks(Long.valueOf(m.group(1)));
                 else hour = twelveHourToTicks(Long.valueOf(m.group(1)), suffix.equalsIgnoreCase("pm"));
-            } else throw new NumberFormatException();
+            } else return Long.valueOf(time);
         }
         hour *= 1000;
         minutes = Math.round(((double) minutes) / 0.06);
@@ -247,6 +254,7 @@ public class timeCommand extends CommandBase {
             if(time.startsWith("=")) time = time.substring(1);
             try {
                 long ticks = extractTime(time);
+                if(ticks < 0) ticks += 24000;
                 this.world.setTime(ticks);
                 Messaging.send(sender,"Time set to " + formatTime(ticks,currentFormat) + "!");
             } catch(NumberFormatException x) {
@@ -298,12 +306,20 @@ public class timeCommand extends CommandBase {
                 showHelp(sender);
                 return true;
             }
+            return true;
+        } else {
+            if(args[0].equalsIgnoreCase("add")) {
+                this.world = General.plugin.getServer().getWorlds().get(0);
+                if(args[1].charAt(0) == '-') return setTime(sender, args[1]);
+                else return setTime(sender, '+' + args[1]);
+            } else if(args[1].equalsIgnoreCase("set")) {
+                this.world = General.plugin.getServer().getWorlds().get(0);
+                return setTime(sender, args[1]);
+            }
             this.world = Toolbox.getWorld(args[0], sender);
             if(this.world != null) {
                 showTime(sender);
             }
-            return true;
-        } else {
             String time = args[1];
             this.world = Toolbox.getWorld(args[0], sender);
             if(this.world == null) return true;
