@@ -33,13 +33,13 @@ public class timeCommand extends CommandBase {
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
         if(args.length < 1) {
-            if(Toolbox.lacksPermission(plugin, sender, "general.time")) return true;
+            if(Toolbox.lacksPermission(plugin, sender, "general.time", "general.basic")) return true;
             // No arguments, assuming get current time for current world.
             this.world = sender.getWorld();
             showTime(sender);
             return true;
         } else if(args.length < 3) {
-            if(Toolbox.lacksPermission(plugin, sender, "general.time")) return true;
+            if(Toolbox.lacksPermission(plugin, sender, "general.time", "general.basic")) return true;
             if(args[0].equalsIgnoreCase("help")) {
                 showHelp(sender);
                 return true;

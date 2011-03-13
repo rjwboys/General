@@ -109,8 +109,13 @@ public class Toolbox {
         return theWorld;
     }
 
-    public static boolean lacksPermission(General plugin, Player who, String permission) {
-        if(!plugin.permissions.hasPermission(who, permission)) {
+    public static boolean lacksPermission(General plugin, Player who, String... permissions) {
+        boolean foundPermission = false;
+        for(String permission : permissions) {
+            if(plugin.permissions.hasPermission(who, permission))
+                foundPermission = true;
+        }
+        if(!foundPermission) {
             Messaging.send(who, "&rose;You don't have permission to do that.");
             return true;
         }

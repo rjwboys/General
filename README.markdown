@@ -26,6 +26,7 @@ Commands:
 
 Available Permissions nodes:
 
+* general.basic (blanket permission covering general.time, general.playerlist, general.who, general.away, general.tell, general.getpos)
 * general.time
 * general.time.set
 * general.teleport
@@ -44,6 +45,7 @@ Available Permissions nodes:
 * general.getpos (this also controls access to /compass and /where)
 * general.getpos.other
 * general.tell
+* general.away
 * general.clear
 * general.clear.other
 * general.take
