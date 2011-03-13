@@ -42,13 +42,6 @@ public class timeCommand extends CommandBase {
             if(args[0].equalsIgnoreCase("help")) {
                 showHelp(sender);
                 return true;
-            } else if(args[0].equalsIgnoreCase("add")) {
-                this.world = sender.getWorld();
-                if(args[1].charAt(0) == '-') return setTime(sender, args[1]);
-                else return setTime(sender, '+' + args[1]);
-            } else if(args[1].equalsIgnoreCase("set")) {
-                this.world = sender.getWorld();
-                return setTime(sender, args[1]);
             }
             this.world = null;
             // This mega-if is to ensure that "no such world" messages are not displayed on valid input
@@ -68,6 +61,14 @@ public class timeCommand extends CommandBase {
             }
             return true;
         case 2: // /time <world> <time>
+            if(args[0].equalsIgnoreCase("add")) {
+                this.world = sender.getWorld();
+                if(args[1].charAt(0) == '-') return setTime(sender, args[1]);
+                else return setTime(sender, '+' + args[1]);
+            } else if(args[0].equalsIgnoreCase("set")) {
+                this.world = sender.getWorld();
+                return setTime(sender, args[1]);
+            }
             this.world = General.plugin.getServer().getWorld(args[0]);
             if(world == null) return true;
             return setTime(sender, args[1]);
@@ -312,7 +313,7 @@ public class timeCommand extends CommandBase {
                 this.world = General.plugin.getServer().getWorlds().get(0);
                 if(args[1].charAt(0) == '-') return setTime(sender, args[1]);
                 else return setTime(sender, '+' + args[1]);
-            } else if(args[1].equalsIgnoreCase("set")) {
+            } else if(args[0].equalsIgnoreCase("set")) {
                 this.world = General.plugin.getServer().getWorlds().get(0);
                 return setTime(sender, args[1]);
             }
