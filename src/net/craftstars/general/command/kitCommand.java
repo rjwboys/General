@@ -3,7 +3,6 @@ package net.craftstars.general.command;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.regex.Matcher;

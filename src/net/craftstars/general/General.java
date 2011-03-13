@@ -290,6 +290,7 @@ public class General extends JavaPlugin {
                     + "]! Please report this error!");
             String cmdStr = "Full command string: [" + commandLabel;
             for(String x : args) cmdStr += " " + x;
+            cmdStr += ']';
             logger.error(cmdStr);
             ex.printStackTrace();
         }

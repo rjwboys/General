@@ -155,7 +155,6 @@ public class generalCommand extends CommandBase {
     private static long getTime(CommandSender sender) {
         if(sender instanceof Player) {
             long t = ((Player) sender).getWorld().getTime();
-            General.logger.debug("Time is " + t);
             return t;
         }
         return 0;

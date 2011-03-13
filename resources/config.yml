@@ -55,6 +55,10 @@ playerlist:
 # If true, show the message of the day on login.
 show-motd: true
 
+time:
+  format-24-hour: false
+  show-ticks: true
+
 # This section is for if you want economy enabled. Currently the only accepted option is system,
 # which should be either None or iConomy.
 

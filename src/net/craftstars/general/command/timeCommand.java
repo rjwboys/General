@@ -23,6 +23,7 @@ public class timeCommand extends CommandBase {
         try {
             boolean in24hr = General.plugin.config.getBoolean("time.format-24-hour", false);
             if(in24hr) currentFormat = TimeFormat.TWENTY_FOUR_HOUR;
+            showTicks = General.plugin.config.getBoolean("time.show-ticks", true);
         } catch(Exception x) {
             
         }
@@ -72,14 +73,15 @@ public class timeCommand extends CommandBase {
     
     private enum TimeFormat {TWENTY_FOUR_HOUR, TWELVE_HOUR};
     private TimeFormat currentFormat;
+    private boolean showTicks;
     
     private String formatTime(long time, TimeFormat fmt) {
-        String suffix = "";
-        long minutes = time % 1000;
-        minutes *= 0.06;
+        String suffix = "", formatString = "";
+        long minutes = time % 1000, ticks = time;
+        minutes = Math.round(((double) minutes) * 0.06);
         time /= 1000;
         time += 6;
-        while(time > 24) time -= 12;
+        while(time > 24) time -= 24;
         switch(fmt){
         case TWELVE_HOUR:
             if(time > 12) {
@@ -87,19 +89,39 @@ public class timeCommand extends CommandBase {
                 suffix = (time == 12) ? "am" : "pm";
             } else if(time < 12) {
                 suffix = "am";
-            } else suffix = "pm";
+            } else {
+                suffix = "pm";
+            }
+            formatString = "%d";
         break;
         case TWENTY_FOUR_HOUR:
             if(time == 24) time = 0;
             suffix = "h";
+            formatString = "%02d";
         break;
         }
+        formatString += ":%02d%s";
         Formatter fmtr = new Formatter();
-        return fmtr.format("%d:%02d%s", time, minutes, suffix).toString();
+        if(showTicks) return fmtr.format(formatString + " (%d)", time, minutes, suffix, ticks).toString();
+        else return fmtr.format(formatString, time, minutes, suffix).toString();
+    }
+    
+    private long twelveHourToTicks(long hour, boolean isPM) {
+        if(isPM) hour += 12;
+        if(hour == 12) hour = 0;
+        else if(hour == 24) hour = 12;
+        return twentyFourHourToTicks(hour);
+    }
+    
+    private long twentyFourHourToTicks(long hour) {
+        hour += 18;
+        while(hour >= 24) hour -= 24;
+        return hour;
     }
 
-    private static Pattern pat12hr = Pattern.compile("(\\d\\d?):(\\d\\d)([aApP][mM])");
-    private static Pattern pat24hr = Pattern.compile("(\\d\\d?):(\\d\\d)[hH]?");
+    private static Pattern pat12hr = Pattern.compile("(0?[1-9]|1[0-2]):([0-5]?[0-9])([aApP][mM])");
+    private static Pattern pat24hr = Pattern.compile("([01]?[0-9]|2[0-3]?):([0-5]?[0-9])[hH]?");
+    private static Pattern patShort = Pattern.compile("([01]?[0-9]|2[0-3]?)([hH]|[aApP][mM])");
     private long extractTime(String time) {
         Matcher m;
         boolean matched = false;
@@ -107,29 +129,34 @@ public class timeCommand extends CommandBase {
         // First try 24-hour
         m = pat24hr.matcher(time);
         if(m.matches()) {
-            hour = Long.valueOf(m.group(1)) - 6;
+            hour = twentyFourHourToTicks(Long.valueOf(m.group(1)));
             minutes = Long.valueOf(m.group(2));
             matched = true;
         }
         m = pat12hr.matcher(time);
         if(m.matches()) {
-            hour = Long.valueOf(m.group(1));
-            minutes = Long.valueOf(m.group(2));
             String suffix = m.group(3);
-            if(suffix.equalsIgnoreCase("pm")) hour += 6;
-            else hour -= 6;
+            hour = twelveHourToTicks(Long.valueOf(m.group(1)), suffix.equalsIgnoreCase("pm"));
+            minutes = Long.valueOf(m.group(2));
             matched = true;
         }
-        if(!matched) throw new NumberFormatException();
-        if(hour <= 0) hour += 24;
+        if(!matched) {
+            m = patShort.matcher(time);
+            if(m.matches()) {
+                String suffix = m.group(2);
+                if(suffix.equalsIgnoreCase("h"))
+                    hour = twentyFourHourToTicks(Long.valueOf(m.group(1)));
+                else hour = twelveHourToTicks(Long.valueOf(m.group(1)), suffix.equalsIgnoreCase("pm"));
+            } else throw new NumberFormatException();
+        }
         hour *= 1000;
-        minutes /= 0.06;
+        minutes = Math.round(((double) minutes) / 0.06);
         return hour + minutes;
     }
     
     private String formatDuration(long time) {
         long minutes = time % 1000, hours = time / 1000;
-        minutes *= 0.06;
+        minutes = Math.round(((double) minutes) * 0.06);
         Formatter fmtr = new Formatter();
         if(minutes + hours == 0) return fmtr.format("%d ticks", time).toString();
         if(minutes == 0) return fmtr.format("%d hours", hours).toString();
@@ -142,23 +169,20 @@ public class timeCommand extends CommandBase {
     private static Pattern patMin  = Pattern.compile(".*?(\\d+)[mM]");
     private long extractDuration(String time) {
         if(time.isEmpty()) return 0;
-        General.logger.debug("Extracting time: " + time);
         Matcher m;
         boolean matched = false;
         long hours = 0, minutes = 0;
         m = patHour.matcher(time);
         if(m.matches()) {
             hours = Long.valueOf(m.group(1));
-            General.logger.debug("Got hours: " + hours);
             matched = true;
         }
         m = patMin.matcher(time);
         if(m.matches()) {
             minutes = Long.valueOf(m.group(1));
-            General.logger.debug("Got minutes: " + minutes);
             matched =  true;
         }
-        if(matched) return (long) ((hours * 1000) + (((double) minutes) / 0.06));
+        if(matched) return (hours * 1000) + Math.round(((double) minutes) / 0.06);
         return Long.valueOf(time);
     }
     
@@ -166,27 +190,27 @@ public class timeCommand extends CommandBase {
         // TODO: Add human-friendly time (=4pm, +4s, +4m, etc)
         if(time.equalsIgnoreCase("day")) { // 6am
             this.world.setTime(this.getStartTime());
-            Messaging.send(sender,"Time set to day (" + formatTime(0,currentFormat) + ")!");
+            Messaging.send(sender,"Time set to day: " + formatTime(0,currentFormat) + "!");
             return true;
         } else if(time.equalsIgnoreCase("night")) { // 7:48pm
             this.world.setTime(this.getStartTime() + 13800);
-            Messaging.send(sender,"Time set to night (" + formatTime(13800,currentFormat) + "!");
+            Messaging.send(sender,"Time set to night: " + formatTime(13800,currentFormat) + "!");
             return true;
         } else if(Toolbox.equalsOne(time, "dusk", "sunset", "evening")) { // 6pm
             this.world.setTime(this.getStartTime() + 12000);
-            Messaging.send(sender,"Time set to dusk (" + formatTime(12000,currentFormat) + "!");
+            Messaging.send(sender,"Time set to dusk: " + formatTime(12000,currentFormat) + "!");
             return true;
         } else if(Toolbox.equalsOne(time, "dawn", "sunrise", "morning")) { // 4:12am
             this.world.setTime(this.getStartTime() + 22200);
-            Messaging.send(sender,"Time set to dawn (" + formatTime(22200,currentFormat) + "!");
+            Messaging.send(sender,"Time set to dawn: " + formatTime(22200,currentFormat) + "!");
             return true;
         } else if(Toolbox.equalsOne(time, "midday", "noon")) { // 12am
             this.world.setTime(this.getStartTime() + 6000);
-            Messaging.send(sender,"Time set to noon (" + formatTime(6000,currentFormat) + "!");
+            Messaging.send(sender,"Time set to noon: " + formatTime(6000,currentFormat) + "!");
             return true;
         } else if(Toolbox.equalsOne(time, "midnight")) { // 12pm
             this.world.setTime(this.getStartTime() + 18000);
-            Messaging.send(sender,"Time set to midnight (" + formatTime(18000,currentFormat) + "!");
+            Messaging.send(sender,"Time set to midnight: " + formatTime(18000,currentFormat) + "!");
             return true;
         } else if(time.startsWith("+")) {
             try {
@@ -194,6 +218,8 @@ public class timeCommand extends CommandBase {
                 long ticks = extractDuration(time.substring(1));
                 this.world.setTime(now + ticks);
                 Messaging.send(sender,"Time advanced by " + formatDuration(ticks) + "!");
+            } catch(NumberFormatException x) {
+                Messaging.send(sender, "&rose;Invalid duration format.");
             } catch(Exception ex) {
                 ex.printStackTrace();
                 return Toolbox.USAGE;
@@ -204,6 +230,8 @@ public class timeCommand extends CommandBase {
                 long ticks = extractDuration(time.substring(1));
                 this.world.setTime(now - ticks);
                 Messaging.send(sender,"Time set back by " + formatDuration(ticks) + "!");
+            } catch(NumberFormatException x) {
+                Messaging.send(sender, "&rose;Invalid duration format.");
             } catch(Exception ex) {
                 ex.printStackTrace();
                 return Toolbox.USAGE;
@@ -213,7 +241,9 @@ public class timeCommand extends CommandBase {
             try {
                 long ticks = extractTime(time);
                 this.world.setTime(ticks);
-                Messaging.send(sender,"Time set to " + formatTime(ticks,currentFormat) + " (" + ticks + ")!");
+                Messaging.send(sender,"Time set to " + formatTime(ticks,currentFormat) + "!");
+            } catch(NumberFormatException x) {
+                Messaging.send(sender, "&rose;Invalid time format.");
             } catch(Exception ex) {
                 return Toolbox.USAGE;
             }
@@ -223,7 +253,7 @@ public class timeCommand extends CommandBase {
 
     private void showTime(CommandSender sender) {
         int time = (int) this.world.getTime();
-        Messaging.send(sender,"Time: " + this.getFriendlyTime(time) + " " + formatTime(time,currentFormat) + " (" + time + ")");
+        Messaging.send(sender,"Current Time: " + this.getFriendlyTime(time) + " " + formatTime(time,currentFormat));
     }
 
     private long getTime() {
