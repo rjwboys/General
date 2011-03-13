@@ -25,42 +25,48 @@ public class timeCommand extends CommandBase {
             if(in24hr) currentFormat = TimeFormat.TWENTY_FOUR_HOUR;
             showTicks = General.plugin.config.getBoolean("time.show-ticks", true);
         } catch(Exception x) {
-            
+            General.logger.warn("Error loading time configuration settings: " + x);
         }
     }
     
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(args.length < 1) {
-            if(Toolbox.lacksPermission(plugin, sender, "general.time", "general.basic")) return true;
+        switch(args.length) {
+        case 0: // /time
             // No arguments, assuming get current time for current world.
             this.world = sender.getWorld();
             showTime(sender);
             return true;
-        } else if(args.length < 3) {
-            if(Toolbox.lacksPermission(plugin, sender, "general.time", "general.basic")) return true;
+        case 1: // /time <world> OR /time <time> OR /time help
             if(args[0].equalsIgnoreCase("help")) {
                 showHelp(sender);
                 return true;
             }
-            
-            int i = args.length - 1;
-            this.world = General.plugin.getServer().getWorld(args[i]);
-            if(i == 0 && this.world != null) {
+            this.world = null;
+            // This mega-if is to ensure that "no such world" messages are not displayed on valid input
+            // or on input that is obviously not intended to be a world, while still allowing access
+            // to worlds if their name happens to match one of the special time keywords.
+            if(!"0123456789+-=".contains(args[0].substring(0,1)))
+                if(Toolbox.equalsOne(args[0], "day", "night", "nood", "midday", "midnight",
+                        "dawn", "sunrise", "morning", "dusk", "sunset", "evening"))
+                    this.world = General.plugin.getServer().getWorld(args[0]); // no error message if not found
+                else
+                    this.world = Toolbox.getWorld(args[0], sender); // error message if not found
+            if(world != null)
                 showTime(sender);
-                return true;
+            else {
+                this.world = sender.getWorld();
+                return setTime(sender, args[0]);
             }
-            
-            if(Toolbox.lacksPermission(plugin, sender, "general.time.set")) return true;
-            String time = args[0];
-            if(args.length == 1) this.world = sender.getWorld();
-            if(this.world == null) {
-                Toolbox.getWorld(args[i], sender);
-                return true;
-            }
-            return setTime(sender, time);
-        } else return Toolbox.USAGE;
+            return true;
+        case 2: // /time <world> <time>
+            this.world = General.plugin.getServer().getWorld(args[0]);
+            if(world == null) return true;
+            return setTime(sender, args[1]);
+        default:
+            return Toolbox.USAGE;
+        }
     }
 
     private void showHelp(CommandSender sender) {
@@ -187,7 +193,8 @@ public class timeCommand extends CommandBase {
     }
     
     private boolean setTime(CommandSender sender, String time) {
-        // TODO: Add human-friendly time (=4pm, +4s, +4m, etc)
+        if(sender instanceof Player)
+            if(Toolbox.lacksPermission(General.plugin, (Player) sender, "general.time.set")) return true;
         if(time.equalsIgnoreCase("day")) { // 6am
             this.world.setTime(this.getStartTime());
             Messaging.send(sender,"Time set to day: " + formatTime(0,currentFormat) + "!");
@@ -252,6 +259,8 @@ public class timeCommand extends CommandBase {
     }
 
     private void showTime(CommandSender sender) {
+        if(sender instanceof Player)
+            if(Toolbox.lacksPermission(General.plugin, (Player) sender, "general.time", "general.basic")) return;
         int time = (int) this.world.getTime();
         Messaging.send(sender,"Current Time: " + this.getFriendlyTime(time) + " " + formatTime(time,currentFormat));
     }
@@ -295,8 +304,8 @@ public class timeCommand extends CommandBase {
             }
             return true;
         } else {
-            String time = args[0];
-            this.world = Toolbox.getWorld(args[1], sender);
+            String time = args[1];
+            this.world = Toolbox.getWorld(args[0], sender);
             if(this.world == null) return true;
             return setTime(sender, time);
         }
