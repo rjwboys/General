@@ -86,6 +86,7 @@ public class General extends JavaPlugin {
         this.loadConfiguration();
 
         Items.setup();
+        kitCommand.loadKits();
         //getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE, new PluginListener(), Priority.Monitor, this);
         setupPermissions(true);
         setupEconomy();
@@ -273,7 +274,6 @@ public class General extends JavaPlugin {
         } catch(Exception ex) {
             General.logger.warn("Could not read and/or write config.yml! Continuing with default values!", ex);
         }
-        kitCommand.loadKits();
     }
 
     @Override

@@ -304,7 +304,7 @@ public class Items {
     public static ItemID validate(String item) {
         ItemID ret;
         // First figure out what the data and ID are.
-        if(Pattern.matches("([a-zA-Z0-9]+)", item)) {
+        if(Pattern.matches("([a-zA-Z0-9a-zA-Z_'-]+)", item)) {
             ret = validateShortItem(item);
             // Since no data was explicitly supplied, we can assume that a -1 in the data means none
             // was found.
@@ -361,6 +361,7 @@ public class Items {
         try {
             ret.ID = Integer.valueOf(item);
         } catch(NumberFormatException x) {
+            if(aliases == null) General.logger.error("aliases is null");
             for(String alias : aliases.keySet()) {
                 if(!alias.equalsIgnoreCase(item)) continue;
                 ItemID code = aliases.get(alias);

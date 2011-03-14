@@ -170,12 +170,12 @@ public class kitCommand extends CommandBase {
             kits.clear();
             String list;
             String[] listing;
-            Pattern idPat = Pattern.compile("^([0-9]+).*");
-            Pattern dataPat = Pattern.compile(".*\\+([0-9]+).*");
-            Pattern nPat = Pattern.compile(".*-([0-9]+)$");
+            Pattern idPat = Pattern.compile("^([0-9a-zA-Z_']+).*");
+            Pattern dataPat = Pattern.compile(".*\\+([0-9a-zA-Z_']+).*");
+            Pattern nPat = Pattern.compile(".*-([0-9a-zA-Z]+)$");
             while ((l = br.readLine()) != null) {
                 list = l.trim();
-                if (!list.startsWith("#")) {
+                if (!list.startsWith("#") && !list.isEmpty()) {
                     listing = list.split(":");
                     try {
                         int delay = Integer.valueOf(listing[2]);
@@ -184,24 +184,26 @@ public class kitCommand extends CommandBase {
                         //ItemID[] components = new ItemID[stuff.length];
                         //int[] amounts = new int[stuff.length];
                         for(String item : stuff) {
-                            int id, data = 0, n = 1;
+                            int n = 1;
+                            String id, data = "0";
                             Matcher m;
                             item = item.trim();
                             m = idPat.matcher(item);
                             if(m.matches()) {
-                                id = Integer.valueOf(m.group(1));
-                            } else throw new InputMismatchException();
+                                id = m.group(1);
+                            } else throw new InputMismatchException(item);
                             m = dataPat.matcher(item);
                             if(m.matches()) {
-                                data = Integer.valueOf(m.group(1));
+                                data = m.group(1);
                             }
                             m = nPat.matcher(item);
                             if(m.matches()) {
                                 n = Integer.valueOf(m.group(1));
                             }
-                            if(Items.validate(id + ":" + data).ID == -1)
-                                throw new IllegalArgumentException();
-                            components.put(new ItemID(id, data), n);
+                            ItemID type = Items.validate(id + ":" + data);
+                            if(type.ID == -1)
+                                throw new IllegalArgumentException(id + ":" + data);
+                            components.put(new ItemID(type.ID, type.data), n);
                         }
                         Kit theKit = new Kit(listing[0], components, delay);
                         kits.put(listing[0].toLowerCase(), theKit);
@@ -209,7 +211,7 @@ public class kitCommand extends CommandBase {
                             General.logger.warn("Note: line " + lineNumber + " in general.kits has more than three components; excess ignored");
                         }
                     } catch(Exception x) {
-                        General.logger.warn("Note: line " + lineNumber + " in general.kits is improperly defined and is ignored (" + x.getClass().getName() + ")");
+                        General.logger.warn("Note: line " + lineNumber + " in general.kits is improperly defined and is ignored (" + x.getClass().getName() + ", " + x.getMessage() + ")");
                     }
                 }
                 lineNumber++;
