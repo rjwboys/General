@@ -7,12 +7,12 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import me.taylorkelly.help.Help;
-import net.craftstars.general.command.generalCommand;
-import net.craftstars.general.command.kitCommand;
+import net.craftstars.general.items.Items;
+import net.craftstars.general.items.wjykk.cjc343.Kits;
 import net.craftstars.general.money.EconomyBase;
 import net.craftstars.general.security.BasicPermissionsHandler;
 import net.craftstars.general.security.PermissionsHandler;
-import net.craftstars.general.util.Items;
+import net.craftstars.general.util.MessageOfTheDay;
 import net.craftstars.general.util.PluginLogger;
 
 import org.bukkit.command.Command;
@@ -86,7 +86,7 @@ public class General extends JavaPlugin {
         this.loadConfiguration();
 
         Items.setup();
-        kitCommand.loadKits();
+        Kits.loadKits();
         //getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE, new PluginListener(), Priority.Monitor, this);
         setupPermissions(true);
         setupEconomy();
@@ -94,7 +94,7 @@ public class General extends JavaPlugin {
             getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, new PlayerListener(){
                 @Override
                 public void onPlayerJoin(PlayerEvent event) {
-                    generalCommand.showMotD(event.getPlayer());
+                    MessageOfTheDay.showMotD(event.getPlayer());
                 }
             }, Priority.Normal, this);
 

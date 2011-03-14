@@ -5,7 +5,8 @@ import java.util.Map;
 
 import net.craftstars.general.CommandBase;
 import net.craftstars.general.General;
-import net.craftstars.general.util.Items;
+import net.craftstars.general.items.ItemID;
+import net.craftstars.general.items.Items;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -17,7 +18,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class takeCommand extends CommandBase {
     private Player who;
-    private Items.ItemID item;
+    private ItemID item;
     private int amount;
 
     @Override
