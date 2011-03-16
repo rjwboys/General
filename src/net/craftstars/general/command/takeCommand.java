@@ -51,20 +51,20 @@ public class takeCommand extends CommandBase {
             return Toolbox.USAGE;
         }
 
-        if(item.ID == -1) {
+        if(item == null || !item.isIdValid()) {
             Messaging.send(sender, "&rose;Invalid item.");
             return true;
         }
 
-        if(item.data == -1) {
-            Messaging.send(sender, "&f" + Items.lastDataError
-                    + "&rose; is not a valid data type for &f" + Items.name(item.ID, 0) + "&rose;.");
+        if(!item.isDataValid()) {
+            Messaging.send(sender, "&f" + item.getVariant()
+                    + "&rose; is not a valid data type for &f" + Items.name(item) + "&rose;.");
             return true;
         }
 
         doTake();
         Messaging.send(sender, "&2Took &f" + amount + "&2 of &f"
-                + Items.name(item.ID, item.data) + "&2 from &f" + who.getName() + "&2!");
+                + Items.name(item) + "&2 from &f" + who.getName() + "&2!");
         return true;
     }
 
@@ -109,20 +109,20 @@ public class takeCommand extends CommandBase {
             return Toolbox.USAGE;
         }
 
-        if(item.ID == -1) {
+        if(item == null || !item.isIdValid()) {
             Messaging.send(sender, "&rose;Invalid item.");
             return true;
         }
 
-        if(item.data == -1) {
-            Messaging.send(sender, "&f" + Items.lastDataError
-                    + "&rose; is not a valid data type for &f" + Items.name(item.ID, 0) + "&rose;.");
+        if(!item.isDataValid()) {
+            Messaging.send(sender, "&f" + item.getVariant()
+                    + "&rose; is not a valid data type for &f" + Items.name(item) + "&rose;.");
             return true;
         }
 
         doTake();
         if(!sender.getName().equalsIgnoreCase(who.getName()))
-            Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + Items.name(item.ID, item.data)
+            Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + Items.name(item)
                     + "&2 from &f" + who.getName());
         return true;
     }
@@ -130,10 +130,10 @@ public class takeCommand extends CommandBase {
     private void doTake() {
         int removed = 0;
         if(amount <= 0) {
-            who.getInventory().remove(item.ID);
+            who.getInventory().remove(item.getId());
         } else {
             PlayerInventory i = who.getInventory();
-            Map<Integer, ? extends ItemStack> items = i.all(item.ID);
+            Map<Integer, ? extends ItemStack> items = i.all(item.getId());
             for(int x : items.keySet()) {
                 ItemStack stk = items.get(x);
                 int n, d;
@@ -143,7 +143,7 @@ public class takeCommand extends CommandBase {
                 } catch(NullPointerException ex) {
                     d = stk.getDurability();
                 }
-                if(!Items.isDamageable(item.ID) && item.data != d) continue;
+                if(!Items.isDamageable(item.getId()) && item.getData() != d) continue;
                 if(n > amount) {
                     stk.setAmount(n - amount);
                     removed += amount;
@@ -157,7 +157,7 @@ public class takeCommand extends CommandBase {
                 if(amount <= 0) break;
             }
         }
-        Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &f" + Items.name(item.ID, item.data)
+        Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &f" + Items.name(item)
                 + "&2 was taken from you.");
     }
 }

@@ -30,9 +30,9 @@ public class Items {
             variants = var;
         }
 
-        public int findVariant(int id, String data) {
+        public Integer findVariant(int id, String data) {
             ConfigurationNode thisItem = variants.getNode("item" + Integer.toString(id));
-            if(thisItem == null) return -1;
+            if(thisItem == null) return null;
             int i = 0;
             List<String> thisVariant;
             do {
@@ -40,7 +40,7 @@ public class Items {
                 if(thisVariant.contains(data)) return i;
                 i++;
             } while(!thisVariant.isEmpty());
-            return -1;
+            return null;
         }
     }
 
@@ -48,7 +48,6 @@ public class Items {
     private static HashMap<ItemID, String> names;
     private static VariantsMap variants;
     private static List<Integer> dmg;
-    public static String lastDataError;
     private static List<Integer> nostk;
     private static List<Integer> smstk;
 
@@ -203,21 +202,18 @@ public class Items {
      * @param data Item data value
      * @return Canonical name
      */
-    public static String name(Integer id, Integer data) {
-        ItemID longKey = new ItemID(id, data);
+    public static String name(ItemID longKey) {
         if(names.containsKey(longKey)) {
             return names.get(longKey);
         }
 
         for(Material item : Material.values()) {
-            if(item.getId() == id) {
+            if(item.getId() == longKey.getId()) {
                 return Toolbox.camelToPhrase(item.toString());
             }
         }
-
-        if(data == null) return Toolbox.string(id) + ":" + Toolbox.string(data);
-
-        return Toolbox.string(id);
+        
+        return longKey.toString();
     }
 
     /**
@@ -264,7 +260,8 @@ public class Items {
             ret = validateShortItem(item);
             // Since no data was explicitly supplied, we can assume that a -1 in the data means none
             // was found.
-            if(ret.data == -1) ret.data = 0;
+            if(ret == null) return ret;
+            if(ret.getData() == null) ret.setData(0);
         } else {
             // Pattern itemPat = Pattern.compile("([a-z0-9]+)[.,:/\\|]([a-z0-9]+)",
             // Pattern.CASE_INSENSITIVE);
@@ -273,17 +270,16 @@ public class Items {
                 String[] parts = item.split("[.,:/\\|]");
                 ret = validateLongItem(parts[0], parts[1]);
             } catch(ArrayIndexOutOfBoundsException x) {
-                return new ItemID(-1,-1);
+                return null;
             }
         }
 
         // Was a valid data/id obtained? If not, we're done; it's invalid.
-        if(ret.ID < 0) ret.data = -1;
-        if(ret.data < 0) return ret;
+        if(!ret.isValid()) return ret;
 
         // Make sure it's the ID of a valid item.
-        Material check = Material.getMaterial(ret.ID);
-        if(check == null) return new ItemID(-1, -1);
+        Material check = Material.getMaterial(ret.getId());
+        if(check == null) return ret.invalidate(false);
 
         // Make sure the damage value is valid.
         // if(dmg.contains(ret.ID)) {
@@ -294,39 +290,40 @@ public class Items {
 
         return ret;
     }
-
+    
     private static ItemID validateLongItem(String item, String data) {
         ItemID ret = validateShortItem(item);
-        if(ret.data >= 0) { // This means a "richalias" was used, which includes the data value.
-            ret.data = -1; // No data value is valid with a "richalias".
-        } else if(ret.ID < 0) { // If it wasn't valid as a short item, check the hooks.
+        if(ret == null) { // If it wasn't valid as a short item, check the hooks.
             // TODO: stuff
+        } else if(ret.getData() != null) { // This means a "richalias" was used, which includes the data value.
+            ret.invalidate(true); // No data value is valid with a "richalias".
         } else {
             try {
-                ret.data = Integer.valueOf(data);
+                ret.setData(Integer.valueOf(data));
             } catch(NumberFormatException x) {
-                ret.data = variants.findVariant(ret.ID, data);
+                Integer d = variants.findVariant(ret.getId(), data);
+                if(d != null) ret.setData(d).setVariant(data);
             }
         }
-        if(ret.data < 0) lastDataError = data;
         return ret;
     }
 
     private static ItemID validateShortItem(String item) {
-        ItemID ret = new ItemID(-1, -1);
+        ItemID ret = null;
         try {
-            ret.ID = Integer.valueOf(item);
+            ret = new ItemID(Integer.valueOf(item));
         } catch(NumberFormatException x) {
             if(aliases == null) General.logger.error("aliases is null");
-            for(String alias : aliases.keySet()) {
+            else for(String alias : aliases.keySet()) {
                 if(!alias.equalsIgnoreCase(item)) continue;
-                ItemID code = aliases.get(alias);
-                ret.ID = code.ID;
-                if(code.dataMatters) ret.data = code.data;
+                ret = new ItemID(aliases.get(alias));
+                ret.setName(alias);
             }
-            if(ret.ID == -1) {
+            if(ret == null) {
                 for(Material material : Material.values()) {
-                    if(material.toString().equalsIgnoreCase(item)) ret.ID = material.getId();
+                    if(material.toString().equalsIgnoreCase(item)) {
+                        ret = new ItemID(material).setName(material.toString());
+                    }
                 }
             }
         }
@@ -355,7 +352,7 @@ public class Items {
     
     public static void giveItem(Player who, ItemID x, Integer amount) {
         PlayerInventory i = who.getInventory();
-        HashMap<Integer, ItemStack> excess = i.addItem(new ItemStack(x.ID, amount, (short) x.data));
+        HashMap<Integer, ItemStack> excess = i.addItem(x.getStack(amount));
         General.logger.debug("Giving " + amount + " of " + x);
         for(ItemStack leftover : excess.values()) {
             if(i.getBoots().getType() == Material.AIR) {

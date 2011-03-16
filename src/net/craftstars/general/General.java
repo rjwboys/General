@@ -96,7 +96,7 @@ public class General extends JavaPlugin {
                 public void onPlayerJoin(PlayerEvent event) {
                     MessageOfTheDay.showMotD(event.getPlayer());
                 }
-            }, Priority.Normal, this);
+            }, Priority.Monitor, this);
 
         logger.info("[Codename: " + General.codename + "] Plugin successfully loaded!");
         

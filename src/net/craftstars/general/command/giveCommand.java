@@ -6,7 +6,6 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.ConfigurationNode;
 
 import net.craftstars.general.CommandBase;
@@ -73,21 +72,21 @@ public class giveCommand extends CommandBase {
             return Toolbox.USAGE;
         }
 
-        if(item.ID == -1) {
+        if(item == null || !item.isIdValid()) {
             Messaging.send(sender, "&rose;Invalid item.");
             return true;
         }
 
-        if(item.data == -1) {
-            Messaging.send(sender, "&f" + Items.lastDataError
-                    + "&rose; is not a valid data type for &f" + Items.name(item.ID, 0) + "&rose;.");
+        if(!item.isDataValid()) {
+            Messaging.send(sender, "&f" + item.getVariant()
+                    + "&rose; is not a valid data type for &f" + Items.name(item) + "&rose;.");
             return true;
         }
 
         if(amount < 0 && Toolbox.lacksPermission(plugin, sender, "general.give.infinite")) return true;
         // Make sure this player is allowed this particular item
         if(!canGetItem(sender)) {
-            Messaging.send(sender, "&2You're not allowed to get &f" + Items.name(item.ID, item.data) + "&2.");
+            Messaging.send(sender, "&2You're not allowed to get &f" + Items.name(item) + "&2.");
             return true;
         }
 
@@ -95,7 +94,7 @@ public class giveCommand extends CommandBase {
         doGive(isGift);
         if(isGift) {
             Messaging.send(sender, "&2Gave &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f"
-                    + Items.name(item.ID, item.data) + "&2 to &f" + who.getName() + "&2!");
+                    + Items.name(item) + "&2 to &f" + who.getName() + "&2!");
         }
 
         return true;
@@ -111,7 +110,7 @@ public class giveCommand extends CommandBase {
         for(String group : groups) {
             List<Integer> items = permissions.getIntList("groups." + group, null);
             if(items.isEmpty()) continue;
-            if(items.contains(item.ID)) {
+            if(items.contains(item.getId())) {
                 return General.plugin.permissions.hasPermission(sender, "general.give.group." + group);
             }
         }
@@ -120,24 +119,23 @@ public class giveCommand extends CommandBase {
 
     private void doGive(boolean isGift) {
         if(amount == 0) { // give one stack
-            amount = Items.maxStackSize(item.ID);
+            amount = Items.maxStackSize(item.getId());
         }
 
         int slot = who.getInventory().firstEmpty();
 
         if(slot < 0) {
-            who.getWorld().dropItem(who.getLocation(),
-                    new ItemStack(item.ID, amount, (short) item.data));
+            who.getWorld().dropItem(who.getLocation(), item.getStack(amount));
         } else {
-            who.getInventory().addItem(new ItemStack(item.ID, amount, (short) item.data));
+            who.getInventory().addItem(item.getStack(amount));
         }
 
         if(isGift) {
             Messaging.send(who, "&2Enjoy the gift! &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f"
-                    + Items.name(item.ID, item.data) + "&2!");
+                    + Items.name(item) + "&2!");
         } else {
             Messaging.send(who, "&2Enjoy! Giving &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f"
-                    + Items.name(item.ID, item.data) + "&2.");
+                    + Items.name(item) + "&2.");
         }
     }
 
@@ -182,20 +180,20 @@ public class giveCommand extends CommandBase {
             return Toolbox.USAGE;
         }
 
-        if(item.ID == -1) {
+        if(item == null || !item.isIdValid()) {
             Messaging.send(sender, "&rose;Invalid item.");
             return true;
         }
 
-        if(item.data == -1) {
-            Messaging.send(sender, "&f" + Items.lastDataError
-                    + "&rose; is not a valid data type for &f" + Items.name(item.ID, 0) + "&rose;.");
+        if(!item.isDataValid()) {
+            Messaging.send(sender, "&f" + item.getVariant()
+                    + "&rose; is not a valid data type for &f" + Items.name(item) + "&rose;.");
             return true;
         }
 
         doGive(true);
         Messaging.send(sender, "&2Gave &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f"
-                + Items.name(item.ID, item.data) + "&2 to &f" + who.getName() + "&2!");
+                + Items.name(item) + "&2 to &f" + who.getName() + "&2!");
 
         return true;
     }

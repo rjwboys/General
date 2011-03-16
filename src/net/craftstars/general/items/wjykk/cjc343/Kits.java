@@ -85,6 +85,8 @@ public class Kits {
     }
     
     public static boolean loadKits() {
+        boolean foundAnException = false;
+        Exception exceptionToShow = null;
         try {
             File dataFolder = General.plugin.getDataFolder();
             BufferedReader br = new BufferedReader(new FileReader(new File(dataFolder, "general.kits")));
@@ -124,9 +126,9 @@ public class Kits {
                                 n = Integer.valueOf(m.group(1));
                             }
                             ItemID type = Items.validate(id + ":" + data);
-                            if(type.ID == -1)
+                            if(item == null || !type.isValid())
                                 throw new IllegalArgumentException(id + ":" + data);
-                            components.put(new ItemID(type.ID, type.data), n);
+                            components.put(new ItemID(type), n);
                         }
                         Kit theKit = new Kit(listing[0], components, delay);
                         kits.put(listing[0].toLowerCase(), theKit);
@@ -135,12 +137,20 @@ public class Kits {
                         }
                     } catch(Exception x) {
                         General.logger.warn("Note: line " + lineNumber + " in general.kits is improperly defined and is ignored (" + x.getClass().getName() + ", " + x.getMessage() + ")");
+                        if(!foundAnException) {
+                            foundAnException = true;
+                            exceptionToShow = x;
+                        }
                     }
                 }
                 lineNumber++;
             }
         } catch (Exception e) {
             General.logger.warn("An error occured: either general.kits does not exist or it could not be read; kits ignored");
+        }
+        if(foundAnException) {
+            General.logger.error("First exception loading the kits:");
+            exceptionToShow.printStackTrace();
         }
         // Return success
         return true;
