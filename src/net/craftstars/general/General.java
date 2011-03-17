@@ -13,13 +13,16 @@ import net.craftstars.general.money.EconomyBase;
 import net.craftstars.general.security.BasicPermissionsHandler;
 import net.craftstars.general.security.PermissionsHandler;
 import net.craftstars.general.util.MessageOfTheDay;
+import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.PluginLogger;
+import net.craftstars.general.util.Time;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.server.PluginEvent;
@@ -54,6 +57,7 @@ public class General extends JavaPlugin {
     public EconomyBase economy;
     private boolean gotRequestedPermissions, gotHelp, gotRequestedEconomy;
     private HashMap<String,String> playersAway = new HashMap<String,String>();
+    private String tagFormat;
     
     public boolean isAway(Player who) {
         return playersAway.containsKey(who.getName());
@@ -77,6 +81,24 @@ public class General extends JavaPlugin {
         plugin = this;
         logger.info("Loaded.");
     }
+    
+    PlayerListener pl = new PlayerListener(){
+        @Override
+        public void onPlayerJoin(PlayerEvent event) {
+            MessageOfTheDay.showMotD(event.getPlayer());
+        }
+        
+        @Override
+        public void onPlayerChat(PlayerChatEvent event) {
+            String tag = event.getMessage().split("\\s+")[0];
+            for(String who : playersAway.keySet()) {
+                if(tag.equalsIgnoreCase(tagFormat.replace("name", who))) {
+                    Messaging.send(event.getPlayer(), "&c" + who + " is away: " + playersAway.get(who));
+                    break;
+                }
+            }
+        }
+    };
 
     //@Override
     public void onEnable() {
@@ -84,20 +106,18 @@ public class General extends JavaPlugin {
         
         this.config = this.getConfiguration();
         this.loadConfiguration();
-
+        
+        Time.setup();
         Items.setup();
         Kits.loadKits();
         //getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE, new PluginListener(), Priority.Monitor, this);
         setupPermissions(true);
         setupEconomy();
         if(config.getBoolean("show-motd", true))
-            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, new PlayerListener(){
-                @Override
-                public void onPlayerJoin(PlayerEvent event) {
-                    MessageOfTheDay.showMotD(event.getPlayer());
-                }
-            }, Priority.Monitor, this);
-
+            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, pl, Priority.Monitor, this);
+        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, pl, Priority.Monitor, this);
+        tagFormat = config.getString("tag-fmt", "name:");
+        
         logger.info("[Codename: " + General.codename + "] Plugin successfully loaded!");
         
         setupHelp();

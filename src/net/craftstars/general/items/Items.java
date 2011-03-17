@@ -46,6 +46,7 @@ public class Items {
 
     private static HashMap<String, ItemID> aliases;
     private static HashMap<ItemID, String> names;
+    private static HashMap<String,HashMap<String,ItemID>> hooks;
     private static VariantsMap variants;
     private static List<Integer> dmg;
     private static List<Integer> nostk;
@@ -110,7 +111,25 @@ public class Items {
         // And then the variant names
         loadItemVariantNames(itemsyml);
 
-        // TODO: Load the "hooks" as well.
+        // Load the "hooks" as well.
+        loadHooks(itemsyml);
+    }
+
+    private static void loadHooks(Configuration itemsyml) {
+        hooks = new HashMap<String,HashMap<String,ItemID>>();
+        for(String key : itemsyml.getKeys("hooks")) {
+            HashMap<String,ItemID> thisHook = new HashMap<String,ItemID>();
+            for(String val : itemsyml.getNode("hooks").getKeys(key)) {
+                String x = itemsyml.getNode("hooks").getNode(key).getString(val);
+                ItemID thisItem = Items.validate(x);
+                if(thisItem == null) {
+                    General.logger.warn("Invalid hook: " + x);
+                } else {
+                    thisHook.put(val,thisItem);
+                }
+            }
+            hooks.put(key, thisHook);
+        }
     }
 
     private static void loadItemVariantNames(Configuration itemsyml) {
@@ -275,7 +294,7 @@ public class Items {
         }
 
         // Was a valid data/id obtained? If not, we're done; it's invalid.
-        if(!ret.isValid()) return ret;
+        if(ret == null || !ret.isValid()) return ret;
 
         // Make sure it's the ID of a valid item.
         Material check = Material.getMaterial(ret.getId());
@@ -294,7 +313,9 @@ public class Items {
     private static ItemID validateLongItem(String item, String data) {
         ItemID ret = validateShortItem(item);
         if(ret == null) { // If it wasn't valid as a short item, check the hooks.
-            // TODO: stuff
+            if(hooks.containsKey(item) && hooks.get(item).containsKey(data)) {
+                return hooks.get(item).get(data);
+            }
         } else if(ret.getData() != null) { // This means a "richalias" was used, which includes the data value.
             ret.invalidate(true); // No data value is valid with a "richalias".
         } else {

@@ -73,4 +73,8 @@ economy:
     351: 0
     276: 0
     # etc
-    
+
+# The format that a chat message's first word must take for General to assume that the player
+# may be tagging another player. For example, if you set it to '@name', it will use Twitter-style
+# tagging. Tagging currently only means that the tagger will be informed if the player is away.
+tag-fmt: 'name:'

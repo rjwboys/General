@@ -2,7 +2,9 @@ package net.craftstars.general.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.List;
 import java.util.Scanner;
 
 import net.craftstars.general.General;
@@ -63,6 +65,7 @@ public class MessageOfTheDay {
                         "+balance,+$,&balance;",
                         "+currency,+m,&currency;",
                         "+online,+c,&online;",
+                        "+list,+p,&list;",
                         "+world,+w,&world;",
                         "+time,+t,&time;",
                         "~!@#$%^&*()"
@@ -77,6 +80,7 @@ public class MessageOfTheDay {
                         getBalance(sender),
                         getCurrency(),
                         General.plugin.getServer().getOnlinePlayers().length,
+                        getOnline(),
                         getWorld(sender),
                         getTime(sender),
                         "+"
@@ -84,6 +88,34 @@ public class MessageOfTheDay {
             );
     }
     
+    private static String getOnline() {
+        List<String> lines = formatPlayerList(Toolbox.getPlayerList(General.plugin));
+        StringBuilder stuff = new StringBuilder();
+        for(String line : lines) stuff.append(line + " ");
+        return stuff.toString();
+    }
+
+    public static List<String> formatPlayerList(List<String> players) {
+        List<String> list = new ArrayList<String>();
+        if(players.size() == 0) {
+            list.add("(no-one)");
+            return list;
+        }
+        StringBuilder playerList = new StringBuilder();
+        for(String who : players) {
+            if(playerList.length() + who.length() > 54) {
+                list.add(playerList.toString());
+                playerList.setLength(0);
+            }
+            playerList.append(who);
+            playerList.append(", ");
+        }
+        int i = playerList.lastIndexOf(", ");
+        if(i > 0) playerList.delete(i,playerList.length());
+        list.add(playerList.toString());
+        return list;
+    }
+
     private static Object getCurrency() {
         if(General.plugin.economy == null) return "none";
         return General.plugin.economy.getCurrency();
@@ -104,12 +136,12 @@ public class MessageOfTheDay {
         return 0;
     }
 
-    private static long getTime(CommandSender sender) {
+    private static String getTime(CommandSender sender) {
         if(sender instanceof Player) {
             long t = ((Player) sender).getWorld().getTime();
-            return t;
+            return Time.formatTime(t, Time.currentFormat);
         }
-        return 0;
+        return "unknown";
     }
 
     private static String getLocation(CommandSender sender) {

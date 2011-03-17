@@ -1,7 +1,9 @@
 
 package net.craftstars.general.util;
 
+import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.List;
 
 import net.craftstars.general.General;
 
@@ -142,5 +144,16 @@ public class Toolbox {
             message.append(" ");
         }
         return message.toString();
+    }
+    
+    public static List<String> getPlayerList(General plugin) {
+        Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
+        List<String> players = new ArrayList<String>();
+
+        for(Player who : onlinePlayers) {
+            players.add(who.getName());
+        }
+
+        return players;
     }
 }

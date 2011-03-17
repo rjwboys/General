@@ -87,7 +87,7 @@ public class Messaging {
      * Example: <blockquote
      * 
      * <pre>
-     * Messaging.colorize(&quot;Hello &amp;green;world!&quot;); // returns: Hello ¤2world!
+     * Messaging.colorize(&quot;Hello &amp;green;world!&quot;); // returns: Hello ï¿½2world!
      * </pre>
      * 
      * </blockquote>
