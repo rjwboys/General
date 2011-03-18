@@ -87,13 +87,6 @@ public class Items {
         }
         aliases = new HashMap<String, ItemID>();
         names = new HashMap<ItemID, String>();
-        try {
-            dmg = itemsyml.getIntList("damageable", null);
-            nostk = itemsyml.getIntList("unstackable", null);
-            smstk = itemsyml.getIntList("smallstacks", null);
-        } catch(NullPointerException x) {
-            General.logger.warn("Information about damageable and stackable items missing.");
-        }
 
         // This loads in the item names from items.yml
         loadItemNames(itemsyml);
