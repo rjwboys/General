@@ -19,65 +19,42 @@ public class spawnCommand extends CommandBase {
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
         if(Toolbox.lacksPermission(plugin, sender, "general.spawn")) return true;
-        if(commandLabel.equalsIgnoreCase("setspawn")){
-            switch(args.length) {
-            case 0:
+        switch(args.length) {
+        case 0: // /spawn
+            doTeleport(sender);
+        break;
+        case 1:
+            if(args[0].equalsIgnoreCase("help")) return Toolbox.USAGE; // /spawn help
+            else if(args[0].equalsIgnoreCase("show")) { // /spawn show
+                doShow(sender.getWorld(), sender);
+            } else if(args[0].equalsIgnoreCase("set")) { // /spawn set
                 if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
                 doSet(sender, sender);
-            break;
-            case 1: // /setspawn <player>
-                if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
-                doSet(sender, args[0]);
-            break;
-            case 3: // /setspawn <x> <y> <z>
-                if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
-                doSet(sender, sender, args[0], args[1], args[2]);
-            break;
-            case 4: // /setspawn <world> <x> <y> <z>
-                if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
-                doSet(args[0], sender, args[1], args[2], args[3]);
-            break;
-            default:
-                return Toolbox.USAGE;
+            } else { // /spawn <player>
+                if(Toolbox.lacksPermission(plugin, sender, "general.spawn.other")) return true;
+                doTeleport(args[0], sender);
             }
-        } else {
-            switch(args.length) {
-            case 0: // /spawn
-                doTeleport(sender);
-            break;
-            case 1:
-                if(args[0].equalsIgnoreCase("help")) return Toolbox.USAGE; // /spawn help
-                else if(args[0].equalsIgnoreCase("show")) { // /spawn show
-                    doShow(sender.getWorld(), sender);
-                } else if(args[0].equalsIgnoreCase("set")) { // /spawn set
-                    if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
-                    doSet(sender, sender);
-                } else { // /spawn <player>
-                    if(Toolbox.lacksPermission(plugin, sender, "general.spawn.other")) return true;
-                    doTeleport(args[0], sender);
-                }
-            break;
-            case 2:
-                if(args[0].equalsIgnoreCase("set")) { // /spawn set <player>
-                    if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
-                    doSet(sender, args[1]);
-                } else if(args[1].equalsIgnoreCase("show")) { // /spawn <world> show
-                    doShow(args[0], sender);
-                } else return Toolbox.USAGE;
-            break;
-            case 4: // /spawn set <x> <y> <z>
-                if(!args[0].equalsIgnoreCase("set")) return Toolbox.USAGE;
+        break;
+        case 2:
+            if(args[0].equalsIgnoreCase("set")) { // /spawn set <player>
                 if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
-                doSet(sender, sender, args[1], args[2], args[3]);
-            break;
-            case 5: // /spawn <world> set <x> <y> <z>
-                if(!args[1].equalsIgnoreCase("set")) return Toolbox.USAGE;
-                if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
-                doSet(args[0], sender, args[2], args[3], args[3]);
-            break;
-            default:
-                return Toolbox.USAGE;
-            }
+                doSet(sender, args[1]);
+            } else if(args[1].equalsIgnoreCase("show")) { // /spawn <world> show
+                doShow(args[0], sender);
+            } else return Toolbox.USAGE;
+        break;
+        case 4: // /spawn set <x> <y> <z>
+            if(!args[0].equalsIgnoreCase("set")) return Toolbox.USAGE;
+            if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
+            doSet(sender, sender, args[1], args[2], args[3]);
+        break;
+        case 5: // /spawn <world> set <x> <y> <z>
+            if(!args[1].equalsIgnoreCase("set")) return Toolbox.USAGE;
+            if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
+            doSet(args[0], sender, args[2], args[3], args[3]);
+        break;
+        default:
+            return Toolbox.USAGE;
         }
         return true;
     }
@@ -85,39 +62,26 @@ public class spawnCommand extends CommandBase {
     @Override
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
-        if(commandLabel.equalsIgnoreCase("setspawn")){
-            switch(args.length) {
-            case 1: // setspawn <player>
-                doSet(sender, args[0]);
-            break;
-            case 4: // setspawn <world> <x> <y> <z>
-                doSet(args[0], sender, args[1], args[2], args[3]);
-            break;
-            default:
-                return Toolbox.USAGE;
+        switch(args.length) {
+        case 1:
+            if(args[0].equalsIgnoreCase("help")) return Toolbox.USAGE; // spawn help
+            else { // spawn <player>
+                doTeleport(args[0], sender);
             }
-        } else {
-            switch(args.length) {
-            case 1:
-                if(args[0].equalsIgnoreCase("help")) return Toolbox.USAGE; // spawn help
-                else { // spawn <player>
-                    doTeleport(args[0], sender);
-                }
-            break;
-            case 2:
-                if(args[0].equalsIgnoreCase("set")) { // /spawn set <player>
-                    doSet(sender, args[1]);
-                } else if(args[1].equalsIgnoreCase("show")) { // /spawn <world> show
-                    doShow(args[0], sender);
-                } else return Toolbox.USAGE;
-            break;
-            case 5: // spawn <world> set <x> <y> <z>
-                if(!args[1].equalsIgnoreCase("set")) return Toolbox.USAGE;
-                doSet(args[0], sender, args[2], args[3], args[4]);
-            break;
-            default:
-                return Toolbox.USAGE;
-            }
+        break;
+        case 2:
+            if(args[0].equalsIgnoreCase("set")) { // /spawn set <player>
+                doSet(sender, args[1]);
+            } else if(args[1].equalsIgnoreCase("show")) { // /spawn <world> show
+                doShow(args[0], sender);
+            } else return Toolbox.USAGE;
+        break;
+        case 5: // spawn <world> set <x> <y> <z>
+            if(!args[1].equalsIgnoreCase("set")) return Toolbox.USAGE;
+            doSet(args[0], sender, args[2], args[3], args[4]);
+        break;
+        default:
+            return Toolbox.USAGE;
         }
         return true;
     }
