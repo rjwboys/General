@@ -48,9 +48,6 @@ public class Items {
     private static HashMap<ItemID, String> names;
     private static HashMap<String,HashMap<String,ItemID>> hooks;
     private static VariantsMap variants;
-    private static List<Integer> dmg;
-    private static List<Integer> nostk;
-    private static List<Integer> smstk;
 
     private static Configuration loadConfig() {
         Configuration itemsyml = null;
@@ -217,8 +214,7 @@ public class Items {
      * Returns the name of the item stored in the hashmap or the item name stored in the items.txt
      * file in the hMod folder.
      * 
-     * @param id Item ID
-     * @param data Item data value
+     * @param longKey The item ID and data
      * @return Canonical name
      */
     public static String name(ItemID longKey) {
@@ -299,13 +295,22 @@ public class Items {
         // Make sure it's the ID of a valid item.
         Material check = Material.getMaterial(ret.getId());
         if(check == null) return ret.invalidate(false);
-
+        
         // Make sure the damage value is valid.
-        // if(dmg.contains(ret.ID)) {
-        // if(ret.data > check.getMaxDurability()) return new ItemID(ret.ID, -1);
-        // } else {
-        // // MaterialData md = check.getNewData(0);
-        // }
+        // TODO: Get rid of hack
+        // --- begin hacky workaround for missing MaterialData classes ---
+        switch(check) {
+        default:
+        // --- pause hacky workaround for missing MaterialData classes ---
+        if(ret.getData() != 0) {
+            boolean test = isDamageable(ret.getId());
+            if(!test || check.getData() == null) ret.invalidate(true);
+            if(ret.getData() > check.getMaxDurability()) ret.invalidate(true);
+        }
+        // --- resume hacky workaround for missing MaterialData classes ---
+        case INK_SACK: case WOOL: case COAL: case WOOD: case STEP: case DOUBLE_STEP:
+        }
+        // --- end hacky workaround for missing MaterialData classes ---
 
         return ret;
     }
@@ -361,14 +366,16 @@ public class Items {
     }
 
     public static boolean isDamageable(int id) {
-        return dmg.contains(id);
+        return Material.getMaterial(id).getMaxDurability() != -1;
     }
 
     public static int maxStackSize(int id) {
-        //return Material.getMaterial(id).getMaxStackSize();
-        if(nostk.contains(id)) return 1;
-        else if(smstk.contains(id)) return 16;
-        else return 64;
+        // TODO: Get rid of hack
+        // --- begin hacky workaround for incorrect getMaxStackSize
+        if(id == 346) return 64;
+        if(id == 335 || id == 349 || id == 350 || id == 355) return 1;
+        // --- end hacky workaround for incorrect getMaxStackSize
+        return Material.getMaterial(id).getMaxStackSize();
     }
     
     public static void giveItem(Player who, ItemID x, Integer amount) {

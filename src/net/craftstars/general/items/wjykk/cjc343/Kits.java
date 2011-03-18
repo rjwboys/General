@@ -127,7 +127,7 @@ public class Kits {
                             }
                             ItemID type = Items.validate(id + ":" + data);
                             if(item == null || !type.isValid())
-                                throw new IllegalArgumentException(id + ":" + data);
+                                throw new IllegalArgumentException(id + ":" + data + ", null: " + (item == null));
                             components.put(new ItemID(type), n);
                         }
                         Kit theKit = new Kit(listing[0], components, delay);
