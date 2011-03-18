@@ -32,23 +32,7 @@ public class MessageOfTheDay {
         while(f.hasNextLine()) {
             String line = f.nextLine();
             if(motd) line = parseMotD(sender, line);
-            do {
-                StringBuilder splitter = new StringBuilder();
-                splitter.append(line);
-                int splitAt = 0;
-                for(int i = Math.min(54, line.length() - 1); i >= 0; i--) {
-                    char c = line.charAt(i);
-                    if(c == ' ') {
-                        splitAt = i + 1;
-                        break;
-                    }
-                }
-                if(line.length() > 54 && splitAt < line.length()) {
-                    line = line.substring(splitAt);
-                    splitter.delete(splitAt, splitter.length());
-                }
-                Messaging.send(sender, splitter.toString());
-            } while(line.length() > 54);
+            Messaging.send(sender, line);
         }
     }
 

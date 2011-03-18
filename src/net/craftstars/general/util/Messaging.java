@@ -73,9 +73,56 @@ public class Messaging {
      */
     public static String parse(String original) {
         original = colorize(original);
-        return original.replace("&&","~!@#$%^&*()")
+        original = original.replace("&&","~!@#$%^&*()")
                        .replaceAll("(&([a-fA-F0-9]))", "\u00A7$2")
                        .replace("~!@#$%^&*()", "&");
+        return splitLines(original);
+    }
+    
+    /**
+     * Splits a message into lines of no more than 54 characters. Colour codes, as indicated
+     * by §[0-9a-f], are not counted in the line length. Make sure you pass through colorize()
+     * first to convert the colour codes to the § syntax.
+     * 
+     * Splitting at a space or hyphen will be preferred. Any newlines already present in the string
+     * will be preserved.
+     * 
+     * @author Celtic Minstrel
+     * @param original The string to split into lines.
+     * @return The string with newlines inserted as required.
+     */
+    public static String splitLines(String original) {
+        StringBuilder splitter = new StringBuilder(original);
+ //       do {
+            int splitAt = 0;
+            int effectiveLen = 0;
+            for(int i = 0; i < splitter.length(); i++) {
+                if(splitter.charAt(i) == '\u00A7') { // §
+                    try {
+                        char c = splitter.charAt(i + 1);
+                        if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')) {
+                            i++;
+                            continue;
+                        }
+                    } catch(IndexOutOfBoundsException x) {
+                        
+                    }
+                }
+                effectiveLen++;
+                char c = splitter.charAt(i);
+                if(c == ' ' || c == '-') splitAt = i;
+                if(effectiveLen > 60) {
+                    if(splitAt == 0) splitAt = i; // as a last resort, just split at the limit
+                    effectiveLen = i - splitAt;
+                    splitter.insert(splitAt+1, '\n');
+                    if(splitter.charAt(splitAt) == ' ')
+                        splitter.deleteCharAt(splitAt);
+                    else i++;
+                    splitAt = 0;
+                }
+            }
+//        } while(original.length() > 54);
+        return splitter.toString();
     }
 
     /**
@@ -87,7 +134,7 @@ public class Messaging {
      * Example: <blockquote
      * 
      * <pre>
-     * Messaging.colorize(&quot;Hello &amp;green;world!&quot;); // returns: Hello �2world!
+     * Messaging.colorize(&quot;Hello &amp;green;world!&quot;); // returns: Hello §2world!
      * </pre>
      * 
      * </blockquote>
@@ -142,7 +189,9 @@ public class Messaging {
      * @param message The message to be sent.
      */
     public static void send(CommandSender player, String message) {
-        player.sendMessage(parse(message));
+        message = parse(message);
+        for(String line : message.split("[\n\r]"))
+            player.sendMessage(line);
     }
 
     /**
