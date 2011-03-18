@@ -129,22 +129,19 @@ public class takeCommand extends CommandBase {
 
     private void doTake() {
         int removed = 0;
-        if(amount <= 0) {
-            who.getInventory().remove(item.getId());
-        } else {
+        //if(amount <= 0) {
+        //    who.getInventory().remove(item.getId());
+        //} else {
             PlayerInventory i = who.getInventory();
             Map<Integer, ? extends ItemStack> items = i.all(item.getId());
             for(int x : items.keySet()) {
                 ItemStack stk = items.get(x);
                 int n, d;
                 n = stk.getAmount();
-                try {
-                    d = stk.getData().getData();
-                } catch(NullPointerException ex) {
-                    d = stk.getDurability();
-                }
-                if(!Items.isDamageable(item.getId()) && item.getData() != d) continue;
-                if(n > amount) {
+                d = stk.getDurability();
+                if(!dataEquiv(item, d)) continue;
+                //if(!Items.isDamageable(item.getId()) && item.getData() != d) continue;
+                if(amount > 0 && n > amount) {
                     stk.setAmount(n - amount);
                     removed += amount;
                     amount = 0;
@@ -153,11 +150,17 @@ public class takeCommand extends CommandBase {
                     amount -= n;
                     removed += n;
                     i.setItem(x, null);
-                }
-                if(amount <= 0) break;
+                } else if(amount <= 0)
+                    i.setItem(x, null);
             }
-        }
+        //}
         Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &f" + Items.name(item)
                 + "&2 was taken from you.");
+    }
+
+    private boolean dataEquiv(ItemID id, int data) {
+        if(Items.isDamageable(id.getId())) return true;
+        if(id.getData() == null) return true;
+        return data == id.getData();
     }
 }

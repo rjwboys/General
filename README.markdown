@@ -37,6 +37,7 @@ Available Permissions nodes:
 * general.who
 * general.give
 * general.give.infinite
+* general.give.mass (to use the /items command)
 * general.give.group.<groupname> (to restrict certain items)
 * general.give.any (to allow access to items not in a group if item whitelist mode is enabled) 
 * general.spawn

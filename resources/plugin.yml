@@ -4,7 +4,7 @@ authors:
   - Celtic Minstrel
   - Plutonium239
   - Nijikokun
-version: 3.2.2
+version: 3.2.3
 commands:
   playerlist:
     description: Displays all players that are online.
@@ -13,29 +13,19 @@ commands:
       - online
     usage: |
            /<command>
-           Example: /<command> - Lists all online players.
   who:
     permission: general.who
     description: Displays information about a player.
-    aliases: [whoami, playerinfo]
+    aliases: [whois, whoami, playerinfo]
     usage: |
            /<command> [player]
-           Example: /<command> - Gives information about you.
-           Example: /<command> [player] - Gives information about [player]
   time:
     permission: general.time
     description: Displays or modifies current world time.
     aliases:
     usage: |
-           /<command> [day|night|dusk|dawn|=num|+num|-num] [world]
-           Example: /<command> - Gets current time.
-           Example: /<command> day - Sets time to day.
-           Example: /<command> night - Sets time to night.
-           Example: /<command> dusk - Sets time to dusk.
-           Example: /<command> dawn - Sets time to dawn.
-           Example: /<command> +500 - Sets relative time forward.
-           Example: /<command> -500 - Sets relative time backward.
-           Example: /<command> =500 - Sets relative time equal to.
+           /<command> [<world>] [=|+|-]<time|duration>
+           /<command> add|set <time|duration>
   give:
     permission: general.give
     description: Users to give yourself or another player an item.
@@ -44,9 +34,6 @@ commands:
       - item
     usage: |
            /<command> item[:data] [amount] [player]
-           item   --> Either the ID of an item, or a known name for it; no spaces
-           data   --> The damage value of a tool, the data value of the item, or a known name for the data value
-           amount --> How much to get; 1 is default, 0 means a full stack
   getpos:
     permission: general.getpos
     description: Displays detailed information about your position.
@@ -55,7 +42,7 @@ commands:
       - where
       - pos
       - coords
-    usage: /<command> [compass|coords]
+    usage: /<command>
   tell:
     permission: general.tell
     description: Sends another player a private message.
@@ -67,27 +54,16 @@ commands:
   spawn:
     permission: general.spawn
     description: Teleports you to the spawn location of your current world.
-    aliases: [setspawn]
+    aliases:
     usage: |
-           /<command> [player]           - Teleports you or another player to spawn.
-           /<command> set                - Sets spawn to your current location.
-           /<command> set player         - Sets spawn to the current location of the specified player.
-           /<command> [world] set x y z  - Sets spawn to the specified location.
-           /<command> [world] show       - Displays the current spawn location
-           /setspawn player
-           /setspawn [world] x y z
-           The parameters in brackets are optional unless the command is used from the console.
+           /<command> [<player>]
+           /<command> [<world>] set [<dest>]
+           /<command> [<world>] show
   teleport:
     permission: general.teleport
     description: Teleports a/multiple/all player(s) to another players location.
-    aliases: [tp]
-    usage: |
-           /<command> [player|player,player,...|*] player
-           /<command> [player] - Teleports you to player.
-           /<command> [player] [player2] - Teleports player to player2.
-           /<command> * [player] - Teleport everyone to player.
-           /<command> [player,player,...] player - Teleport several to player.
-           /<command> [player] x y z - Teleport you or someone else to a specific location.
+    aliases: [tele]
+    usage: /<command> [<who>] <dest>
   summon:
     permission: general.teleport.other
     description: Teleports a player to your location.
@@ -131,3 +107,8 @@ commands:
     description: Sets your away message
     aliases: [afk]
     usage: /<command> [message]
+  items:
+    permission: general.give.mass
+    description: Gives several items all at once
+    aliases:
+    usage: /<command> <item1> <item2> ...etc

@@ -266,14 +266,8 @@ public class Items {
         // First figure out what the data and ID are.
         if(Pattern.matches("([a-zA-Z0-9a-zA-Z_'-]+)", item)) {
             ret = validateShortItem(item);
-            // Since no data was explicitly supplied, we can assume that a -1 in the data means none
-            // was found.
             if(ret == null) return ret;
-            if(ret.getData() == null) ret.setData(0);
         } else {
-            // Pattern itemPat = Pattern.compile("([a-z0-9]+)[.,:/\\|]([a-z0-9]+)",
-            // Pattern.CASE_INSENSITIVE);
-            // Matcher m = itemPat.matcher(item);
             try {
                 String[] parts = item.split("[.,:/\\|]");
                 ret = validateLongItem(parts[0], parts[1]);
@@ -295,10 +289,12 @@ public class Items {
         switch(check) {
         default:
         // --- pause hacky workaround for missing MaterialData classes ---
-        if(ret.getData() != 0) {
-            boolean test = isDamageable(ret.getId());
-            if(!test || check.getData() == null) ret.invalidate(true);
-            if(ret.getData() > check.getMaxDurability()) ret.invalidate(true);
+        if(ret.getData() != null && ret.getData() != 0) {
+            boolean isInvalid = true;
+            if(isDamageable(ret.getId())) isInvalid = false;
+            if(check.getData() != null) isInvalid = false;
+            if(isInvalid) ret.invalidate(true);
+            else if(ret.getData() > check.getMaxDurability()) ret.invalidate(true);
         }
         // --- resume hacky workaround for missing MaterialData classes ---
         case INK_SACK: case WOOL: case COAL: case WOOD: case STEP: case DOUBLE_STEP:
@@ -374,7 +370,6 @@ public class Items {
     public static void giveItem(Player who, ItemID x, Integer amount) {
         PlayerInventory i = who.getInventory();
         HashMap<Integer, ItemStack> excess = i.addItem(x.getStack(amount));
-        General.logger.debug("Giving " + amount + " of " + x);
         for(ItemStack leftover : excess.values()) {
             if(i.getBoots().getType() == Material.AIR) {
                 i.setBoots(leftover);

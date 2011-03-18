@@ -130,26 +130,28 @@ public class General extends JavaPlugin {
             // TODO: Some of these help messages are too long; need to shorten them.
             // TODO: Some of the help should be moved to /<cmd> help; spawn and teleport, in particular.
             ////////////////////////////--------------------------------------------------
-            helpPlugin.registerCommand("playerlist|online", "Lists online players.", plugin,
+            helpPlugin.registerCommand("playerlist", "Lists online players. Alias: online", plugin,
                     "general.playerlist");
-            helpPlugin.registerCommand("playerinfo|who ([player])",
-                    "Displays information about a player.", plugin, "general.who");
+            helpPlugin.registerCommand("who ([player])",
+                    "Displays information about a player. Aliases: playerinfo, whois", plugin, "general.who");
+            helpPlugin.registerCommand("whoami",
+                    "Displays information about you.", plugin, "general.who");
             helpPlugin.registerCommand("time ([world])", "Displays the current time in [world].",
                     plugin, "general.time");
-            helpPlugin.registerCommand("time [time] ([world])", "Sets the current time.", plugin,
-                    "general.time.set");
             helpPlugin.registerCommand("time help", "Shows syntax for setting the time.", plugin,
                     "general.time.set");
-            helpPlugin.registerCommand("give|i(tem) [item](:[variant]) ([amount]) ([player])",
-                    "Gives [player] [amount] of [item].", plugin, "general.give");
+            helpPlugin.registerCommand("give [item](:[variant]) ([amount]) ([player])",
+                    "Gives [player] [amount] of [item]. Aliases: i(tem)", plugin, "general.give");
+            helpPlugin.registerCommand("items [item1] [item2] ... [itemN]",
+                    "Give yourself several different items at once. You get one of each item.", plugin, "general.give.mass");
             helpPlugin.registerCommand("getpos ([player])",
                     "Get the current position of [player].", plugin, "general.getpos");
             helpPlugin.registerCommand("compass", "Show your direction.", plugin, "general.getpos");
-            helpPlugin.registerCommand("where|pos|coords ([player])",
-                    "Show the location of [player]; less detailed form of /getpos.", plugin,
+            helpPlugin.registerCommand("where ([player])",
+                    "Show the location of [player]; less detailed form of /getpos. Aliases: pos, coords", plugin,
                     "general.getpos");
-            helpPlugin.registerCommand("tell|msg|pm|whisper [player] [message]",
-                    "Whisper to a player.", plugin, "general.tell");
+            helpPlugin.registerCommand("tell [player] [message]",
+                    "Whisper to a player. Aliases: msg, pm, whisper", plugin, "general.tell");
             helpPlugin.registerCommand("spawn ([player])",
                     "Teleports [player] to the spawn location.", plugin, "general.spawn");
             helpPlugin.registerCommand("spawn ([world]) show",
@@ -159,31 +161,22 @@ public class General extends JavaPlugin {
                     "general.spawn.set");
             helpPlugin.registerCommand("spawn ([world]) set [x] [y] [z]", ".", plugin,
                     "general.spawn.set");
-            helpPlugin.registerCommand("setspawn ([player])",
-                    "Sets the spawn location in [player]'s world to [player]'s location.", plugin,
-                    "general.spawn.set");
-            helpPlugin.registerCommand("setspawn ([world]) [x] [y] [z]",
-                    "Sets the spawn location of [world]", plugin, "general.spawn.set");
-            helpPlugin.registerCommand("teleport|tp [player]",
-                    "Teleport to the location of [player].", plugin, "general.teleport");
-            helpPlugin.registerCommand("teleport|tp [player] [to-player]",
-                    "Teleports [player] to the location of [to-player]", plugin,
+            helpPlugin.registerCommand("teleport [player]",
+                    "Teleport to the location of [player]. Alias: tele", plugin, "general.teleport");
+            helpPlugin.registerCommand("teleport [player] [to-player]",
+                    "Teleports [player] to the location of [to-player]. Alias: tele", plugin,
                     "general.teleport.other");
-            helpPlugin.registerCommand("teleport|tp [player1],[player2],... [to-player]",
-                    "Teleports several players to the location of [to-player].", plugin,
+            helpPlugin.registerCommand("teleport [player1],[player2],... [to-player]",
+                    "Teleports several players to the location of [to-player]. Alias: tele", plugin,
                     "general.teleport.other.mass");
-            helpPlugin.registerCommand("teleport|tp * [player]",
-                    "Teleports everyone to the location of [player]", plugin,
+            helpPlugin.registerCommand("teleport * [player]",
+                    "Teleports everyone to the location of [player]. Alias: tele", plugin,
                     "general.teleport.other.mass");
-            helpPlugin.registerCommand("teleport|tp [x] [y] [z]",
-                    "Teleport to the specified coordinates", plugin, "general.teleport.coords");
-            helpPlugin.registerCommand("s(ummon)|tphere|teleporthere [player]",
-                    "Teleports a player to your location.", plugin, "general.teleport.other");
-            // helpPlugin.registerCommand("s(ummon)|tphere|teleporthere [player1],[player2],...",
-            // "", plugin, "general.teleport.other.mass");
-            // helpPlugin.registerCommand("s(ummon)|tphere|teleporthere *", "", plugin,
-            // "general.teleport.other.mass");
-            helpPlugin.registerCommand("clear ([player])", "Clear's [player]'s inventory.", plugin,
+            helpPlugin.registerCommand("teleport|[x] [y] [z]",
+                    "Teleport to the specified coordinates. Alias: tele", plugin, "general.teleport.coords");
+            helpPlugin.registerCommand("s(ummon) [player]",
+                    "Teleports a player to your location. Aliases: tphere, teleporthere", plugin, "general.teleport.other");
+            helpPlugin.registerCommand("clear ([player])", "Clears [player]'s inventory.", plugin,
                     "general.clear");
             helpPlugin.registerCommand("take [item](:[variant]) ([amount]) ([player])",
                     "Deletes something from [player]'s inventory.", plugin, "general.take");

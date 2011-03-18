@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Toolbox {
-    public static final boolean USAGE = true; // Change to false to spew out usage notes on incorrect syntax
+    public static final boolean USAGE = false; // Change to true to not spew out usage notes on incorrect syntax
     public static Player playerMatch(String name) {
         if(General.plugin.getServer().getOnlinePlayers().length < 1) {
             return null;

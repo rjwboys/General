@@ -33,7 +33,12 @@ public class ItemID implements Comparable<ItemID>, Cloneable {
     }
 
     public ItemID(ItemID item) {
-        this(item.ID,item.dataMatters?item.data:null);
+        this.ID = item.ID;
+        this.data = item.data;
+        this.dataMatters = item.dataMatters;
+        this.isValid = item.isValid;
+        this.itemName = item.itemName;
+        this.dataName = item.dataName;
     }
 
     public ItemID(Material m) {
@@ -65,7 +70,7 @@ public class ItemID implements Comparable<ItemID>, Cloneable {
 
     @Override
     public String toString() {
-        if(dataMatters && isValid)
+        if(dataMatters)
             return Integer.toString(ID) + ":" + Integer.toString(data);
         return Integer.toString(ID);
     }
