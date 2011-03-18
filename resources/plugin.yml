@@ -87,11 +87,11 @@ commands:
     description: Restores your health. (Can also reduce it if you give a negative amount.)
     aliases:
     usage: /heal [player] [amount]
-#  mobspawn:
-#    permission: general.mobspawn
-#    description: Spawns a mob.
-#    aliases:
-#    usage: /mobspawn
+  mobspawn:
+    permission: general.mobspawn
+    description: Spawns a mob.
+    aliases: [mob]
+    usage: /mobspawn <mob-name>[:<slime-size>|;<mount>] [<how-many>]
   kit:
     permission: general.kit
     description: Gives you a kit.
