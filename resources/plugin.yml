@@ -4,7 +4,7 @@ authors:
   - Celtic Minstrel
   - Plutonium239
   - Nijikokun
-version: 3.2.3
+version: 3.3
 commands:
   playerlist:
     description: Displays all players that are online.
@@ -76,7 +76,7 @@ commands:
     permission: general.clear
     description: Clears your inventory.
     aliases: [clean]
-    usage: /<command> [player]
+    usage: /<command> [player] [pack|armo[u]r|quickbar]
   take:
     permission: general.take
     description: Removes something from your inventory.

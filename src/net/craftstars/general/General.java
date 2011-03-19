@@ -176,7 +176,7 @@ public class General extends JavaPlugin {
                     "Teleport to the specified coordinates. Alias: tele", plugin, "general.teleport.coords");
             helpPlugin.registerCommand("s(ummon) [player]",
                     "Teleports a player to your location. Aliases: tphere, teleporthere", plugin, "general.teleport.other");
-            helpPlugin.registerCommand("clear ([player])", "Clears [player]'s inventory.", plugin,
+            helpPlugin.registerCommand("clear ([player]) (pack|quickbar|armo(u)r)", "Clears [player]'s inventory.", plugin,
                     "general.clear");
             helpPlugin.registerCommand("take [item](:[variant]) ([amount]) ([player])",
                     "Deletes something from [player]'s inventory.", plugin, "general.take");
