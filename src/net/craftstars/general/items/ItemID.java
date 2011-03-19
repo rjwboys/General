@@ -145,4 +145,8 @@ public class ItemID implements Comparable<ItemID>, Cloneable {
         if(dataMatters) return new ItemStack(ID, amount, (short) data);
         return new ItemStack(ID, amount);
     }
+    
+    public Material getMaterial() {
+        return Material.getMaterial(ID);
+    }
 }
