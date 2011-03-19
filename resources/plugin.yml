@@ -76,7 +76,7 @@ commands:
     permission: general.clear
     description: Clears your inventory.
     aliases: [clean]
-    usage: /<command> [player] [pack|armo[u]r|quickbar]
+    usage: /<command> [player] [pack|armo[u]r|quickbar|all]
   take:
     permission: general.take
     description: Removes something from your inventory.

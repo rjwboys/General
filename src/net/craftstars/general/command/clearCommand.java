@@ -33,15 +33,19 @@ public class clearCommand extends CommandBase {
         if(args.length == 1) {
             if(args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
             Player who = Toolbox.getPlayer(args[0], sender);
+            if(who == null) return true;
             doClean(who, sender, CleanType.FULL);
         } else if(args.length == 2) {
             Player who = Toolbox.getPlayer(args[0], sender);
+            if(who == null) return true;
             if(args[1].equalsIgnoreCase("pack")) {
                 doClean(who, sender, CleanType.PACK);
             } else if(args[1].equalsIgnoreCase("quickbar")) {
                 doClean(who, sender, CleanType.QUICKBAR);
-            }else if(Toolbox.equalsOne(args[1], "armour", "armor")) {
+            } else if(Toolbox.equalsOne(args[1], "armour", "armor")) {
                 doClean(who, sender, CleanType.ARMOUR);
+            } else if(args[1].equalsIgnoreCase("all")) {
+                doClean(who, sender, CleanType.FULL);
             }
         } else return Toolbox.USAGE;
         return true;
@@ -59,21 +63,28 @@ public class clearCommand extends CommandBase {
                 doClean(sender, sender, CleanType.PACK);
             } else if(args[0].equalsIgnoreCase("quickbar")) {
                 doClean(sender, sender, CleanType.QUICKBAR);
-            }else if(Toolbox.equalsOne(args[0], "armour", "armor")) {
+            } else if(Toolbox.equalsOne(args[0], "armour", "armor")) {
                 doClean(sender, sender, CleanType.ARMOUR);
+            } else if(args[1].equalsIgnoreCase("all")) {
+                doClean(sender, sender, CleanType.FULL);
+            } else {
+                if(Toolbox.lacksPermission(plugin, sender, "clear someone else's inventory", "general.clear.other")) return true;
+                Player who = Toolbox.getPlayer(args[0], sender);
+                if(who == null) return true;
+                doClean(who, sender, CleanType.FULL);
             }
-            if(Toolbox.lacksPermission(plugin, sender, "clear someone else's inventory", "general.clear.other")) return true;
-            Player who = Toolbox.getPlayer(args[0], sender);
-            doClean(who, sender, CleanType.FULL);
         } else if(args.length == 2) {
             if(Toolbox.lacksPermission(plugin, sender, "clear someone else's inventory", "general.clear.other")) return true;
             Player who = Toolbox.getPlayer(args[0], sender);
+            if(who == null) return true;
             if(args[1].equalsIgnoreCase("pack")) {
                 doClean(who, sender, CleanType.PACK);
             } else if(args[1].equalsIgnoreCase("quickbar")) {
                 doClean(who, sender, CleanType.QUICKBAR);
-            }else if(Toolbox.equalsOne(args[1], "armour", "armor")) {
+            } else if(Toolbox.equalsOne(args[1], "armour", "armor")) {
                 doClean(who, sender, CleanType.ARMOUR);
+            } else if(args[1].equalsIgnoreCase("all")) {
+                doClean(who, sender, CleanType.FULL);
             }
         } else return Toolbox.USAGE;
         return true;

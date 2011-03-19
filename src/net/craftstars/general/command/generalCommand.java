@@ -18,8 +18,10 @@ public class generalCommand extends CommandBase {
         if(args.length < 1) return Toolbox.USAGE;
         if(args[0].equalsIgnoreCase("reload")) {
             doReload(sender);
+            return true;
         } else if(args[0].equalsIgnoreCase("die")) {
             die(sender);
+            return true;
         } else if(args[0].equalsIgnoreCase("help")) {
             if(args.length == 1) {
                 MessageOfTheDay.showHelp(sender, "console.help");
@@ -30,6 +32,7 @@ public class generalCommand extends CommandBase {
             }
         } else if(args[0].equalsIgnoreCase("motd")) {
             MessageOfTheDay.showMotD(sender);
+            return true;
         }
         return Toolbox.USAGE;
     }
@@ -41,6 +44,7 @@ public class generalCommand extends CommandBase {
         if(args[0].equalsIgnoreCase("reload")) {
             if(Toolbox.lacksPermission(plugin, sender, "administrate the plugin", "general.admin")) return true;
             doReload(sender);
+            return true;
         } else if(args[0].equalsIgnoreCase("help")) {
             if(args.length == 1) {
                 MessageOfTheDay.showHelp(sender, "player.help");
@@ -51,6 +55,7 @@ public class generalCommand extends CommandBase {
             }
         } else if(args[0].equalsIgnoreCase("motd")) {
             MessageOfTheDay.showMotD(sender);
+            return true;
         }
         return Toolbox.USAGE;
     }

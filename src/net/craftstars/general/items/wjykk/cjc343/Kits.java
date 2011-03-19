@@ -110,7 +110,7 @@ public class Kits {
                         //int[] amounts = new int[stuff.length];
                         for(String item : stuff) {
                             int n = 1;
-                            String id, data = "0";
+                            String id, data = "";
                             Matcher m;
                             item = item.trim();
                             m = idPat.matcher(item);
@@ -125,8 +125,11 @@ public class Kits {
                             if(m.matches()) {
                                 n = Integer.valueOf(m.group(1));
                             }
-                            ItemID type = Items.validate(id + ":" + data);
-                            if(item == null || !type.isValid())
+                            ItemID type;
+                            if(data.isEmpty())
+                                type = Items.validate(id);
+                            else type = Items.validate(id + ":" + data);
+                            if(type == null || !type.isValid())
                                 throw new IllegalArgumentException(id + ":" + data + ", null: " + (item == null));
                             components.put(new ItemID(type), n);
                         }

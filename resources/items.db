@@ -864,6 +864,8 @@ GPants:316
 # Boots
 LeatherBoots:301
 LeatherShoes:301
+LBoots:301
+LShoes:301
 
 ChainBoots:305
 ChainShoes:305
