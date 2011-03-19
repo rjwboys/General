@@ -26,12 +26,12 @@ public class clearCommand extends CommandBase {
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(Toolbox.lacksPermission(plugin, sender, "general.clear")) return true;
+        if(Toolbox.lacksPermission(plugin, sender, "clear your inventory", "general.clear")) return true;
         if(args.length == 0) {
             doClean(sender, sender);
         } else if(args.length == 1) {
             if(args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
-            if(Toolbox.lacksPermission(plugin, sender, "general.clear.other")) return true;
+            if(Toolbox.lacksPermission(plugin, sender, "clear someone else's inventory", "general.clear.other")) return true;
             Player who = Toolbox.getPlayer(args[0], sender);
             doClean(who, sender);
         } else return Toolbox.USAGE;

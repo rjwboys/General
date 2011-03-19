@@ -18,7 +18,7 @@ public class spawnCommand extends CommandBase {
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(Toolbox.lacksPermission(plugin, sender, "general.spawn")) return true;
+        if(Toolbox.lacksPermission(plugin, sender, "teleport to spawn", "general.spawn")) return true;
         switch(args.length) {
         case 0: // /spawn
             doTeleport(sender);
@@ -28,16 +28,16 @@ public class spawnCommand extends CommandBase {
             else if(args[0].equalsIgnoreCase("show")) { // /spawn show
                 doShow(sender.getWorld(), sender);
             } else if(args[0].equalsIgnoreCase("set")) { // /spawn set
-                if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
+                if(Toolbox.lacksPermission(plugin, sender, "set the spawn location", "general.spawn.set")) return true;
                 doSet(sender, sender);
             } else { // /spawn <player>
-                if(Toolbox.lacksPermission(plugin, sender, "general.spawn.other")) return true;
+                if(Toolbox.lacksPermission(plugin, sender, "teleport others to spawn", "general.spawn.other")) return true;
                 doTeleport(args[0], sender);
             }
         break;
         case 2:
             if(args[0].equalsIgnoreCase("set")) { // /spawn set <player>
-                if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
+                if(Toolbox.lacksPermission(plugin, sender, "set the spawn location", "general.spawn.set")) return true;
                 doSet(sender, args[1]);
             } else if(args[1].equalsIgnoreCase("show")) { // /spawn <world> show
                 doShow(args[0], sender);
@@ -45,12 +45,12 @@ public class spawnCommand extends CommandBase {
         break;
         case 4: // /spawn set <x> <y> <z>
             if(!args[0].equalsIgnoreCase("set")) return Toolbox.USAGE;
-            if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
+            if(Toolbox.lacksPermission(plugin, sender, "set the spawn location", "general.spawn.set")) return true;
             doSet(sender, sender, args[1], args[2], args[3]);
         break;
         case 5: // /spawn <world> set <x> <y> <z>
             if(!args[1].equalsIgnoreCase("set")) return Toolbox.USAGE;
-            if(Toolbox.lacksPermission(plugin, sender, "general.spawn.set")) return true;
+            if(Toolbox.lacksPermission(plugin, sender, "set the spawn location", "general.spawn.set")) return true;
             doSet(args[0], sender, args[2], args[3], args[3]);
         break;
         default:

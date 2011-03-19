@@ -17,7 +17,7 @@ public class teleportCommand extends CommandBase {
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(Toolbox.lacksPermission(plugin, sender, "general.teleport")) return true;
+        if(Toolbox.lacksPermission(plugin, sender, "teleport", "general.teleport")) return true;
         switch(args.length) {
         case 1: {// /tp <player>
             Player destination = Toolbox.getPlayer(args[0], sender);
@@ -36,7 +36,7 @@ public class teleportCommand extends CommandBase {
             if(destination == null) return true;
 
             if(args[0].equalsIgnoreCase("*")) {
-                if(Toolbox.lacksPermission(plugin, sender, "general.teleport.other.mass")) return true;
+                if(Toolbox.lacksPermission(plugin, sender, "teleport many players at once", "general.teleport.other.mass")) return true;
                 Teleport.teleportAllToPlayer(destination);
                 Messaging.send(sender, "&fTeleported all players to &9" + destination.getName()
                         + "&f!");
@@ -44,7 +44,7 @@ public class teleportCommand extends CommandBase {
             }
 
             if(args[0].contains(",")) {
-                if(Toolbox.lacksPermission(plugin, sender, "general.teleport.other.mass")) return true;
+                if(Toolbox.lacksPermission(plugin, sender, "teleport many players at once", "general.teleport.other.mass")) return true;
                 Teleport.teleportManyToPlayer(args[0], destination);
                 Messaging.send(sender, "&fTeleported several players to &9" + destination.getName()
                         + "&f!");
@@ -59,7 +59,7 @@ public class teleportCommand extends CommandBase {
                 Messaging.send(sender, "&fCongrats! You just teleported yourself to yourself!");
                 return true;
             } else {
-                if(Toolbox.lacksPermission(plugin, sender, "general.teleport.other")) return true;
+                if(Toolbox.lacksPermission(plugin, sender, "teleport players other than yourself", "general.teleport.other")) return true;
                 Messaging.send(who, "&fYou have been teleported to &9" + destination.getName()
                         + "&f!");
             }
@@ -70,7 +70,7 @@ public class teleportCommand extends CommandBase {
         }
         break;
         case 3: { // /tp <x> <y> <z>
-            if(Toolbox.lacksPermission(plugin, sender, "general.teleport.coords")) return true;
+            if(Toolbox.lacksPermission(plugin, sender, "teleport to coordinates", "general.teleport.coords")) return true;
             Location destination =
                     Toolbox.getLocation(sender, sender.getWorld(), args[0], args[1], args[2]);
             if(destination == null) return true;
@@ -80,14 +80,14 @@ public class teleportCommand extends CommandBase {
         }
         break;
         case 4: { // /tp <player> <x> <y> <z>
-            if(Toolbox.lacksPermission(plugin, sender, "general.teleport.coords")) return true;
+            if(Toolbox.lacksPermission(plugin, sender, "teleport to coordinates", "general.teleport.coords")) return true;
             Player who = Toolbox.getPlayer(args[0], sender);
             if(who == null) return true;
             Location destination =
                     Toolbox.getLocation(sender, who.getWorld(), args[1], args[2], args[3]);
             if(destination == null) return true;
             if(!who.getName().equals(sender.getName())) {
-                if(Toolbox.lacksPermission(plugin, sender, "general.teleport.other")) return true;
+                if(Toolbox.lacksPermission(plugin, sender, "teleport players other than yourself", "general.teleport.other")) return true;
                 Messaging.send(who, "&fYou have been teleported to &9(" + args[0] + "," + args[1]
                         + "," + args[2] + ")&f!");
             }

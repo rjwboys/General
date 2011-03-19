@@ -93,35 +93,33 @@ public class Messaging {
      */
     public static String splitLines(String original) {
         StringBuilder splitter = new StringBuilder(original);
- //       do {
-            int splitAt = 0;
-            int effectiveLen = 0;
-            for(int i = 0; i < splitter.length(); i++) {
-                if(splitter.charAt(i) == '\u00A7') { // §
-                    try {
-                        char c = splitter.charAt(i + 1);
-                        if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')) {
-                            i++;
-                            continue;
-                        }
-                    } catch(IndexOutOfBoundsException x) {
-                        
+        int splitAt = 0;
+        int effectiveLen = 0;
+        for(int i = 0; i < splitter.length(); i++) {
+            if(splitter.charAt(i) == '\u00A7') { // §
+                try {
+                    char c = splitter.charAt(i + 1);
+                    if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')) {
+                        i++;
+                        continue;
                     }
-                }
-                effectiveLen++;
-                char c = splitter.charAt(i);
-                if(c == ' ' || c == '-') splitAt = i;
-                if(effectiveLen > 60) {
-                    if(splitAt == 0) splitAt = i; // as a last resort, just split at the limit
-                    effectiveLen = i - splitAt;
-                    splitter.insert(splitAt+1, '\n');
-                    if(splitter.charAt(splitAt) == ' ')
-                        splitter.deleteCharAt(splitAt);
-                    else i++;
-                    splitAt = 0;
+                } catch(IndexOutOfBoundsException x) {
+                    
                 }
             }
-//        } while(original.length() > 54);
+            effectiveLen++;
+            char c = splitter.charAt(i);
+            if(c == ' ' || c == '-') splitAt = i;
+            if(effectiveLen > 60) {
+                if(splitAt == 0) splitAt = i; // as a last resort, just split at the limit
+                effectiveLen = i - splitAt;
+                splitter.insert(splitAt+1, '\n');
+                if(splitter.charAt(splitAt) == ' ')
+                    splitter.deleteCharAt(splitAt);
+                else i++;
+                splitAt = 0;
+            }
+        }
         return splitter.toString();
     }
 

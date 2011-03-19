@@ -188,7 +188,9 @@ public class General extends JavaPlugin {
             helpPlugin.registerCommand("general die", "Kills the plugin.", plugin, "OP",
                     "general.admin");
             helpPlugin.registerCommand("general motd", "Displays the message of the day.", plugin);
-            // helpPlugin.registerCommand("mob(spawn)", "Spawns a mob.", plugin, "general.mobspawn");
+            helpPlugin.registerCommand("mob(spawn) [mob](;[mount])", "Spawns a [mob] riding a [mount]. " +
+            		"Both [mob] and [mount] are of the form [name](:[data]), where [data] is slime size or sheep colour.",
+                    plugin, "general.mobspawn");
             helpPlugin.registerCommand("help General", "Help for the General plugin.", plugin, true);
             logger.info("[Help " + helpPlugin.getDescription().getVersion() + "] support enabled.");
             gotHelp = true;

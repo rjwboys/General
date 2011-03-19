@@ -39,7 +39,7 @@ public class generalCommand extends CommandBase {
             String[] args) {
         if(args.length < 1) return Toolbox.USAGE;
         if(args[0].equalsIgnoreCase("reload")) {
-            if(Toolbox.lacksPermission(plugin, sender, "general.admin")) return true;
+            if(Toolbox.lacksPermission(plugin, sender, "administrate the plugin", "general.admin")) return true;
             doReload(sender);
         } else if(args[0].equalsIgnoreCase("help")) {
             if(args.length == 1) {

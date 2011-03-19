@@ -18,7 +18,7 @@ public class getposCommand extends CommandBase {
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(Toolbox.lacksPermission(plugin, sender, "general.getpos", "general.basic")) return true;
+        if(Toolbox.lacksPermission(plugin, sender, "check your location", "general.getpos", "general.basic")) return true;
         if(args.length == 0) {
             showPos(sender, sender, commandLabel);
             return true;
@@ -27,12 +27,12 @@ public class getposCommand extends CommandBase {
                 showPos(sender, sender, args[0]);
                 return true;
             }
-            if(Toolbox.lacksPermission(plugin, sender, "general.getpos.other")) return true;
+            if(Toolbox.lacksPermission(plugin, sender, "check someone else's location", "general.getpos.other")) return true;
             Player who = Toolbox.getPlayer(args[0], sender);
             if(who != null) showPos(sender, who, commandLabel);
             return true;
         } else if(args.length == 2) {
-            if(Toolbox.lacksPermission(plugin, sender, "general.getpos.other")) return true;
+            if(Toolbox.lacksPermission(plugin, sender, "check someone else's location", "general.getpos.other")) return true;
             Player who = Toolbox.getPlayer(args[1], sender);
             if(who != null) showPos(sender, who, commandLabel.equalsIgnoreCase("getpos") ? args[0]
                     : commandLabel);

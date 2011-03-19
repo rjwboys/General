@@ -111,14 +111,15 @@ public class Toolbox {
         return theWorld;
     }
 
-    public static boolean lacksPermission(General plugin, Player who, String... permissions) {
+    public static boolean lacksPermission(General plugin, Player who, String message, String... permissions) {
+        if(message == null) message = "do that";
         boolean foundPermission = false;
         for(String permission : permissions) {
             if(plugin.permissions.hasPermission(who, permission))
                 foundPermission = true;
         }
         if(!foundPermission) {
-            Messaging.send(who, "&rose;You don't have permission to do that.");
+            Messaging.send(who, "&rose;You don't have permission to " + message + ".");
             return true;
         }
         return false;

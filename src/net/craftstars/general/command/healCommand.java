@@ -43,7 +43,7 @@ public class healCommand extends CommandBase {
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(Toolbox.lacksPermission(plugin, sender, "general.heal")) return true;
+        if(Toolbox.lacksPermission(plugin, sender, "heal players", "general.heal")) return true;
         double amount = 10;
         Player who = null;
         switch(args.length) {

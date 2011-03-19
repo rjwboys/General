@@ -45,7 +45,7 @@ public class itemsCommand extends CommandBase {
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(Toolbox.lacksPermission(plugin, sender, "general.give.mass")) return true;
+        if(Toolbox.lacksPermission(plugin, sender, "give many items at once", "general.give.mass")) return true;
         doGive(sender, sender, args);
         return Toolbox.USAGE;
     }

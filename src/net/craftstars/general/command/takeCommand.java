@@ -71,7 +71,7 @@ public class takeCommand extends CommandBase {
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(Toolbox.lacksPermission(plugin, sender, "general.take")) return true;
+        if(Toolbox.lacksPermission(plugin, sender, "remove items from your inventory", "general.take")) return true;
         if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
 
         who = sender;
@@ -108,6 +108,9 @@ public class takeCommand extends CommandBase {
         default:
             return Toolbox.USAGE;
         }
+        
+        if(!sender.equals(who) && Toolbox.lacksPermission(plugin, sender, "take items from someone else's inventory", "general.take.other"))
+            return true;
 
         if(item == null || !item.isIdValid()) {
             Messaging.send(sender, "&rose;Invalid item.");

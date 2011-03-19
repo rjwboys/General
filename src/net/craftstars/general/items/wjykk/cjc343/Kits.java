@@ -95,9 +95,9 @@ public class Kits {
             kits.clear();
             String list;
             String[] listing;
-            Pattern idPat = Pattern.compile("^([0-9a-zA-Z_']+).*");
-            Pattern dataPat = Pattern.compile(".*\\+([0-9a-zA-Z_']+).*");
-            Pattern nPat = Pattern.compile(".*-([0-9a-zA-Z]+)$");
+            Pattern idPat = Pattern.compile("^([0-9a-zA-Z_']+).*$");
+            Pattern dataPat = Pattern.compile("^.*\\+([0-9a-zA-Z_']+).*$");
+            Pattern nPat = Pattern.compile("^.*-([0-9a-zA-Z]+).*$");
             while ((l = br.readLine()) != null) {
                 list = l.trim();
                 if (!list.startsWith("#") && !list.isEmpty()) {

@@ -28,7 +28,7 @@ public class whoCommand extends CommandBase {
         } else if(args.length >= 1) {
             if(args[0].equals("help"))
                 return Toolbox.USAGE;
-            if(Toolbox.lacksPermission(plugin, sender, "general.who", "general.basic")) return true;
+            if(Toolbox.lacksPermission(plugin, sender, "view info on users other than yourself", "general.who", "general.basic")) return true;
             Player who = Toolbox.getPlayer(args[0], sender);
             if(who == null) return true;
             this.getPlayerInfo(who);

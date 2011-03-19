@@ -28,7 +28,7 @@ public class kitCommand extends CommandBase {
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(Toolbox.lacksPermission(plugin, sender, "general.kit")) return true;
+        if(Toolbox.lacksPermission(plugin, sender, "get kits", "general.kit")) return true;
         if (args.length == 0) {
             String msg = "&cKits available: ";
             for (String thisKit : Kits.kits.keySet()) {

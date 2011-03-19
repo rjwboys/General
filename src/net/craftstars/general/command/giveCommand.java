@@ -23,7 +23,7 @@ public class giveCommand extends CommandBase {
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(Toolbox.lacksPermission(plugin, sender, "general.give")) return true;
+        if(Toolbox.lacksPermission(plugin, sender, "give items", "general.give")) return true;
         if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
 
         who = sender;
@@ -83,7 +83,7 @@ public class giveCommand extends CommandBase {
             return true;
         }
 
-        if(amount < 0 && Toolbox.lacksPermission(plugin, sender, "general.give.infinite")) return true;
+        if(amount < 0 && Toolbox.lacksPermission(plugin, sender, "give infinite stacks of items", "general.give.infinite")) return true;
         // Make sure this player is allowed this particular item
         if(!canGetItem(sender)) {
             Messaging.send(sender, "&2You're not allowed to get &f" + Items.name(item) + "&2.");
