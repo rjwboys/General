@@ -9,6 +9,7 @@ import net.craftstars.general.items.Items;
 import net.craftstars.general.util.Toolbox;
 import net.minecraft.server.EntityGhast;
 import net.minecraft.server.EntityGiantZombie;
+import net.minecraft.server.EntityHuman;
 import net.minecraft.server.EntityMonster;
 import net.minecraft.server.EntitySheep;
 import net.minecraft.server.EntitySlime;
@@ -21,6 +22,7 @@ import org.bukkit.World;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftGhast;
 import org.bukkit.craftbukkit.entity.CraftGiant;
+import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.entity.CraftMonster;
 import org.bukkit.craftbukkit.entity.CraftSlime;
 import org.bukkit.craftbukkit.CraftServer;
@@ -33,40 +35,20 @@ import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Slime;
 import org.bukkit.inventory.PlayerInventory;
 
+/**
+ * Mob types for /spawnmob
+ * @author Celtic Minstrel
+ * @author jordanneil23
+ * @author xmlns
+ */
 public enum MobType {
-    
-    /**
-     * Mob types for /spawnmob
-     * @author jordanneil23
-     * @author xmlns
-     */
     //And edited by jordaneil23
-    CHICKEN(Enemies.FRIENDLY, CreatureType.CHICKEN),
-    COW(Enemies.FRIENDLY, CreatureType.COW),
-    CREEPER(Enemies.ENEMY, CreatureType.CREEPER),
-    GHAST(Enemies.ENEMY, CreatureType.GHAST) {
-        @Override // TODO: Eliminate the need for this override.
-        public LivingEntity spawn(Player byWhom, General plugin, Location loc) throws MobException {
-            try {
-                WorldServer world = ((CraftWorld) byWhom.getWorld()).getHandle();
-                EntityGhast entity = (EntityGhast) EntityTypes.a("Ghast", world);
-                CraftGhast mob = new CraftGhast((CraftServer) plugin.getServer(), entity);
-                mob.teleportTo(loc);
-                world.a(mob.getHandle());
-                return mob;
-            } catch (Exception e) {
-                General.logger.error("Unable to spawn mob Ghast; internal error.");
-                throw new MobException(e);
-            }
-        }
-    },
-    PIG(Enemies.FRIENDLY, CreatureType.PIG),
-    PIG_ZOMBIE(Enemies.NEUTRAL, CreatureType.PIG_ZOMBIE, "ZombiePigman"),
-    SKELETON(Enemies.ENEMY, CreatureType.SKELETON),
-    SPIDER(Enemies.ENEMY, CreatureType.SPIDER),
-    SQUID(Enemies.FRIENDLY, CreatureType.SQUID),
-    ZOMBIE(Enemies.ENEMY, CreatureType.ZOMBIE),
-    SHEEP(Enemies.FRIENDLY, CreatureType.SHEEP) {
+    // The order of these enums constants MUST NOT BE CHANGED since the ordinal() function
+    // needs to return the correct value.
+    /*  0 */ PIG(Enemies.FRIENDLY, CreatureType.PIG),
+    /*  1 */ CHICKEN(Enemies.FRIENDLY, CreatureType.CHICKEN),
+    /*  2 */ COW(Enemies.FRIENDLY, CreatureType.COW),
+    /*  3 */ SHEEP(Enemies.FRIENDLY, CreatureType.SHEEP) {
         @Override
         public void setData(LivingEntity what, String data) throws MobException {
             if(data == null) return;
@@ -87,7 +69,29 @@ public enum MobType {
             }
         }
     },
-    SLIME(Enemies.ENEMY, CreatureType.SLIME) {
+    /*  4 */ SQUID(Enemies.FRIENDLY, CreatureType.SQUID),
+    /*  5 */ CREEPER(Enemies.ENEMY, CreatureType.CREEPER),
+    /*  6 */ GHAST(Enemies.ENEMY, CreatureType.GHAST) {
+        @Override // TODO: Eliminate the need for this override.
+        public LivingEntity spawn(Player byWhom, General plugin, Location loc) throws MobException {
+            try {
+                WorldServer world = ((CraftWorld) byWhom.getWorld()).getHandle();
+                EntityGhast entity = (EntityGhast) EntityTypes.a("Ghast", world);
+                CraftGhast mob = new CraftGhast((CraftServer) plugin.getServer(), entity);
+                mob.teleportTo(loc);
+                world.a(mob.getHandle());
+                return mob;
+            } catch (Exception e) {
+                General.logger.error("Unable to spawn mob Ghast; internal error.");
+                throw new MobException(e);
+            }
+        }
+    },
+    /*  7 */ PIG_ZOMBIE(Enemies.NEUTRAL, CreatureType.PIG_ZOMBIE, "ZombiePigman"),
+    /*  8 */ SKELETON(Enemies.ENEMY, CreatureType.SKELETON),
+    /*  9 */ SPIDER(Enemies.ENEMY, CreatureType.SPIDER),
+    /* 10 */ ZOMBIE(Enemies.ENEMY, CreatureType.ZOMBIE),
+    /* 11 */ SLIME(Enemies.ENEMY, CreatureType.SLIME) {
         @Override
         public void setData(LivingEntity what, String data) throws MobException {
             if(data == null) return;
@@ -121,7 +125,7 @@ public enum MobType {
             }
         }
     },
-    GIANT_ZOMBIE(Enemies.ENEMY, null, "Giant") {
+    /* 12 */ GIANT_ZOMBIE(Enemies.ENEMY, null, "Giant") {
         @Override // TODO: Eliminate the need for this override.
         public LivingEntity spawn(Player byWhom, General plugin, Location loc) throws MobException {
             try {
@@ -137,13 +141,15 @@ public enum MobType {
             }
         }
     },
-    MONSTER(Enemies.ENEMY, null, "Human") {
+    /* 13 */ MONSTER(Enemies.ENEMY, null, "Human") {
         @Override // TODO: Eliminate the need for this override.
         public LivingEntity spawn(Player byWhom, General plugin, Location loc) throws MobException {
             try {
                 WorldServer world = ((CraftWorld) byWhom.getWorld()).getHandle();
                 EntityMonster entity = (EntityMonster) EntityTypes.a("Monster", world);
                 CraftMonster mob = new CraftMonster((CraftServer) plugin.getServer(), entity);
+                //EntityHuman entity = new EntityHuman(world) {};
+                //CraftHumanEntity mob = new CraftHumanEntity((CraftServer) plugin.getServer(), entity);
                 mob.teleportTo(loc);
                 world.a(mob.getHandle());
                 return mob;
@@ -319,8 +325,17 @@ public enum MobType {
         private static final long serialVersionUID = 1L;
     }
     
+    
     public static MobType fromName(String n){
-        return hashMap.get(n.toLowerCase());
+        try {
+            int i = Integer.valueOf(n);
+            for(MobType m : hashMap.values()) {
+                if(i == m.ordinal()) return m;
+            }
+            return null;
+        } catch(NumberFormatException x) {
+            return hashMap.get(n.toLowerCase());
+        }
     }
     
     public String getName() {
