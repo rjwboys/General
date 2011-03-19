@@ -299,15 +299,25 @@ public class Items {
         // --- resume hacky workaround for missing MaterialData classes ---
         break;
         case INK_SACK: case WOOL:
-            if(ret.getData() > 15 || ret.getData() < 0) ret.invalidate(true); 
+            if(ret.getData() == null) break;
+            if(ret.getData() > 15 || ret.getData() < 0) ret.invalidate(true);
+        break;
         case COAL:
+            if(ret.getData() == null) break;
             if(ret.getData() > 1 || ret.getData() < 0) ret.invalidate(true);
+        break;
         case WOOD:
+            if(ret.getData() == null) break;
             if(ret.getData() > 2 || ret.getData() < 0) ret.invalidate(true);
+        break;
         case STEP: case DOUBLE_STEP:
+            if(ret.getData() == null) break;
             if(ret.getData() > 3 || ret.getData() < 0) ret.invalidate(true);
+        break;
         case MOB_SPAWNER: // creaturebox support
+            if(ret.getData() == null) break;
             if(ret.getData() > 13 || ret.getData() < 0) ret.invalidate(true);
+        break;
         }
         // --- end hacky workaround for missing MaterialData classes ---
 
