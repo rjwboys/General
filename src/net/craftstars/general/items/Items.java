@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -22,35 +23,53 @@ import net.craftstars.general.General;
 import net.craftstars.general.util.Toolbox;
 
 public class Items {
-    private static class VariantsMap {
-        @SuppressWarnings("hiding")
-        private ConfigurationNode variants;
-
-        VariantsMap(ConfigurationNode var) {
-            variants = var;
-        }
-
-        public Integer findVariant(int id, String data) {
-            ConfigurationNode thisItem = variants.getNode("item" + Integer.toString(id));
-            if(thisItem == null) return null;
-            int i = 0;
-            List<String> thisVariant;
-            do {
-                thisVariant = thisItem.getStringList("type" + Integer.toString(i), null);
-                if(thisVariant.contains(data)) return i;
-                i++;
-            } while(!thisVariant.isEmpty());
-            return null;
-        }
-    }
-
+    private static Configuration config;
     private static HashMap<String, ItemID> aliases;
     private static HashMap<ItemID, String> names;
-    private static HashMap<String,HashMap<String,ItemID>> hooks;
-    private static VariantsMap variants;
-
-    private static Configuration loadConfig() {
-        Configuration itemsyml = null;
+    private static HashMap<String,ItemID> hooks;
+    
+    public static void save() {
+        for(String alias : aliases.keySet()) {
+            ItemID item = aliases.get(alias);
+            String code = Integer.toString(item.getId());
+            if(item.getData() != null) code += "/" + item.getData();
+            config.setProperty("aliases." + alias, (String) code);
+        }
+        HashMap<Integer, ArrayList<ItemID>> tmpList = new HashMap<Integer, ArrayList<ItemID>>();
+        for(ItemID item : names.keySet()) {
+            int id = item.getId();
+            if(!tmpList.containsKey(id)) {
+                tmpList.put(id, new ArrayList<ItemID>());
+            }
+            tmpList.get(id).add(item);
+        }
+        for(int id : tmpList.keySet()) {
+            String key = "names.item" + id;
+            if(tmpList.get(id).size() == 1)
+                config.setProperty(key, names.get(tmpList.get(id).get(0)));
+            else {
+                ArrayList<String> theseNames = new ArrayList<String>();
+                for(ItemID item : tmpList.get(id)) {
+                    while(theseNames.size() <= item.getData())
+                        theseNames.add("");
+                    theseNames.set(item.getData(), names.get(item));
+                }
+                config.setProperty(key, theseNames);
+            }
+        }
+        final int NAME = 0, TYPE = 1;
+        for(String hook : hooks.keySet()) {
+            String[] split = hook.split(":");
+            String key = "hooks." + split[NAME] + "." + split[TYPE];
+            ItemID item = hooks.get(hook);
+            String code = Integer.toString(item.getId());
+            if(item.getData() != null) code += "/" + item.getData();
+            config.setProperty(key, (String) code);
+        }
+        config.save();
+    }
+    
+    private static void loadConfig() {
         try {
             File dataFolder = General.plugin.getDataFolder();
             if(!dataFolder.exists()) dataFolder.mkdirs();
@@ -68,70 +87,60 @@ public class Items {
                 out.close();
                 defaultConfig.close();
             }
-            itemsyml = new Configuration(configFile);
-            itemsyml.load();
+            config = new Configuration(configFile);
+            config.load();
         } catch(Exception ex) {
             General.logger.warn(
                     "Could not read and/or write items.yml! Continuing with default values!", ex);
         }
-        return itemsyml;
     }
 
     public static void setup() {
         Properties itemsdb = new Properties();
-        Configuration itemsyml = loadConfig();
+        loadConfig();
         try {
             itemsdb.load(new FileInputStream("items.db"));
-        } catch(Exception ex) {
-            General.logger.warn("Could not open items.db!");
-        }
+        } catch(Exception ex) {}
         aliases = new HashMap<String, ItemID>();
         names = new HashMap<ItemID, String>();
 
         // This loads in the item names from items.yml
-        loadItemNames(itemsyml);
+        loadItemNames();
 
         // Now load the aliases from items.db
         try {
-            loadItemAliases(itemsdb);
-        } catch(NumberFormatException x) {
+            loadItemsDB(itemsdb);
+        } catch(Exception x) {
             General.logger.error(x.getMessage());
         }
-
-        // And then the variant names
-        loadItemVariantNames(itemsyml);
+        //try {
+            loadItemAliases();
+        //} catch(Exception x) {
+        //    General.logger.error(x.getMessage());
+        //}
 
         // Load the "hooks" as well.
-        loadHooks(itemsyml);
+        loadHooks();
     }
 
-    private static void loadHooks(Configuration itemsyml) {
-        hooks = new HashMap<String,HashMap<String,ItemID>>();
-        for(String key : itemsyml.getKeys("hooks")) {
-            HashMap<String,ItemID> thisHook = new HashMap<String,ItemID>();
-            for(String val : itemsyml.getNode("hooks").getKeys(key)) {
-                String x = itemsyml.getNode("hooks").getNode(key).getString(val);
+    private static void loadHooks() {
+        hooks = new HashMap<String,ItemID>();
+        for(String key : config.getKeys("hooks")) {
+            for(String val : config.getNode("hooks").getKeys(key)) {
+                String x = config.getNode("hooks").getNode(key).getString(val);
                 ItemID thisItem = Items.validate(x);
                 if(thisItem == null) {
                     General.logger.warn("Invalid hook: " + x);
                 } else {
-                    thisHook.put(val,thisItem);
+                    hooks.put(key + ":" + val, thisItem);
                 }
             }
-            hooks.put(key, thisHook);
         }
     }
 
-    private static void loadItemVariantNames(Configuration itemsyml) {
-        try {
-            variants = new VariantsMap(itemsyml.getNode("variants"));
-        } catch(NullPointerException x) {
-            General.logger.warn("List of item variants is missing.");
-        }
-    }
-
-    private static void loadItemAliases(Properties itemsdb) {
-        Pattern itemPat = Pattern.compile("([0-9]+)(?:[.,:/|]([0-9]+))?");
+    private static final String invalidItemAlias = "I am not a valid item.";
+    private static Pattern itemPat = Pattern.compile("([0-9]+)(?:[.,:/|]([0-9]+))?");
+    private static void loadItemsDB(Properties itemsdb) {
         for(String alias : itemsdb.stringPropertyNames()) {
             ItemID val;
             String code = itemsdb.getProperty(alias);
@@ -148,25 +157,68 @@ public class Items {
                 try {
                     data = Integer.valueOf(m.group(2));
                 } catch(NumberFormatException x) {
-                    General.logger.warn("Invalid items.db assignment '" + m.group(1) + ":"
+                    General.logger.warn("Invalid item alias assignment '" + m.group(1) + ":"
                             + m.group(2) + "'.");
                     continue;
                 }
                 val = new ItemID(num, data);
             } else if(problem) {
-                General.logger.warn("Invalid items.db assignment '" + m.group(1) + "'.");
+                General.logger.warn("Invalid item alias assignment '" + m.group(1) + "'.");
+                continue;
+            } else val = new ItemID(num, null);
+            aliases.put(alias, val);
+        }
+    }
+    
+    private static void loadItemAliases() {
+        List<String> ymlAliases = config.getKeys("aliases");
+        if(ymlAliases == null) {
+            General.logger.warn("No aliases were defined in items.yml.");
+            if(!aliases.isEmpty()) {
+                General.logger.info("Your items.db aliases will be inserted into the items.yml upon shutdown,");
+                General.logger.info("or you can force it earlier using /general save");
+            }
+            return;
+        }
+        for(String alias : ymlAliases) {
+            ItemID val;
+            String code = config.getString("aliases." + alias, invalidItemAlias);
+            if(code.equals(invalidItemAlias)) {
+                General.logger.warn("Invalid item alias assignment  for '" + alias + "'.");
+                continue;
+            }
+            Matcher m = itemPat.matcher(code);
+            if(!m.matches()) continue;
+            int num = 0, data;
+            boolean problem = false;
+            try {
+                num = Integer.valueOf(m.group(1));
+            } catch(NumberFormatException x) {
+                problem = true;
+            }
+            if(m.groupCount() > 1 && m.group(2) != null) {
+                try {
+                    data = Integer.valueOf(m.group(2));
+                } catch(NumberFormatException x) {
+                    General.logger.warn("Invalid item alias assignment '" + m.group(1) + ":"
+                            + m.group(2) + "'.");
+                    continue;
+                }
+                val = new ItemID(num, data);
+            } else if(problem) {
+                General.logger.warn("Invalid item alias assignment '" + m.group(1) + "'.");
                 continue;
             } else val = new ItemID(num, null);
             aliases.put(alias, val);
         }
     }
 
-    private static void loadItemNames(Configuration itemsyml) {
+    private static void loadItemNames() {
         int invalids = 0;
         String lastInvalid = null;
         List<String> keys;
         try {
-            keys = itemsyml.getKeys("names");
+            keys = config.getKeys("names");
         } catch(NullPointerException x) {
             General.logger.warn("Names of items are missing.");
             return;
@@ -185,9 +237,9 @@ public class Items {
                     invalids++;
                     continue;
                 }
-                List<String> list = itemsyml.getStringList("names." + id, null);
+                List<String> list = config.getStringList("names." + id, null);
                 if(list.isEmpty()) {
-                    name = itemsyml.getString("names." + id);
+                    name = config.getString("names." + id);
                     key = new ItemID(num, null);
                     names.put(key, name);
                 } else {
@@ -327,8 +379,9 @@ public class Items {
     private static ItemID validateLongItem(String item, String data) {
         ItemID ret = validateShortItem(item);
         if(ret == null) { // If it wasn't valid as a short item, check the hooks.
-            if(hooks.containsKey(item) && hooks.get(item).containsKey(data)) {
-                return hooks.get(item).get(data);
+            String key = item + ":" + data;
+            if(hooks.containsKey(key)) {
+                return hooks.get(key);
             }
         } else if(ret.getData() != null) { // This means a "richalias" was used, which includes the data value.
             ret.invalidate(true); // No data value is valid with a "richalias".
@@ -336,7 +389,7 @@ public class Items {
             try {
                 ret.setData(Integer.valueOf(data));
             } catch(NumberFormatException x) {
-                Integer d = variants.findVariant(ret.getId(), data);
+                Integer d = findVariant(ret.getId(), data);
                 if(d != null) ret.setData(d).setVariant(data);
             }
         }
@@ -356,13 +409,29 @@ public class Items {
             }
             if(ret == null) {
                 for(Material material : Material.values()) {
-                    if(material.toString().equalsIgnoreCase(item)) {
+                    String mat = material.toString();
+                    if(mat.equalsIgnoreCase(item) ||
+                            mat.replace("_","-").equalsIgnoreCase(item) ||
+                            mat.replace("_", "").equalsIgnoreCase(item)) {
                         ret = new ItemID(material).setName(material.toString());
                     }
                 }
             }
         }
         return ret;
+    }
+    
+    private static Integer findVariant(int id, String data) {
+        ConfigurationNode thisItem = config.getNode("variants.item" + Integer.toString(id));
+        if(thisItem == null) return null;
+        int i = 0;
+        List<String> thisVariant;
+        do {
+            thisVariant = thisItem.getStringList("type" + Integer.toString(i), null);
+            if(thisVariant.contains(data)) return i;
+            i++;
+        } while(!thisVariant.isEmpty());
+        return null;
     }
 
     public static boolean checkID(int id) {

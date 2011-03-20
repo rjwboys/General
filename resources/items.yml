@@ -1,5 +1,4 @@
 
-
 names:
   item0: Air
   item1: Stone
@@ -72,6 +71,21 @@ names:
   item50: Torch
   item51: Fire
   item52: Monster Spawner
+  item52:
+   - Pig Spawner
+   - Chicken Spawner
+   - Cow Spawner
+   - Sheep Spawner
+   - Squid Spawner
+   - Creeper Spawner
+   - Ghast Spawner
+   - Zombie Pigman Spawner
+   - Skeleton Spawner
+   - Spider Spawner
+   - Zombie Spawner
+   - Slime Spawner
+   - Giant Spawner
+   - Human Spawner
   item53: Wooden Stairs
   item54: Chest
   item55: Redstone Wire
@@ -268,6 +282,21 @@ variants:
     type1: [sandstone]
     type2: [wood, wooden]
     type3: [cobble, cobblestone]
+  item52:
+    type0: [pig]
+    type1: [chicken, duck]
+    type2: [cow]
+    type3: [sheep]
+    type4: [squid]
+    type5: [creeper]
+    type6: [ghast, nethersquid]
+    type7: [pigzombie, zombiepigman]
+    type8: [skeleton]
+    type9: [spider]
+    type10: [zombie]
+    type11: [slime]
+    type12: [giant, giantzombie, zombiegiant, bigzombie]
+    type13: [human, monster]
   item351:
     type0: [black, ink]
     type1: [rose, red, darkred]
@@ -287,107 +316,211 @@ variants:
     type15: [white]
 
 hooks:
-  block:
-    gold: '41'
-    iron: '42'
-    diamond: '57'
-    lapis: '22'
-    lazuli: '22'
-    lapislazuli: '22'
-    snow: '80'
-    clay: '82'
-    glowstone: '89'
-    glow: '89'
-  ore:
-    gold: '14'
-    iron: '15'
-    diamond: '56'
-    lapis: '21'
-    lazuli: '21'
-    lapislazuli: '21'
-    redstone: '73'
-    red: '73'
-    glowstone: '89'
-    glow: '89'
-    coal: '16'
-  pick:
-    gold: '285'
-    wood: '270'
-    stone: '274'
-    iron: '257'
-    diamond: '278'
-    admin: '278:-1562'
-  axe:
-    gold: '286'
-    wood: '271'
-    stone: '275'
-    iron: '258'
-    diamond: '279'
-    admin: '279:-1562'
-  hoe:
-    gold: '294'
-    wood: '290'
-    stone: '291'
-    iron: '292'
-    diamond: '293'
-    admin: '293:-1562'
-  shovel:
-    gold: '284'
-    wood: '269'
-    stone: '273'
-    iron: '256'
-    diamond: '277'
-    admin: '277:-1562'
-  sword:
-    gold: '283'
-    wood: '268'
-    stone: '272'
-    iron: '267'
-    diamond: '276'
-    admin: '276:-1562'
-  helm:
-    gold: '314'
-    leather: '298'
-    chain: '302'
-    iron: '306'
-    diamond: '310'
-    admin: '310:-272'
-  plate:
-    gold: '315'
-    leather: '299'
-    chain: '303'
-    iron: '307'
-    diamond: '311'
-    admin: '311:-385'
-  pants:
-    gold: '316'
-    leather: '300'
-    chain: '304'
-    iron: '308'
-    diamond: '312'
-    admin: '312:-368'
-  boots:
-    gold: '317'
-    leather: '301'
-    chain: '305'
-    iron: '309'
-    diamond: '313'
-    admin: '313:-320'
-  bucket:
-    lava: '327'
-    water: '326'
-    milk: '335'
-    empty: '325'
-  dust:
-    redstone: '331'
-    red: '331'
-    glowstone: '348'
-    glow: '348'
-  ball:
-    snow: '332'
-    clay: '337'
-    slime: '341'
-  record:
-    gold: '2256'
-    green: '2257'
+  block: {gold: 41, iron: 42, diamond: 57, lapis: 22, lazuli: 22, lapislazuli: 22, snow: 80, clay: 82, glowstone: 89, glow: 89}
+  ore: {gold: 14, iron: 15, diamond: 56, lapis: 21, lazuli: 21, lapislazuli: 21, redstone: 73, red: 73, glowstone: 89, glow: 89, coal: 16}
+  pick: {gold: 285, wood: 270, stone: 274, iron: 257, diamond: 278, admin: 278/-1562}
+  axe: {gold: 286, wood: 271, stone: 275, iron: 258, diamond: 279, admin: 279/-1562}
+  hoe: {gold: 294, wood: 290, stone: 291, iron: 292, diamond: 293, admin: 293/-1562}
+  shovel: {gold: 284, wood: 269, stone: 273, iron: 256, diamond: 277, admin: 277/-1562}
+  sword: {gold: 283, wood: 268, stone: 272, iron: 267, diamond: 276, admin: 276/-1562}
+  helm: {gold: 314, leather: 298, chain: 302, iron: 306, diamond: 310, admin: 310/-272}
+  plate: {gold: 315, leather: 299, chain: 303, iron: 307, diamond: 311, admin: 311/-385}
+  pants: {gold: 316, leather: 300, chain: 304, iron: 308, diamond: 312, admin: 312/-368}
+  boots: {gold: 317, leather: 301, chain: 305, iron: 309, diamond: 313, admin: 313/-320}
+  bucket: {lava: 327, water: 326, milk: 335, empty: 325}
+  dust: {redstone: 331, red: 331, glowstone: 348, glow: 348}
+  ball: {snow: 332, clay: 337, slime: 341}
+  record: {gold: 2256, green: 2257}
 
+# You may notice some glaring omissions here, for example air, stone, grass, dirt.
+# These are deliberate, since they match their Material.* names.
+# Thus, those names will work even though they are not listed here.
+aliases: {
+  None: 0, 'Null': 0, Nil: 0, Nothing: 0, Empty: 0,
+  SmoothStone: 1, SmeltedStone: 1,
+  Cobble: 4,
+  Plank: 5, WoodPlank: 5, WoodenPlank: 5, WPlank: 5,
+  Tree: 6,
+  Adminium: 7, Admincrete: 7, Unobtainium: 7, Neutronium: 7,
+  FWater: 8, FlowWater: 8, FlowingWater: 8, MovingWater: 8,
+  StillWater: 9, SWater: 9, Spring: 9,
+  FLava: 10, FlowLava: 10, FlowingLava: 10, MovingLava: 10,
+  StillLava: 22, SLava: 11, LavaSpring: 11,
+  Oak: 17/0, Pine: 17/1, Redwood: 17/1, Birch: 17/2,
+  Leaf: 18,
+  LapisLazuliOre: 21, LazuliOre: 21,
+  LapisLazuliBlock: 22, LazuliBlock: 22,
+  Trap: 23,
+  Sandstone: 24,
+  MidiBlock: 24,
+  Cloth: 35, Fabric: 35,
+  Dandelion: 37, YellowDandelion: 37,
+  Rose: 38, RedFlower: 38,
+  Mushroom: 39,
+  Toadstool: 40,
+  BlockOfGold: 41,
+  BlockOfIron: 42,
+  DoubleSlab: 43, DStep: 43, DSlab: 43,
+  Slab: 44, Half: 44, HalfBlock: 44,
+  BrickBlock: 45, BrickWall: 45, Bricks: 45,
+  Dynamite: 46, Bomb: 46, Boom: 46,
+  Bookcase: 47,
+  Moss: 48, MossStone: 48, MossRock: 48, MossCobble: 48, MossCobblestone: 48, MossyStone: 48, MossyRock: 48, MossyCobble: 48,
+  Flame: 51, Flames: 51, Conflagration: 51,
+  MonsterSpawner: 52, MonsterSpawn: 52, MobSpawn: 52, Spawn: 52, Spawner: 52, Mob: 52, Monster: 52,
+  WoodenStairs: 53, WStairs: 53,
+  Box: 54,
+  BlockOfDiamond: 57,
+  CraftingTable: 58, Toolbench: 58,
+  Farmland: 60,
+  Oven: 61, Kiln: 61,
+  LitFurnace: 62,
+  Rail: 66, Track: 66, Tracks: 66, TrainTrack: 66, TrainRail: 66, TrainTracks: 66, TrainRails: 66, MinecartTrack: 66,
+  MinecartRail: 66, MinecartTracks: 66, MinecartRails: 66, CartTrack: 66, CartTracks: 66, CartRails: 66, CartRail: 66,
+  MineTrack: 66, MineTracks: 66, MineRail: 66, MineRails: 66,
+  StoneStairs: 67, Stairs: 67, CobbleStairs: 67, CStairs: 67, RockStairs: 67, SStairs: 67,
+  StonePressurePlate: 70, RockPlate: 70, PressurePlate: 70, SPressurePlate: 70, SPlate: 70,
+  WoodenPressurePlate: 72, WoodPressurePlate: 72, WPressurePlate: 72, WoodenPlate: 72, WPlate: 72,
+  RedstoneTorch: 76, RedTorch: 76,
+  Button: 77,
+  Snowfall: 78, SurfaceSnow: 78,
+  BlockOfSnow: 80,
+  Cacti: 81,
+  ClayBlock: 82,
+  Radio: 84, Juke: 84, Musicbox: 84, RecordPlayer: 84, Turntable: 84,
+  Pole: 85,
+  PumpkinOff: 86,
+  Netherwrack: 87, Netherstone: 87, RedMossyCobblestone: 87, Nether: 87, Netherrock: 87, Bloodstone: 87,
+  SoulMud: 88, SoulDirt: 88, SlowSand: 88, SlowMud: 88, SlowDirt: 88, QuickSand: 88, QuickMud: 88, QuickDirt: 88,
+  BrittleGold: 89, Lightstone: 89, GlowRock: 89, GlowingRock: 89, GlowstoneBlock: 89, GlowstoneOre: 89,
+  Jack'o'lantern: 91, LitPumpkin: 91, PumpkinOff: 91, Jack: 91, PumpkinLit: 91, PumpkinLight: 91, WaterLantern: 91,
+  # Shovels
+  WoodenShovel: 269, WoodenSpade: 269, WoodShovel: 269, WShovel: 269, WSpade: 269,
+  StoneShovel: 273, SShovel: 273, SSword: 273,
+  IronShovel: 256, IShovel: 256, ISpade: 256,
+  DiamondShovel: 277, DShovel: 277, DSpade: 277,
+  GoldenShovel: 284, GoldenSpade: 284, GoldShovel: 284, GShovel: 284, GSpade: 284,
+  # Pickaxes
+  WoodenPickaxe: 270, WoodenPick: 270, WoodPick: 270, WPickaxe: 270, WPick: 270,
+  StonePick: 274, SPickaxe: 274, SPick: 274,
+  IronPick: 257, IPickaxe: 257, IPick: 257,
+  DiamondPick: 278, DPickaxe: 278, DPick: 278,
+  GoldenPickaxe: 285, GoldenPick: 285, GoldPick: 285, GPickaxe: 285, GPick: 285,
+  # Hatchets
+  WoodenAxe: 271, WoodenHatchet: 271, WoodHatchet: 271, WAxe: 271, WHatchet: 271,
+  StoneHatchet: 275, SAxe: 275, SHatchet: 275,
+  IronHatchet: 258, IAxe: 258, IHatchet: 258,
+  DiamondHatchet: 279, DAxe: 279, DHatchet: 279,
+  GoldenAxe: 286, GoldenHatchet: 286, GoldHatchet: 286, GAxe: 286, GHatchet: 286,
+  # Swords
+  WoodenSword: 268, WSword: 268,
+  SSword: 272, ISword: 267, DSword: 276,
+  GoldenSword: 283, GSword: 283,
+  # Hoes
+  WoodenHoe: 290, WHoe: 290,
+  SHoe: 291, IHoe: 292, DHoe: 293,
+  GoldenHoe: 294, GHoe: 294,
+  # Buckets
+  WaterBucket: 326, BucketOfWater: 326, WBucket: 326,
+  LavaBucket: 327, BucketOfLava: 327, LBucket: 327,
+  Milk: 335, BucketOfMilk: 335, MBucket: 335,
+  # Other Tools and Weapons
+  Lighter: 259, SteelAndFlint: 259,
+  Arrows: 262,
+  FishingPole: 346, Rod: 346, Fishing: 346, Tackle: 346,
+  Clock: 347, Time: 347,
+  # Food
+  Fruit: 260,
+  MushroomStew: 282, Stew: 282, Soup: 282, BowlWithSoup: 282, BowlWithStew: 282,
+  Loaf: 297, BreadLoaf: 297, LoafOfBread: 297,
+  RawPorkchop: 319, RawPork: 319, Meat: 319,
+  CookedPorkchop: 320, GrilledPorkchop: 320, RoastedPorkchop: 320, CookedPork: 320, RoastedPork: 320,
+  CookedMeat: 320, RoastedMeat: 320, GrilledMeat: 320,
+  Restore: 322, GoldApple: 322, GApple: 322, GoldenFruit: 322, GoldFruit: 322, GFruit: 322,
+  Fish: 349,
+  RoastedFish: 350, GrilledFish: 350,
+  # Materials
+  Coal: 263/0, Charcoal: 263/1,
+  DiamondCrystal: 264, DiamondIngot: 264, DiamondBar: 264,
+  IronBar: 265,
+  GoldBar: 266,
+  SoupBowl: 281, WoodBowl: 281, WBowl: 281,
+  Yarn: 287, Web: 287, Rope: 287, Silk: 287, Twine: 287,
+  Feathers: 288, Quill: 288, Quills: 288,
+  Sulfur: 289, Gunpowder: 289,
+  Seed: 295,
+  Grain: 296,
+  RedstoneDust: 331, RDust: 331,
+  Skin: 334, Pelt: 334,
+  Brick: 336, ClayBrick: 336,
+  ClayBalls: 337,
+  SugarCanes: 338, Reed: 338, Reeds: 338,
+  Papyrus: 339,
+  SlimeOrb: 341,
+  LightstoneDust: 348, GlowDust: 348, LightDust: 348, BrittleGoldDust: 348,
+  # Helmets
+  LeatherCap: 298, LeatherHelm: 298, LeatherHat: 298, LHelmet: 298, LHelm: 298, LCap: 298, LHat: 298,
+  ChainHelmet: 302, ChainHelm: 302, ChainCap: 302, ChainHat: 302, MailHelmet: 302, MailHelm: 302, MailCap: 302,
+  MailHat: 302, ChainmailHelm: 302, ChainmailCap: 302, ChainmailHat: 302, CHelmet: 302, CHelm: 302, CCap: 302, CHat: 302,
+  IronHelm: 306, IronCap: 306, IronHat: 306, IHelmet: 306, IHelm: 306, ICap: 306, IHat: 306,
+  DiamondHelm: 310, DiamondCap: 310, DiamondHat: 310, DHelmet: 310, DHelm: 310, DCap: 310, DHat: 310,
+  GoldenHelmet: 314, GoldenHelm: 314, GoldenCap: 314, GoldenHat: 314, GoldHelm: 314, GoldCap: 314, GoldHat: 314,
+  GHelmet: 314, GHelm: 314, GCap: 314, GHat: 314,
+  # Chestplates
+  LeatherTunic: 299, LeatherPlate: 299, LeatherBody: 299, LChestplate: 299, LPlate: 299, LTunic: 299, LBody: 299,
+  ChainChestplate: 303, ChainPlate: 303, ChainTunic: 303, ChainBody: 303, MailChestplate: 303, MailPlate: 303,
+  MailTunic: 303, MailBody: 303, ChainmailPlate: 303, ChainmailTunic: 303, ChainmailBody: 303, CChestplate: 303,
+  CPlate: 303, CTunic: 303, CBody: 303,
+  IronPlate: 307, IronTunic: 307, IronBody: 307, IChestplate: 307, IPlate: 307, ITunic: 307, IBody: 307,
+  DiamondPlate: 311, DiamondTunic: 311, DiamondBody: 311, DChestplate: 311, DPlate: 311, DTunic: 311, DBody: 311,
+  GoldenChestplate: 315, GoldenPlate: 315, GoldenTunic: 315, GoldenBody: 315, GoldPlate: 315, GoldTunic: 315,
+  GoldBody: 315, GChestplate: 315, GPlate: 315, GTunic: 315, GBody: 315,
+  # Pants
+  LeatherPants: 300, LeatherLegs: 300, LLeggings: 300, LLegs: 300, LPants: 300,
+  ChainLeggings: 304, ChainLegs: 304, ChainPants: 304, MailLeggings: 304, MailLegs: 304, MailPants: 304, ChainmailLegs: 304,
+  ChainmailPants: 304, CLeggins: 304, CLegs: 304, CPants: 304,
+  IronLegs: 308, IronPants: 308, ILeggings: 308, ILegs: 308, IPants: 308,
+  DiamondLegs: 312, DiamondPants: 312, DLeggings: 312, DLegs: 312, DPants: 312,
+  GoldenLeggings: 316, GoldenLegs: 316, GoldenPants: 316, GoldLegs: 316, GoldPants: 316, GLeggins: 316,
+  GLegs: 316, GPants: 316,
+  # Boots
+  LeatherShoes: 301, LBoots: 301, LShoes: 301,
+  ChainBoots: 305, ChainShoes: 305, MailBoots: 305, MailShoes: 305, ChainmailShoes: 305, CBoots: 305, CShoes: 305,
+  IronShoes: 309, IBoots: 309, IShoes: 309,
+  DiamondShoes: 313, DBoots: 313, DShoes: 313,
+  GoldenBoots: 317, GoldenShoes: 317, GoldShoes: 317, GBoots: 317, GShoes: 317,
+  # Decorations
+  Paintings: 321, Picture: 321,
+  Door: 324, WoodenDoor: 324, WDoor: 324,
+  IDoor: 330, MetalDoor: 330,
+  RedstoneRepeater: 356, RedstoneDelay: 356, RedstoneDiode: 356, Repeater: 356, Delay: 356,
+  GoldMusicDisc: 2256, GoldMusicDisc: 2256, GoldDisc: 2256, GoldenMusicDisc: 2256, GoldenMusicDisc: 2256,
+  GoldenRecord: 2256, GoldenDisc: 2256, GoldenDisc: 2256, GoldCD: 2256, GoldenCD: 2256,
+  GreenMusicDisc: 2257, GreenMusicDisc: 2257, GreenDisc: 2257, GreenDisc: 2257, GreenCD: 2257,
+  # Vehicles
+  Cart: 328, Barge: 333,
+  MinecartWithChest: 342, FreightMinecart: 342, ChestMinecart: 342, CartWithChest: 342, FreightCart: 342,
+  StorageCart: 342, ChestCart: 342, Freight: 342,
+  MinecartWithFurnace: 343, EngineMinecart: 343, FurnaceMinecart: 343, AutoMinecart: 343, CartWithFurnace: 343,
+  PoweredCart: 343, EngineCart: 343, FurnaceCart: 343, AutoCart: 343, Engine: 343,
+  # Dye
+  Dye: 351,
+  InkSac: 351/0, InkSack: 351/0,
+  RoseRed: 351/1,
+  CactusGreen: 351/2,
+  CocoaBeans: 351/3, CocoBeans: 351/3,
+  LapisLazuli: 351/4, Lapis: 351/4, Lazuli: 351/4,
+  DandelionYellow: 351/11,
+  BoneMeal: 351/15, Bleach: 351/15, Fertilizer: 351/15,
+  # Blocks not intended for the inventory (For Internal Use Only)
+  # These are mainly things that should only exist as blocks, not items.
+  # All have an alternative elsewhere in this list which behaves equivalently.
+  # Still could be useful if this file were used by WorldEdit, though.
+  SignBlock: 63,
+  WoodenDoorBlock: 64, WoodDoorBlock: 64, WDoorBlock: 64,
+  WallSign: 68, WallSignBlock: 68,
+  IDoorBlock: 71, MetalDoorBlock: 71,
+  RedstoneOreGlow: 74, RedstoneOreAlt: 74,
+  UnlitRedstoneTorch: 75, UnlitRedTorch: 75, RedTorchOff: 75,
+  ReedBlock: 83
+}

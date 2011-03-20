@@ -71,7 +71,7 @@ public enum MobType {
     },
     /*  4 */ SQUID(Enemies.FRIENDLY, CreatureType.SQUID),
     /*  5 */ CREEPER(Enemies.ENEMY, CreatureType.CREEPER),
-    /*  6 */ GHAST(Enemies.ENEMY, CreatureType.GHAST) {
+    /*  6 */ GHAST(Enemies.ENEMY, CreatureType.GHAST, "NetherSquid") {
         @Override // TODO: Eliminate the need for this override.
         public LivingEntity spawn(Player byWhom, General plugin, Location loc) throws MobException {
             try {

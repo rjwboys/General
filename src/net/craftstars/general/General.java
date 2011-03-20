@@ -79,6 +79,10 @@ public class General extends JavaPlugin {
     public General() {
         if(plugin != null) General.logger.warn("Seems to have loaded twice for some reason.");
         plugin = this;
+    }
+    
+    @Override
+    public void onLoad() {
         logger.info("Loaded.");
     }
     
@@ -262,6 +266,8 @@ public class General extends JavaPlugin {
 
     //@Override
     public void onDisable() {
+        Items.save();
+        // config.save();
         General.logger.info("Plugin disabled!");
     }
 
