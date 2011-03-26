@@ -392,7 +392,7 @@ public class Items {
             if(ret.getData() == null) break;
             if(ret.getData() > 3 || ret.getData() < 0) ret.invalidate(true);
         break;
-        case MOB_SPAWNER: // creaturebox support
+        case MOB_SPAWNER: // creaturebox support TODO: Why do I need this here?
             if(ret.getData() == null) break;
             if(ret.getData() > 13 || ret.getData() < 0) ret.invalidate(true);
         break;
@@ -507,8 +507,7 @@ public class Items {
     }
     
     public static void setItemName(ItemID id, String name) {
-        // TODO: There is the dilemma of whether the item currently in the map has "doesn't matter" for data
-        
+        names.put(id, name);
     }
     
     public static List<String> variantNames(ItemID id) {
@@ -547,5 +546,13 @@ public class Items {
     
     public static ItemID getAlias(String name) {
         return aliases.get(name);
+    }
+    
+    public static ItemID getHook(String main, String sub) {
+        return hooks.get(main + ":" + sub);
+    }
+    
+    public static void setHook(String main, String sub, ItemID id) {
+        hooks.put(main + ":" + sub, id);
     }
 }

@@ -82,7 +82,7 @@ public class generalCommand extends CommandBase {
     }
 
     private boolean itemEdit(CommandSender sender, String[] args) {
-        if(args.length < 1 || args.length > 3) {
+        if(args.length < 2 || args.length > 3) {
             return Toolbox.SHOW_USAGE;
         } else if(args[0].equalsIgnoreCase("alias")) {
             switch(args.length) {
@@ -137,7 +137,16 @@ public class generalCommand extends CommandBase {
                 return true;
             }
         } else if(args[0].equalsIgnoreCase("hook")) {
-            // TODO: Implement hook setting
+            String hook[] = args[1].split("[:/,.|]");
+            switch(args.length) {
+            case 2:
+                Messaging.send(sender, "The hook " + hook[0] + ":" + hook[1] + " refers to " + Items.getHook(hook[0], hook[1]));
+                return true;
+            case 3:
+                ItemID id = Items.validate(args[2]);
+                Items.setHook(hook[0], hook[1], id);
+                Messaging.send(sender, "The hook " + hook[0] + ":" + hook[1] + " now refers to " + id);
+            }
         }
         return Toolbox.SHOW_USAGE;
     }

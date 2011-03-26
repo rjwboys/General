@@ -86,6 +86,8 @@ names:
    - Slime Spawner
    - Giant Spawner
    - Human Spawner
+   - null
+   - Mob Spawner
   item53: Wooden Stairs
   item54: Chest
   item55: Redstone Wire
