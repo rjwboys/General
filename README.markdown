@@ -1,5 +1,5 @@
 # General Plugin for CraftBukkit #
-## Version 3.2.2 [Sibelius]
+## Version 3.3 [Dvorak]
 ### README
 - - -
 This is the first draft of this README. It's not done. Build instructions coming soon.
@@ -21,8 +21,8 @@ Commands:
 * /clear
 * /take
 * /heal
-* /mobspawn (not implemented yet)
-* /general reload|help|motd
+* /mobspawn
+* /general reload|help|motd|item
 
 Available Permissions nodes:
 

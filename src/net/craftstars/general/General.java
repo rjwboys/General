@@ -135,13 +135,14 @@ public class General extends JavaPlugin {
             // TODO: Some of the help should be moved to /<cmd> help; spawn and teleport, in particular.
             ////////////////////////////--------------------------------------------------
             helpPlugin.registerCommand("playerlist", "Lists online players. Alias: online", plugin,
-                    "general.playerlist");
+                    "general.playerlist", "general.basic");
             helpPlugin.registerCommand("who ([player])",
-                    "Displays information about a player. Aliases: playerinfo, whois", plugin, "general.who");
+                    "Displays information about a player. Aliases: playerinfo, whois", plugin,
+                    "general.who", "general.basic");
             helpPlugin.registerCommand("whoami",
                     "Displays information about you.", plugin, "general.who");
             helpPlugin.registerCommand("time ([world])", "Displays the current time in [world].",
-                    plugin, "general.time");
+                    plugin, "general.time", "general.basic");
             helpPlugin.registerCommand("time help", "Shows syntax for setting the time.", plugin,
                     "general.time.set");
             helpPlugin.registerCommand("give [item](:[variant]) ([amount]) ([player])",
@@ -149,13 +150,13 @@ public class General extends JavaPlugin {
             helpPlugin.registerCommand("items [item1] [item2] ... [itemN]",
                     "Give yourself several different items at once. You get one of each item.", plugin, "general.give.mass");
             helpPlugin.registerCommand("getpos ([player])",
-                    "Get the current position of [player].", plugin, "general.getpos");
+                    "Get the current position of [player].", plugin, "general.getpos", "general.basic");
             helpPlugin.registerCommand("compass", "Show your direction.", plugin, "general.getpos");
             helpPlugin.registerCommand("where ([player])",
                     "Show the location of [player]; less detailed form of /getpos. Aliases: pos, coords", plugin,
                     "general.getpos");
             helpPlugin.registerCommand("tell [player] [message]",
-                    "Whisper to a player. Aliases: msg, pm, whisper", plugin, "general.tell");
+                    "Whisper to a player. Aliases: msg, pm, whisper", plugin, "general.tell", "general.basic");
             helpPlugin.registerCommand("spawn ([player])",
                     "Teleports [player] to the spawn location.", plugin, "general.spawn");
             helpPlugin.registerCommand("spawn ([world]) show",
@@ -196,6 +197,10 @@ public class General extends JavaPlugin {
             		"Both [mob] and [mount] are of the form [name](:[data]), where [data] is slime size or sheep colour.",
                     plugin, "general.mobspawn");
             helpPlugin.registerCommand("help General", "Help for the General plugin.", plugin, true);
+            helpPlugin.registerCommand("away [reason]", "Sets your away status. Aliases: afk", plugin,
+                    "general.away", "general.basic");
+            helpPlugin.registerCommand("kit [kit]", "Gives you the [kit], or shows a list of available kits.",
+                    plugin, "general.kit");
             logger.info("[Help " + helpPlugin.getDescription().getVersion() + "] support enabled.");
             gotHelp = true;
         } else {
