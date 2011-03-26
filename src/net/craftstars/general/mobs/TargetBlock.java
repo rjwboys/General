@@ -1,4 +1,4 @@
-package net.craftstars.general.mobs.xmlns.jordanneil23;
+package net.craftstars.general.mobs;
 
 import java.util.ArrayList;
 

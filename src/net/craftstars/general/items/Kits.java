@@ -1,4 +1,4 @@
-package net.craftstars.general.items.wjykk.cjc343;
+package net.craftstars.general.items;
 
 import java.io.BufferedReader;
 import java.io.File;
