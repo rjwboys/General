@@ -97,7 +97,7 @@ public class teleportCommand extends CommandBase {
         }
         break;
         default:
-            return Toolbox.USAGE;
+            return Toolbox.SHOW_USAGE;
         }
         return true;
     }
@@ -147,7 +147,7 @@ public class teleportCommand extends CommandBase {
         }
         break;
         default:
-            return Toolbox.USAGE;
+            return Toolbox.SHOW_USAGE;
         }
         return true;
     }

@@ -479,4 +479,47 @@ public class Items {
             who.getWorld().dropItemNaturally(who.getLocation(), leftover);
         }
     }
+    
+    public static void setItemName(ItemID id, String name) {
+        // TODO: There is the dilemma of whether the item currently in the map has "doesn't matter" for data
+        
+    }
+    
+    public static List<String> variantNames(ItemID id) {
+        if(id.getData() != null)
+            return config.getStringList("variants.item" + id.getId() + ".type" + id.getData(), null);
+        return null;
+    }
+    
+    public static void addVariantName(ItemID id, String name) {
+        if(id.getData() != null) {
+            List<String> variants = variantNames(id);
+            variants.add(name);
+            setVariantNames(id, variants);
+        }
+    }
+    
+    public static void removeVariantName(ItemID id, String name) {
+        if(id.getData() != null) {
+            List<String> variants = variantNames(id);
+            variants.remove(name);
+            setVariantNames(id, variants);
+        }
+    }
+
+    public static void setVariantNames(ItemID id, List<String> variants) {
+        config.setProperty("variants.item" + id.getId() + ".type" + id.getData(), variants);
+    }
+    
+    public static void addAlias(String name, ItemID id) {
+        aliases.put(name, id);
+    }
+    
+    public static void removeAlias(String name) {
+        aliases.remove(name);
+    }
+    
+    public static ItemID getAlias(String name) {
+        return aliases.get(name);
+    }
 }

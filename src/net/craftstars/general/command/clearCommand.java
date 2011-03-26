@@ -31,7 +31,7 @@ public class clearCommand extends CommandBase {
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
         if(args.length == 1) {
-            if(args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
+            if(args[0].equalsIgnoreCase("help")) return Toolbox.SHOW_USAGE;
             Player who = Toolbox.getPlayer(args[0], sender);
             if(who == null) return true;
             doClean(who, sender, CleanType.FULL);
@@ -47,7 +47,7 @@ public class clearCommand extends CommandBase {
             } else if(args[1].equalsIgnoreCase("all")) {
                 doClean(who, sender, CleanType.FULL);
             }
-        } else return Toolbox.USAGE;
+        } else return Toolbox.SHOW_USAGE;
         return true;
     }
 
@@ -58,7 +58,7 @@ public class clearCommand extends CommandBase {
         if(args.length == 0) {
             doClean(sender, sender, CleanType.FULL);
         } else if(args.length == 1) {
-            if(args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
+            if(args[0].equalsIgnoreCase("help")) return Toolbox.SHOW_USAGE;
             else if(args[0].equalsIgnoreCase("pack")) {
                 doClean(sender, sender, CleanType.PACK);
             } else if(args[0].equalsIgnoreCase("quickbar")) {
@@ -86,7 +86,7 @@ public class clearCommand extends CommandBase {
             } else if(args[1].equalsIgnoreCase("all")) {
                 doClean(who, sender, CleanType.FULL);
             }
-        } else return Toolbox.USAGE;
+        } else return Toolbox.SHOW_USAGE;
         return true;
     }
 

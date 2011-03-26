@@ -16,7 +16,7 @@ public class tellCommand extends CommandBase {
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
         if(Toolbox.lacksPermission(plugin, sender, "send private messages to players", "general.tell", "general.basic")) return true;
-        if(args.length < 2) return Toolbox.USAGE;
+        if(args.length < 2) return Toolbox.SHOW_USAGE;
         Player who = Toolbox.getPlayer(args[0], sender);
         if(who != null) {
             if(who.getName().equals(sender.getName())) {
@@ -36,7 +36,7 @@ public class tellCommand extends CommandBase {
     @Override
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
-        if(args.length < 2) return Toolbox.USAGE;
+        if(args.length < 2) return Toolbox.SHOW_USAGE;
         Player who = Toolbox.getPlayer(args[0],sender);
         if(who != null) {
             Messaging.send(sender,"&gray;(whisper)   to <" + who.getName() + "> " + Toolbox.combineSplit(args,1));

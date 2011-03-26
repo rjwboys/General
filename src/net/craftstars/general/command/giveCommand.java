@@ -24,7 +24,7 @@ public class giveCommand extends CommandBase {
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
         if(Toolbox.lacksPermission(plugin, sender, "give items", "general.give")) return true;
-        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
+        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.SHOW_USAGE;
 
         who = sender;
         item = null;
@@ -69,7 +69,7 @@ public class giveCommand extends CommandBase {
             }
         break;
         default:
-            return Toolbox.USAGE;
+            return Toolbox.SHOW_USAGE;
         }
 
         if(item == null || !item.isIdValid()) {
@@ -142,7 +142,7 @@ public class giveCommand extends CommandBase {
     @Override
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
-        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
+        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.SHOW_USAGE;
 
         who = null;
         item = null;
@@ -150,7 +150,7 @@ public class giveCommand extends CommandBase {
 
         switch(args.length) {
         case 1: // give help
-            if(!args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
+            if(!args[0].equalsIgnoreCase("help")) return Toolbox.SHOW_USAGE;
             showHelp(sender);
             return true;
         case 2: // give <item>[:<data>] <player>
@@ -177,7 +177,7 @@ public class giveCommand extends CommandBase {
             }
         break;
         default:
-            return Toolbox.USAGE;
+            return Toolbox.SHOW_USAGE;
         }
 
         if(item == null || !item.isIdValid()) {

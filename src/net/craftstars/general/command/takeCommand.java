@@ -24,7 +24,7 @@ public class takeCommand extends CommandBase {
     @Override
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
-        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
+        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.SHOW_USAGE;
 
         who = null;
         item = null;
@@ -48,7 +48,7 @@ public class takeCommand extends CommandBase {
             }
         break;
         default:
-            return Toolbox.USAGE;
+            return Toolbox.SHOW_USAGE;
         }
 
         if(item == null || !item.isIdValid()) {
@@ -72,7 +72,7 @@ public class takeCommand extends CommandBase {
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
         if(Toolbox.lacksPermission(plugin, sender, "remove items from your inventory", "general.take")) return true;
-        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.USAGE;
+        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.SHOW_USAGE;
 
         who = sender;
         item = null;
@@ -106,7 +106,7 @@ public class takeCommand extends CommandBase {
             }
         break;
         default:
-            return Toolbox.USAGE;
+            return Toolbox.SHOW_USAGE;
         }
         
         if(!sender.equals(who) && Toolbox.lacksPermission(plugin, sender, "take items from someone else's inventory", "general.take.other"))

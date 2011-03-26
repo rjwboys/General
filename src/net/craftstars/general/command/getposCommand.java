@@ -37,7 +37,7 @@ public class getposCommand extends CommandBase {
             if(who != null) showPos(sender, who, commandLabel.equalsIgnoreCase("getpos") ? args[0]
                     : commandLabel);
             return true;
-        } else return Toolbox.USAGE;
+        } else return Toolbox.SHOW_USAGE;
     }
 
     private void showPos(CommandSender sender, Player whose, String subcmd) {
@@ -86,7 +86,7 @@ public class getposCommand extends CommandBase {
     @Override
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
-        if(args.length < 1 || args.length > 2) return Toolbox.USAGE;
+        if(args.length < 1 || args.length > 2) return Toolbox.SHOW_USAGE;
         if(args.length == 1) {
             Player who = Toolbox.getPlayer(args[0], sender);
             if(who != null) showPos(sender, who, commandLabel);
@@ -96,6 +96,6 @@ public class getposCommand extends CommandBase {
             if(who != null) showPos(sender, who, commandLabel.equalsIgnoreCase("getpos") ? args[0]
                     : commandLabel);
             return true;
-        } else return Toolbox.USAGE;
+        } else return Toolbox.SHOW_USAGE;
     }
 }

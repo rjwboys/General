@@ -60,7 +60,7 @@ public class timeCommand extends CommandBase {
             if(world == null) return true;
             return setTime(sender, args[1]);
         default:
-            return Toolbox.USAGE;
+            return Toolbox.SHOW_USAGE;
         }
     }
 
@@ -109,7 +109,7 @@ public class timeCommand extends CommandBase {
                 Messaging.send(sender, "&rose;Invalid duration format.");
             } catch(Exception ex) {
                 ex.printStackTrace();
-                return Toolbox.USAGE;
+                return Toolbox.SHOW_USAGE;
             }
         } else if(time.startsWith("-")) {
             try {
@@ -121,7 +121,7 @@ public class timeCommand extends CommandBase {
                 Messaging.send(sender, "&rose;Invalid duration format.");
             } catch(Exception ex) {
                 ex.printStackTrace();
-                return Toolbox.USAGE;
+                return Toolbox.SHOW_USAGE;
             }
         } else {
             if(time.startsWith("=")) time = time.substring(1);
@@ -133,10 +133,10 @@ public class timeCommand extends CommandBase {
             } catch(NumberFormatException x) {
                 Messaging.send(sender, "&rose;Invalid time format.");
             } catch(Exception ex) {
-                return Toolbox.USAGE;
+                return Toolbox.SHOW_USAGE;
             }
         }
-        return Toolbox.USAGE;
+        return Toolbox.SHOW_USAGE;
     }
 
     private void showTime(CommandSender sender) {
@@ -173,7 +173,7 @@ public class timeCommand extends CommandBase {
     @Override
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
-        if(args.length < 1 || args.length > 2) return Toolbox.USAGE;
+        if(args.length < 1 || args.length > 2) return Toolbox.SHOW_USAGE;
         else if(args.length == 1) {
             if(args[0].equalsIgnoreCase("help")) {
                 showHelp(sender);

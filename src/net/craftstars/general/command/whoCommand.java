@@ -27,12 +27,12 @@ public class whoCommand extends CommandBase {
             this.getPlayerInfo(sender);
         } else if(args.length >= 1) {
             if(args[0].equals("help"))
-                return Toolbox.USAGE;
+                return Toolbox.SHOW_USAGE;
             if(Toolbox.lacksPermission(plugin, sender, "view info on users other than yourself", "general.who", "general.basic")) return true;
             Player who = Toolbox.getPlayer(args[0], sender);
             if(who == null) return true;
             this.getPlayerInfo(who);
-        } else return Toolbox.USAGE;
+        } else return Toolbox.SHOW_USAGE;
         showPlayerInfo(sender);
         return true;
     }
@@ -81,9 +81,9 @@ public class whoCommand extends CommandBase {
     @Override
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
-        if(args.length != 1) return Toolbox.USAGE;
+        if(args.length != 1) return Toolbox.SHOW_USAGE;
         if(args[0].equals("help"))
-            return Toolbox.USAGE;
+            return Toolbox.SHOW_USAGE;
         Player who = Toolbox.getPlayer(args[0], sender);
         if(who == null) return true;
         this.getPlayerInfo(who);
