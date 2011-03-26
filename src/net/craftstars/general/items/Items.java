@@ -358,7 +358,7 @@ public class Items {
             if(ret.getData() == null) break;
             if(ret.getData() > 1 || ret.getData() < 0) ret.invalidate(true);
         break;
-        case WOOD:
+        case LOG:
             if(ret.getData() == null) break;
             if(ret.getData() > 2 || ret.getData() < 0) ret.invalidate(true);
         break;

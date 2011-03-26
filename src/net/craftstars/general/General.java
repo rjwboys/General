@@ -300,22 +300,27 @@ public class General extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String commandLabel,
             String[] args) {
+        String cmdStr = commandLabel;
+        for(String x : args) cmdStr += " " + x;
         try {
             Class<? extends CommandBase> clazz = this.getClass().getClassLoader().loadClass(
                     "net.craftstars.general.command." + command.getName() + "Command").asSubclass(
                     CommandBase.class);
             CommandBase commandInstance = (CommandBase) clazz.newInstance();
-            return commandInstance.runCommand(this, sender, command, commandLabel, args);
+            boolean result = commandInstance.runCommand(this, sender, command, commandLabel, args);
+            if(config.getBoolean("log-commands", false)) {
+                String name = "CONSOLE";
+                if(sender instanceof Player) name = ((Player) sender).getName();
+                logger.info(name + " used command: " + cmdStr);
+            }
+            return result;
         } catch(Exception ex) {
             logger.error("There was a big problem executing command [" + command.getName()
                     + "]! Please report this error!");
-            String cmdStr = "Full command string: [" + commandLabel;
-            for(String x : args) cmdStr += " " + x;
-            cmdStr += ']';
-            logger.error(cmdStr);
+            String err = "Full command string: [" + cmdStr + "]";
+            logger.error(err);
             ex.printStackTrace();
+            return false;
         }
-
-        return false;
     }
 }
