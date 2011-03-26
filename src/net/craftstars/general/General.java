@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 import me.taylorkelly.help.Help;
 import net.craftstars.general.items.Items;
-import net.craftstars.general.items.wjykk.cjc343.Kits;
+import net.craftstars.general.items.Kits;
 import net.craftstars.general.money.EconomyBase;
 import net.craftstars.general.security.BasicPermissionsHandler;
 import net.craftstars.general.security.PermissionsHandler;
@@ -104,7 +104,7 @@ public class General extends JavaPlugin {
         }
     };
 
-    //@Override
+    @Override
     public void onEnable() {
         logger.setPluginVersion(this.getDescription().getVersion());
         
@@ -269,7 +269,7 @@ public class General extends JavaPlugin {
         logger.info(" Using [" + permissions.getName() + " " + permissions.getVersion() + "] for permissions.");
     }
 
-    //@Override
+    @Override
     public void onDisable() {
         Items.save();
         // config.save();

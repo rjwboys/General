@@ -18,19 +18,23 @@ public class BasicPermissionsHandler implements PermissionsHandler {
         }
     }
 
+    @Override
     public boolean wasLoaded() {
         return true;
     }
 
+    @Override
     public boolean inGroup(Player who, String which) {
         if(which == ".isop") return who.isOp();
         return false;
     }
 
+    @Override
     public String getVersion() {
         return "(isOp)";
     }
 
+    @Override
     public String getName() {
         return "Basic";
     }

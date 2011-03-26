@@ -28,23 +28,28 @@ public class PermissionsPermissionsHandler implements PermissionsHandler {
         } else this.version = "0.0";
     }
 
+    @Override
     public boolean hasPermission(Player who, String what) {
         return this.permissions.has(who, what);
     }
 
+    @Override
     public boolean wasLoaded() {
         return wasLoaded;
     }
 
+    @Override
     public boolean inGroup(Player who, String which) {
         if(which == ".isop") return who.isOp();
         return this.permissions.inGroup(who.getWorld().getName(), who.getName(), which);
     }
 
+    @Override
     public String getVersion() {
         return version;
     }
 
+    @Override
     public String getName() {
         return "Permissions";
     }

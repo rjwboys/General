@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,24 +36,32 @@ public class Items {
             if(item.getData() != null) code += "/" + item.getData();
             config.setProperty("aliases." + alias, (String) code);
         }
-        HashMap<Integer, ArrayList<ItemID>> tmpList = new HashMap<Integer, ArrayList<ItemID>>();
+        HashMap<Integer, TreeSet<ItemID>> tmpList = new HashMap<Integer, TreeSet<ItemID>>();
         for(ItemID item : names.keySet()) {
             int id = item.getId();
             if(!tmpList.containsKey(id)) {
-                tmpList.put(id, new ArrayList<ItemID>());
+                tmpList.put(id, new TreeSet<ItemID>());
             }
             tmpList.get(id).add(item);
         }
         for(int id : tmpList.keySet()) {
             String key = "names.item" + id;
             if(tmpList.get(id).size() == 1)
-                config.setProperty(key, names.get(tmpList.get(id).get(0)));
+                config.setProperty(key, names.get(tmpList.get(id).first()));
             else {
                 ArrayList<String> theseNames = new ArrayList<String>();
                 for(ItemID item : tmpList.get(id)) {
-                    while(theseNames.size() <= item.getData())
-                        theseNames.add("");
-                    theseNames.set(item.getData(), names.get(item));
+                    if(item.getData() == null) {
+                        theseNames.add(null);
+                        theseNames.add(names.get(item));
+                        break; // even if there are further entries, they are anomalies and we don't care about them
+                        // Actually, having further entries at this point would be a bug since IDs with null data
+                        // compare higher than IDs with non-null data.
+                    } else {
+                        while(theseNames.size() <= item.getData())
+                            theseNames.add("");
+                        theseNames.set(item.getData(), names.get(item));
+                    }
                 }
                 config.setProperty(key, theseNames);
             }
@@ -243,10 +252,21 @@ public class Items {
                     key = new ItemID(num, null);
                     names.put(key, name);
                 } else {
+                    boolean atEnd = false;
                     for(int i = 0; i < list.size(); i++) {
                         name = list.get(i);
-                        key = new ItemID(num, i);
-                        names.put(key, name);
+                        if(atEnd) {
+                            key = new ItemID(num, null);
+                            names.put(key, name);
+                            break; // Even if there are additional items, they are meaningless at this point; skip them.
+                        } else {
+                            if(name == null) {
+                                atEnd = true;
+                                continue;
+                            }
+                            key = new ItemID(num, i);
+                            names.put(key, name);
+                        }
                     }
                 }
             }
@@ -266,10 +286,16 @@ public class Items {
         if(names.containsKey(longKey)) {
             return names.get(longKey);
         }
+        
+        // This is a redundant lookup if longKey already has null data, but that shouldn't create significant overhead
+        ItemID shortKey = longKey.clone().setData(null);
+        if(names.containsKey(shortKey)) {
+            return names.get(shortKey);
+        }
 
         for(Material item : Material.values()) {
             if(item.getId() == longKey.getId()) {
-                return Toolbox.camelToPhrase(item.toString());
+                return Toolbox.formatItemName(item.toString());
             }
         }
         

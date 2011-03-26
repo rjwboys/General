@@ -77,18 +77,30 @@ public class Toolbox {
     /**
      * Turns "SomeName" into "Some Name" or "MyABC" into "My ABC". (Inserts a space before a capital
      * letter unless it is at the beginning of the string or preceded by a capital letter.)
+     * Also turns "SOME_NAME" into "Some Name".
      * @param str The string to expand.
      * @return The expanded string.
      */
-    public static String camelToPhrase(String str) {
+    public static String formatItemName(String str) {
         String newStr = "";
+        str = str.replace("_", " ");
+        
         for(int i = 0; i < str.length(); i++) {
             if(i > 0 && Character.isUpperCase(str.charAt(i))
                     && !Character.isUpperCase(str.charAt(i - 1))) newStr += ' ';
             newStr += str.charAt(i);
         }
-
-        return newStr;
+        
+        String[] words = newStr.trim().split("\\s+");
+        newStr = "";
+        for(String word : words) {
+            newStr += ' ';
+            newStr += word.substring(0, 1).toUpperCase();
+            if(word.length() == 1) continue;
+            newStr += word.substring(1).toLowerCase();
+        }
+        
+        return newStr.trim();
     }
 
     public static Player getPlayer(String name, CommandSender fromWhom) {

@@ -30,30 +30,36 @@ public class iConomyEconomyHandler implements EconomyBase {
         } else this.version = "0.0";
     }
     
+    @Override
     public String formatCost(double amount) {
         return econ.format(amount);
     }
 
+    @Override
     public double getBalance(Player who) {
         String player = who.getName();
         if(!econ.hasAccount(player)) return 0;
         return econ.getAccount(player).getBalance();
     }
 
+    @Override
     public String getBalanceForDisplay(Player who) {
         String player = who.getName();
         if(!econ.hasAccount(player)) return formatCost(0);
         return econ.format(who.getName());
     }
 
+    @Override
     public String getName() {
         return "iConomy";
     }
 
+    @Override
     public String getVersion() {
         return version;
     }
 
+    @Override
     public void givePayment(Player toWhom, double amount) {
         String player = toWhom.getName();
         if(!econ.hasAccount(player)) return;
@@ -62,6 +68,7 @@ public class iConomyEconomyHandler implements EconomyBase {
         bank.save();
     }
 
+    @Override
     public boolean takePayment(Player fromWhom, double amount) {
         String player = fromWhom.getName();
         if(!econ.hasAccount(player)) return false;
@@ -72,10 +79,12 @@ public class iConomyEconomyHandler implements EconomyBase {
         return true;
     }
 
+    @Override
     public boolean wasLoaded() {
         return wasLoaded;
     }
 
+    @Override
     public String getCurrency() {
         return econ.getCurrency();
     }

@@ -6,7 +6,7 @@ package net.craftstars.general.items;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemID implements Comparable<ItemID>, Cloneable {
+public class ItemID implements Cloneable, Comparable<ItemID> {
     private int ID;
     private int data;
     private boolean dataMatters, isValid;
@@ -43,29 +43,6 @@ public class ItemID implements Comparable<ItemID>, Cloneable {
 
     public ItemID(Material m) {
         this(m.getId());
-    }
-
-    public int compareTo(ItemID arg) {
-        ItemID other = (ItemID) arg;
-        if(!dataMatters) return new Integer(ID).compareTo(other.ID);
-        else {
-            if(ID < other.ID) return -1;
-            else if(ID > other.ID) return 1;
-            else return new Integer(data).compareTo(other.data);
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        // System.out.println(this.toString()+" is hashed; result: "+Integer.toString((ID << 8)
-        // + (data & 0xFF)));
-        return (ID << 8) + (data & 0xFF);
-    }
-    
-    @Override
-    public boolean equals(Object other){
-        if(other instanceof ItemID) return 0 == this.compareTo((ItemID) other);
-        else return false;
     }
 
     @Override
@@ -148,5 +125,27 @@ public class ItemID implements Comparable<ItemID>, Cloneable {
     
     public Material getMaterial() {
         return Material.getMaterial(ID);
+    }
+
+    @Override
+    public int compareTo(ItemID other) {
+        if(ID < other.ID) return -1;
+        else if(ID > other.ID) return 1;
+        else {
+            if(dataMatters == other.dataMatters)
+                return dataMatters ? new Integer(data).compareTo(other.data) : 0;
+            else if(!other.dataMatters)
+                return -1;
+            else return 1;
+        }
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof ItemID) {
+            ItemID other = (ItemID) obj;
+            return (ID == other.ID && data == other.data && dataMatters == other.dataMatters);
+        }
+        return false;
     }
 }

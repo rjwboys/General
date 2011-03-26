@@ -30,26 +30,31 @@ public class WorldEditPermissionsHandler implements PermissionsHandler {
         permsListener.register(General.plugin);
         perms.load();
     }
-    
+
+    @Override
     public boolean hasPermission(Player who, String what) {
         if(this.perms == null) loadPermissions();
         return perms.hasPermission(who.getName(), what);
     }
 
+    @Override
     public boolean inGroup(Player who, String which) {
         if(which == ".isop") return who.isOp();
         if(this.perms == null) loadPermissions();
         return perms.inGroup(who.getName(), which);
     }
 
+    @Override
     public boolean wasLoaded() {
         return wasLoaded;
     }
-    
+
+    @Override
     public String getVersion() {
         return version;
     }
 
+    @Override
     public String getName() {
         return "WorldEdit";
     }
