@@ -4,6 +4,7 @@ package net.craftstars.general.util;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
+import java.util.Scanner;
 
 import net.craftstars.general.General;
 
@@ -168,5 +169,13 @@ public class Toolbox {
         }
 
         return players;
+    }
+
+    public static void showFile(CommandSender sender, Scanner f, boolean motd) {
+        while(f.hasNextLine()) {
+            String line = f.nextLine();
+            if(motd) line = MessageOfTheDay.parseMotD(sender, line);
+            Messaging.send(sender, line);
+        }
     }
 }

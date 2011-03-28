@@ -12,6 +12,7 @@ import net.craftstars.general.items.Kits;
 import net.craftstars.general.money.EconomyBase;
 import net.craftstars.general.security.BasicPermissionsHandler;
 import net.craftstars.general.security.PermissionsHandler;
+import net.craftstars.general.util.HelpHandler;
 import net.craftstars.general.util.MessageOfTheDay;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.PluginLogger;
@@ -27,7 +28,6 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.server.PluginEvent;
 import org.bukkit.event.server.ServerListener;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
@@ -35,8 +35,8 @@ public class General extends JavaPlugin {
     private class PluginListener extends ServerListener {
         @Override
         public void onPluginEnabled(PluginEvent event) {
-            if(!gotHelp && event.getPlugin() instanceof Help)
-                setupHelp();
+            if(!HelpHandler.gotHelp && event.getPlugin() instanceof Help)
+                HelpHandler.setup();
             else if (!gotRequestedPermissions)
                 setupPermissions(false);
             else if (!gotRequestedEconomy)
@@ -55,7 +55,8 @@ public class General extends JavaPlugin {
     public Configuration config; // NOTE: This was private. Should it be changed back? [celticminstrel]
     public PermissionsHandler permissions;
     public EconomyBase economy;
-    private boolean gotRequestedPermissions, gotHelp, gotRequestedEconomy;
+    private boolean gotRequestedPermissions, gotRequestedEconomy;
+
     private HashMap<String,String> playersAway = new HashMap<String,String>();
     private String tagFormat;
     
@@ -124,91 +125,9 @@ public class General extends JavaPlugin {
         
         logger.info("[Codename: " + General.codename + "] Plugin successfully loaded!");
         
-        setupHelp();
+        HelpHandler.setup();
     }
 
-    private void setupHelp() {
-        Plugin test = plugin.getServer().getPluginManager().getPlugin("Help");
-        if (test != null) {
-            Help helpPlugin = ((Help) test);
-            // TODO: Some of these help messages are too long; need to shorten them.
-            // TODO: Some of the help should be moved to /<cmd> help; spawn and teleport, in particular.
-            ////////////////////////////--------------------------------------------------
-            helpPlugin.registerCommand("playerlist", "Lists online players. Alias: online", plugin,
-                    "general.playerlist", "general.basic");
-            helpPlugin.registerCommand("who ([player])",
-                    "Displays information about a player. Aliases: playerinfo, whois", plugin,
-                    "general.who", "general.basic");
-            helpPlugin.registerCommand("whoami",
-                    "Displays information about you.", plugin, "general.who");
-            helpPlugin.registerCommand("time ([world])", "Displays the current time in [world].",
-                    plugin, "general.time", "general.basic");
-            helpPlugin.registerCommand("time help", "Shows syntax for setting the time.", plugin,
-                    "general.time.set");
-            helpPlugin.registerCommand("give [item](:[variant]) ([amount]) ([player])",
-                    "Gives [player] [amount] of [item]. Aliases: i(tem)", plugin, "general.give");
-            helpPlugin.registerCommand("items [item1] [item2] ... [itemN]",
-                    "Give yourself several different items at once. You get one of each item.", plugin, "general.give.mass");
-            helpPlugin.registerCommand("getpos ([player])",
-                    "Get the current position of [player].", plugin, "general.getpos", "general.basic");
-            helpPlugin.registerCommand("compass", "Show your direction.", plugin, "general.getpos");
-            helpPlugin.registerCommand("where ([player])",
-                    "Show the location of [player]; less detailed form of /getpos. Aliases: pos, coords", plugin,
-                    "general.getpos");
-            helpPlugin.registerCommand("tell [player] [message]",
-                    "Whisper to a player. Aliases: msg, pm, whisper", plugin, "general.tell", "general.basic");
-            helpPlugin.registerCommand("spawn ([player])",
-                    "Teleports [player] to the spawn location.", plugin, "general.spawn");
-            helpPlugin.registerCommand("spawn ([world]) show",
-                    "Displays the current spawn location in [world].", plugin, "general.spawn");
-            helpPlugin.registerCommand("spawn set ([player])",
-                    "Sets the spawn location in [player]'s world to [player]'s location.", plugin,
-                    "general.spawn.set");
-            helpPlugin.registerCommand("spawn ([world]) set [x] [y] [z]", ".", plugin,
-                    "general.spawn.set");
-            helpPlugin.registerCommand("teleport [player]",
-                    "Teleport to the location of [player]. Alias: tele", plugin, "general.teleport");
-            helpPlugin.registerCommand("teleport [player] [to-player]",
-                    "Teleports [player] to the location of [to-player]. Alias: tele", plugin,
-                    "general.teleport.other");
-            helpPlugin.registerCommand("teleport [player1],[player2],... [to-player]",
-                    "Teleports several players to the location of [to-player]. Alias: tele", plugin,
-                    "general.teleport.other.mass");
-            helpPlugin.registerCommand("teleport * [player]",
-                    "Teleports everyone to the location of [player]. Alias: tele", plugin,
-                    "general.teleport.other.mass");
-            helpPlugin.registerCommand("teleport|[x] [y] [z]",
-                    "Teleport to the specified coordinates. Alias: tele", plugin, "general.teleport.coords");
-            helpPlugin.registerCommand("s(ummon) [player]",
-                    "Teleports a player to your location. Aliases: tphere, teleporthere", plugin, "general.teleport.other");
-            helpPlugin.registerCommand("clear ([player]) (pack|quickbar|armo(u)r|all)",
-                    "Clears [player]'s inventory.", plugin, "general.clear");
-            helpPlugin.registerCommand("take [item](:[variant]) ([amount]) ([player])",
-                    "Deletes something from [player]'s inventory.", plugin, "general.take");
-            helpPlugin.registerCommand("heal ([player]) ([amount])",
-                    "Heals [player] by [amount] hearts (0-10). If [amount] is omitted, full heal.",
-                    plugin, "general.heal");
-            helpPlugin.registerCommand("general reload", "Reloads the configuration files.",
-                    plugin, "OP", "general.admin");
-            helpPlugin.registerCommand("general die", "Kills the plugin.", plugin, "OP",
-                    "general.admin");
-            helpPlugin.registerCommand("general motd", "Displays the message of the day.", plugin);
-            helpPlugin.registerCommand("mob(spawn) [mob](;[mount])", "Spawns a [mob] riding a [mount]. " +
-            		"Both [mob] and [mount] are of the form [name](:[data]), where [data] is slime size or sheep colour.",
-                    plugin, "general.mobspawn");
-            helpPlugin.registerCommand("help General", "Help for the General plugin.", plugin, true);
-            helpPlugin.registerCommand("away [reason]", "Sets your away status. Aliases: afk", plugin,
-                    "general.away", "general.basic");
-            helpPlugin.registerCommand("kit [kit]", "Gives you the [kit], or shows a list of available kits.",
-                    plugin, "general.kit");
-            logger.info("[Help " + helpPlugin.getDescription().getVersion() + "] support enabled.");
-            gotHelp = true;
-        } else {
-            logger.warn("[Help] isn't detected. No /help support; instead use /general help");
-            gotHelp = false;
-        }
-    }
-    
     private void setupEconomy() {
         gotRequestedEconomy = true;
         String econType = "None";

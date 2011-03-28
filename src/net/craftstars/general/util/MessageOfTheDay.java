@@ -14,29 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class MessageOfTheDay {
-    public static void showHelp(CommandSender sender, String filename) {
-        File dataFolder = General.plugin.getDataFolder();
-        if(!dataFolder.exists()) dataFolder.mkdirs();
-        Scanner f;
-        try {
-            File helpFile = new File(dataFolder, filename);
-            f = new Scanner(helpFile);
-        } catch(FileNotFoundException e) {
-            Messaging.send(sender, "&rose;Help topic unavailable.");
-            return;
-        }
-        showFile(sender, f, false);
-    }
-
-    private static void showFile(CommandSender sender, Scanner f, boolean motd) {
-        while(f.hasNextLine()) {
-            String line = f.nextLine();
-            if(motd) line = parseMotD(sender, line);
-            Messaging.send(sender, line);
-        }
-    }
-
-    private static String parseMotD(CommandSender sender, String original) {
+    public static String parseMotD(CommandSender sender, String original) {
         return Messaging.argument(
                 original,
                 new String[]{
@@ -163,6 +141,6 @@ public class MessageOfTheDay {
             Messaging.send(sender, "&rose;No message of the day available.");
             return;
         }
-        showFile(sender, f, true);
+        Toolbox.showFile(sender, f, true);
     }
 }

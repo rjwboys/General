@@ -10,6 +10,7 @@ import net.craftstars.general.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
+import net.craftstars.general.util.HelpHandler;
 import net.craftstars.general.util.MessageOfTheDay;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
@@ -28,10 +29,10 @@ public class generalCommand extends CommandBase {
             return true;
         } else if(args[0].equalsIgnoreCase("help")) {
             if(args.length == 1) {
-                MessageOfTheDay.showHelp(sender, "console.help");
+                HelpHandler.showHelp(sender, "console.help");
                 return true;
             } else if(args.length == 2) {
-                MessageOfTheDay.showHelp(sender, args[1] + ".help");
+                HelpHandler.showHelp(sender, args[1] + ".help");
                 return true;
             }
         } else if(args[0].equalsIgnoreCase("motd")) {
@@ -57,10 +58,10 @@ public class generalCommand extends CommandBase {
             return true;
         } else if(args[0].equalsIgnoreCase("help")) {
             if(args.length == 1) {
-                MessageOfTheDay.showHelp(sender, "player.help");
+                HelpHandler.showHelp(sender, "player.help");
                 return true;
             } else if(args.length == 2) {
-                MessageOfTheDay.showHelp(sender, args[1] + ".help");
+                HelpHandler.showHelp(sender, args[1] + ".help");
                 return true;
             }
         } else if(args[0].equalsIgnoreCase("motd")) {
