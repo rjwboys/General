@@ -6,7 +6,6 @@ import net.craftstars.general.General;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
-import net.craftstars.general.util.Time.TimeFormat;
 
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -26,10 +25,6 @@ public class timeCommand extends CommandBase {
             showTime(sender);
             return true;
         case 1: // /time <world> OR /time <time> OR /time help
-            if(args[0].equalsIgnoreCase("help")) {
-                showHelp(sender);
-                return true;
-            }
             this.world = null;
             // This mega-if is to ensure that "no such world" messages are not displayed on valid input
             // or on input that is obviously not intended to be a world, while still allowing access
@@ -62,14 +57,6 @@ public class timeCommand extends CommandBase {
         default:
             return Toolbox.SHOW_USAGE;
         }
-    }
-
-    private void showHelp(CommandSender sender) {
-        Messaging.send(sender, "&c/time day|night|nood|midday|midnight");
-        Messaging.send(sender, "&c/time dawn|sunrise|morning|dusk|sunset|evening");
-        Messaging.send(sender, "&c/time +&7[ticks]&f : Fast-forward time.");
-        Messaging.send(sender, "&c/time -&7[ticks]&f : Rewind time.");
-        Messaging.send(sender, "&c/time +&7[ticks]&f : Set time.");
     }
     
     private boolean setTime(CommandSender sender, String time) {
@@ -174,13 +161,7 @@ public class timeCommand extends CommandBase {
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
         if(args.length < 1 || args.length > 2) return Toolbox.SHOW_USAGE;
-        else if(args.length == 1) {
-            if(args[0].equalsIgnoreCase("help")) {
-                showHelp(sender);
-                return true;
-            }
-            return true;
-        } else {
+        else {
             if(args[0].equalsIgnoreCase("add")) {
                 this.world = General.plugin.getServer().getWorlds().get(0);
                 if(args[1].charAt(0) == '-') return setTime(sender, args[1]);
@@ -192,7 +173,9 @@ public class timeCommand extends CommandBase {
             this.world = Toolbox.getWorld(args[0], sender);
             if(this.world != null) {
                 showTime(sender);
-            }
+                return true;
+            } else if(args.length == 1)
+                return true;
             String time = args[1];
             this.world = Toolbox.getWorld(args[0], sender);
             if(this.world == null) return true;

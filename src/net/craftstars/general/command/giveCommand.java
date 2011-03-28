@@ -32,10 +32,6 @@ public class giveCommand extends CommandBase {
 
         switch(args.length) {
         case 1: // /give <item>[:<data>]
-            if(args[0].equalsIgnoreCase("help")) {
-                showHelp(sender);
-                return true;
-            }
             item = Items.validate(args[0]);
         break;
         case 2: // /give <item>[:<data>] <amount> OR /give <item>[:<data>] <player>
@@ -149,10 +145,6 @@ public class giveCommand extends CommandBase {
         amount = 1;
 
         switch(args.length) {
-        case 1: // give help
-            if(!args[0].equalsIgnoreCase("help")) return Toolbox.SHOW_USAGE;
-            showHelp(sender);
-            return true;
         case 2: // give <item>[:<data>] <player>
             who = Toolbox.getPlayer(args[1],sender);
             if(who == null) return true;
@@ -196,13 +188,5 @@ public class giveCommand extends CommandBase {
                 + Items.name(item) + "&2 to &f" + who.getName() + "&2!");
 
         return true;
-    }
-
-    private void showHelp(CommandSender sender) {
-        Messaging.send(sender, "&c/give &7[item]&c (&7[amount]&c)&f : Gives something to you.");
-        Messaging.send(sender, "&c/give &7[player] [item]&c (&7[amount]&c)&f : Gives something to someone else.");
-        Messaging.send(sender, "&fAn amount of &7-1&f is an infinite stack; &70&f is one full stack.");
-        Messaging.send(sender, "&fThe &7[item]&f and &7[variant]&f both may be either a number or a name.");
-        Messaging.send(sender, "&fExample: &c/give Notch wool:red 5&f : Gives a stack of five red wool to Notch.");
     }
 }

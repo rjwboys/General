@@ -92,6 +92,13 @@ public class Messaging {
      * @return The string with newlines inserted as required.
      */
     public static String splitLines(String original) {
+        if(original.contains("\r") || original.contains("\n")) {
+            String[] lines = original.split("\n|\r|\n\r|\r\n");
+            String joined = "";
+            for(String line : lines)
+                joined += splitLines(line) + '\n';
+            return joined.substring(0, joined.length()-2);
+        }
         StringBuilder splitter = new StringBuilder(original);
         int splitAt = 0;
         int effectiveLen = 0;

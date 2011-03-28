@@ -227,11 +227,16 @@ public class General extends JavaPlugin {
         String cmdStr = commandLabel;
         for(String x : args) cmdStr += " " + x;
         try {
-            Class<? extends CommandBase> clazz = this.getClass().getClassLoader().loadClass(
-                    "net.craftstars.general.command." + command.getName() + "Command").asSubclass(
-                    CommandBase.class);
-            CommandBase commandInstance = (CommandBase) clazz.newInstance();
-            boolean result = commandInstance.runCommand(this, sender, command, commandLabel, args);
+            boolean result;
+            if(args.length > 0 && args[0].equalsIgnoreCase("help") && HelpHandler.hasEntry(command.getName()))
+                result = HelpHandler.displayEntry(sender, command.getName());
+            else {
+                Class<? extends CommandBase> clazz = this.getClass().getClassLoader().loadClass(
+                        "net.craftstars.general.command." + command.getName() + "Command").asSubclass(
+                        CommandBase.class);
+                CommandBase commandInstance = (CommandBase) clazz.newInstance();
+                result = commandInstance.runCommand(this, sender, command, commandLabel, args);
+            }
             if(config.getBoolean("log-commands", false)) {
                 String name = "CONSOLE";
                 if(sender instanceof Player) name = ((Player) sender).getName();

@@ -21,7 +21,7 @@ public class itemsCommand extends CommandBase {
         if(args.length < 2) return Toolbox.SHOW_USAGE;
         Player toWhom = Toolbox.getPlayer(args[0], sender);
         doGive(toWhom, sender, Arrays.copyOfRange(args, 1, args.length));
-        return Toolbox.SHOW_USAGE;
+        return true;
     }
 
     private void doGive(Player toWhom, CommandSender sender, String[] items) {
@@ -47,7 +47,7 @@ public class itemsCommand extends CommandBase {
             String[] args) {
         if(Toolbox.lacksPermission(plugin, sender, "give many items at once", "general.give.mass")) return true;
         doGive(sender, sender, args);
-        return Toolbox.SHOW_USAGE;
+        return true;
     }
 
 }
