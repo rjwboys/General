@@ -67,6 +67,7 @@ public class generalCommand extends CommandBase {
             MessageOfTheDay.showMotD(sender);
             return true;
         } else if(args[0].equalsIgnoreCase("item")) {
+            if(Toolbox.lacksPermission(plugin, sender, "administrate the plugin", "general.admin")) return true;
             if(args.length < 3) {
                 Messaging.send(sender, "&cNot enough arguments.");
                 return Toolbox.SHOW_USAGE;
