@@ -148,4 +148,12 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
         }
         return false;
     }
+    
+    @Override // Considering currently valid values, this should return a unique hash for each possible ItemID.
+    public int hashCode() {
+        int hash = data;
+        hash |= ID << 12; // 1562, the damage data of a diamond tool, is 11 bits long
+        if(!dataMatters) hash = ~hash;
+        return hash;
+    }
 }

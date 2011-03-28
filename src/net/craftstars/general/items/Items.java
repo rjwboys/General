@@ -415,8 +415,7 @@ public class Items {
             try {
                 ret.setData(Integer.valueOf(data));
             } catch(NumberFormatException x) {
-                Integer d = findVariant(ret.getId(), data);
-                if(d != null) ret.setData(d).setVariant(data);
+                ret.setData(findVariant(ret.getId(), data)).setVariant(data);
             }
         }
         return ret;
@@ -511,13 +510,13 @@ public class Items {
     }
     
     public static List<String> variantNames(ItemID id) {
-        if(id.getData() != null)
+        if(id != null && id.getData() != null)
             return config.getStringList("variants.item" + id.getId() + ".type" + id.getData(), null);
         return null;
     }
     
     public static void addVariantName(ItemID id, String name) {
-        if(id.getData() != null) {
+        if(id != null && id.getData() != null) {
             List<String> variants = variantNames(id);
             variants.add(name);
             setVariantNames(id, variants);
@@ -525,7 +524,7 @@ public class Items {
     }
     
     public static void removeVariantName(ItemID id, String name) {
-        if(id.getData() != null) {
+        if(id != null && id.getData() != null) {
             List<String> variants = variantNames(id);
             variants.remove(name);
             setVariantNames(id, variants);
@@ -545,7 +544,10 @@ public class Items {
     }
     
     public static ItemID getAlias(String name) {
-        return aliases.get(name);
+        for(String x : aliases.keySet()) {
+            if(x.equalsIgnoreCase(name)) return aliases.get(x);
+        }
+        return null;
     }
     
     public static ItemID getHook(String main, String sub) {

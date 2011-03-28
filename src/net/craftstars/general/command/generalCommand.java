@@ -38,8 +38,11 @@ public class generalCommand extends CommandBase {
             MessageOfTheDay.showMotD(sender);
             return true;
         } else if(args[0].equalsIgnoreCase("item")) {
-            if(args.length < 2) return Toolbox.SHOW_USAGE;
-            return itemEdit(sender, Arrays.copyOfRange(args, 2, args.length));
+            if(args.length < 3) {
+                Messaging.send(sender, "&cNot enough arguments.");
+                return Toolbox.SHOW_USAGE;
+            }
+            return itemEdit(sender, Arrays.copyOfRange(args, 1, args.length));
         }
         return Toolbox.SHOW_USAGE;
     }
@@ -64,7 +67,10 @@ public class generalCommand extends CommandBase {
             MessageOfTheDay.showMotD(sender);
             return true;
         } else if(args[0].equalsIgnoreCase("item")) {
-            if(args.length < 2) return Toolbox.SHOW_USAGE;
+            if(args.length < 3) {
+                Messaging.send(sender, "&cNot enough arguments.");
+                return Toolbox.SHOW_USAGE;
+            }
             return itemEdit(sender, Arrays.copyOfRange(args, 2, args.length));
         }
         return Toolbox.SHOW_USAGE;
@@ -87,21 +93,25 @@ public class generalCommand extends CommandBase {
         } else if(args[0].equalsIgnoreCase("alias")) {
             switch(args.length) {
             case 2:
-                Messaging.send(sender, "The alias " + args[0] + " refers to " + Items.getAlias(args[0]));
-                return true;
-            case 3:
                 if(args[1].charAt(0) == '-') {
-                    Items.removeAlias(args[2].substring(1));
+                    Items.removeAlias(args[1].substring(1));
                     Messaging.send(sender, "Alias " + args[1].substring(1) + " removed.");
                 } else {
-                    ItemID id = Items.validate(args[2]);
-                    Items.addAlias(args[1], id);
-                    Messaging.send(sender, "Alias " + args[1] + " added for " + id);
+                    Messaging.send(sender, "The alias " + args[1] + " refers to " + Items.getAlias(args[1]));
                 }
+                return true;
+            case 3:
+                ItemID id = Items.validate(args[2]);
+                Items.addAlias(args[1], id);
+                Messaging.send(sender, "Alias " + args[1] + " added for " + id);
                 return true;
             }
         } else if(args[0].equalsIgnoreCase("variant")) {
             ItemID id = Items.validate(args[1]);
+            if(id == null) {
+                Messaging.send(sender, "&cNo such item.");
+                return true;
+            }
             switch(args.length) {
             case 2:
                 Messaging.send(sender, "Variant names for " + id + ": " + Items.variantNames(id));
@@ -109,7 +119,9 @@ public class generalCommand extends CommandBase {
             case 3:
                 switch(args[2].charAt(0)) {
                 default:
-                    Items.addVariantName(id, args[2]);
+                    if(args[2].contains(","))
+                        Items.setVariantNames(id, Arrays.asList(args[2].split(",")));
+                    else Items.addVariantName(id, args[2]);
                 break;
                 case '+':
                     Items.addVariantName(id, args[2].substring(1));
@@ -132,8 +144,8 @@ public class generalCommand extends CommandBase {
                 Messaging.send(sender, "The name of item ID " + id + " is " + name);
                 return true;
             case 3:
-                Items.setItemName(id, args[2]);
-                Messaging.send(sender, "Item ID " + id + " is now called " + args[2]);
+                Items.setItemName(id, args[2].replace("_"," "));
+                Messaging.send(sender, "Item ID " + id + " is now called " + args[2].replace("_"," "));
                 return true;
             }
         } else if(args[0].equalsIgnoreCase("hook")) {
@@ -146,6 +158,7 @@ public class generalCommand extends CommandBase {
                 ItemID id = Items.validate(args[2]);
                 Items.setHook(hook[0], hook[1], id);
                 Messaging.send(sender, "The hook " + hook[0] + ":" + hook[1] + " now refers to " + id);
+                return true;
             }
         }
         return Toolbox.SHOW_USAGE;
