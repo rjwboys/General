@@ -16,11 +16,16 @@ public class GroupManagerPermissionsHandler implements PermissionsHandler {
     public GroupManagerPermissionsHandler() {
         Plugin p = General.plugin.getServer().getPluginManager().getPlugin("GroupManager");
         if (p != null) {
-            if (!General.plugin.getServer().getPluginManager().isPluginEnabled(p)) {
-                General.plugin.getServer().getPluginManager().enablePlugin(p);
+            try {
+                if (!General.plugin.getServer().getPluginManager().isPluginEnabled(p)) {
+                    General.plugin.getServer().getPluginManager().enablePlugin(p);
+                }
+                wd = ((GroupManager) p).getWorldsHolder();
+                wasLoaded = true;
+            } catch(Throwable e) {
+                General.plugin.logger.error("Error loading GroupManager. Please report to the GroupManager dev.");
+                e.printStackTrace();
             }
-            wd = ((GroupManager) p).getWorldsHolder();
-            wasLoaded = true;
             version = p.getDescription().getVersion();
         } else {
             version = "0.0";
