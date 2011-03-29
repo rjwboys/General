@@ -22,7 +22,7 @@ public class GroupManagerPermissionsHandler implements PermissionsHandler {
                 }
                 wd = ((GroupManager) p).getWorldsHolder();
                 wasLoaded = true;
-            } catch(Throwable e) {
+            } catch(Error e) {
                 General.plugin.logger.error("Error loading GroupManager. Please report to the GroupManager dev.");
                 e.printStackTrace();
             }
