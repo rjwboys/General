@@ -171,11 +171,11 @@ public class timeCommand extends CommandBase {
                 return setTime(sender, args[1]);
             }
             this.world = Toolbox.getWorld(args[0], sender);
-            if(this.world != null) {
+            if(this.world == null) return true;
+            if(args.length == 1) {
                 showTime(sender);
                 return true;
-            } else if(args.length == 1)
-                return true;
+            }
             String time = args[1];
             this.world = Toolbox.getWorld(args[0], sender);
             if(this.world == null) return true;
