@@ -12,9 +12,9 @@ import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
-import net.craftstars.general.items.wjykk.cjc343.Kits;
-import net.craftstars.general.items.wjykk.cjc343.Kits.Kit;
-import net.craftstars.general.items.wjykk.cjc343.Kits.GotKit;
+import net.craftstars.general.items.Kits;
+import net.craftstars.general.items.Kits.Kit;
+import net.craftstars.general.items.Kits.GotKit;
 
 public class kitCommand extends CommandBase {
     

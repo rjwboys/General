@@ -24,7 +24,7 @@ public class PermissionsPermissionsHandler implements PermissionsHandler {
                 this.permissions = ((Permissions) test).getHandler();
                 this.wasLoaded = true;
             } catch(Error e) {
-                General.plugin.logger.error("Error loading Permissions. Please report to the Permissions dev.");
+                General.logger.error("Error loading Permissions. Please report to the Permissions dev.");
                 e.printStackTrace();
             }
             this.version = test.getDescription().getVersion();

@@ -37,7 +37,7 @@
   </target>
   
   <target name="compile" depends="get_latest_libs">
-    <javac srcdir="${src}" destdir="${classes}" includeantruntime="false" debug="on">
+    <javac srcdir="${src}" destdir="${classes}" includeantruntime="false" debug="on" deprecation="on">
       <classpath>
         <pathelement location="${lib}/${craftbukkit.jar}"/>
         <pathelement location="${lib}/${permissions.jar}"/>

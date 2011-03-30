@@ -1,32 +1,15 @@
 package net.craftstars.general.mobs;
 
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
 import net.craftstars.general.General;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.util.Toolbox;
-import net.minecraft.server.EntityGhast;
-import net.minecraft.server.EntityGiantZombie;
-import net.minecraft.server.EntityHuman;
-import net.minecraft.server.EntityMonster;
-import net.minecraft.server.EntitySheep;
-import net.minecraft.server.EntitySlime;
-import net.minecraft.server.EntityTypes;
-import net.minecraft.server.WorldServer;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.entity.CraftEntity;
-import org.bukkit.craftbukkit.entity.CraftGhast;
-import org.bukkit.craftbukkit.entity.CraftGiant;
-import org.bukkit.craftbukkit.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.entity.CraftMonster;
-import org.bukkit.craftbukkit.entity.CraftSlime;
-import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
@@ -34,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Slime;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.DyeColor;
 
 /**
  * Mob types for /spawnmob
@@ -54,15 +38,15 @@ public enum MobType {
             if(data == null) return;
             if(!(what instanceof Sheep))
                 throw new MobException("Tried to set sheep data on a non-sheep; please report this!");
-            CraftEntity ce = (CraftEntity) what;
-            EntitySheep entity = (EntitySheep) ce.getHandle();
+            Sheep entity = (Sheep) what;
             if(Toolbox.equalsOne(data, "sheared", "nude", "naked", "bald")) {
-                entity.a(true);
+                entity.setSheared(true);
             } else {
                 try {
                     ItemID wool = Items.validate("35:" + data);
-                    if(!wool.isValid()) throw new MobException("Invalid colour.");
-                    entity.a_(wool.getData());
+                    if(wool == null || !wool.isValid()) throw new MobException("Invalid colour.");
+                    DyeColor clr = DyeColor.getByData((byte)(int)wool.getData());
+                    entity.setColor(clr);
                 } catch (Exception e) {
                     throw new MobException("Malformed colour.",e);
                 }
@@ -71,22 +55,7 @@ public enum MobType {
     },
     /*  4 */ SQUID(Enemies.FRIENDLY, CreatureType.SQUID),
     /*  5 */ CREEPER(Enemies.ENEMY, CreatureType.CREEPER),
-    /*  6 */ GHAST(Enemies.ENEMY, CreatureType.GHAST, "NetherSquid") {
-        @Override // TODO: Eliminate the need for this override.
-        public LivingEntity spawn(Player byWhom, General plugin, Location loc) throws MobException {
-            try {
-                WorldServer world = ((CraftWorld) byWhom.getWorld()).getHandle();
-                EntityGhast entity = (EntityGhast) EntityTypes.a("Ghast", world);
-                CraftGhast mob = new CraftGhast((CraftServer) plugin.getServer(), entity);
-                mob.teleportTo(loc);
-                world.a(mob.getHandle());
-                return mob;
-            } catch (Exception e) {
-                General.logger.error("Unable to spawn mob Ghast; internal error.");
-                throw new MobException(e);
-            }
-        }
-    },
+    /*  6 */ GHAST(Enemies.ENEMY, CreatureType.GHAST, "NetherSquid"),
     /*  7 */ PIG_ZOMBIE(Enemies.NEUTRAL, CreatureType.PIG_ZOMBIE, "ZombiePigman"),
     /*  8 */ SKELETON(Enemies.ENEMY, CreatureType.SKELETON),
     /*  9 */ SPIDER(Enemies.ENEMY, CreatureType.SPIDER),
@@ -97,67 +66,21 @@ public enum MobType {
             if(data == null) return;
             if(!(what instanceof Slime))
                 throw new MobException("Tried to set slime data on a non-slime; please report this!");
-            CraftEntity ce = (CraftEntity) what;
-            EntitySlime entity = (EntitySlime) ce.getHandle();
-            if(data.equalsIgnoreCase("tiny")) entity.e(1);
-            else if(data.equalsIgnoreCase("small")) entity.e(2);
-            else if(data.equalsIgnoreCase("medium")) entity.e(3);
-            else if(data.equalsIgnoreCase("large")) entity.e(4);
-            else if(data.equalsIgnoreCase("huge")) entity.e(8);
+            Slime entity = (Slime) what;
+            if(data.equalsIgnoreCase("tiny")) entity.setSize(1);
+            else if(data.equalsIgnoreCase("small")) entity.setSize(2);
+            else if(data.equalsIgnoreCase("medium")) entity.setSize(3);
+            else if(data.equalsIgnoreCase("large")) entity.setSize(4);
+            else if(data.equalsIgnoreCase("huge")) entity.setSize(8);
             else try {
-                entity.e(Integer.parseInt(data));
+                entity.setSize(Integer.parseInt(data));
             } catch (Exception e) {
                 throw new MobException("Malformed size.",e);
             }
         }
-        @Override // TODO: Eliminate the need for this override.
-        public LivingEntity spawn(Player byWhom, General plugin, Location loc) throws MobException {
-            try {
-                WorldServer world = ((CraftWorld) byWhom.getWorld()).getHandle();
-                EntitySlime entity = (EntitySlime) EntityTypes.a("Slime", world);
-                CraftSlime mob = new CraftSlime((CraftServer) plugin.getServer(), entity);
-                mob.teleportTo(loc);
-                world.a(mob.getHandle());
-                return mob;
-            } catch (Exception e) {
-                General.logger.error("Unable to spawn mob Slime; internal error.");
-                throw new MobException(e);
-            }
-        }
     },
-    /* 12 */ GIANT_ZOMBIE(Enemies.ENEMY, null, "Giant") {
-        @Override // TODO: Eliminate the need for this override.
-        public LivingEntity spawn(Player byWhom, General plugin, Location loc) throws MobException {
-            try {
-                WorldServer world = ((CraftWorld) byWhom.getWorld()).getHandle();
-                EntityGiantZombie entity = (EntityGiantZombie) EntityTypes.a("Giant", world);
-                CraftGiant mob = new CraftGiant((CraftServer) plugin.getServer(), entity);
-                mob.teleportTo(loc);
-                world.a(mob.getHandle());
-                return mob;
-            } catch (Exception e) {
-                General.logger.error("Unable to spawn mob GiantZombie; internal error.");
-                throw new MobException(e);
-            }
-        }
-    },
-    /* 13 */ MONSTER(Enemies.ENEMY, null, "Human") {
-        @Override // TODO: Eliminate the need for this override.
-        public LivingEntity spawn(Player byWhom, General plugin, Location loc) throws MobException {
-            try {
-                WorldServer world = ((CraftWorld) byWhom.getWorld()).getHandle();
-                EntityMonster entity = (EntityMonster) EntityTypes.a("Monster", world);
-                CraftMonster mob = new CraftMonster((CraftServer) plugin.getServer(), entity);
-                //EntityHuman entity = new EntityHuman(world) {};
-                //CraftHumanEntity mob = new CraftHumanEntity((CraftServer) plugin.getServer(), entity);
-                mob.teleportTo(loc);
-                world.a(mob.getHandle());
-                return mob;
-            } catch (Exception e) {
-                General.logger.error("Unable to spawn mob Human; internal error.");
-                throw new MobException(e);
-            }
-        }
+    /* 12 */ GIANT_ZOMBIE(Enemies.ENEMY, CreatureType.GIANT, "Giant"),
+    /* 13 */ MONSTER(Enemies.ENEMY, CreatureType.MONSTER, "Human") {
 //        @Override
 //        public void setData(LivingEntity what, String data) throws MobException {
 //            if(!(what instanceof HumanEntity))
@@ -225,39 +148,9 @@ public enum MobType {
         this.type = t;
     }
     
-//    private MobType(boolean b, String n, Enemies en){
-//        this.s = "";
-//        this.name = n;
-//        this.craftClass = n;
-//        this.entityClass = n;
-//        this.type = en;
-//    }
-//    private MobType(String n, Enemies en){
-//        this.name = n;
-//        this.craftClass = n;
-//        this.entityClass = n;
-//        this.type = en;
-//    }
-//    private MobType(String n, String ec, Enemies en){
-//        this.name = n;
-//        this.craftClass = n;
-//        this.entityClass = ec;
-//        this.type = en;
-//    }
-//    private MobType(String n, String ec, String cc, Enemies en){
-//        this.name = n;
-//        this.entityClass = ec;
-//        this.craftClass = cc;
-//        this.type = en;
-//    }
-    
-    //public String s = "s";
-    //public String name;
     public Enemies category;
-    //private String entityClass;
-    //private String craftClass;
     private String alt;
-    private CreatureType type; // if null, it's a Giant Zombie or Monster
+    private CreatureType type;
     
     private static HashMap<String, MobType> hashMap = new HashMap<String, MobType>();
     
@@ -268,19 +161,6 @@ public enum MobType {
         }
     }
     
-//    @SuppressWarnings("unchecked")
-//    public CraftEntity spawn(Player player, General plugin) throws MobException {
-//        try {
-//            WorldServer world = ((CraftWorld) player.getWorld()).getHandle();
-//            Constructor<CraftEntity> craft = (Constructor<CraftEntity>) ClassLoader.getSystemClassLoader().loadClass("org.bukkit.craftbukkit.entity.Craft" + craftClass).getConstructors()[0];
-//            Constructor<Entity> entity = (Constructor<Entity>) ClassLoader.getSystemClassLoader().loadClass("net.minecraft.server.Entity" + entityClass).getConstructors()[0];
-//            return craft.newInstance((CraftServer) plugin.getServer(), entity.newInstance( world ) );
-//        } catch (Exception e) {
-//            General.logger.error("Unable to spawn mob. Error: ");
-//            e.printStackTrace();
-//            throw new MobException();
-//        }
-//    }
     public LivingEntity spawn(Player byWhom, General plugin, Location loc) throws MobException {
         try {
             World world = byWhom.getWorld();

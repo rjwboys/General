@@ -93,7 +93,7 @@ public class spawnCommand extends CommandBase {
 
     private void doTeleport(Player who) {
         Location spawnLocation = who.getWorld().getSpawnLocation();
-        who.teleportTo(spawnLocation);
+        who.teleport(spawnLocation);
         Messaging.send(who, "You were teleported to the spawn location!");
     }
 

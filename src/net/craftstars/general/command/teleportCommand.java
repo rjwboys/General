@@ -74,7 +74,7 @@ public class teleportCommand extends CommandBase {
             Location destination =
                     Toolbox.getLocation(sender, sender.getWorld(), args[0], args[1], args[2]);
             if(destination == null) return true;
-            sender.teleportTo(destination);
+            sender.teleport(destination);
             Messaging.send(sender, "&fTeleported you to &9(" + args[0] + "," + args[1] + ","
                     + args[2] + ")&f!");
         }
@@ -91,7 +91,7 @@ public class teleportCommand extends CommandBase {
                 Messaging.send(who, "&fYou have been teleported to &9(" + args[0] + "," + args[1]
                         + "," + args[2] + ")&f!");
             }
-            who.teleportTo(destination);
+            who.teleport(destination);
             Messaging.send(sender, "&fTeleported &9" + who.getName() + "&f to &9(" + args[0] + ","
                     + args[1] + "," + args[2] + ")&f!");
         }
@@ -141,7 +141,7 @@ public class teleportCommand extends CommandBase {
             if(destination == null) return true;
             Messaging.send(who, "&fYou have been teleported to &9(" + args[1] + "," + args[2]
                         + "," + args[3] + ")&f!");
-            who.teleportTo(destination);
+            who.teleport(destination);
             Messaging.send(sender, "&fTeleported &9" + who.getName() + "&f to &9(" + args[1] + ","
                     + args[2] + "," + args[3] + ")&f!");
         }

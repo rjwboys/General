@@ -24,9 +24,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.server.PluginEvent;
+import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
@@ -34,7 +34,7 @@ import org.bukkit.util.config.Configuration;
 public class General extends JavaPlugin {
     private class PluginListener extends ServerListener {
         @Override
-        public void onPluginEnabled(PluginEvent event) {
+        public void onPluginEnable(PluginEnableEvent event) {
             if(!HelpHandler.gotHelp && event.getPlugin() instanceof Help)
                 HelpHandler.setup();
             else if (!gotRequestedPermissions)
@@ -89,7 +89,7 @@ public class General extends JavaPlugin {
     
     PlayerListener pl = new PlayerListener(){
         @Override
-        public void onPlayerJoin(PlayerEvent event) {
+        public void onPlayerJoin(PlayerJoinEvent event) {
             MessageOfTheDay.showMotD(event.getPlayer());
         }
         
