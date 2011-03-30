@@ -1,4 +1,4 @@
-package net.craftstars.general.command;
+package net.craftstars.general.command.misc;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;

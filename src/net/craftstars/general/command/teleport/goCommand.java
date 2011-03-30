@@ -1,5 +1,5 @@
 
-package net.craftstars.general.command;
+package net.craftstars.general.command.teleport;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -13,7 +13,7 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Teleport;
 import net.craftstars.general.util.Toolbox;
 
-public class teleportCommand extends CommandBase {
+public class goCommand extends CommandBase {
 
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,

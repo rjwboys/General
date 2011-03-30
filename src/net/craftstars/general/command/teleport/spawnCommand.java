@@ -1,5 +1,5 @@
 
-package net.craftstars.general.command;
+package net.craftstars.general.command.teleport;
 
 import java.util.Formatter;
 

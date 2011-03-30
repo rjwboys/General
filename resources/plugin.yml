@@ -6,109 +6,96 @@ authors:
   - Nijikokun
 version: 3.3.1
 commands:
-  playerlist:
+  info.playerlist:
     description: Displays all players that are online.
     permission: general.playerlist
-    aliases:
-      - online
+    aliases: [playerlist, list, online]
     usage: |
            /<command>
-  who:
+  info.who:
     permission: general.who
     description: Displays information about a player.
-    aliases: [whois, whoami, playerinfo]
+    aliases: [who, whois, whoami, playerinfo]
     usage: |
            /<command> [player]
-  time:
+  misc.time:
     permission: general.time
     description: Displays or modifies current world time.
-    aliases:
+    aliases: [time]
     usage: |
            /<command> [<world>] [=|+|-]<time|duration>
            /<command> add|set <time|duration>
-  give:
+  inven.give:
     permission: general.give
     description: Users to give yourself or another player an item.
-    aliases:
-      - i
-      - item
+    aliases: [give, i, item]
     usage: |
            /<command> item[:data] [amount] [player]
-  getpos:
+  info.getpos:
     permission: general.getpos
     description: Displays detailed information about your position.
-    aliases:
-      - compass
-      - where
-      - pos
-      - coords
+    aliases: [getpos, compass, where, pos, coords]
     usage: /<command>
-  tell:
+  chat.tell:
     permission: general.tell
     description: Sends another player a private message.
-    aliases:
-      - msg
-      - pm
-      - whisper
+    aliases: [tell, msg, pm, whisper]
     usage: /<command> <player> <message>
-  spawn:
+  teleport.spawn:
     permission: general.spawn
     description: Teleports you to the spawn location of your current world.
-    aliases:
+    aliases: [spawn]
     usage: |
            /<command> [<player>]
            /<command> [<world>] set [<dest>]
            /<command> [<world>] show
-  teleport:
+  teleport.go:
     permission: general.teleport
     description: Teleports a/multiple/all player(s) to another players location.
-    aliases: [tele]
+    aliases: [teleport, tele, go]
     usage: /<command> [<who>] <dest>
-  summon:
+  teleport.summon:
     permission: general.teleport.other
     description: Teleports a player to your location.
-    aliases:
-      - tphere
-      - teleporthere
-      - s
+    aliases: [summon, tphere, teleporthere, s]
     usage: /<command> [player]
-  clear:
+  inven.clear:
     permission: general.clear
     description: Clears your inventory.
-    aliases: [clean]
+    aliases: [clear, clean]
     usage: /<command> [player] [pack|armo[u]r|quickbar|all]
-  take:
+  inven.take:
     permission: general.take
     description: Removes something from your inventory.
-    aliases:
+    aliases: [take]
     usage: /<command> item[:data] [amount] [player]
-  heal:
+  misc.heal:
     permission: general.heal
     description: Restores your health. (Can also reduce it if you give a negative amount.)
-    aliases:
+    aliases: [heal, hurt]
     usage: /heal [player] [amount]
-  mobspawn:
+  misc.mobspawn:
     permission: general.mobspawn
     description: Spawns a mob.
-    aliases: [mob]
+    aliases: [mobspawn, mob]
     usage: /mobspawn <mob-name>[;<mount>] [<how-many>]
-  kit:
+  inven.kit:
     permission: general.kit
     description: Gives you a kit.
-    aliases:
+    aliases: [kit]
     usage: /kit [kit-name]
   general:
     permission: general.admin
     description: Administrates the plugin.
-    aliases:
+    aliases: [help, motd]
     usage: /general reload|die|motd|help
-  away:
+  chat.away:
     permission: general.away
     description: Sets your away message
-    aliases: [afk]
+    aliases: [away, afk]
     usage: /<command> [message]
-  items:
+  inven.items:
     permission: general.give.mass
     description: Gives several items all at once
-    aliases:
+    aliases: [items]
     usage: /<command> <item1> <item2> ...etc

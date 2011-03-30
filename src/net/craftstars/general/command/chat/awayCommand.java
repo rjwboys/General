@@ -1,4 +1,4 @@
-package net.craftstars.general.command;
+package net.craftstars.general.command.chat;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

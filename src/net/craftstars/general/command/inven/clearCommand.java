@@ -1,5 +1,5 @@
 
-package net.craftstars.general.command;
+package net.craftstars.general.command.inven;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;

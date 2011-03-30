@@ -1,5 +1,5 @@
 
-package net.craftstars.general.command;
+package net.craftstars.general.command.info;
 
 import java.util.List;
 

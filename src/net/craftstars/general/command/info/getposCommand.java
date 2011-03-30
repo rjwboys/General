@@ -1,5 +1,5 @@
 
-package net.craftstars.general.command;
+package net.craftstars.general.command.info;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
