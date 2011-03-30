@@ -1,6 +1,8 @@
 
-package net.craftstars.general;
+package net.craftstars.general.command;
 
+
+import net.craftstars.general.General;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

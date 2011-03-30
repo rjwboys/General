@@ -1,7 +1,7 @@
 
 package net.craftstars.general.command;
 
-import net.craftstars.general.CommandBase;
+import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;

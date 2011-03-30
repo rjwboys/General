@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import me.taylorkelly.help.Help;
+import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.items.Kits;
 import net.craftstars.general.money.EconomyBase;

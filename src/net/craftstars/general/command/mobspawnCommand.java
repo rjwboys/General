@@ -7,7 +7,7 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-import net.craftstars.general.CommandBase;
+import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.mobs.MobType;
 import net.craftstars.general.mobs.TargetBlock;

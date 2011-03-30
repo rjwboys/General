@@ -3,7 +3,7 @@ package net.craftstars.general.command;
 
 import java.util.Map;
 
-import net.craftstars.general.CommandBase;
+import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
