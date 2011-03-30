@@ -18,7 +18,7 @@ public class itemsCommand extends CommandBase {
     @Override
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
-        if(args.length < 2) return Toolbox.SHOW_USAGE;
+        if(args.length < 2) return SHOW_USAGE;
         Player toWhom = Toolbox.getPlayer(args[0], sender);
         doGive(toWhom, sender, Arrays.copyOfRange(args, 1, args.length));
         return true;

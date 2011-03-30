@@ -24,7 +24,7 @@ public class spawnCommand extends CommandBase {
             doTeleport(sender);
         break;
         case 1:
-            if(args[0].equalsIgnoreCase("help")) return Toolbox.SHOW_USAGE; // /spawn help
+            if(args[0].equalsIgnoreCase("help")) return SHOW_USAGE; // /spawn help
             else if(args[0].equalsIgnoreCase("show")) { // /spawn show
                 doShow(sender.getWorld(), sender);
             } else if(args[0].equalsIgnoreCase("set")) { // /spawn set
@@ -41,20 +41,20 @@ public class spawnCommand extends CommandBase {
                 doSet(sender, args[1]);
             } else if(args[1].equalsIgnoreCase("show")) { // /spawn <world> show
                 doShow(args[0], sender);
-            } else return Toolbox.SHOW_USAGE;
+            } else return SHOW_USAGE;
         break;
         case 4: // /spawn set <x> <y> <z>
-            if(!args[0].equalsIgnoreCase("set")) return Toolbox.SHOW_USAGE;
+            if(!args[0].equalsIgnoreCase("set")) return SHOW_USAGE;
             if(Toolbox.lacksPermission(plugin, sender, "set the spawn location", "general.spawn.set")) return true;
             doSet(sender, sender, args[1], args[2], args[3]);
         break;
         case 5: // /spawn <world> set <x> <y> <z>
-            if(!args[1].equalsIgnoreCase("set")) return Toolbox.SHOW_USAGE;
+            if(!args[1].equalsIgnoreCase("set")) return SHOW_USAGE;
             if(Toolbox.lacksPermission(plugin, sender, "set the spawn location", "general.spawn.set")) return true;
             doSet(args[0], sender, args[2], args[3], args[3]);
         break;
         default:
-            return Toolbox.SHOW_USAGE;
+            return SHOW_USAGE;
         }
         return true;
     }
@@ -64,7 +64,7 @@ public class spawnCommand extends CommandBase {
             String commandLabel, String[] args) {
         switch(args.length) {
         case 1:
-            if(args[0].equalsIgnoreCase("help")) return Toolbox.SHOW_USAGE; // spawn help
+            if(args[0].equalsIgnoreCase("help")) return SHOW_USAGE; // spawn help
             else { // spawn <player>
                 doTeleport(args[0], sender);
             }
@@ -74,14 +74,14 @@ public class spawnCommand extends CommandBase {
                 doSet(sender, args[1]);
             } else if(args[1].equalsIgnoreCase("show")) { // /spawn <world> show
                 doShow(args[0], sender);
-            } else return Toolbox.SHOW_USAGE;
+            } else return SHOW_USAGE;
         break;
         case 5: // spawn <world> set <x> <y> <z>
-            if(!args[1].equalsIgnoreCase("set")) return Toolbox.SHOW_USAGE;
+            if(!args[1].equalsIgnoreCase("set")) return SHOW_USAGE;
             doSet(args[0], sender, args[2], args[3], args[4]);
         break;
         default:
-            return Toolbox.SHOW_USAGE;
+            return SHOW_USAGE;
         }
         return true;
     }

@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import me.taylorkelly.help.Help;
 import net.craftstars.general.General;
+import net.craftstars.general.command.CommandBase;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -144,7 +145,7 @@ public class HelpHandler {
         } catch(IllegalAccessException e) {
             e.printStackTrace();
         } catch(NoSuchFieldException e) {}
-        return Toolbox.SHOW_USAGE;
+        return CommandBase.SHOW_USAGE;
     }
     
     @SuppressWarnings("unused") // because it only LOOKS unused; it's accessed reflectively

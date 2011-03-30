@@ -24,7 +24,7 @@ public class giveCommand extends CommandBase {
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
         if(Toolbox.lacksPermission(plugin, sender, "give items", "general.give")) return true;
-        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.SHOW_USAGE;
+        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
 
         who = sender;
         item = null;
@@ -67,7 +67,7 @@ public class giveCommand extends CommandBase {
             }
         break;
         default:
-            return Toolbox.SHOW_USAGE;
+            return SHOW_USAGE;
         }
 
         if(item == null || !item.isIdValid()) {
@@ -140,7 +140,7 @@ public class giveCommand extends CommandBase {
     @Override
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
-        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return Toolbox.SHOW_USAGE;
+        if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
 
         who = null;
         item = null;
@@ -171,7 +171,7 @@ public class giveCommand extends CommandBase {
             }
         break;
         default:
-            return Toolbox.SHOW_USAGE;
+            return SHOW_USAGE;
         }
 
         if(item == null || !item.isIdValid()) {

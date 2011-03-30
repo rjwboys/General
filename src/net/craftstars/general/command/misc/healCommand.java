@@ -31,7 +31,7 @@ public class healCommand extends CommandBase {
             }
         break;
         default:
-            return Toolbox.SHOW_USAGE;
+            return SHOW_USAGE;
         }
         if(who == null) return true;
         doHeal(who, amount);
@@ -68,7 +68,7 @@ public class healCommand extends CommandBase {
             }
         break;
         default:
-            return Toolbox.SHOW_USAGE;
+            return SHOW_USAGE;
         }
         if(who == null) return true;
         doHeal(who, amount);

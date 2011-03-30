@@ -141,6 +141,6 @@ public class mobspawnCommand extends CommandBase {
             Messaging.send(player, mobType.getName() + (mountType != null ? " riding a " + mountType.getName() : "") + " spawned.");
             return true;
         }
-        return Toolbox.SHOW_USAGE;
+        return SHOW_USAGE;
     }
 }

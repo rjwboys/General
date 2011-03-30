@@ -129,7 +129,7 @@ public class goCommand extends CommandBase {
                     + args[1] + "," + args[2] + ")&f!");
         }
         default:
-            return Toolbox.SHOW_USAGE;
+            return SHOW_USAGE;
         }
         return true;
     }
@@ -198,7 +198,7 @@ public class goCommand extends CommandBase {
                     + args[1] + "," + args[2] + ")&f!");
         }
         default:
-            return Toolbox.SHOW_USAGE;
+            return SHOW_USAGE;
         }
         return true;
     }

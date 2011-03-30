@@ -20,7 +20,14 @@ public class generalCommand extends CommandBase {
     @Override
     public boolean fromConsole(General plugin, CommandSender sender, Command command,
             String commandLabel, String[] args) {
-        if(args.length < 1) return Toolbox.SHOW_USAGE;
+        if(commandLabel.equalsIgnoreCase("help")) {
+            args = prependArg(args,"help");
+            commandLabel = "general";
+        } else if(commandLabel.equalsIgnoreCase("motd")) {
+            args = prependArg(args,"motd");
+            commandLabel = "general";
+        }
+        if(args.length < 1) return SHOW_USAGE;
         if(args[0].equalsIgnoreCase("reload")) {
             doReload(sender);
             return true;
@@ -41,17 +48,24 @@ public class generalCommand extends CommandBase {
         } else if(args[0].equalsIgnoreCase("item")) {
             if(args.length < 3) {
                 Messaging.send(sender, "&cNot enough arguments.");
-                return Toolbox.SHOW_USAGE;
+                return SHOW_USAGE;
             }
             return itemEdit(sender, Arrays.copyOfRange(args, 1, args.length));
         }
-        return Toolbox.SHOW_USAGE;
+        return SHOW_USAGE;
     }
 
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
-        if(args.length < 1) return Toolbox.SHOW_USAGE;
+        if(commandLabel.equalsIgnoreCase("help")) {
+            args = prependArg(args,"help");
+            commandLabel = "general";
+        } else if(commandLabel.equalsIgnoreCase("motd")) {
+            args = prependArg(args,"motd");
+            commandLabel = "general";
+        }
+        if(args.length < 1) return SHOW_USAGE;
         if(args[0].equalsIgnoreCase("reload")) {
             if(Toolbox.lacksPermission(plugin, sender, "administrate the plugin", "general.admin")) return true;
             doReload(sender);
@@ -71,11 +85,11 @@ public class generalCommand extends CommandBase {
             if(Toolbox.lacksPermission(plugin, sender, "administrate the plugin", "general.admin")) return true;
             if(args.length < 3) {
                 Messaging.send(sender, "&cNot enough arguments.");
-                return Toolbox.SHOW_USAGE;
+                return SHOW_USAGE;
             }
             return itemEdit(sender, Arrays.copyOfRange(args, 2, args.length));
         }
-        return Toolbox.SHOW_USAGE;
+        return SHOW_USAGE;
     }
 
     private void doReload(CommandSender sender) {
@@ -91,7 +105,7 @@ public class generalCommand extends CommandBase {
 
     private boolean itemEdit(CommandSender sender, String[] args) {
         if(args.length < 2 || args.length > 3) {
-            return Toolbox.SHOW_USAGE;
+            return SHOW_USAGE;
         } else if(args[0].equalsIgnoreCase("alias")) {
             switch(args.length) {
             case 2:
@@ -163,7 +177,7 @@ public class generalCommand extends CommandBase {
                 return true;
             }
         }
-        return Toolbox.SHOW_USAGE;
+        return SHOW_USAGE;
     }
 
 }
