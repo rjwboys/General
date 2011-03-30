@@ -1,5 +1,5 @@
 # General Plugin for CraftBukkit #
-## Version 3.3 [Dvorak]
+## Version 3.3.1 [Dvorak]
 ### README
 - - -
 This is the first draft of this README. It's not done. Build instructions coming soon.
