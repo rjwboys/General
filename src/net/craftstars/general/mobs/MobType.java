@@ -8,15 +8,12 @@ import net.craftstars.general.items.Items;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Slime;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.DyeColor;
 
 /**
@@ -79,63 +76,9 @@ public enum MobType {
             }
         }
     },
-    /* 12 */ GIANT_ZOMBIE(Enemies.ENEMY, CreatureType.GIANT, "Giant"),
-    /* 13 */ MONSTER(Enemies.ENEMY, CreatureType.MONSTER, "Human") {
-//        @Override
-//        public void setData(LivingEntity what, String data) throws MobException {
-//            if(!(what instanceof HumanEntity))
-//                throw new MobException("Tried to set human data on a non-human; please report this!");
-//            HumanEntity human = ((HumanEntity) what);
-//            PlayerInventory inven = human.getInventory();
-//            String[] items = {data};
-//            if(data.contains(",")) items = data.split(",");
-//            ItemID[] ids = new ItemID[items.length];
-//            int i = 0;
-//            for(String item : items) ids[i++] = Items.validate(item);
-//            i = 0;
-//            for(ItemID id : ids) {
-//                if(id == null || !id.isValid()) {
-//                    throw new MobException("Invalid item: " + items[i]);
-//                }
-//                switch(id.getMaterial()) {
-//                case PUMPKIN:
-//                case LEATHER_HELMET:
-//                case CHAINMAIL_HELMET:
-//                case IRON_HELMET:
-//                case DIAMOND_HELMET:
-//                case GOLD_HELMET:
-//                    inven.setHelmet(id.getStack(1));
-//                break;
-//                case LEATHER_CHESTPLATE:
-//                case CHAINMAIL_CHESTPLATE:
-//                case IRON_CHESTPLATE:
-//                case DIAMOND_CHESTPLATE:
-//                case GOLD_CHESTPLATE:
-//                    inven.setChestplate(id.getStack(1));
-//                break;
-//                case LEATHER_LEGGINGS:
-//                case CHAINMAIL_LEGGINGS:
-//                case IRON_LEGGINGS:
-//                case DIAMOND_LEGGINGS:
-//                case GOLD_LEGGINGS:
-//                    inven.setLeggings(id.getStack(1));
-//                break;
-//                case LEATHER_BOOTS:
-//                case CHAINMAIL_BOOTS:
-//                case IRON_BOOTS:
-//                case DIAMOND_BOOTS:
-//                case GOLD_BOOTS:
-//                    inven.setBoots(id.getStack(1));
-//                break;
-//                case BOW:
-//                    inven.addItem(new ItemStack(Material.ARROW,64));
-//                default:
-//                    human.setItemInHand(id.getStack(1));
-//                }
-//                i++;
-//            }
-//        }
-    };
+    /* 12 */ MONSTER(Enemies.ENEMY, CreatureType.MONSTER, "Human"),
+    /* 13 */ GIANT_ZOMBIE(Enemies.ENEMY, CreatureType.GIANT, "Giant"),
+    /* 14 */ WOLF(Enemies.NEUTRAL, CreatureType.WOLF, "Wolf");
     
     private MobType(Enemies cat, CreatureType t) {
         this.category = cat;

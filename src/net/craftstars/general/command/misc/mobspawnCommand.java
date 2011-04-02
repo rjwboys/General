@@ -3,7 +3,6 @@ package net.craftstars.general.command.misc;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -97,47 +96,8 @@ public class mobspawnCommand extends CommandBase {
                     General.logger.info("Failed to spawn mob " + mountType.getName() + ".",e);
                     return true;
                 }
-                ((CraftEntity) spawned).getHandle().setPassengerOf(((CraftEntity) mounted).getHandle());
+                mounted.setPassenger(spawned);
             }
-//            spawned.teleportTo(loc);
-//            world.a(spawned.getHandle());
-//            if (split0.length == 2) {
-//                mob2 = MobType.fromName(split0[1].equalsIgnoreCase("PigZombie") ? "PigZombie" : capitalCase(split0[1]));
-//                if (mob2 == null) {
-//                    p.sendMessage("Invalid mob type.");
-//                    return true;
-//                }
-//                try {
-//                    spawned1 = mob2.spawn(p, plugin);
-//                } catch (MobException e) {
-//                    p.sendMessage("Unable to spawn mob.");
-//                    return true;
-//                }
-//                spawned1.teleportTo(spawned);
-//                spawned.getHandle().setPassengerOf(spawned1.getHandle());
-//                world.a(spawned1.getHandle());
-//            }
-//            if (split1.length == 2 && mob.name == "Slime") {
-//                try {
-//                    ((EntitySlime) spawned.getHandle()).b(Integer.parseInt(split1[1]));
-//                } catch (Exception e) {
-//                    p.sendMessage("Malformed size.");
-//                    return true;
-//                }
-//            } else if (split1.length == 2 && mob.name == "Sheep") {
-//                if(Toolbox.equalsOne(split1[1], "sheared", "nude", "naked", "bald")) {
-//                    ((EntitySheep) spawned.getHandle()).a(true);
-//                } else {
-//                    try {
-//                        ItemID wool = Items.validate("35:" + split1[1]);
-//                        ((EntitySheep) spawned.getHandle()).a_(wool.getData());
-//                    } catch (Exception e) {
-//                        p.sendMessage("Malformed colour.");
-//                        e.printStackTrace();
-//                        return true;
-//                    }
-//                }
-//            }
             Messaging.send(player, mobType.getName() + (mountType != null ? " riding a " + mountType.getName() : "") + " spawned.");
             return true;
         }
