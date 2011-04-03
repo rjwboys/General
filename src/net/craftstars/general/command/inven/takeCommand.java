@@ -89,9 +89,11 @@ public class takeCommand extends CommandBase {
                 amount = Integer.valueOf(args[1]);
             } catch(NumberFormatException x) {
                 who = Toolbox.playerMatch(args[1]);
-                Messaging.send(sender, "&rose;The amount must be an integer.");
-                Messaging.send(sender, "&rose;There is no player named &f" + args[1] + "&rose;.");
-                return true;
+                if(who == null) {
+                    Messaging.send(sender, "&rose;The amount must be an integer.");
+                    Messaging.send(sender, "&rose;There is no player named &f" + args[1] + "&rose;.");
+                    return true;
+                }
             }
         break;
         case 3: // /take <item>[:<data>] <amount> <player>
