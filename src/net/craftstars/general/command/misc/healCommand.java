@@ -72,8 +72,9 @@ public class healCommand extends CommandBase {
             return SHOW_USAGE;
         }
         if(who == null) return true;
+        
         if(commandLabel.equalsIgnoreCase("hurt")) amount = -amount;
-        doHeal(who, amount);
+        amount = doHeal(who, amount);
         if(!sender.getName().equalsIgnoreCase(who.getName())) {
             Messaging.send(sender, "&e" + who.getName() + "&f has been "
                     + (amount < 0 ? "hurt" : "healed") + " by &e" + Math.abs(amount) + "&f hearts.");
@@ -81,7 +82,7 @@ public class healCommand extends CommandBase {
         return true;
     }
 
-    private void doHeal(Player who, double amount) {
+    private double doHeal(Player who, double amount) {
         int hp = who.getHealth();
         amount *= 2;
         hp += amount;
@@ -92,6 +93,7 @@ public class healCommand extends CommandBase {
         who.setHealth(hp);
         Messaging.send(who, "&fYou are " + (amount < 0 ? "hurt" : "healed") + " by &e"
                 + Math.abs(amount) + "&f hearts.");
+        return amount;
     }
 
 }
