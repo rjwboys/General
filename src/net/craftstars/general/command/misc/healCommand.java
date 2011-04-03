@@ -34,6 +34,7 @@ public class healCommand extends CommandBase {
             return SHOW_USAGE;
         }
         if(who == null) return true;
+        if(commandLabel.equalsIgnoreCase("hurt")) amount = -amount;
         doHeal(who, amount);
         Messaging.send(sender, "&e" + who.getName() + "&f has been "
                 + (amount < 0 ? "hurt" : "healed") + " by &e" + Math.abs(amount) + "&f hearts.");
@@ -71,6 +72,7 @@ public class healCommand extends CommandBase {
             return SHOW_USAGE;
         }
         if(who == null) return true;
+        if(commandLabel.equalsIgnoreCase("hurt")) amount = -amount;
         doHeal(who, amount);
         if(!sender.getName().equalsIgnoreCase(who.getName())) {
             Messaging.send(sender, "&e" + who.getName() + "&f has been "
