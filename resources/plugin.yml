@@ -87,7 +87,7 @@ commands:
   general:
     permission: general.admin
     description: Administrates the plugin.
-    aliases: [help, motd]
+    aliases: #[help, motd]
     usage: /general reload|die|motd|help
   chat.away:
     permission: general.away
