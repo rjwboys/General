@@ -4,7 +4,7 @@ authors:
   - Celtic Minstrel
   - Plutonium239
   - Nijikokun
-version: 3.3.1
+version: 3.3.2
 commands:
   info.playerlist:
     description: Displays all players that are online.
@@ -52,7 +52,7 @@ commands:
   teleport.go:
     permission: general.teleport
     description: Teleports a/multiple/all player(s) to another players location.
-    aliases: [teleport, tele, go]
+    aliases: [teleport, tele, go] #tp
     usage: /<command> [<who>] <dest>
   teleport.summon:
     permission: general.teleport.other
