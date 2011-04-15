@@ -52,6 +52,7 @@ Available Permissions nodes:
 * general.take
 * general.take.other
 * general.heal
+* general.hurt
 * general.mobspawn
 * general.kit.<kitname>
 * general.kit-now (to bypass delays on kits)

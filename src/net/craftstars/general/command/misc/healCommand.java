@@ -73,9 +73,9 @@ public class healCommand extends CommandBase {
         if(who == null) return true;
         
         if(commandLabel.equalsIgnoreCase("hurt")) amount = -amount;
-        if(amount<0 && Toolbox.lacksPermission(plugin, sender, "hurt players", "general.hurt")) return true;
+        if(amount < 0 && !who.equals(sender) && Toolbox.lacksPermission(plugin, sender, "hurt players", "general.hurt")) return true;
         amount = doHeal(who, amount);
-        if(!sender.getName().equalsIgnoreCase(who.getName())) {
+        if(!sender.equals(who)) {
             Messaging.send(sender, "&e" + who.getName() + "&f has been "
                     + (amount < 0 ? "hurt" : "healed") + " by &e" + Math.abs(amount) + "&f hearts.");
         }
