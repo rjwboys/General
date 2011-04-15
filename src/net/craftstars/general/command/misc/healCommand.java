@@ -1,4 +1,3 @@
-
 package net.craftstars.general.command.misc;
 
 import net.craftstars.general.command.CommandBase;
@@ -74,6 +73,7 @@ public class healCommand extends CommandBase {
         if(who == null) return true;
         
         if(commandLabel.equalsIgnoreCase("hurt")) amount = -amount;
+        if(amount<0 && Toolbox.lacksPermission(plugin, sender, "hurt players", "general.hurt")) return true;
         amount = doHeal(who, amount);
         if(!sender.getName().equalsIgnoreCase(who.getName())) {
             Messaging.send(sender, "&e" + who.getName() + "&f has been "
