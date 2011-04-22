@@ -6,7 +6,10 @@ names:
   item3: Dirt
   item4: Cobblestone
   item5: Wooden Plank
-  item6: Sapling
+  item6:
+   - Oak Sapling
+   - Spruce Sapling
+   - Birch Sapling
   item7: Bedrock
   item8: Flowing Water
   item9: Stationary Water
@@ -19,7 +22,7 @@ names:
   item16: Coal Ore
   item17:
    - Oak Log
-   - Pine Log
+   - Spruce Log
    - Birch Log
   item18: Leaves
   item19: Sponge
@@ -30,6 +33,9 @@ names:
   item24: Sandstone
   item25: Note Block
   item26: Bed
+  item27: Powered Rail
+  item28: Detector Rail
+  item30: Spiderweb
   item35:
    - White Wool
    - Orange Wool
@@ -256,9 +262,13 @@ names:
   item2257: Green Music Disc
 
 variants:
+  item6:
+    type0: [oak]
+    type1: [pine, red, redwood, spruce]
+    type2: [birch, white]
   item17:
     type0: [oak]
-    type1: [pine, red, redwood]
+    type1: [pine, red, redwood, spruce]
     type2: [birch, white]
   item35:
     type0: [white]
@@ -358,6 +368,8 @@ aliases: {
   Trap: 23,
   Sandstone: 24,
   MidiBlock: 24,
+  PowerRail: 27,
+  Spiderweb: 30,
   Cloth: 35, Fabric: 35,
   Dandelion: 37, YellowDandelion: 37,
   Rose: 38, RedFlower: 38,
@@ -450,7 +462,7 @@ aliases: {
   IronBar: 265,
   GoldBar: 266,
   SoupBowl: 281, WoodBowl: 281, WBowl: 281,
-  Yarn: 287, Web: 287, Rope: 287, Silk: 287, Twine: 287,
+  Yarn: 287, Rope: 287, Silk: 287, Twine: 287,
   Feathers: 288, Quill: 288, Quills: 288,
   Sulfur: 289, Gunpowder: 289,
   Seed: 295,

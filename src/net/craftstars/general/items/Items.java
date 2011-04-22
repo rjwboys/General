@@ -384,6 +384,7 @@ public class Items {
             if(ret.getData() == null) break;
             if(ret.getData() > 1 || ret.getData() < 0) ret.invalidate(true);
         break;
+        case SAPLING:
         case LOG:
             if(ret.getData() == null) break;
             if(ret.getData() > 2 || ret.getData() < 0) ret.invalidate(true);
@@ -394,7 +395,7 @@ public class Items {
         break;
         case MOB_SPAWNER: // creaturebox support TODO: Why do I need this here?
             if(ret.getData() == null) break;
-            if(ret.getData() > 13 || ret.getData() < 0) ret.invalidate(true);
+            if(ret.getData() > 14 || ret.getData() < 0) ret.invalidate(true);
         break;
         }
         // --- end hacky workaround for missing MaterialData classes ---

@@ -4,7 +4,7 @@ authors:
   - Celtic Minstrel
   - Plutonium239
   - Nijikokun
-version: 3.3.2
+version: 3.3.3
 commands:
   info.playerlist:
     description: Displays all players that are online.
@@ -99,3 +99,8 @@ commands:
     description: Gives several items all at once
     aliases: [items]
     usage: /<command> <item1> <item2> ...etc
+  misc.weather:
+    permission: general.weather
+    description: Affects the weather
+    aliases: [weather]
+    usage: /<command> [<world>] <weather>
