@@ -42,6 +42,7 @@ public class weatherCommand extends CommandBase {
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
+        if(Toolbox.lacksPermission(plugin, sender, "control the weather", "general.weather")) return true;
         switch(args.length) {
         case 0:
             if(sender.getWorld().hasStorm())
@@ -106,6 +107,7 @@ public class weatherCommand extends CommandBase {
     }
     
     private void doLightning(CommandSender sender, World world, Location centre) {
+        if(Toolbox.lacksPermission(General.plugin, sender, "summon lightning", "general.weather.zap")) return;
         int x, y, z;
         x = centre.getBlockX();
         y = 127;

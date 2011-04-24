@@ -78,19 +78,10 @@ public enum MobType {
                 Field anger = EntityPigZombie.class.getDeclaredField("angerLevel");
                 anger.setAccessible(true);
                 anger.setInt(epz, 400);
-            } catch(SecurityException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch(NoSuchFieldException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch(IllegalArgumentException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch(IllegalAccessException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            } catch(SecurityException e) {}
+            catch(NoSuchFieldException e) {}
+            catch(IllegalArgumentException e) {}
+            catch(IllegalAccessException e) {}
             // End section of accessing internal Minecraft code
             return true;
         }

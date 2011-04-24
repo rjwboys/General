@@ -11,6 +11,7 @@ import net.craftstars.general.General;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class Toolbox {
@@ -123,7 +124,10 @@ public class Toolbox {
         return theWorld;
     }
 
-    public static boolean lacksPermission(General plugin, Player who, String message, String... permissions) {
+    public static boolean lacksPermission(General plugin, CommandSender sender, String message, String... permissions) {
+        if(sender instanceof ConsoleCommandSender) return false;
+        else if(!(sender instanceof Player)) return true; // TODO: Some allowance for non-player-or-console permissions?
+        Player who = (Player) sender;
         if(message == null) message = "do that";
         boolean foundPermission = false;
         for(String permission : permissions) {
