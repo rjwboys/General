@@ -25,8 +25,14 @@ public class weatherCommand extends CommandBase {
         switch(args.length) {
         case 2:
             World world = Toolbox.getWorld(args[0], sender);
-            if(world == null) return true;
-            doWeather(sender, args[1], world, world.getSpawnLocation());
+            Location loc;
+            if(world == null) {
+                Player player = Toolbox.getPlayer(args[0], sender);
+                if(player == null) return true;
+                world = player.getWorld();
+                loc = player.getLocation();
+            } else loc = world.getSpawnLocation();
+            doWeather(sender, args[1], world, loc);
             return true;
         default:
             return SHOW_USAGE;
