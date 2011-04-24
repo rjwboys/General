@@ -162,11 +162,15 @@ public class goCommand extends CommandBase {
 
             Player who = Toolbox.getPlayer(args[0], sender);
             if(who == null) return true;
-            Messaging.send(who, "&fYou have been teleported to &9" + destination.getName()
+            if(destination != null) {
+                Messaging.send(who, "&fYou have been teleported to &9" + destination.getName()
                         + "&f!");
-            if(destination != null)
                 Teleport.teleportPlayerToPlayer(who, destination);
-            else who.teleport(where.getSpawnLocation());
+            } else {
+                who.teleport(where.getSpawnLocation());
+                Messaging.send(who, "&fYou have been teleported to &9" + where.getName()
+                        + "&f!");
+            }
             Messaging.send(sender, "&fTeleported &9" + who.getName() + "&f to &9"
                     + destination.getName() + "&f!");
         }
