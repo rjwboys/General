@@ -7,8 +7,9 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
+import net.craftstars.general.teleport.Destination;
+import net.craftstars.general.teleport.Target;
 import net.craftstars.general.util.Messaging;
-import net.craftstars.general.util.Teleport;
 import net.craftstars.general.util.Toolbox;
 
 public class summonCommand extends CommandBase {
@@ -17,18 +18,16 @@ public class summonCommand extends CommandBase {
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
         if(Toolbox.lacksPermission(plugin, sender, "summon players", "general.teleport.other")) return true;
-        if(args.length < 1) return SHOW_USAGE;
+        if(args.length != 1) return SHOW_USAGE;
+        
+        Target target = Target.get(args[0], sender);
+        Destination dest = Destination.locOf(sender);
+        if(dest == null || target == null) return true;
 
-        Player player = Toolbox.getPlayer(args[0], sender);
-        if(player == null) return true;
-
-        if(player.equals(sender)) {
-            Messaging.send(sender, "&rose;You cannot summon yourself.");
-            return true;
+        if(target.hasPermission(sender) && dest.hasPermission(sender)) {
+            target.teleport(dest);
+            Messaging.send(sender, "&fTeleported &9" + target.getName() + "&f to you!");
         }
-
-        Teleport.teleportPlayerToPlayer(player, sender);
-        Messaging.send(sender, "Teleported " + player.getName() + " to you!");
         return true;
     }
 

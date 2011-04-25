@@ -9,10 +9,14 @@ import java.util.Scanner;
 import net.craftstars.general.General;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.util.BlockIterator;
 
 public class Toolbox {
     public static Player playerMatch(String name) {
@@ -179,6 +183,36 @@ public class Toolbox {
             String line = f.nextLine();
             if(motd) line = MessageOfTheDay.parseMotD(sender, line);
             Messaging.send(sender, line);
+        }
+    }
+
+    public static Location getTargetBlock(Player sender) {
+        Location where = null;
+        BlockIterator iter = new BlockIterator(sender);
+        Block block;
+        for(block = iter.next(); !isSolid(block) && iter.hasNext(); block = iter.next());
+        if(isSolid(block) && !isSolid(block.getRelative(BlockFace.UP)))
+            where = block.getRelative(BlockFace.UP).getLocation();
+        if(where == null)
+            where = sender.getLocation();
+        return where;
+    }
+
+    public static boolean isSolid(Block block) {
+        if(block == null) return false;
+        Material mat = block.getType();
+        if(mat.getId() >= 256) return true; // should never happen, but just in case...
+        switch(mat) {
+        case AIR: case SAPLING: case WATER: case STATIONARY_WATER: case LAVA: case STATIONARY_LAVA:
+        case POWERED_RAIL: case DETECTOR_RAIL: case WEB: case YELLOW_FLOWER: case RED_ROSE:
+        case BROWN_MUSHROOM: case RED_MUSHROOM: case FIRE: case REDSTONE_WIRE: case CROPS:
+        case SIGN_POST: case WOODEN_DOOR: case LADDER: case RAILS: case WALL_SIGN: case LEVER:
+        case STONE_PLATE: case IRON_DOOR_BLOCK: case WOOD_PLATE: case REDSTONE_TORCH_OFF:
+        case REDSTONE_TORCH_ON: case STONE_BUTTON: case SNOW: case SUGAR_CANE_BLOCK: case PORTAL:
+        case DIODE_BLOCK_ON: case DIODE_BLOCK_OFF:
+            return false;
+        default:
+            return true;
         }
     }
 }

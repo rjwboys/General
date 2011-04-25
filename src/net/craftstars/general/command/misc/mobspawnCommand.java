@@ -1,14 +1,10 @@
 package net.craftstars.general.command.misc;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.util.BlockIterator;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
@@ -22,14 +18,7 @@ public class mobspawnCommand extends CommandBase {
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
             String[] args) {
         if(Toolbox.lacksPermission(plugin, sender, "spawn mobs", "general.mobspawn")) return true;
-        Location where = null;
-        BlockIterator iter = new BlockIterator(sender);
-        Block block;
-        for(block = iter.next(); !isSolid(block) && iter.hasNext(); block = iter.next());
-        if(isSolid(block) && !isSolid(block.getRelative(BlockFace.UP)))
-            where = block.getRelative(BlockFace.UP).getLocation();
-        if(where == null)
-            where = sender.getLocation();
+        Location where = Toolbox.getTargetBlock(sender);
         switch(args.length) {
         case 1:
             if(args[0].equalsIgnoreCase("SpiderJockey"))
@@ -98,23 +87,5 @@ public class mobspawnCommand extends CommandBase {
             String commandLabel, String[] args) {
         Messaging.send(sender, "&cSorry, this command can only be used by a player.");
         return true;
-    }
-
-    private boolean isSolid(Block block) {
-        if(block == null) return true; // should never happen, but just in case...
-        Material mat = block.getType();
-        if(mat.getId() >= 256) return true; // should never happen, but just in case...
-        switch(mat) {
-        case AIR: case SAPLING: case WATER: case STATIONARY_WATER: case LAVA: case STATIONARY_LAVA:
-        case POWERED_RAIL: case DETECTOR_RAIL: case WEB: case YELLOW_FLOWER: case RED_ROSE:
-        case BROWN_MUSHROOM: case RED_MUSHROOM: case FIRE: case REDSTONE_WIRE: case CROPS:
-        case SIGN_POST: case WOODEN_DOOR: case LADDER: case RAILS: case WALL_SIGN: case LEVER:
-        case STONE_PLATE: case IRON_DOOR_BLOCK: case WOOD_PLATE: case REDSTONE_TORCH_OFF:
-        case REDSTONE_TORCH_ON: case STONE_BUTTON: case SNOW: case SUGAR_CANE_BLOCK: case PORTAL:
-        case DIODE_BLOCK_ON: case DIODE_BLOCK_OFF:
-            return false;
-        default:
-            return true;
-        }
     }
 }
