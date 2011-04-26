@@ -11,7 +11,8 @@ public enum DestinationType {
     COORDS("specific coordinates"),
     HOME("player homes",true),
     SPAWN("spawn",true),
-    TARGET("targeted block",true);
+    TARGET("targeted block",true),
+    COMPASS("compass target",true);
     private String msg;
     private boolean spec;
 

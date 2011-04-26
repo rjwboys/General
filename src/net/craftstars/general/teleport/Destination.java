@@ -90,6 +90,7 @@ public class Destination {
             if(Toolbox.equalsOne(dest, "here", "$here")) return locOf(keystone);
             if(Toolbox.equalsOne(dest, "home", "$home")) return homeOf(keystone);
             if(Toolbox.equalsOne(dest, "spawn", "$spawn")) return spawnOf(keystone);
+            if(Toolbox.equalsOne(dest, "compass", "$compass")) return compassOf(keystone);
             // Is it a coordinate? x,y,z
             try {
                 String[] split = dest.split(",");
@@ -126,6 +127,7 @@ public class Destination {
                 if(split[1].equalsIgnoreCase("there")) return targetOf(target);
                 if(split[1].equalsIgnoreCase("home")) return homeOf(target);
                 if(split[1].equalsIgnoreCase("spawn")) return spawnOf(target);
+                if(split[1].equalsIgnoreCase("compass")) return compassOf(target);
             }
         }
         // Well, nothing matches; give up.
@@ -144,6 +146,13 @@ public class Destination {
 
     public static Destination spawnOf(Player player) {
         Destination d = new Destination(player.getWorld(), DestinationType.SPAWN);
+        d.keystone = player;
+        return d;
+    }
+    
+    public static Destination compassOf(Player player) {
+        String name = player.getDisplayName() + "'s compass";
+        Destination d = new Destination(player.getCompassTarget(), name, DestinationType.COMPASS);
         d.keystone = player;
         return d;
     }
