@@ -120,8 +120,9 @@ public class Target {
         }
         if(teleporter != null) {
             // Is it a special keyword?
+            int range = General.plugin.config.getInt("summon-range", 30);
             if(Toolbox.equalsOne(targ, "near", "$near")) {
-                List<Entity> near = teleporter.getNearbyEntities(10, 10, 10);
+                List<Entity> near = teleporter.getNearbyEntities(range, range, range);
                 ArrayList<LivingEntity> players = new ArrayList<LivingEntity>();
                 for(Entity what : near) {
                     if(what instanceof Player)
@@ -134,7 +135,7 @@ public class Target {
                 }
             }
             if(Toolbox.equalsOne(targ, "nearmob", "$nearmob")) {
-                List<Entity> near = teleporter.getNearbyEntities(10, 10, 10);
+                List<Entity> near = teleporter.getNearbyEntities(range, range, range);
                 ArrayList<LivingEntity> victims = new ArrayList<LivingEntity>();
                 for(Entity what : near) {
                     if(what instanceof LivingEntity && !(what instanceof Player))
@@ -147,7 +148,7 @@ public class Target {
                 }
             }
             if(Toolbox.equalsOne(targ, "there", "$there")) {
-                List<Entity> near = teleporter.getNearbyEntities(50, 50, 50);
+                List<Entity> near = teleporter.getNearbyEntities(range, range, range);
                 HashMap<Integer,LivingEntity> potentials = new HashMap<Integer,LivingEntity>();
                 for(Entity potential : near) {
                     if(!(potential instanceof LivingEntity)) continue;
