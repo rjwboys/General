@@ -8,6 +8,7 @@ import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class whoCommand extends CommandBase {
@@ -18,6 +19,7 @@ public class whoCommand extends CommandBase {
     private String world;
     private String awayReason;
     private boolean isAway;
+    private String ip;
 
     @Override
     public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
@@ -49,6 +51,15 @@ public class whoCommand extends CommandBase {
             Messaging.send(sender, "&6 -&e Location: &f" + this.location);
         if(General.plugin.config.getBoolean("playerlist.show-world", false))
             Messaging.send(sender, "&6 -&e World: &f" + this.world);
+        if(General.plugin.config.getBoolean("playerlist.show-ip", false)) {
+            boolean canSeeIp = false;
+            if(sender instanceof Player) {
+                Player p = (Player) sender;
+                canSeeIp = General.plugin.permissions.hasPermission(p, "general.who.ip");
+            } else if(sender instanceof ConsoleCommandSender)
+                canSeeIp = true;
+            if(canSeeIp) Messaging.send(sender, "&6 -&e IP: &f" + this.ip);
+        }
         if(this.isAway)
             Messaging.send(sender, "&6 -&e Status: &f" + "Away (" + this.awayReason + ").");
         else
@@ -76,6 +87,7 @@ public class whoCommand extends CommandBase {
         this.world = player.getWorld().getName();
         this.isAway = General.plugin.isAway(player);
         this.awayReason = General.plugin.whyAway(player).trim();
+        this.ip = player.getAddress().getAddress().getHostAddress();
     }
 
     @Override
