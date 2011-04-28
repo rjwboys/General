@@ -55,7 +55,10 @@ public class whoCommand extends CommandBase {
             boolean canSeeIp = false;
             if(sender instanceof Player) {
                 Player p = (Player) sender;
-                canSeeIp = General.plugin.permissions.hasPermission(p, "general.who.ip");
+                if(p.getName().equals(name))
+                    canSeeIp = true;
+                else
+                    canSeeIp = General.plugin.permissions.hasPermission(p, "general.who.ip");
             } else if(sender instanceof ConsoleCommandSender)
                 canSeeIp = true;
             if(canSeeIp) Messaging.send(sender, "&6 -&e IP: &f" + this.ip);
