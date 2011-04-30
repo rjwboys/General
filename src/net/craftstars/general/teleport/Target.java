@@ -169,7 +169,7 @@ public class Target {
                     Messaging.send(notify, "&cNo-one there.");
                 }
             }
-            if(Toolbox.equalsOne(targ, "self", "$self")) return fromPlayer(teleporter);
+            if(Toolbox.equalsOne(targ, "self", "$self", "me")) return fromPlayer(teleporter);
         }
         // No more ideas, so just give up.
         Messaging.send(notify, "&cInvalid target.");
@@ -193,5 +193,13 @@ public class Target {
 
     public String getName() {
         return title;
+    }
+    
+    public void setTeleporter(Player who) {
+        if(type == TargetType.MOB) return;
+        if(teleportees.size() != 1) return;
+        LivingEntity e = teleportees.get(0);
+        if(who.equals(e)) type = TargetType.SELF;
+        else type = TargetType.OTHER;
     }
 }

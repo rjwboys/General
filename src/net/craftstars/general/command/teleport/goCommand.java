@@ -1,8 +1,6 @@
 
 package net.craftstars.general.command.teleport;
 
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,7 +33,7 @@ public class goCommand extends CommandBase {
             return SHOW_USAGE;
         }
         if(dest == null || target == null) return true;
-        if(target.hasPermission(sender) && dest.hasPermission(sender)) {
+        if(target.hasPermission(sender) && dest.hasPermission(sender, "teleport", "general.teleport")) {
             target.teleport(dest);
             Messaging.send(sender, "&fYou teleported &9" + target.getName() + "&f to &9" + dest.getName() + "&f!");
         }

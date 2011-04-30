@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
 
 public class weatherCommand extends CommandBase {
@@ -70,7 +71,8 @@ public class weatherCommand extends CommandBase {
 
     private void doWeather(CommandSender sender, String key, World world, Location loc) {
         try {
-            int duration = Integer.valueOf(key);
+            long duration = Time.extractDuration(key);
+            if(duration < 0) throw new NumberFormatException("Only positive durations accepted for weather.");
             doWeather(sender, world, duration);
         } catch(NumberFormatException e) {
             if(Toolbox.equalsOne(key, "lightning", "strike", "zap"))
@@ -91,12 +93,12 @@ public class weatherCommand extends CommandBase {
 //        world.setThunderDuration(100);
 //    }
 
-    private void doWeather(CommandSender sender, World world, int duration) {
+    private void doWeather(CommandSender sender, World world, long duration) {
         boolean state = duration != 0;
         boolean hasStorm = world.hasStorm();
         world.setStorm(state);
         if(state && duration != -1)
-            world.setWeatherDuration(duration);
+            world.setWeatherDuration((int) duration);
         if(duration == 0)
             Messaging.send(sender, "&blue;Weather storm stopped!");
         else if(duration == -1)

@@ -43,12 +43,14 @@ commands:
     usage: /<command> <player> <message>
   teleport.spawn:
     permission: general.spawn
-    description: Teleports you to the spawn location of your current world.
+    description: Shows you the spawn location the specified current world.
     aliases: [spawn]
-    usage: |
-           /<command> [<player>]
-           /<command> [<world>] set [<dest>]
-           /<command> [<world>] show
+    usage: /<command> [<world>]
+  teleport.setspawn:
+    permission: general.spawn.set
+    description: Sets to the spawn location of your current world (or the specified one).
+    aliases: [setspawn]
+    usage: /<command> [<dest>]
   teleport.go:
     permission: general.teleport
     description: Teleports a/multiple/all player(s) to another players location.

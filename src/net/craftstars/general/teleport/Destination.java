@@ -61,13 +61,16 @@ public class Destination {
         return keystone;
     }
     
-    public boolean hasPermission(Player who) {
-        if(who.isOp()) return true;
+    public boolean hasPermission(CommandSender sender, String action, String base) {
+        if(sender instanceof ConsoleCommandSender) return true;
+        if(!(sender instanceof Player)) return false;
+        Player player = (Player)  sender;
+        if(player.isOp()) return true;
         boolean perm = true;
         for(DestinationType type : t) {
-            perm = perm && type.hasPermission(who);
-            if(type.isSpecial() && !who.equals(keystone)) {
-                perm = perm && General.plugin.permissions.hasPermission(who, type.getPermission() + ".other");
+            perm = perm && type.hasPermission(player, action, base);
+            if(type.isSpecial() && !player.equals(keystone)) {
+                perm = perm && General.plugin.permissions.hasPermission(player, type.getPermission(base) + ".other");
             }
         }
         return perm;
@@ -83,7 +86,7 @@ public class Destination {
         if(who != null) return locOf(who);
         // Is it a world? Optionally prefixed with @
         World globe = mc.getWorld(dest.replaceFirst("^@", ""));
-        if(globe != null) return new Destination(globe, DestinationType.WORLD);
+        if(globe != null) return fromWorld(globe);
         if(keystone != null) {
             // Is it a special keyword? Optionally prefixed with $
             if(Toolbox.equalsOne(dest, "there", "$there")) return targetOf(keystone);
@@ -135,22 +138,31 @@ public class Destination {
         return null;
     }
 
+    public static Destination fromWorld(World globe) {
+        if(globe == null) return null;
+        return new Destination(globe, DestinationType.WORLD);
+    }
+
     public static Destination targetOf(Player player) {
+        if(player == null) return null;
         Location targetBlock = Toolbox.getTargetBlock(player);
         return new Destination(targetBlock, player, player.getDisplayName(), DestinationType.TARGET);
     }
 
     public static Destination locOf(Player player) {
+        if(player == null) return null;
         return new Destination(player, DestinationType.PLAYER);
     }
 
     public static Destination spawnOf(Player player) {
+        if(player == null) return null;
         Destination d = new Destination(player.getWorld(), DestinationType.SPAWN);
         d.keystone = player;
         return d;
     }
     
     public static Destination compassOf(Player player) {
+        if(player == null) return null;
         String name = player.getDisplayName() + "'s compass";
         Destination d = new Destination(player.getCompassTarget(), name, DestinationType.COMPASS);
         d.keystone = player;
@@ -158,6 +170,7 @@ public class Destination {
     }
 
     public static Destination homeOf(Player player) {
+        if(player == null) return null;
         // Begin accessing Minecraft code
         // TODO: Rewrite to use Bukkit API
         CraftPlayer cp = (CraftPlayer) player;
@@ -174,5 +187,9 @@ public class Destination {
 
     public String getName() {
         return title;
+    }
+    
+    public void setWorld(World world) {
+        calc.setWorld(world);
     }
 }

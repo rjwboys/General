@@ -24,7 +24,7 @@ public class summonCommand extends CommandBase {
         Destination dest = Destination.locOf(sender);
         if(dest == null || target == null) return true;
 
-        if(target.hasPermission(sender) && dest.hasPermission(sender)) {
+        if(target.hasPermission(sender) && dest.hasPermission(sender, "teleport", "general.teleport")) {
             target.teleport(dest);
             Messaging.send(sender, "&fTeleported &9" + target.getName() + "&f to you!");
         }

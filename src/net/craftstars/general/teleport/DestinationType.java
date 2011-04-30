@@ -26,10 +26,10 @@ public enum DestinationType {
         this.spec = special;
     }
     
-    public boolean hasPermission(Player who) {
+    public boolean hasPermission(Player who, String action, String base) {
         if(who.isOp()) return true;
-        if(General.plugin.permissions.hasPermission(who, getPermission())) return true;
-        Messaging.send(who, "&cYou do not have permission to teleport to " + msg + ".");
+        if(General.plugin.permissions.hasPermission(who, getPermission(base))) return true;
+        Messaging.send(who, "&cYou do not have permission to " + action + " to " + msg + ".");
         return false;
     }
 
@@ -37,7 +37,7 @@ public enum DestinationType {
         return spec;
     }
     
-    public String getPermission() {
-        return "general.teleport.to." + this.toString().toLowerCase();
+    public String getPermission(String base) {
+        return base + ".to." + this.toString().toLowerCase();
     }
 }
