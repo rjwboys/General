@@ -11,49 +11,49 @@ import net.craftstars.general.General;
 import net.craftstars.general.security.PermissionsHandler;
 
 public class PermissionsPermissionsHandler implements PermissionsHandler {
-    private PermissionHandler permissions = null;
-    private boolean wasLoaded = false;
-    private final String version;
-
-    public PermissionsPermissionsHandler() {
-        Plugin test = General.plugin.getServer().getPluginManager().getPlugin("Permissions");
-
-        if(test != null) {
-            try {
-                General.plugin.getServer().getPluginManager().enablePlugin(test);
-                this.permissions = ((Permissions) test).getHandler();
-                this.wasLoaded = true;
-            } catch(Error e) {
-                General.logger.error("Error loading Permissions. Please report to the Permissions dev.");
-                e.printStackTrace();
-            }
-            this.version = test.getDescription().getVersion();
-        } else this.version = "0.0";
-    }
-
-    @Override
-    public boolean hasPermission(Player who, String what) {
-        return this.permissions.has(who, what);
-    }
-
-    @Override
-    public boolean wasLoaded() {
-        return wasLoaded;
-    }
-
-    @Override
-    public boolean inGroup(Player who, String which) {
-        if(which == ".isop") return who.isOp();
-        return this.permissions.inGroup(who.getWorld().getName(), who.getName(), which);
-    }
-
-    @Override
-    public String getVersion() {
-        return version;
-    }
-
-    @Override
-    public String getName() {
-        return "Permissions";
-    }
+	private PermissionHandler permissions = null;
+	private boolean wasLoaded = false;
+	private final String version;
+	
+	public PermissionsPermissionsHandler() {
+		Plugin test = General.plugin.getServer().getPluginManager().getPlugin("Permissions");
+		
+		if(test != null) {
+			try {
+				General.plugin.getServer().getPluginManager().enablePlugin(test);
+				this.permissions = ((Permissions) test).getHandler();
+				this.wasLoaded = true;
+			} catch(Error e) {
+				General.logger.error("Error loading Permissions. Please report to the Permissions dev.");
+				e.printStackTrace();
+			}
+			this.version = test.getDescription().getVersion();
+		} else this.version = "0.0";
+	}
+	
+	@Override
+	public boolean hasPermission(Player who, String what) {
+		return this.permissions.has(who, what);
+	}
+	
+	@Override
+	public boolean wasLoaded() {
+		return wasLoaded;
+	}
+	
+	@Override
+	public boolean inGroup(Player who, String which) {
+		if(which == ".isop") return who.isOp();
+		return this.permissions.inGroup(who.getWorld().getName(), who.getName(), which);
+	}
+	
+	@Override
+	public String getVersion() {
+		return version;
+	}
+	
+	@Override
+	public String getName() {
+		return "Permissions";
+	}
 }
