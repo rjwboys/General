@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 
 public class MessageOfTheDay {
 	public static String parseMotD(CommandSender sender, String original) {
-		return Messaging.argument(original, new String[] {"++", "+dname,+d,&dname;", "+name,+n,&name;",
+		return Messaging.substitute(original, new String[] {"++", "+dname,+d,&dname;", "+name,+n,&name;",
 				"+location,+l,&location;", "+health,+h,&health;", "+ip,+a,&ip;", "+balance,+$,&balance;",
 				"+currency,+m,&currency;", "+online,+c,&online;", "+list,+p,&list;", "+world,+w,&world;",
 				"+time,+t,&time;", "~!@#$%^&*()"}, new Object[] {"~!@#$%^&*()", getDisplayName(sender),
