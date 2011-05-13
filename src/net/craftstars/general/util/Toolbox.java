@@ -3,6 +3,7 @@ package net.craftstars.general.util;
 
 import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,44 +20,34 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 
 public class Toolbox {
-	public static Player playerMatch(String name) {
-		if(General.plugin.getServer().getOnlinePlayers().length < 1) {
-			return null;
-		}
-		
-		Player[] online = General.plugin.getServer().getOnlinePlayers();
-		
-		Player lastPlayer = null;
-		
-		for(Player player : online) {
-			String playerName = player.getName();
-			String playerDisplayName = player.getDisplayName();
-			
-			if(playerName.equalsIgnoreCase(name)) {
-				lastPlayer = player;
-				
-				break;
-			} else if(playerDisplayName.equalsIgnoreCase(name)) {
-				lastPlayer = player;
-				
-				break;
-			}
-			if(playerName.toLowerCase().indexOf(name.toLowerCase()) != -1) {
-				if(lastPlayer != null) {
-					return null;
-				}
-				
-				lastPlayer = player;
-			} else if(playerDisplayName.toLowerCase().indexOf(name.toLowerCase()) != -1) {
-				if(lastPlayer != null) {
-					return null;
-				}
-				
-				lastPlayer = player;
+	public static Player matchPlayer(String pat) {
+		Player[] players = General.plugin.getServer().getOnlinePlayers();
+		if(players.length == 0) return null;
+		HashMap<Player,Integer> closeness = new HashMap<Player,Integer>();
+		for(Player p : players) {
+			String name = p.getName();
+			String dname = p.getDisplayName();
+			if(name.equalsIgnoreCase(pat) || dname.equalsIgnoreCase(pat)) {
+				closeness.put(p, 0);
+			} else if(name.startsWith(pat)) {
+				closeness.put(p, name.length() - pat.length());
+			} else if(dname.startsWith(pat)) {
+				closeness.put(p, dname.length() - pat.length());
+			} else if(name.contains(pat)) {
+				closeness.put(p, 1 + name.length() - pat.length());
+			} else if(dname.contains(pat)) {
+				closeness.put(p, 1 + dname.length() - pat.length());
 			}
 		}
-		
-		return lastPlayer;
+		int min = Integer.MAX_VALUE;
+		for(int i : closeness.values())
+			if(i < min) min = i;
+		ArrayList<Player> closest = new ArrayList<Player>();
+		for(Player p : closeness.keySet())
+			if(closeness.get(p) == min) closest.add(p);
+		// If there are multiple equally close matches, we'll make no attempt to resolve
+		if(closest.size() == 1) return closest.get(0);
+		return null;
 	}
 	
 	public static boolean equalsOne(String what, String... choices) {
@@ -109,7 +100,7 @@ public class Toolbox {
 	}
 	
 	public static Player getPlayer(String name, CommandSender fromWhom) {
-		Player who = Toolbox.playerMatch(name);
+		Player who = Toolbox.matchPlayer(name);
 		if(who == null) {
 			Formatter fmt = new Formatter();
 			String ifNone = fmt.format("&rose;There is no player named &f%s&rose;.", name).toString();

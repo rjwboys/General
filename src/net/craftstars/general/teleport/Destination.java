@@ -84,7 +84,7 @@ public class Destination {
 			notify = new ConsoleCommandSender(mc);
 		else notify = keystone;
 		// Is it a player? Optionally prefixed with !
-		Player who = mc.getPlayer(dest.replaceFirst("^!", ""));
+		Player who = Toolbox.matchPlayer(dest.replaceFirst("^!", ""));
 		if(who != null) return locOf(who);
 		// Is it a world? Optionally prefixed with @
 		World globe = mc.getWorld(dest.replaceFirst("^@", ""));

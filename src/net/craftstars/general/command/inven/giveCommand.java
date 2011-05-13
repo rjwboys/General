@@ -39,7 +39,7 @@ public class giveCommand extends CommandBase {
 				who = sender;
 				amount = Integer.valueOf(args[1]);
 			} catch(NumberFormatException x) {
-				who = Toolbox.playerMatch(args[1]);
+				who = Toolbox.matchPlayer(args[1]);
 				if(who == null) {
 					Messaging.send(sender, "&rose;The amount must be an integer.");
 					Messaging.send(sender, "&rose;There is no player named &f" + args[1] + "&rose;.");

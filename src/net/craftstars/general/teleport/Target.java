@@ -98,7 +98,7 @@ public class Target {
 			notify = new ConsoleCommandSender(mc);
 		else notify = teleporter;
 		// Is it a player? Optionally prefixed by !
-		LivingEntity victim = mc.getPlayer(targ.replaceFirst("^!", ""));
+		LivingEntity victim = Toolbox.matchPlayer(targ.replaceFirst("^!", ""));
 		if(victim != null) {
 			TargetType tt = TargetType.OTHER;
 			if(victim.equals(teleporter)) tt = TargetType.SELF;
@@ -122,7 +122,7 @@ public class Target {
 			String[] split = targ.split(",");
 			ArrayList<LivingEntity> players = new ArrayList<LivingEntity>();
 			for(String p : split)
-				players.add(mc.getPlayer(p));
+				players.add(Toolbox.matchPlayer(p));
 			return new Target(players, TargetType.OTHER);
 		}
 		if(teleporter != null) {
