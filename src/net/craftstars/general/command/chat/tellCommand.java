@@ -20,7 +20,7 @@ public class tellCommand extends CommandBase {
 		if(Toolbox.lacksPermission(plugin, sender, "send private messages to players", "general.tell",
 				"general.basic")) return true;
 		if(args.length < 2) return SHOW_USAGE;
-		Player who = Toolbox.getPlayer(args[0], sender);
+		Player who = Toolbox.matchPlayer(args[0]);
 		if(who != null) {
 			if(who.getName().equals(sender.getName())) {
 				Messaging.send(sender, "&c;You can't message yourself!");
@@ -32,7 +32,7 @@ public class tellCommand extends CommandBase {
 				Messaging.send(sender, "&7" + who.getDisplayName() + " is currently away.");
 				Messaging.send(sender, "&7Reason: " + General.plugin.whyAway(who));
 			}
-		}
+		} else Messaging.invalidPlayer(sender, args[0]);
 		return true;
 	}
 	
@@ -40,7 +40,7 @@ public class tellCommand extends CommandBase {
 	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		if(args.length < 2) return SHOW_USAGE;
-		Player who = Toolbox.getPlayer(args[0], sender);
+		Player who = Toolbox.matchPlayer(args[0]);
 		if(who != null) {
 			Messaging.send(sender, "&gray;(whisper)   to <" + who.getName() + "> " + Toolbox.combineSplit(args, 1));
 			Messaging.send(who, "(whisper) from [CONSOLE] " + Toolbox.combineSplit(args, 1));
@@ -48,9 +48,7 @@ public class tellCommand extends CommandBase {
 				Messaging.send(sender, "&7" + who.getDisplayName() + " is currently away.");
 				Messaging.send(sender, "&7Reason: " + General.plugin.whyAway(who));
 			}
-		} else {
-			Messaging.send(sender, "Couldn't find player " + args[0]);
-		}
+		} else Messaging.invalidPlayer(sender, args[0]);
 		return true;
 	}
 }

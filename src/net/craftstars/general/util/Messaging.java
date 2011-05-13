@@ -120,14 +120,14 @@ public class Messaging {
 		return splitter.toString();
 	}
 	
-	public boolean invalidPlayer(CommandSender from, String name) {
+	public static boolean invalidPlayer(CommandSender from, String name) {
 		Formatter fmt = new Formatter();
 		String ifNone = fmt.format("&rose;There is no player named &f%s&rose;.", name).toString();
 		Messaging.send(from, ifNone);
 		return true;
 	}
 	
-	public boolean invalidWorld(CommandSender from, String name) {
+	public static boolean invalidWorld(CommandSender from, String name) {
 		Formatter fmt = new Formatter();
 		String ifNone = fmt.format("&rose;There is no world named &f%s&rose;.", name).toString();
 		Messaging.send(from, ifNone);

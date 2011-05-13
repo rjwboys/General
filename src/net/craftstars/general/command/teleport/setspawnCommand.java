@@ -47,9 +47,9 @@ public class setspawnCommand extends CommandBase {
 			} else {
 				if(Toolbox.lacksPermission(plugin, sender, "see the spawn location", "general.spawn.home.other"))
 					return true;
-				who = Toolbox.getPlayer(args[0], sender);
+				who = Toolbox.matchPlayer(args[0]);
 			}
-			if(who == null) return true;
+			if(who == null) return Messaging.invalidPlayer(sender, args[0]);
 			dest = Destination.get(args[1], sender);
 			setHome(sender, dest, who);
 			return true;
@@ -74,8 +74,8 @@ public class setspawnCommand extends CommandBase {
 			setSpawn(sender, dest, null);
 		break;
 		case 2: // /setspawn <player> <destination>
-			Player who = Toolbox.getPlayer(args[0], sender);
-			if(who == null) return true;
+			Player who = Toolbox.matchPlayer(args[0]);
+			if(who == null) return Messaging.invalidPlayer(sender, args[0]);
 			dest = Destination.get(args[1], null);
 			setHome(sender, dest, who);
 		break;

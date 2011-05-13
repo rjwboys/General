@@ -24,7 +24,8 @@ public class itemsCommand extends CommandBase {
 	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		if(args.length < 2) return SHOW_USAGE;
-		Player toWhom = Toolbox.getPlayer(args[0], sender);
+		Player toWhom = Toolbox.matchPlayer(args[0]);
+		if(toWhom == null) return Messaging.invalidPlayer(sender, args[0]);
 		doGive(toWhom, sender, Arrays.copyOfRange(args, 1, args.length));
 		return true;
 	}

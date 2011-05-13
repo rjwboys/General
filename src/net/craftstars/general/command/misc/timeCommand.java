@@ -34,10 +34,10 @@ public class timeCommand extends CommandBase {
 			// or on input that is obviously not intended to be a world, while still allowing access
 			// to worlds if their name happens to match one of the special time keywords.
 			if(!"0123456789+-=".contains(args[0].substring(0, 1)))
-				if(Toolbox.equalsOne(args[0], "day", "night", "nood", "midday", "midnight", "dawn", "sunrise",
-						"morning", "dusk", "sunset", "evening"))
-					this.world = General.plugin.getServer().getWorld(args[0]); // no error message if not found
-			else this.world = Toolbox.getWorld(args[0], sender); // error message if not found
+				this.world = Toolbox.matchWorld(args[0]);
+				if(world == null && !Toolbox.equalsOne(args[0], "day", "night", "nood", "midday", "midnight",
+						"dawn", "sunrise", "morning", "dusk", "sunset", "evening"))
+					Messaging.invalidWorld(sender, args[0]);
 			if(world != null)
 				showTime(sender);
 			else {
@@ -175,15 +175,13 @@ public class timeCommand extends CommandBase {
 				this.world = General.plugin.getServer().getWorlds().get(0);
 				return setTime(sender, args[1]);
 			}
-			this.world = Toolbox.getWorld(args[0], sender);
-			if(this.world == null) return true;
+			this.world = Toolbox.matchWorld(args[0]);
+			if(this.world == null) return Messaging.invalidWorld(sender, args[0]);
 			if(args.length == 1) {
 				showTime(sender);
 				return true;
 			}
 			String time = args[1];
-			this.world = Toolbox.getWorld(args[0], sender);
-			if(this.world == null) return true;
 			return setTime(sender, time);
 		}
 	}

@@ -22,12 +22,12 @@ public class healCommand extends CommandBase {
 		Player who = null;
 		switch(args.length) {
 		case 1: // /heal <amount> OR /heal <player>
-			who = Toolbox.getPlayer(args[0], sender);
+			who = Toolbox.matchPlayer(args[0]);
 		break;
 		case 2: // /heal <player> <amount>
 			try {
 				amount = Double.valueOf(args[1]);
-				who = Toolbox.getPlayer(args[0], sender);
+				who = Toolbox.matchPlayer(args[0]);
 			} catch(NumberFormatException x) {
 				Messaging.send(sender, "&rose;Invalid number.");
 				return true;
@@ -36,7 +36,7 @@ public class healCommand extends CommandBase {
 		default:
 			return SHOW_USAGE;
 		}
-		if(who == null) return true;
+		if(who == null) return Messaging.invalidPlayer(sender, args[0]);
 		if(commandLabel.equalsIgnoreCase("hurt")) amount = -amount;
 		amount = doHeal(who, amount);
 		Messaging.send(sender, "&e" + who.getName() + "&f has been " + (amount < 0 ? "hurt" : "healed") + " by &e"
@@ -58,13 +58,13 @@ public class healCommand extends CommandBase {
 				who = sender;
 				amount = Double.valueOf(args[0]);
 			} catch(NumberFormatException x) {
-				who = Toolbox.getPlayer(args[0], sender);
+				who = Toolbox.matchPlayer(args[0]);
 			}
 		break;
 		case 2: // /heal <player> <amount>
 			try {
 				amount = Double.valueOf(args[1]);
-				who = Toolbox.getPlayer(args[0], sender);
+				who = Toolbox.matchPlayer(args[0]);
 			} catch(NumberFormatException x) {
 				Messaging.send(sender, "&rose;Invalid number.");
 				return true;
@@ -73,7 +73,7 @@ public class healCommand extends CommandBase {
 		default:
 			return SHOW_USAGE;
 		}
-		if(who == null) return true;
+		if(who == null) return Messaging.invalidPlayer(sender, args[0]);
 		
 		if(commandLabel.equalsIgnoreCase("hurt")) amount = -amount;
 		if(amount < 0 && !who.equals(sender)

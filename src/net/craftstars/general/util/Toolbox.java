@@ -2,7 +2,6 @@
 package net.craftstars.general.util;
 
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -44,6 +43,31 @@ public class Toolbox {
 			if(i < min) min = i;
 		ArrayList<Player> closest = new ArrayList<Player>();
 		for(Player p : closeness.keySet())
+			if(closeness.get(p) == min) closest.add(p);
+		// If there are multiple equally close matches, we'll make no attempt to resolve
+		if(closest.size() == 1) return closest.get(0);
+		return null;
+	}
+	
+	public static World matchWorld(String pat) {
+		List<World> worlds = General.plugin.getServer().getWorlds();
+		if(worlds.size() == 0) return null;
+		HashMap<World,Integer> closeness = new HashMap<World,Integer>();
+		for(World w : worlds) {
+			String name = w.getName();
+			if(name.equalsIgnoreCase(pat)) {
+				closeness.put(w, 0);
+			} else if(name.startsWith(pat)) {
+				closeness.put(w, name.length() - pat.length());
+			} else if(name.contains(pat)) {
+				closeness.put(w, 1 + name.length() - pat.length());
+			}
+		}
+		int min = Integer.MAX_VALUE;
+		for(int i : closeness.values())
+			if(i < min) min = i;
+		ArrayList<World> closest = new ArrayList<World>();
+		for(World p : closeness.keySet())
 			if(closeness.get(p) == min) closest.add(p);
 		// If there are multiple equally close matches, we'll make no attempt to resolve
 		if(closest.size() == 1) return closest.get(0);
@@ -97,26 +121,6 @@ public class Toolbox {
 		}
 		
 		return newStr.trim();
-	}
-	
-	public static Player getPlayer(String name, CommandSender fromWhom) {
-		Player who = Toolbox.matchPlayer(name);
-		if(who == null) {
-			Formatter fmt = new Formatter();
-			String ifNone = fmt.format("&rose;There is no player named &f%s&rose;.", name).toString();
-			Messaging.send(fromWhom, ifNone);
-		}
-		return who;
-	}
-	
-	public static World getWorld(String name, CommandSender fromWhom) {
-		World theWorld = General.plugin.getServer().getWorld(name);
-		if(theWorld == null) {
-			Formatter fmt = new Formatter();
-			String ifNone = fmt.format("&rose;There is no world named &f%s&rose;.", name).toString();
-			Messaging.send(fromWhom, ifNone);
-		}
-		return theWorld;
 	}
 	
 	public static boolean lacksPermission(General plugin, CommandSender sender, String message,

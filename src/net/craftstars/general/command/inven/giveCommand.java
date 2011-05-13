@@ -55,12 +55,12 @@ public class giveCommand extends CommandBase {
 				// <amount>
 			try {
 				amount = Integer.valueOf(args[2]);
-				who = Toolbox.getPlayer(args[0], sender);
-				if(who == null) return true;
+				who = Toolbox.matchPlayer(args[0]);
+				if(who == null) return Messaging.invalidPlayer(sender, args[0]);
 				item = Items.validate(args[1]);
 			} catch(NumberFormatException ex) {
-				who = Toolbox.getPlayer(args[2], sender);
-				if(who == null) return true;
+				who = Toolbox.matchPlayer(args[2]);
+				if(who == null) return Messaging.invalidPlayer(sender, args[2]);
 				item = Items.validate(args[0]);
 				try {
 					amount = Integer.valueOf(args[1]);
@@ -156,19 +156,19 @@ public class giveCommand extends CommandBase {
 		
 		switch(args.length) {
 		case 2: // give <item>[:<data>] <player>
-			who = Toolbox.getPlayer(args[1], sender);
-			if(who == null) return true;
+			who = Toolbox.matchPlayer(args[1]);
+			if(who == null) return Messaging.invalidPlayer(sender, args[1]);
 			item = Items.validate(args[0]);
 		break;
 		case 3: // give <item>[:<data>] <amount> <player> OR give <player> <item>[:<data>] <amount>
 			try {
 				amount = Integer.valueOf(args[2]);
-				who = Toolbox.getPlayer(args[0], sender);
-				if(who == null) return true;
+				who = Toolbox.matchPlayer(args[0]);
+				if(who == null) return Messaging.invalidPlayer(sender, args[0]);
 				item = Items.validate(args[1]);
 			} catch(NumberFormatException ex) {
-				who = Toolbox.getPlayer(args[2], sender);
-				if(who == null) return true;
+				who = Toolbox.matchPlayer(args[2]);
+				if(who == null) return Messaging.invalidPlayer(sender, args[2]);
 				item = Items.validate(args[0]);
 				try {
 					amount = Integer.valueOf(args[1]);

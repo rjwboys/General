@@ -35,12 +35,12 @@ public class clearCommand extends CommandBase {
 			String[] args) {
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
-			Player who = Toolbox.getPlayer(args[0], sender);
-			if(who == null) return true;
+			Player who = Toolbox.matchPlayer(args[0]);
+			if(who == null) return Messaging.invalidPlayer(sender, args[0]);
 			doClean(who, sender, CleanType.FULL);
 		} else if(args.length == 2) {
-			Player who = Toolbox.getPlayer(args[0], sender);
-			if(who == null) return true;
+			Player who = Toolbox.matchPlayer(args[0]);
+			if(who == null) return Messaging.invalidPlayer(sender, args[0]);
 			if(args[1].equalsIgnoreCase("pack")) {
 				doClean(who, sender, CleanType.PACK);
 			} else if(args[1].equalsIgnoreCase("quickbar")) {
@@ -73,15 +73,15 @@ public class clearCommand extends CommandBase {
 			} else {
 				if(Toolbox.lacksPermission(plugin, sender, "clear someone else's inventory", "general.clear.other"))
 					return true;
-				Player who = Toolbox.getPlayer(args[0], sender);
-				if(who == null) return true;
+				Player who = Toolbox.matchPlayer(args[0]);
+				if(who == null) return Messaging.invalidPlayer(sender, args[0]);
 				doClean(who, sender, CleanType.FULL);
 			}
 		} else if(args.length == 2) {
 			if(Toolbox.lacksPermission(plugin, sender, "clear someone else's inventory", "general.clear.other"))
 				return true;
-			Player who = Toolbox.getPlayer(args[0], sender);
-			if(who == null) return true;
+			Player who = Toolbox.matchPlayer(args[0]);
+			if(who == null) return Messaging.invalidPlayer(sender, args[0]);
 			if(args[1].equalsIgnoreCase("pack")) {
 				doClean(who, sender, CleanType.PACK);
 			} else if(args[1].equalsIgnoreCase("quickbar")) {

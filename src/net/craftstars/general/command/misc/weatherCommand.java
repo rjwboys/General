@@ -31,11 +31,11 @@ public class weatherCommand extends CommandBase {
 			String[] args) {
 		switch(args.length) {
 		case 2:
-			World world = Toolbox.getWorld(args[0], sender);
+			World world = Toolbox.matchWorld(args[0]);
 			Location loc;
 			if(world == null) {
-				Player player = Toolbox.getPlayer(args[0], sender);
-				if(player == null) return true;
+				Player player = Toolbox.matchPlayer(args[0]);
+				if(player == null) return Messaging.invalidPlayer(sender, args[0]);
 				world = player.getWorld();
 				loc = player.getLocation();
 			} else loc = world.getSpawnLocation();
@@ -59,11 +59,11 @@ public class weatherCommand extends CommandBase {
 			doWeather(sender, args[0], sender.getWorld(), sender.getLocation());
 			return true;
 		case 2:
-			World world = Toolbox.getWorld(args[0], sender);
+			World world = Toolbox.matchWorld(args[0]);
 			Location loc;
 			if(world == null) {
-				Player player = Toolbox.getPlayer(args[0], sender);
-				if(player == null) return true;
+				Player player = Toolbox.matchPlayer(args[0]);
+				if(player == null) return Messaging.invalidPlayer(sender, args[0]);
 				world = player.getWorld();
 				loc = player.getLocation();
 			} else loc = world.getSpawnLocation();

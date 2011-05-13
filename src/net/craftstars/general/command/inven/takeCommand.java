@@ -36,13 +36,13 @@ public class takeCommand extends CommandBase {
 		
 		switch(args.length) {
 		case 2: // take <item>[:<data>] <player>
-			who = Toolbox.getPlayer(args[1], sender);
-			if(who == null) return true;
+			who = Toolbox.matchPlayer(args[1]);
+			if(who == null) return Messaging.invalidPlayer(sender, args[1]);
 			item = Items.validate(args[0]);
 		break;
-		case 3: // take <player> <item>[:<data>] <amount>
-			who = Toolbox.getPlayer(args[2], sender);
-			if(who == null) return true;
+		case 3: // take <item>[:<data>] <amount> <player>
+			who = Toolbox.matchPlayer(args[2]);
+			if(who == null) return Messaging.invalidPlayer(sender, args[2]);
 			item = Items.validate(args[0]);
 			try {
 				amount = Integer.valueOf(args[1]);
@@ -95,14 +95,14 @@ public class takeCommand extends CommandBase {
 				who = Toolbox.matchPlayer(args[1]);
 				if(who == null) {
 					Messaging.send(sender, "&rose;The amount must be an integer.");
-					Messaging.send(sender, "&rose;There is no player named &f" + args[1] + "&rose;.");
+					Messaging.invalidPlayer(sender, args[1]);
 					return true;
 				}
 			}
 		break;
 		case 3: // /take <item>[:<data>] <amount> <player>
-			who = Toolbox.getPlayer(args[2], sender);
-			if(who == null) return true;
+			who = Toolbox.matchPlayer(args[2]);
+			if(who == null) return Messaging.invalidPlayer(sender, args[2]);
 			item = Items.validate(args[0]);
 			try {
 				amount = Integer.valueOf(args[1]);

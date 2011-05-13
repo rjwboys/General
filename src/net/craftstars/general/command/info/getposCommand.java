@@ -34,14 +34,16 @@ public class getposCommand extends CommandBase {
 			}
 			if(Toolbox.lacksPermission(plugin, sender, "check someone else's location", "general.getpos.other"))
 				return true;
-			Player who = Toolbox.getPlayer(args[0], sender);
+			Player who = Toolbox.matchPlayer(args[0]);
 			if(who != null) showPos(sender, who, commandLabel);
+			else Messaging.invalidPlayer(sender, args[0]);
 			return true;
 		} else if(args.length == 2) {
 			if(Toolbox.lacksPermission(plugin, sender, "check someone else's location", "general.getpos.other"))
 				return true;
-			Player who = Toolbox.getPlayer(args[1], sender);
+			Player who = Toolbox.matchPlayer(args[1]);
 			if(who != null) showPos(sender, who, commandLabel.equalsIgnoreCase("getpos") ? args[0] : commandLabel);
+			else Messaging.invalidPlayer(sender, args[1]);
 			return true;
 		} else return SHOW_USAGE;
 	}
@@ -110,12 +112,14 @@ public class getposCommand extends CommandBase {
 			String[] args) {
 		if(args.length < 1 || args.length > 2) return SHOW_USAGE;
 		if(args.length == 1) {
-			Player who = Toolbox.getPlayer(args[0], sender);
+			Player who = Toolbox.matchPlayer(args[0]);
 			if(who != null) showPos(sender, who, commandLabel);
+			else Messaging.invalidPlayer(sender, args[0]);
 			return true;
 		} else if(args.length == 2) {
-			Player who = Toolbox.getPlayer(args[1], sender);
+			Player who = Toolbox.matchPlayer(args[1]);
 			if(who != null) showPos(sender, who, commandLabel.equalsIgnoreCase("getpos") ? args[0] : commandLabel);
+			else Messaging.invalidPlayer(sender, args[1]);
 			return true;
 		} else return SHOW_USAGE;
 	}
