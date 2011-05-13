@@ -1,6 +1,8 @@
 
 package net.craftstars.general.util;
 
+import java.util.Formatter;
+
 import net.craftstars.general.General;
 
 import org.bukkit.ChatColor;
@@ -11,6 +13,13 @@ import org.bukkit.entity.Player;
 
 public class Messaging {
 	public static void send(CommandSender who, String string) {
+		String coloured = colourize(string);
+		coloured = substitute(coloured, new String[] {"&&","~!@#$%^&*()"}, new String[] {"~!@#$%^&*()","&"});
+		for(String line : splitLines(coloured).split("[\\n\\r][\\n\\r]?"))
+			who.sendMessage(line);
+	}
+
+	public static String colourize(String string) {
 		String coloured = substitute(string,
 				new String[] {
 					"&black;,&0","&navy;,&1","&green;,&2","&teal;,&3",
@@ -20,9 +29,7 @@ public class Messaging {
 				},
 				ChatColor.values()
 		);
-		coloured = substitute(coloured, new String[] {"&&","~!@#$%^&*()"}, new String[] {"~!@#$%^&*()","&"});
-		for(String line : splitLines(coloured).split("[\\n\\r][\\n\\r]?"))
-			who.sendMessage(line);
+		return coloured;
 	}
 	
 	public static void broadcast(String string) {
@@ -56,7 +63,7 @@ public class Messaging {
 	
 	/**
 	 * Splits a message into lines of no more than 54 characters. Colour codes, as indicated by §[0-9a-f], are not
-	 * counted in the line length. Make sure you pass through colorize() first to convert the colour codes to the §
+	 * counted in the line length. Make sure you pass through colourize() first to convert the colour codes to the §
 	 * syntax.
 	 * 
 	 * Splitting at a space or hyphen will be preferred. Any newlines already present in the string will be
@@ -111,5 +118,19 @@ public class Messaging {
 			}
 		}
 		return splitter.toString();
+	}
+	
+	public boolean invalidPlayer(CommandSender from, String name) {
+		Formatter fmt = new Formatter();
+		String ifNone = fmt.format("&rose;There is no player named &f%s&rose;.", name).toString();
+		Messaging.send(from, ifNone);
+		return true;
+	}
+	
+	public boolean invalidWorld(CommandSender from, String name) {
+		Formatter fmt = new Formatter();
+		String ifNone = fmt.format("&rose;There is no world named &f%s&rose;.", name).toString();
+		Messaging.send(from, ifNone);
+		return true;
 	}
 }

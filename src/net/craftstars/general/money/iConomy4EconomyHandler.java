@@ -12,13 +12,13 @@ import com.nijiko.coelho.iConomy.system.Bank;
 
 import net.craftstars.general.money.EconomyBase;
 
-public class iConomyEconomyHandler implements EconomyBase {
+public class iConomy4EconomyHandler implements EconomyBase {
 	Bank econ;
 	private boolean wasLoaded;
 	private String version;
 	
 	@SuppressWarnings("static-access")
-	public iConomyEconomyHandler() {
+	public iConomy4EconomyHandler() {
 		Plugin test = General.plugin.getServer().getPluginManager().getPlugin("iConomy");
 		
 		if(test != null) {
@@ -28,6 +28,12 @@ public class iConomyEconomyHandler implements EconomyBase {
 				this.wasLoaded = true;
 			}
 			this.version = test.getDescription().getVersion();
+			String majorRev = version.substring(0, version.indexOf('.'));
+			if(Integer.valueOf(majorRev) > 4) {
+				wasLoaded = false;
+				General.logger.warn("Was looking for iConomy 4 but found iConomy 5 instead. Please either update iConomy, " +
+						"or edit your config.yml to specify iConomy5.");
+			}
 		} else this.version = "0.0";
 	}
 	
@@ -52,7 +58,7 @@ public class iConomyEconomyHandler implements EconomyBase {
 	
 	@Override
 	public String getName() {
-		return "iConomy";
+		return "iConomy 4";
 	}
 	
 	@Override
@@ -66,7 +72,6 @@ public class iConomyEconomyHandler implements EconomyBase {
 		if(!econ.hasAccount(player)) return;
 		Account bank = econ.getAccount(player);
 		bank.add(amount);
-		bank.save();
 	}
 	
 	@Override
@@ -76,7 +81,6 @@ public class iConomyEconomyHandler implements EconomyBase {
 		Account bank = econ.getAccount(player);
 		if(!bank.hasEnough(amount)) return false;
 		bank.subtract(amount);
-		bank.save();
 		return true;
 	}
 	
