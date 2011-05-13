@@ -45,7 +45,7 @@ public class General extends JavaPlugin {
 	public static General plugin = null;
 	
 	public static final boolean DEBUG = true;
-	public static final String codename = "Dvorak";
+	public static final String codename = "Hindemith";
 	
 	public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG); // NOTE: Was private. Should be
 																					// changed back? [celticminstrel]

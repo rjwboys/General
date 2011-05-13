@@ -13,7 +13,9 @@
   <property name="worldedit.jar"    value="WorldEdit.jar"/>
   <property name="groupmanager.jar" value="GroupManager.jar"/>
   <property name="help.jar" value="Help.jar"/>
+  <property name="iconomy4.jar" value="iConomy4.jar"/>
   <property name="iconomy.jar" value="iConomy.jar"/>
+  <property name="boseconomy.jar" value="BOSEconomy.jar"/>
   
   <target name="init">
     <mkdir dir="${lib}"/>
@@ -45,6 +47,8 @@
         <pathelement location="${lib}/${groupmanager.jar}"/>
         <pathelement location="${lib}/${help.jar}"/>
         <pathelement location="${lib}/${iconomy.jar}"/>
+        <pathelement location="${lib}/${iconomy4.jar}"/>
+        <pathelement location="${lib}/${boseconomy.jar}"/>
       </classpath>
     </javac>
   </target>
