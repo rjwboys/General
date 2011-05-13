@@ -133,4 +133,9 @@ public class Messaging {
 		Messaging.send(from, ifNone);
 		return true;
 	}
+	
+	public static boolean lacksPermission(CommandSender from, String message) {
+		Messaging.send(from, "&rose;You don't have permission to " + message + ".");
+		return true;
+	}
 }

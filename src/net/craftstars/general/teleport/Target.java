@@ -58,10 +58,9 @@ public class Target {
 		if(who.isOp()) return true;
 		boolean perm = type.hasPermission(who);
 		if(teleportees.size() > 1) {
-			perm =
-					perm
-							&& !Toolbox.lacksPermission(General.plugin, who, "teleport en masse",
-									"general.teleport.mass");
+			boolean canMass = Toolbox.hasPermission(who, "general.teleport.mass");
+			perm = perm && canMass;
+			if(!canMass) Messaging.lacksPermission(who, "teleport en masse");
 		}
 		return perm;
 	}
@@ -208,5 +207,9 @@ public class Target {
 		if(who.equals(e))
 			type = TargetType.SELF;
 		else type = TargetType.OTHER;
+	}
+	
+	public TargetType getType() {
+		return type;
 	}
 }

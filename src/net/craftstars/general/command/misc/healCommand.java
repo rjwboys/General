@@ -46,7 +46,8 @@ public class healCommand extends CommandBase {
 	
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(plugin, sender, "heal players", "general.heal")) return true;
+		if(Toolbox.lacksPermission(sender, "general.heal"))
+			return Messaging.lacksPermission(sender, "heal players");
 		double amount = 10;
 		Player who = null;
 		switch(args.length) {
@@ -76,8 +77,8 @@ public class healCommand extends CommandBase {
 		if(who == null) return Messaging.invalidPlayer(sender, args[0]);
 		
 		if(commandLabel.equalsIgnoreCase("hurt")) amount = -amount;
-		if(amount < 0 && !who.equals(sender)
-				&& Toolbox.lacksPermission(plugin, sender, "hurt players", "general.hurt")) return true;
+		if(amount < 0 && !who.equals(sender) && Toolbox.lacksPermission(sender, "general.hurt"))
+			return Messaging.lacksPermission(sender, "hurt players");
 		amount = doHeal(who, amount);
 		if(!sender.equals(who)) {
 			Messaging.send(sender, "&e" + who.getName() + "&f has been " + (amount < 0 ? "hurt" : "healed")

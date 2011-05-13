@@ -1,12 +1,9 @@
 
 package net.craftstars.general.command.inven;
 
-import java.util.List;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.ConfigurationNode;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
@@ -26,7 +23,8 @@ public class giveCommand extends CommandBase {
 	
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(plugin, sender, "give items", "general.give")) return true;
+		if(Toolbox.lacksPermission(sender, "general.give"))
+			return Messaging.lacksPermission(sender, "give items");
 		if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
 		
 		who = sender;
@@ -86,11 +84,13 @@ public class giveCommand extends CommandBase {
 			return true;
 		}
 		
-		if(amount < 0
-				&& Toolbox.lacksPermission(plugin, sender, "give infinite stacks of items", "general.give.infinite"))
-			return true;
+		int maxAmount = General.plugin.config.getInt("give.mass", 64);
+		if(amount < 0 && Toolbox.lacksPermission(sender, "general.give.infinite"))
+			return Messaging.lacksPermission(sender, "give infinite stacks of items");
+		if(amount > maxAmount && Toolbox.lacksPermission(sender, "general.give.mass"))
+			return Messaging.lacksPermission(sender, "give masses of items");
 		// Make sure this player is allowed this particular item
-		if(!canGetItem(sender)) {
+		if(!item.canGive(sender)) {
 			Messaging.send(sender, "&2You're not allowed to get &f" + Items.name(item) + "&2.");
 			return true;
 		}
@@ -103,22 +103,6 @@ public class giveCommand extends CommandBase {
 		}
 		
 		return true;
-	}
-	
-	private boolean canGetItem(Player sender) {
-		if(General.plugin.permissions.hasPermission(sender, "general.give.any")) return true;
-		ConfigurationNode permissions = General.plugin.config.getNode("give");
-		if(permissions == null) return true;
-		List<String> groups = permissions.getKeys("groups");
-		if(groups == null) return true;
-		for(String group : groups) {
-			List<Integer> items = permissions.getIntList("groups." + group, null);
-			if(items.isEmpty()) continue;
-			if(items.contains(item.getId())) {
-				return General.plugin.permissions.hasPermission(sender, "general.give.group." + group);
-			}
-		}
-		return permissions.getBoolean("others-for-all", true);
 	}
 	
 	private void doGive(boolean isGift) {

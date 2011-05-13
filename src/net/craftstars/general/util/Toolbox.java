@@ -123,37 +123,21 @@ public class Toolbox {
 		return newStr.trim();
 	}
 	
-	public static boolean lacksPermission(General plugin, CommandSender sender, String message,
-			String... permissions) {
-		if(sender instanceof ConsoleCommandSender)
-			return false;
-		else if(! (sender instanceof Player)) return true; // TODO: Some allowance for non-player-or-console
-															// permissions?
-		Player who = (Player) sender;
-		if(message == null) message = "do that";
-		boolean foundPermission = false;
-		for(String permission : permissions) {
-			if(plugin.permissions.hasPermission(who, permission)) foundPermission = true;
-		}
-		if(!foundPermission) {
-			Messaging.send(who, "&rose;You don't have permission to " + message + ".");
-			return true;
-		}
-		return false;
+	public static boolean lacksPermission(CommandSender sender, String... permissions) {
+		return !hasPermission(sender, permissions);
 	}
 	
-	public static Location getLocation(CommandSender fromWhom, World which, String xCoord, String yCoord,
-			String zCoord) {
-		int x, y, z;
-		try {
-			x = Integer.valueOf(xCoord);
-			y = Integer.valueOf(yCoord);
-			z = Integer.valueOf(zCoord);
-			return new Location(which, x, y, z);
-		} catch(NumberFormatException ex) {
-			Messaging.send(fromWhom, "&rose;Invalid number.");
-			return null;
+	public static boolean hasPermission(CommandSender sender, String... permissions) {
+		if(sender instanceof ConsoleCommandSender)
+			return true;
+		else if(!(sender instanceof Player)) return false; // TODO: Some allowance for non-player-or-console
+															// permissions?
+		Player who = (Player) sender;
+		boolean foundPermission = false;
+		for(String permission : permissions) {
+			if(General.plugin.permissions.hasPermission(who, permission)) foundPermission = true;
 		}
+		return foundPermission;
 	}
 	
 	public static String combineSplit(String[] args, int startAt) {

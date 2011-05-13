@@ -41,12 +41,12 @@ public class setspawnCommand extends CommandBase {
 			General.logger.debug("Setting home to...");
 			Player who;
 			if(Toolbox.equalsOne(args[0], "self", "$self", "me")) {
-				if(Toolbox.lacksPermission(plugin, sender, "see the spawn location", "general.spawn.home"))
-					return true;
+				if(Toolbox.lacksPermission(sender, "general.spawn.home"))
+					return Messaging.lacksPermission(sender, "see your home location");
 				who = sender;
 			} else {
-				if(Toolbox.lacksPermission(plugin, sender, "see the spawn location", "general.spawn.home.other"))
-					return true;
+				if(Toolbox.lacksPermission(sender, "general.spawn.home.other"))
+					return Messaging.lacksPermission(sender, "see someone else's home location");
 				who = Toolbox.matchPlayer(args[0]);
 			}
 			if(who == null) return Messaging.invalidPlayer(sender, args[0]);
@@ -57,7 +57,8 @@ public class setspawnCommand extends CommandBase {
 			return SHOW_USAGE;
 		}
 		General.logger.debug("Checking permission...");
-		if(Toolbox.lacksPermission(plugin, sender, "see the spawn location", "general.spawn.set")) return true;
+		if(Toolbox.lacksPermission(sender, "general.spawn.set"))
+			return Messaging.lacksPermission(sender, "see the spawn location");
 		General.logger.debug("Setting...");
 		setSpawn(sender, dest, sender.getWorld());
 		return true;

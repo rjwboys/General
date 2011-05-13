@@ -31,7 +31,8 @@ public class kitCommand extends CommandBase {
 	
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(plugin, sender, "get kits", "general.kit")) return true;
+		if(Toolbox.lacksPermission(sender, "general.kit"))
+			return Messaging.lacksPermission(sender, "get kits");
 		if(args.length == 0) {
 			String msg = "&cKits available: ";
 			for(String thisKit : Kits.kits.keySet()) {
@@ -74,7 +75,7 @@ public class kitCommand extends CommandBase {
 	}
 	
 	private boolean canGetKit(Player sender, String kit) {
-		if(General.plugin.permissions.hasPermission(sender, "general.kit." + kit)) return true;
+		if(Toolbox.hasPermission(sender, "general.kit." + kit)) return true;
 		return false;
 	}
 	

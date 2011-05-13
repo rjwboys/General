@@ -19,7 +19,8 @@ public class goCommand extends CommandBase {
 
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(plugin, sender, "teleport", "general.teleport")) return true;
+		if(Toolbox.lacksPermission(sender, "general.teleport"))
+			return Messaging.lacksPermission(sender, "teleport");
 		Target target;
 		Destination dest;
 		switch(args.length) {
@@ -35,11 +36,16 @@ public class goCommand extends CommandBase {
 			return SHOW_USAGE;
 		}
 		if(dest == null || target == null) return true;
-		if(target.hasPermission(sender) && dest.hasPermission(sender, "teleport", "general.teleport")) {
+		if(target.hasPermission(sender) && hasDestPermission(sender, target, dest)) {
 			target.teleport(dest);
 			Messaging.send(sender, "&fYou teleported &9" + target.getName() + "&f to &9" + dest.getName() + "&f!");
 		}
 		return true;
+	}
+
+	public boolean hasDestPermission(Player sender, Target targ, Destination dest) {
+		if(dest.hasPermission(sender, "teleport", "general.teleport")) return true;
+		return dest.hasPermission(sender, "teleport", targ.getType().getPermission());
 	}
 	
 	@Override

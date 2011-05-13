@@ -24,8 +24,8 @@ public class awayCommand extends CommandBase {
 	
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(plugin, sender, "set your away status", "general.away", "general.basic"))
-			return true;
+		if(Toolbox.lacksPermission(sender, "general.away", "general.basic"))
+			return Messaging.lacksPermission(sender, "set your away status");
 		if(args.length == 0) {
 			if(General.plugin.isAway(sender)) {
 				General.plugin.unAway(sender);

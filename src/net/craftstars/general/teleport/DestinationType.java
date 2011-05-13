@@ -1,8 +1,8 @@
 
 package net.craftstars.general.teleport;
 
-import net.craftstars.general.General;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.entity.Player;
 
@@ -24,8 +24,15 @@ public enum DestinationType {
 	
 	public boolean hasPermission(Player who, String action, String base) {
 		if(who.isOp()) return true;
-		if(General.plugin.permissions.hasPermission(who, getPermission(base))) return true;
-		Messaging.send(who, "&cYou do not have permission to " + action + " to " + msg + ".");
+		if(Toolbox.hasPermission(who, getPermission(base))) return true;
+		Messaging.lacksPermission(who, getAction(action, false));
+		return false;
+	}
+	
+	public boolean hasOtherPermission(Player who, String action, String base) {
+		if(who.isOp()) return true;
+		if(Toolbox.hasPermission(who, getPermission(base + ".other"))) return true;
+		Messaging.lacksPermission(who, getAction(action, true));
 		return false;
 	}
 	
@@ -35,5 +42,9 @@ public enum DestinationType {
 	
 	public String getPermission(String base) {
 		return base + ".to." + this.toString().toLowerCase();
+	}
+	
+	public String getAction(String base,boolean other) {
+		return base + " to " + (other ? "others' " : "") + this.msg;
 	}
 }

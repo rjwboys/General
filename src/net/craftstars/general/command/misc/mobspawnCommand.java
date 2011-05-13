@@ -20,7 +20,8 @@ public class mobspawnCommand extends CommandBase {
 
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(plugin, sender, "spawn mobs", "general.mobspawn")) return true;
+		if(Toolbox.lacksPermission(sender, "general.mobspawn"))
+			return Messaging.lacksPermission(sender, "spawn mobs");
 		Location where = Toolbox.getTargetBlock(sender);
 		switch(args.length) {
 		case 1:
@@ -31,8 +32,8 @@ public class mobspawnCommand extends CommandBase {
 		case 2:
 			try {
 				int n = Integer.valueOf(args[1]);
-				if(n > 5 && Toolbox.lacksPermission(plugin, sender, "spawn mobs en masse", "general.mobspawn.mass"))
-					return true;
+				if(n > 5 && Toolbox.lacksPermission(sender, "general.mobspawn.mass"))
+					return Messaging.lacksPermission(sender, "spawn mobs en masse");
 				if(args[0].equalsIgnoreCase("SpiderJockey"))
 					while(n-- > 0)
 						doCompoundSpawn(sender, "Skeleton", "Spider", where);
@@ -45,8 +46,8 @@ public class mobspawnCommand extends CommandBase {
 		case 3:
 			try {
 				int n = Integer.valueOf(args[2]);
-				if(n > 5 && Toolbox.lacksPermission(plugin, sender, "spawn mobs en masse", "general.mobspawn.mass"))
-					return true;
+				if(n > 5 && Toolbox.lacksPermission(sender, "general.mobspawn.mass"))
+					return Messaging.lacksPermission(sender, "spawn mobs en masse");
 				if(args[0].equals("-") || args[1].equals("-"))
 					while(n-- > 0)
 						doSimpleSpawn(sender, (args[0] + args[1]).replace("-", ""), where);

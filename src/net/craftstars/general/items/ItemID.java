@@ -4,8 +4,17 @@
 
 package net.craftstars.general.items;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.craftstars.general.General;
+import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Toolbox;
+
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.config.ConfigurationNode;
 
 public class ItemID implements Cloneable, Comparable<ItemID> {
 	private int ID;
@@ -158,5 +167,29 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		hash |= ID << 12; // 1562, the damage data of a diamond tool, is 11 bits long
 		if(!dataMatters) hash = ~hash;
 		return hash;
+	}
+	
+	public boolean canGive(CommandSender who) {
+		ArrayList<String> permissions = new ArrayList<String>();
+		permissions.add("general.give.any");
+		String itemNode = Material.getMaterial(ID).toString();
+		itemNode = "general.give.item." + itemNode.toLowerCase().replace('_', '-');
+		permissions.add(itemNode);
+		ConfigurationNode config = General.plugin.config.getNode("give");
+		if(config == null) return true;
+		List<String> groups = config.getKeys("groups");
+		if(groups == null) return true;
+		for(String group : groups) {
+			List<Integer> items = config.getIntList("groups." + group, null);
+			if(items.isEmpty()) continue;
+			if(items.contains(ID)) {
+				permissions.add("general.give.group." + group);
+			}
+		}
+		String[] permNodes = null;
+		permNodes = permissions.toArray(permNodes);
+		boolean hasPermission = Toolbox.hasPermission(who, permNodes) && config.getBoolean("others-for-all", true);
+		if(!hasPermission) Messaging.lacksPermission(who, "give " + Items.name(this));
+		return hasPermission;
 	}
 }

@@ -11,16 +11,12 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
+import net.craftstars.general.teleport.Destination;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class whoCommand extends CommandBase {private String name;
-	private String displayName;
-	private String bar;
-	private String location;
-	private String world;
-	private String ip;
-	private String status;
+	private String displayName, bar, location, home, world, ip, status;
 	
 	protected whoCommand(General instance) {
 		super(instance);
@@ -32,8 +28,8 @@ public class whoCommand extends CommandBase {private String name;
 			getInfo(toWhom);
 		else if(args.length == 1) {
 			Player who = Toolbox.matchPlayer(args[0]);
-			if(!toWhom.equals(who) && Toolbox.lacksPermission(plugin, toWhom, "view info on users other than yourself", "general.who", "general.basic"))
-				return true;
+			if(!toWhom.equals(who) && Toolbox.lacksPermission(toWhom, "general.who", "general.basic"))
+				return Messaging.lacksPermission(toWhom, "view info on users other than yourself");
 			if(who == null) return true;
 			getInfo(who);
 		} else return SHOW_USAGE;
@@ -56,7 +52,8 @@ public class whoCommand extends CommandBase {private String name;
 		this.name = ofWhom.getName();
 		this.displayName = ofWhom.getDisplayName();
 		this.bar = getHealthBar(ofWhom);
-		this.location = formatLocation(ofWhom);
+		this.location = formatLocation(ofWhom.getLocation());
+		this.home = formatLocation(Destination.homeOf(ofWhom).getLoc());
 		this.world = ofWhom.getWorld().getName();
 		this.ip = ofWhom.getAddress().getAddress().getHostAddress();
 		if(General.plugin.isAway(ofWhom))
@@ -64,8 +61,7 @@ public class whoCommand extends CommandBase {private String name;
 		else this.status = "Around";
 	}
 	
-	private String formatLocation(Player ofWhom) {
-		Location loc = ofWhom.getLocation();
+	private String formatLocation(Location loc) {
 		Formatter fmt = new Formatter();
 		fmt.format("(%d, %d, %d) facing (%d, %d)", loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
 		return fmt.toString();
@@ -93,8 +89,10 @@ public class whoCommand extends CommandBase {private String name;
 		Messaging.send(toWhom, "&6 DisplayName: &f" + this.displayName);
 		if(General.plugin.config.getBoolean("playerlist.show-health", true))
 			Messaging.send(toWhom, "&6 -&e Health: &f" + this.bar);
-		if(General.plugin.config.getBoolean("playerlist.show-coords", true))
+		if(General.plugin.config.getBoolean("playerlist.show-coords", true)) {
 			Messaging.send(toWhom, "&6 -&e Location: &f" + this.location);
+			Messaging.send(toWhom, "&6 -&e Spawn: &f" + this.home);
+		}
 		if(General.plugin.config.getBoolean("playerlist.show-world", false))
 			Messaging.send(toWhom, "&6 -&e World: &f" + this.world);
 		if(General.plugin.config.getBoolean("playerlist.show-ip", false)) {

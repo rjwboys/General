@@ -21,8 +21,8 @@ public class playerlistCommand extends CommandBase {
 
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(plugin, sender, "view the player list", "general.playerlist", "general.basic"))
-			return true;
+		if(Toolbox.lacksPermission(sender, "general.playerlist", "general.basic"))
+			return Messaging.lacksPermission(sender, "view the player list");
 		List<String> players = Toolbox.getPlayerList(plugin);
 		Messaging.send(sender, "&eOnline Players (" + players.size() + "):");
 		doListing(sender, players);

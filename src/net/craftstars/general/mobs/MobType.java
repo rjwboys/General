@@ -37,6 +37,8 @@ public enum MobType {
 		public boolean setData(LivingEntity mob, Player setter, String data) {
 			if(! (mob instanceof Creeper)) return false;
 			if(Toolbox.equalsOne(data, "powered", "power", "zapped", "zap", "on", "high")) {
+				if(Toolbox.lacksPermission(setter, "general.mobspawn.creeper.powered", "general.mobspawn.variants"))
+					return !Messaging.lacksPermission(setter, "spawn powered creepers");
 				Creeper creep = (Creeper) mob;
 				creep.setPowered(true);
 			}
@@ -45,8 +47,7 @@ public enum MobType {
 		}
 	},
 	GHAST(MobAlignment.ENEMY, CreatureType.GHAST, 6, "Ghast", "Ghasts", "Ghast", "NetherSquid"),
-	GIANT_ZOMBIE(
-			MobAlignment.ENEMY, CreatureType.GIANT, 13, "Giant", "Giants", "GiantZombie", "ZombieGiant", "Giant"),
+	GIANT_ZOMBIE(MobAlignment.ENEMY, CreatureType.GIANT, 13, "Giant", "Giants", "GiantZombie", "ZombieGiant", "Giant"),
 	HUMAN(MobAlignment.ENEMY, CreatureType.MONSTER, 12, "Human", "Humans", "Human", "Monster", "Bandit"),
 	PIG(MobAlignment.FRIENDLY, CreatureType.PIG, 0, "Pig", "Pigs", "Pig") {
 		@Override
@@ -54,6 +55,8 @@ public enum MobType {
 			if(! (mob instanceof Pig)) return false;
 			Pig swine = (Pig) mob;
 			if(Toolbox.equalsOne(data, "tame", "saddle", "saddled")) {
+				if(Toolbox.lacksPermission(setter, "general.mobspawn.pig.saddled", "general.mobspawn.variants"))
+					return !Messaging.lacksPermission(setter, "spawn saddled pigs");
 				// Begin section of accessing internal Minecraft code
 				// TODO: Rewrite using only Bukkit API
 				CraftPig cp = (CraftPig) swine;
@@ -65,14 +68,16 @@ public enum MobType {
 			return false;
 		}
 	},
-	PIG_ZOMBIE(
-			MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 7, "Zombie Pigman", "Zombie Pigmen", "PigZombie",
+	PIG_ZOMBIE(MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 7, "Zombie Pigman", "Zombie Pigmen", "PigZombie",
 			"ZombiePigman") {
 		@Override
 		public boolean setData(LivingEntity mob, Player setter, String data) {
 			if(! (mob instanceof PigZombie)) return false;
 			if(Toolbox.equalsOne(data, "calm", "passive")) return true;
 			if(!Toolbox.equalsOne(data, "angry", "mad", "aggressive", "hostile")) return false;
+			if(Toolbox.lacksPermission(setter, "general.mobspawn.pig-zombie.angry", "general.mobspawn.neutral.angry",
+					"general.mobspawn.variants"))
+				return !Messaging.lacksPermission(setter, "spawn angry zombie pigmen");
 			PigZombie zom = (PigZombie) mob;
 			// Begin section of accessing internal Minecraft code
 			// TODO: Rewrite using only Bukkit API
@@ -95,6 +100,9 @@ public enum MobType {
 			if(Toolbox.equalsOne(data, "sheared", "nude", "naked", "bald")) {
 				sheep.setSheared(true);
 			} else {
+				if(Toolbox.lacksPermission(setter, "general.mobspawn.sheep.coloured", "general.mobspawn.sheep.colored",
+						"general.mobspawn.variants"))
+					return !Messaging.lacksPermission(setter, "spawn coloured sheep");
 				ItemID wool = Items.validate("35:" + data);
 				if(wool == null || !wool.isValid()) return false;
 				DyeColor clr = DyeColor.getByData((byte) (int) wool.getData());
@@ -121,9 +129,9 @@ public enum MobType {
 			}
 		}
 	},
-	SPIDER(MobAlignment.ENEMY, CreatureType.SPIDER, 9, "Spider", "Spiders", "Spider"), SQUID(
-			MobAlignment.FRIENDLY, CreatureType.SQUID, 4, "Squid", "Squid", "Squid"), WOLF(
-			MobAlignment.NEUTRAL, CreatureType.WOLF, 14, "Wolf", "Wolves", "Wolf", "Dog") {
+	SPIDER(MobAlignment.ENEMY, CreatureType.SPIDER, 9, "Spider", "Spiders", "Spider"),
+	SQUID(MobAlignment.FRIENDLY, CreatureType.SQUID, 4, "Squid", "Squid", "Squid"),
+	WOLF(MobAlignment.NEUTRAL, CreatureType.WOLF, 14, "Wolf", "Wolves", "Wolf", "Dog") {
 		@Override
 		public boolean setData(LivingEntity mob, Player setter, String data) {
 			if(! (mob instanceof Wolf)) return false;
@@ -134,12 +142,19 @@ public enum MobType {
 			CraftWolf cw = (CraftWolf) dog;
 			EntityWolf ew = cw.getHandle();
 			if(Toolbox.equalsOne(data, "angry", "mad", "hostile", "aggressive")) {
+				if(Toolbox.lacksPermission(setter, "general.mobspawn.wolf.angry", "general.mobspawn.neutral.angry",
+						"general.mobspawn.variants"))
+					return !Messaging.lacksPermission(setter, "spawn angry wolves");
 				ew.setAngry(true);
 			} else if(Toolbox.equalsOne(data, "tame", "pet")) {
+				if(Toolbox.lacksPermission(setter, "general.mobspawn.wolf.tamed", "general.mobspawn.variants"))
+					return !Messaging.lacksPermission(setter, "spawn tamed wolves");
 				String owner = setter.getName();
 				ew.a(owner);
 				ew.d(true);
 			} else {
+				if(Toolbox.lacksPermission(setter, "general.mobspawn.wolf.tamed", "general.mobspawn.variants"))
+					return !Messaging.lacksPermission(setter, "spawn tamed wolves");
 				ew.a(data);
 				ew.d(true);
 			}
@@ -147,7 +162,7 @@ public enum MobType {
 			return true;
 		}
 	},
-	ZOMBIE(MobAlignment.ENEMY, CreatureType.ZOMBIE, 10, "Zombie", "Zombies", "Zombie"), ;
+	ZOMBIE(MobAlignment.ENEMY, CreatureType.ZOMBIE, 10, "Zombie", "Zombies", "Zombie");
 	private MobAlignment alignment;
 	private CreatureType ctype;
 	private String[] aliases;
@@ -181,13 +196,13 @@ public enum MobType {
 	public boolean hasPermission(Player byWhom) {
 		if(byWhom.isOp())
 			return true;
-		else if(General.plugin.permissions.hasPermission(byWhom, "general.mobspawn.all"))
+		else if(Toolbox.hasPermission(byWhom, "general.mobspawn.all"))
 			return true;
 		else if(alignment.hasPermission(byWhom))
 			return true;
 		else {
 			String x = this.toString().toLowerCase().replace("_", "-");
-			return General.plugin.permissions.hasPermission(byWhom, "general.mobspawn." + x);
+			return Toolbox.hasPermission(byWhom, "general.mobspawn." + x);
 		}
 	}
 	

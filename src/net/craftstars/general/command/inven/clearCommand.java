@@ -56,7 +56,8 @@ public class clearCommand extends CommandBase {
 	
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(plugin, sender, "clear your inventory", "general.clear")) return true;
+		if(Toolbox.lacksPermission(sender, "general.clear"))
+			return Messaging.lacksPermission(sender, "clear your inventory");
 		if(args.length == 0) {
 			doClean(sender, sender, CleanType.FULL);
 		} else if(args.length == 1) {
@@ -71,15 +72,15 @@ public class clearCommand extends CommandBase {
 			} else if(args[1].equalsIgnoreCase("all")) {
 				doClean(sender, sender, CleanType.FULL);
 			} else {
-				if(Toolbox.lacksPermission(plugin, sender, "clear someone else's inventory", "general.clear.other"))
-					return true;
+				if(Toolbox.lacksPermission(sender, "general.clear.other"))
+					return Messaging.lacksPermission(sender, "clear someone else's inventory");
 				Player who = Toolbox.matchPlayer(args[0]);
 				if(who == null) return Messaging.invalidPlayer(sender, args[0]);
 				doClean(who, sender, CleanType.FULL);
 			}
 		} else if(args.length == 2) {
-			if(Toolbox.lacksPermission(plugin, sender, "clear someone else's inventory", "general.clear.other"))
-				return true;
+			if(Toolbox.lacksPermission(sender, "general.clear.other"))
+				return Messaging.lacksPermission(sender, "clear someone else's inventory");
 			Player who = Toolbox.matchPlayer(args[0]);
 			if(who == null) return Messaging.invalidPlayer(sender, args[0]);
 			if(args[1].equalsIgnoreCase("pack")) {

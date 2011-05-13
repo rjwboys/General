@@ -69,9 +69,11 @@ public class Destination {
 		if(player.isOp()) return true;
 		boolean perm = true;
 		for(DestinationType type : t) {
-			perm = perm && type.hasPermission(player, action, base);
+			boolean can = type.hasPermission(player, action, base);
+			perm = perm && can;
 			if(type.isSpecial() && !player.equals(keystone)) {
-				perm = perm && General.plugin.permissions.hasPermission(player, type.getPermission(base) + ".other");
+				boolean canOther = type.hasOtherPermission(player, action, base);
+				perm = perm && canOther;
 			}
 		}
 		return perm;

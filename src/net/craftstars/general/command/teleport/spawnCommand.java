@@ -23,22 +23,22 @@ public class spawnCommand extends CommandBase {
 
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(plugin, sender, "see the spawn location", "general.spawn")) return true;
+		if(Toolbox.lacksPermission(sender, "general.spawn"))
+			return Messaging.lacksPermission(sender, "see the spawn location");
 		World dest;
 		switch(args.length) {
 		case 0: // /spawn
 			dest = sender.getWorld();
 		break;
 		case 1: // /spawn <world|player>
-			dest = plugin.getServer().getWorld(args[0]);
+			dest = Toolbox.matchWorld(args[0]);
 			if(dest == null) {
-				Player player = plugin.getServer().getPlayer(args[0]);
-				if(player == null) return true;
-				if(Toolbox.lacksPermission(plugin, sender, "see a player's home location", "general.spawn.home"))
-					return true;
-				if(!player.equals(sender)
-						&& Toolbox.lacksPermission(plugin, sender, "see a player's home location",
-								"general.spawn.home.other")) return true;
+				Player player = Toolbox.matchPlayer(args[0]);
+				if(player == null) return Messaging.invalidPlayer(sender, args[0]);
+				if(!player.equals(sender) && Toolbox.lacksPermission(sender, "general.spawn.home.other"))
+					return Messaging.lacksPermission(sender, "see a player's home location");
+				else if(Toolbox.lacksPermission(sender, "general.spawn.home"))
+					return Messaging.lacksPermission(sender, "see your home location");
 				showHome(player, sender);
 				return true;
 			}
@@ -53,19 +53,13 @@ public class spawnCommand extends CommandBase {
 	@Override
 	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
-		if(Toolbox.lacksPermission(plugin, sender, "see the spawn location", "general.spawn")) return true;
 		World dest;
 		switch(args.length) {
-		case 2: // /spawn show <world>
-			dest = plugin.getServer().getWorld(args[1]);
+		case 1: // /spawn <world>
+			dest = plugin.getServer().getWorld(args[0]);
 			if(dest == null) {
-				Player player = plugin.getServer().getPlayer(args[0]);
+				Player player = Toolbox.matchPlayer(args[0]);
 				if(player == null) return true;
-				if(Toolbox.lacksPermission(plugin, sender, "see a player's home location", "general.spawn.home"))
-					return true;
-				if(!player.equals(sender)
-						&& Toolbox.lacksPermission(plugin, sender, "see a player's home location",
-								"general.spawn.home.other")) return true;
 				showHome(player, sender);
 			} else showSpawn(dest, sender);
 		break;
@@ -79,9 +73,8 @@ public class spawnCommand extends CommandBase {
 		Destination dest = Destination.homeOf(player);
 		Location pos = dest.getLoc();
 		Formatter fmt = new Formatter();
-		String message =
-				fmt.format("&eCurrent home location of player '&f%s&e' is &f(%d,%d,%d)", player.getName(),
-						pos.getBlockX(), pos.getBlockY(), pos.getBlockZ()).toString();
+		String message = fmt.format("&eCurrent home location of player '&f%s&e' is &f(%d,%d,%d)", player.getName(),
+				pos.getBlockX(), pos.getBlockY(), pos.getBlockZ()).toString();
 		Messaging.send(toWhom, message);
 		
 	}
@@ -89,9 +82,8 @@ public class spawnCommand extends CommandBase {
 	private void showSpawn(World which, CommandSender toWhom) {
 		Location pos = which.getSpawnLocation();
 		Formatter fmt = new Formatter();
-		String message =
-				fmt.format("&eCurrent spawn location in world '&f%s&e' is &f(%d,%d,%d)", which.getName(),
-						pos.getBlockX(), pos.getBlockY(), pos.getBlockZ()).toString();
+		String message = fmt.format("&eCurrent spawn location in world '&f%s&e' is &f(%d,%d,%d)", which.getName(),
+				pos.getBlockX(), pos.getBlockY(), pos.getBlockZ()).toString();
 		Messaging.send(toWhom, message);
 	}
 }

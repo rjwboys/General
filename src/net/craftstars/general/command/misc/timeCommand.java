@@ -64,7 +64,8 @@ public class timeCommand extends CommandBase {
 	}
 	
 	private boolean setTime(CommandSender sender, String time) {
-		if(Toolbox.lacksPermission(General.plugin, sender, "set the time", "general.time.set")) return true;
+		if(Toolbox.lacksPermission(sender, "general.time.set"))
+			return Messaging.lacksPermission(sender, "set the time");
 		if(time.equalsIgnoreCase("day")) { // 6am
 			this.world.setTime(this.getStartTime());
 			Messaging.send(sender, "Time set to day: " + Time.formatTime(0, Time.currentFormat) + "!");
@@ -130,10 +131,13 @@ public class timeCommand extends CommandBase {
 	}
 	
 	private void showTime(CommandSender sender) {
-		if(Toolbox.lacksPermission(General.plugin, sender, "see the time", "general.time", "general.basic")) return;
-		int time = (int) this.world.getTime();
-		Messaging.send(sender,
-				"Current Time: " + this.getFriendlyTime(time) + " " + Time.formatTime(time, Time.currentFormat));
+		if(Toolbox.lacksPermission(sender, "general.time", "general.basic"))
+			Messaging.lacksPermission(sender, "see the time");
+		else {
+			int time = (int) this.world.getTime();
+			Messaging.send(sender, "Current Time: " + this.getFriendlyTime(time) + " " +
+					Time.formatTime(time, Time.currentFormat));
+		}
 	}
 	
 	private long getTime() {

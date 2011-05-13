@@ -35,6 +35,7 @@ public class itemsCommand extends CommandBase {
 		for(String item : items) {
 			ItemID what = Items.validate(item);
 			if(what == null || !what.isValid()) continue;
+			if(!what.canGive(sender)) continue;
 			text.append(Items.name(what));
 			text.append("&2, &f");
 			Items.giveItem(toWhom, what, 1);
@@ -50,7 +51,8 @@ public class itemsCommand extends CommandBase {
 	
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(plugin, sender, "give many items at once", "general.give.mass")) return true;
+		if(Toolbox.lacksPermission(sender, "general.give.mass"))
+			return Messaging.lacksPermission(sender, "give many items at once");
 		doGive(sender, sender, args);
 		return true;
 	}

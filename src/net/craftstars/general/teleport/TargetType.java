@@ -1,8 +1,8 @@
 
 package net.craftstars.general.teleport;
 
-import net.craftstars.general.General;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.entity.Player;
 
@@ -16,8 +16,8 @@ public enum TargetType {
 	
 	public boolean hasPermission(Player who) {
 		if(who.isOp()) return true;
-		if(General.plugin.permissions.hasPermission(who, getPermission())) return true;
-		Messaging.send(who, "&cYou don't have permission to teleport " + msg + ".");
+		if(Toolbox.hasPermission(who, getPermission())) return true;
+		Messaging.lacksPermission(who, "teleport " + msg);
 		return false;
 	}
 	

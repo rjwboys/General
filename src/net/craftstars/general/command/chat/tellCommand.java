@@ -17,8 +17,8 @@ public class tellCommand extends CommandBase {
 
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(plugin, sender, "send private messages to players", "general.tell",
-				"general.basic")) return true;
+		if(Toolbox.lacksPermission(sender, "general.tell", "general.basic"))
+			return Messaging.lacksPermission(sender, "send private messages to players");
 		if(args.length < 2) return SHOW_USAGE;
 		Player who = Toolbox.matchPlayer(args[0]);
 		if(who != null) {

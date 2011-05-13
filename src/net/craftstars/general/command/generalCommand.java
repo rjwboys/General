@@ -71,7 +71,8 @@ public class generalCommand extends CommandBase {
 		}
 		if(args.length < 1) return SHOW_USAGE;
 		if(args[0].equalsIgnoreCase("reload")) {
-			if(Toolbox.lacksPermission(plugin, sender, "administrate the plugin", "general.admin")) return true;
+			if(Toolbox.lacksPermission(sender, "general.admin"))
+				return Messaging.lacksPermission(sender, "administrate the General plugin");
 			doReload(sender);
 			return true;
 		} else if(args[0].equalsIgnoreCase("help")) {
@@ -86,7 +87,8 @@ public class generalCommand extends CommandBase {
 			MessageOfTheDay.showMotD(sender);
 			return true;
 		} else if(args[0].equalsIgnoreCase("item")) {
-			if(Toolbox.lacksPermission(plugin, sender, "administrate the plugin", "general.admin")) return true;
+			if(Toolbox.lacksPermission(sender, "general.admin"))
+				return Messaging.lacksPermission(sender, "administrate the General plugin");
 			if(args.length < 3) {
 				Messaging.send(sender, "&cNot enough arguments.");
 				return SHOW_USAGE;

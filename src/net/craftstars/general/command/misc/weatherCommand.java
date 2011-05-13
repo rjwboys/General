@@ -48,7 +48,8 @@ public class weatherCommand extends CommandBase {
 	
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(plugin, sender, "control the weather", "general.weather")) return true;
+		if(Toolbox.lacksPermission(sender, "general.weather"))
+			return Messaging.lacksPermission(sender, "control the weather");
 		switch(args.length) {
 		case 0:
 			if(sender.getWorld().hasStorm())
@@ -82,8 +83,8 @@ public class weatherCommand extends CommandBase {
 		} catch(NumberFormatException e) {
 			if(Toolbox.equalsOne(key, "lightning", "strike", "zap"))
 				doLightning(sender, world, loc);
-			// else if(Toolbox.equalsOne(key, "thunder", "boom"))
-			// doThunder(sender, world);
+			else if(Toolbox.equalsOne(key, "thunder", "boom"))
+				doThunder(sender, world);
 			else if(Toolbox.equalsOne(key, "on", "start"))
 				doWeather(sender, world, -1);
 			else if(Toolbox.equalsOne(key, "off", "stop"))
@@ -92,11 +93,18 @@ public class weatherCommand extends CommandBase {
 		}
 	}
 	
-	// private void doThunder(Player sender, World world) {
-	// world.setThundering(true);
-	// Messaging.send(sender, "Thunder started!");
-	// world.setThunderDuration(100);
-	// }
+	private void doThunder(CommandSender sender, World world) {
+		if(Toolbox.lacksPermission(sender, "general.weather.thunder"))
+			Messaging.lacksPermission(sender, "toggle thunder");
+		else if(world.isThundering()) {
+			world.setThundering(false);
+			Messaging.send(sender, "Thunder stopped!");
+		} else {
+			world.setThundering(true);
+			Messaging.send(sender, "Thunder started!");
+			world.setThunderDuration(100);
+		}
+	}
 	
 	private void doWeather(CommandSender sender, World world, long duration) {
 		boolean state = duration != 0;
@@ -113,19 +121,22 @@ public class weatherCommand extends CommandBase {
 	}
 	
 	private void doLightning(CommandSender sender, World world, Location centre) {
-		if(Toolbox.lacksPermission(General.plugin, sender, "summon lightning", "general.weather.zap")) return;
-		int x, y, z;
-		x = centre.getBlockX();
-		y = 127;
-		z = centre.getBlockZ();
-		Block block = world.getBlockAt(x, y, z);
-		while(block.getType() == Material.AIR)
-			block = block.getRelative(BlockFace.DOWN);
-		int range = General.plugin.config.getInt("lightning-range", 20);
-		x += lightning.nextInt(range * 2) - range;
-		y = block.getLocation().getBlockY();
-		z += lightning.nextInt(range * 2) - range;
-		world.strikeLightning(new Location(world, x, y, z));
-		Messaging.send(sender, "&yellow;Lightning strike!");
+		if(Toolbox.lacksPermission(sender, "general.weather.zap"))
+			Messaging.lacksPermission(sender, "summon lightning");
+		else {
+			int x, y, z;
+			x = centre.getBlockX();
+			y = 127;
+			z = centre.getBlockZ();
+			Block block = world.getBlockAt(x, y, z);
+			while(block.getType() == Material.AIR)
+				block = block.getRelative(BlockFace.DOWN);
+			int range = General.plugin.config.getInt("lightning-range", 20);
+			x += lightning.nextInt(range * 2) - range;
+			y = block.getLocation().getBlockY();
+			z += lightning.nextInt(range * 2) - range;
+			world.strikeLightning(new Location(world, x, y, z));
+			Messaging.send(sender, "&yellow;Lightning strike!");
+		}
 	}
 }
