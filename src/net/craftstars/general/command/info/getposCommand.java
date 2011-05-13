@@ -3,6 +3,7 @@ package net.craftstars.general.command.info;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
@@ -15,8 +16,12 @@ public class getposCommand extends CommandBase {
 		MAIN, COMPASS, WHERE
 	};
 	
+	protected getposCommand(General instance) {
+		super(instance);
+	}
+	
 	@Override
-	public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		if(Toolbox.lacksPermission(plugin, sender, "check your location", "general.getpos", "general.basic"))
 			return true;
 		if(args.length == 0) {
@@ -101,7 +106,7 @@ public class getposCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(General plugin, CommandSender sender, Command command, String commandLabel,
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		if(args.length < 1 || args.length > 2) return SHOW_USAGE;
 		if(args.length == 1) {

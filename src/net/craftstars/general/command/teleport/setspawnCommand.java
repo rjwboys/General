@@ -15,12 +15,17 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class setspawnCommand extends CommandBase {
+	protected setspawnCommand(General instance) {
+		super(instance);
+	}
+
 	@Override
-	public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		Destination dest;
 		switch(args.length) {
 		case 0: // /setspawn
@@ -59,7 +64,7 @@ public class setspawnCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(General plugin, CommandSender sender, Command command, String commandLabel,
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		Destination dest;
 		switch(args.length) {

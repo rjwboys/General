@@ -11,23 +11,32 @@ import org.bukkit.entity.Player;
 
 public abstract class CommandBase {
 	public static final boolean SHOW_USAGE = false; // Change to true to not spew out usage notes on incorrect syntax
+	protected final General plugin;
 	
-	public boolean runCommand(General plugin, CommandSender sender, Command command, String commandLabel,
+	protected CommandBase(General instance) {
+		plugin = instance;
+	}
+	
+	public boolean runCommand(CommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		if(sender instanceof Player) {
-			return this.fromPlayer(plugin, (Player) sender, command, commandLabel, args);
+			return this.fromPlayer((Player) sender, command, commandLabel, args);
 		} else if(sender instanceof ConsoleCommandSender) {
-			return this.fromConsole(plugin, sender, command, commandLabel, args);
+			return this.fromConsole((ConsoleCommandSender) sender, command, commandLabel, args);
 		} else {
-			throw new CommandException("Unknown sender type, aborting command.");
+			return this.fromUnknown(sender, command, commandLabel, args);
 		}
 	}
 	
-	public abstract boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel,
+	public abstract boolean fromPlayer(Player sender, Command command, String commandLabel,
 			String[] args);
 	
-	public abstract boolean fromConsole(General plugin, CommandSender sender, Command command, String commandLabel,
+	public abstract boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args);
+	
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		throw new CommandException("Unknown sender type, aborting command.");
+	}
 	
 	protected String[] prependArg(String[] args, String first) {
 		String[] newArgs = new String[args.length + 1];

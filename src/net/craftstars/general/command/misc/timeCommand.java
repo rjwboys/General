@@ -10,13 +10,18 @@ import net.craftstars.general.util.Toolbox;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class timeCommand extends CommandBase {
 	private World world;
 	
+	protected timeCommand(General instance) {
+		super(instance);
+	}
+	
 	@Override
-	public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		switch(args.length) {
 		case 0: // /time
 			// No arguments, assuming get current time for current world.
@@ -156,7 +161,7 @@ public class timeCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(General plugin, CommandSender sender, Command command, String commandLabel,
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		if(args.length < 1 || args.length > 2)
 			return SHOW_USAGE;

@@ -8,6 +8,7 @@ import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -24,9 +25,13 @@ public class clearCommand extends CommandBase {
 			return name;
 		}
 	}
+
+	protected clearCommand(General instance) {
+		super(instance);
+	}
 	
 	@Override
-	public boolean fromConsole(General plugin, CommandSender sender, Command command, String commandLabel,
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
@@ -50,7 +55,7 @@ public class clearCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		if(Toolbox.lacksPermission(plugin, sender, "clear your inventory", "general.clear")) return true;
 		if(args.length == 0) {
 			doClean(sender, sender, CleanType.FULL);

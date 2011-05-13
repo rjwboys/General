@@ -2,7 +2,7 @@
 package net.craftstars.general.command.chat;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
@@ -11,15 +11,19 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class awayCommand extends CommandBase {
+	awayCommand(General instance) {
+		super(instance);
+	}
+
 	@Override
-	public boolean fromConsole(General plugin, CommandSender sender, Command command, String commandLabel,
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 	
 	@Override
-	public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		if(Toolbox.lacksPermission(plugin, sender, "set your away status", "general.away", "general.basic"))
 			return true;
 		if(args.length == 0) {

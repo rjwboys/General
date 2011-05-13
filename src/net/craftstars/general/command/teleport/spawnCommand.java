@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
@@ -16,8 +17,12 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class spawnCommand extends CommandBase {
+	protected spawnCommand(General instance) {
+		super(instance);
+	}
+
 	@Override
-	public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		if(Toolbox.lacksPermission(plugin, sender, "see the spawn location", "general.spawn")) return true;
 		World dest;
 		switch(args.length) {
@@ -46,7 +51,7 @@ public class spawnCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(General plugin, CommandSender sender, Command command, String commandLabel,
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		if(Toolbox.lacksPermission(plugin, sender, "see the spawn location", "general.spawn")) return true;
 		World dest;

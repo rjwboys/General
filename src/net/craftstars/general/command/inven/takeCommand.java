@@ -11,7 +11,7 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -21,8 +21,12 @@ public class takeCommand extends CommandBase {
 	private ItemID item;
 	private int amount;
 	
+	protected takeCommand(General instance) {
+		super(instance);
+	}
+	
 	@Override
-	public boolean fromConsole(General plugin, CommandSender sender, Command command, String commandLabel,
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
 		
@@ -70,7 +74,7 @@ public class takeCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		if(Toolbox.lacksPermission(plugin, sender, "remove items from your inventory", "general.take")) return true;
 		if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
 		

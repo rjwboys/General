@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
@@ -14,29 +15,32 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class playerlistCommand extends CommandBase {
-	
+	protected playerlistCommand(General instance) {
+		super(instance);
+	}
+
 	@Override
-	public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		if(Toolbox.lacksPermission(plugin, sender, "view the player list", "general.playerlist", "general.basic"))
 			return true;
 		List<String> players = Toolbox.getPlayerList(plugin);
 		Messaging.send(sender, "&eOnline Players (" + players.size() + "):");
-		doListing(plugin, sender, players);
+		doListing(sender, players);
 		return true;
 	}
 	
-	private void doListing(General plugin, CommandSender fromWhom, List<String> players) {
+	private void doListing(CommandSender fromWhom, List<String> players) {
 		List<String> playerList = MessageOfTheDay.formatPlayerList(players);
 		for(String line : playerList)
 			Messaging.send(fromWhom, line);
 	}
 	
 	@Override
-	public boolean fromConsole(General plugin, CommandSender sender, Command command, String commandLabel,
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		List<String> players = Toolbox.getPlayerList(plugin);
 		Messaging.send(sender, "&eOnline Players (" + players.size() + "):");
-		doListing(plugin, sender, players);
+		doListing(sender, players);
 		return true;
 	}
 }

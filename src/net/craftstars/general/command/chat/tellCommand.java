@@ -2,7 +2,7 @@
 package net.craftstars.general.command.chat;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
@@ -11,9 +11,12 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class tellCommand extends CommandBase {
-	
+	protected tellCommand(General instance) {
+		super(instance);
+	}
+
 	@Override
-	public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		if(Toolbox.lacksPermission(plugin, sender, "send private messages to players", "general.tell",
 				"general.basic")) return true;
 		if(args.length < 2) return SHOW_USAGE;
@@ -34,7 +37,7 @@ public class tellCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(General plugin, CommandSender sender, Command command, String commandLabel,
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		if(args.length < 2) return SHOW_USAGE;
 		Player who = Toolbox.getPlayer(args[0], sender);

@@ -4,7 +4,7 @@ package net.craftstars.general.command.inven;
 import java.util.List;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -20,8 +20,12 @@ public class giveCommand extends CommandBase {
 	private ItemID item;
 	private int amount;
 	
+	protected giveCommand(General instance) {
+		super(instance);
+	}
+	
 	@Override
-	public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		if(Toolbox.lacksPermission(plugin, sender, "give items", "general.give")) return true;
 		if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
 		
@@ -142,7 +146,7 @@ public class giveCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(General plugin, CommandSender sender, Command command, String commandLabel,
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
 		

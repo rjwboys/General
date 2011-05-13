@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
@@ -17,9 +18,12 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class generalCommand extends CommandBase {
-	
+	generalCommand(General instance) {
+		super(instance);
+	}
+
 	@Override
-	public boolean fromConsole(General plugin, CommandSender sender, Command command, String commandLabel,
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		if(commandLabel.equalsIgnoreCase("help")) {
 			args = prependArg(args, "help");
@@ -57,7 +61,7 @@ public class generalCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		if(commandLabel.equalsIgnoreCase("help")) {
 			args = prependArg(args, "help");
 			commandLabel = "general";

@@ -4,7 +4,7 @@ package net.craftstars.general.command.inven;
 import java.util.HashMap;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
@@ -18,16 +18,19 @@ import net.craftstars.general.items.Kits.Kit;
 import net.craftstars.general.items.Kits.GotKit;
 
 public class kitCommand extends CommandBase {
-	
+	protected kitCommand(General instance) {
+		super(instance);
+	}
+
 	@Override
-	public boolean fromConsole(General plugin, CommandSender sender, Command command, String commandLabel,
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		// TODO Auto-generated method stub
 		return true;
 	}
 	
 	@Override
-	public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		if(Toolbox.lacksPermission(plugin, sender, "get kits", "general.kit")) return true;
 		if(args.length == 0) {
 			String msg = "&cKits available: ";

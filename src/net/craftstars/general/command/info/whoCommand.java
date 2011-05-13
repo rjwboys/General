@@ -14,8 +14,7 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
-public class whoCommand extends CommandBase {
-	private String name;
+public class whoCommand extends CommandBase {private String name;
 	private String displayName;
 	private String bar;
 	private String location;
@@ -23,8 +22,12 @@ public class whoCommand extends CommandBase {
 	private String ip;
 	private String status;
 	
+	protected whoCommand(General instance) {
+		super(instance);
+	}
+	
 	@Override
-	public boolean fromPlayer(General plugin, Player toWhom, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(Player toWhom, Command command, String commandLabel, String[] args) {
 		if(args.length < 1 || commandLabel.equalsIgnoreCase("whoami"))
 			getInfo(toWhom);
 		else if(args.length == 1) {
@@ -39,7 +42,7 @@ public class whoCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(General plugin, CommandSender toWhom, Command command, String commandLabel,
+	public boolean fromConsole(ConsoleCommandSender toWhom, Command command, String commandLabel,
 			String[] args) {
 		if(args.length != 1) return SHOW_USAGE;
 		Player who = Toolbox.matchPlayer(args[0]);

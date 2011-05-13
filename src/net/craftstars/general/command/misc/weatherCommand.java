@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
@@ -19,10 +20,14 @@ import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
 
 public class weatherCommand extends CommandBase {
-	Random lightning = new Random();
+	static Random lightning = new Random();
+	
+	protected weatherCommand(General instance) {
+		super(instance);
+	}
 	
 	@Override
-	public boolean fromConsole(General plugin, CommandSender sender, Command command, String commandLabel,
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		switch(args.length) {
 		case 2:
@@ -42,7 +47,7 @@ public class weatherCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromPlayer(General plugin, Player sender, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		if(Toolbox.lacksPermission(plugin, sender, "control the weather", "general.weather")) return true;
 		switch(args.length) {
 		case 0:

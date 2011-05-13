@@ -237,8 +237,8 @@ public class General extends JavaPlugin {
 								.getClassLoader()
 								.loadClass("net.craftstars.general.command." + command.getName() + "Command")
 								.asSubclass(CommandBase.class);
-				CommandBase commandInstance = (CommandBase) clazz.newInstance();
-				result = commandInstance.runCommand(this, sender, command, commandLabel, args);
+				CommandBase commandInstance = (CommandBase) clazz.getConstructor(General.class).newInstance(this);
+				result = commandInstance.runCommand(sender, command, commandLabel, args);
 			}
 			if(config.getBoolean("log-commands", false)) {
 				String name = "CONSOLE";
