@@ -15,7 +15,7 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class playerlistCommand extends CommandBase {
-	protected playerlistCommand(General instance) {
+	public playerlistCommand(General instance) {
 		super(instance);
 	}
 

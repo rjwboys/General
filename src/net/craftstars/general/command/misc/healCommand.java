@@ -11,7 +11,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class healCommand extends CommandBase {
-	protected healCommand(General instance) {
+	public healCommand(General instance) {
 		super(instance);
 	}
 

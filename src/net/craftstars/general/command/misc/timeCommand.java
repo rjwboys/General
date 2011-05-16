@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 public class timeCommand extends CommandBase {
 	private World world;
 	
-	protected timeCommand(General instance) {
+	public timeCommand(General instance) {
 		super(instance);
 	}
 	

@@ -13,7 +13,7 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class summonCommand extends CommandBase {
-	protected summonCommand(General instance) {
+	public summonCommand(General instance) {
 		super(instance);
 	}
 

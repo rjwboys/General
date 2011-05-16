@@ -22,7 +22,7 @@ import net.craftstars.general.util.Toolbox;
 public class weatherCommand extends CommandBase {
 	static Random lightning = new Random();
 	
-	protected weatherCommand(General instance) {
+	public weatherCommand(General instance) {
 		super(instance);
 	}
 	

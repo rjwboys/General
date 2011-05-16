@@ -18,7 +18,7 @@ import net.craftstars.general.util.Toolbox;
 public class whoCommand extends CommandBase {private String name;
 	private String displayName, bar, location, home, world, ip, status;
 	
-	protected whoCommand(General instance) {
+	public whoCommand(General instance) {
 		super(instance);
 	}
 	

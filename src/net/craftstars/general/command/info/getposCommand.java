@@ -16,7 +16,7 @@ public class getposCommand extends CommandBase {
 		MAIN, COMPASS, WHERE
 	};
 	
-	protected getposCommand(General instance) {
+	public getposCommand(General instance) {
 		super(instance);
 	}
 	

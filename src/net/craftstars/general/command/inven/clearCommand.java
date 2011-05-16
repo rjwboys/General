@@ -26,7 +26,7 @@ public class clearCommand extends CommandBase {
 		}
 	}
 
-	protected clearCommand(General instance) {
+	public clearCommand(General instance) {
 		super(instance);
 	}
 	

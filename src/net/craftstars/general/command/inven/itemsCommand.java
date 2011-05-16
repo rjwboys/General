@@ -16,7 +16,7 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class itemsCommand extends CommandBase {
-	protected itemsCommand(General instance) {
+	public itemsCommand(General instance) {
 		super(instance);
 	}
 

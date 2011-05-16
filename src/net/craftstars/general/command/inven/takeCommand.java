@@ -21,7 +21,7 @@ public class takeCommand extends CommandBase {
 	private ItemID item;
 	private int amount;
 	
-	protected takeCommand(General instance) {
+	public takeCommand(General instance) {
 		super(instance);
 	}
 	

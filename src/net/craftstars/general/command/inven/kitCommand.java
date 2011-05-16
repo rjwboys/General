@@ -18,7 +18,7 @@ import net.craftstars.general.items.Kits.Kit;
 import net.craftstars.general.items.Kits.GotKit;
 
 public class kitCommand extends CommandBase {
-	protected kitCommand(General instance) {
+	public kitCommand(General instance) {
 		super(instance);
 	}
 

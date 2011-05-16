@@ -11,7 +11,7 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class tellCommand extends CommandBase {
-	protected tellCommand(General instance) {
+	public tellCommand(General instance) {
 		super(instance);
 	}
 

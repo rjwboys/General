@@ -20,7 +20,7 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class setspawnCommand extends CommandBase {
-	protected setspawnCommand(General instance) {
+	public setspawnCommand(General instance) {
 		super(instance);
 	}
 

@@ -11,7 +11,7 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class awayCommand extends CommandBase {
-	awayCommand(General instance) {
+	public awayCommand(General instance) {
 		super(instance);
 	}
 

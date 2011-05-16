@@ -13,7 +13,7 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class goCommand extends CommandBase {
-	protected goCommand(General instance) {
+	public goCommand(General instance) {
 		super(instance);
 	}
 

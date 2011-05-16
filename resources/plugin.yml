@@ -4,7 +4,7 @@ authors:
   - Celtic Minstrel
   - Plutonium239
   - Nijikokun
-version: 3.4b1
+version: 3.4b2
 commands:
   info.playerlist:
     description: Displays all players that are online.

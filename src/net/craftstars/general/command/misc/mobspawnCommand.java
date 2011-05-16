@@ -14,7 +14,7 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class mobspawnCommand extends CommandBase {
-	protected mobspawnCommand(General instance) {
+	public mobspawnCommand(General instance) {
 		super(instance);
 	}
 
