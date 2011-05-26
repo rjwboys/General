@@ -13,6 +13,7 @@ import net.minecraft.server.EntityPig;
 import net.minecraft.server.EntityPigZombie;
 import net.minecraft.server.EntityWolf;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.entity.CraftPig;
@@ -57,12 +58,7 @@ public enum MobType {
 			if(Toolbox.equalsOne(data, "tame", "saddle", "saddled")) {
 				if(Toolbox.lacksPermission(setter, "general.mobspawn.pig.saddled", "general.mobspawn.variants"))
 					return !Messaging.lacksPermission(setter, "spawn saddled pigs");
-				// Begin section of accessing internal Minecraft code
-				// TODO: Rewrite using only Bukkit API
-				CraftPig cp = (CraftPig) swine;
-				EntityPig ep = (EntityPig) cp.getHandle();
-				ep.a(true);
-				// End section of accessing internal Minecraft code
+				swine.setSaddle(true);
 				return true;
 			} else if(Toolbox.equalsOne(data, "wild", "unsaddled")) return true;
 			return false;
@@ -137,26 +133,22 @@ public enum MobType {
 			if(! (mob instanceof Wolf)) return false;
 			if(Toolbox.equalsOne(data, "wild", "calm", "passive")) return true;
 			Wolf dog = (Wolf) mob;
-			// Begin section of accessing internal Minecraft code
-			// TODO: Rewrite using only Bukkit API
-			CraftWolf cw = (CraftWolf) dog;
-			EntityWolf ew = cw.getHandle();
 			if(Toolbox.equalsOne(data, "angry", "mad", "hostile", "aggressive")) {
 				if(Toolbox.lacksPermission(setter, "general.mobspawn.wolf.angry", "general.mobspawn.neutral.angry",
 						"general.mobspawn.variants"))
 					return !Messaging.lacksPermission(setter, "spawn angry wolves");
-				ew.setAngry(true);
+				dog.setAngry(true);
 			} else if(Toolbox.equalsOne(data, "tame", "pet")) {
 				if(Toolbox.lacksPermission(setter, "general.mobspawn.wolf.tamed", "general.mobspawn.variants"))
 					return !Messaging.lacksPermission(setter, "spawn tamed wolves");
 				String owner = setter.getName();
-				ew.a(owner);
-				ew.d(true);
+				dog.setTamed(true);
+				dog.setOwner(Bukkit.getServer().getPlayer(owner));
 			} else {
 				if(Toolbox.lacksPermission(setter, "general.mobspawn.wolf.tamed", "general.mobspawn.variants"))
 					return !Messaging.lacksPermission(setter, "spawn tamed wolves");
-				ew.a(data);
-				ew.d(true);
+				dog.setTamed(true);
+				dog.setOwner(Bukkit.getServer().getPlayer(data));
 			}
 			// End section of accessing internal Minecraft code
 			return true;
