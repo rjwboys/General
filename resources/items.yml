@@ -36,6 +36,11 @@ names:
   item27: Powered Rail
   item28: Detector Rail
   item30: Spiderweb
+  item31:
+   - Dead Shrub
+   - Tall Grass
+   - Shrub
+  item32: Dead Shrub
   item35:
    - White Wool
    - Orange Wool
@@ -138,6 +143,7 @@ names:
   item93: Unlit Redstone Repeater Block
   item94: Redstone Repeater Block
   item95: Locked Chest
+  item96: Trapdoor
   item256: Iron Shovel
   item257: Iron Pickaxe
   item258: Iron Axe
@@ -258,6 +264,7 @@ names:
   item355: Bed
   item356: Redstone Repeater
   item357: Cookie
+  item385: Map
   item2256: Gold Music Disc
   item2257: Green Music Disc
 
@@ -370,6 +377,9 @@ aliases: {
   MidiBlock: 24,
   PowerRail: 27,
   Spiderweb: 30,
+  TallGrass: 31/1,
+  Shrub: 31/2,
+  DeadShrub: 32,
   Cloth: 35, Fabric: 35,
   Dandelion: 37, YellowDandelion: 37,
   Rose: 38, RedFlower: 38,
