@@ -132,16 +132,20 @@ public class Items {
 	
 	private static void loadHooks() {
 		hooks = new HashMap<String, ItemID>();
-		for(String key : config.getKeys("hooks")) {
-			for(String val : config.getNode("hooks").getKeys(key)) {
-				String x = config.getNode("hooks").getNode(key).getString(val);
-				ItemID thisItem = Items.validate(x);
-				if(thisItem == null) {
-					General.logger.warn("Invalid hook: " + x);
-				} else {
-					hooks.put(key + ":" + val, thisItem);
+		try {
+			for(String key : config.getKeys("hooks")) {
+				for(String val : config.getNode("hooks").getKeys(key)) {
+					String x = config.getNode("hooks").getNode(key).getString(val);
+					ItemID thisItem = Items.validate(x);
+					if(thisItem == null) {
+						General.logger.warn("Invalid hook: " + x);
+					} else {
+						hooks.put(key + ":" + val, thisItem);
+					}
 				}
 			}
+		} catch(NullPointerException x) {
+			General.logger.warn("Hooks are missing.");
 		}
 	}
 	
