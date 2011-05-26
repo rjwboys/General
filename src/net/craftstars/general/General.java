@@ -106,7 +106,12 @@ public class General extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		logger.setPluginVersion(this.getDescription().getVersion());
-		
+		loadAllConfigs();
+		logger.info("[Codename: " + General.codename + "] Plugin successfully loaded!");
+		HelpHandler.setup();
+	}
+
+	public void loadAllConfigs() {
 		this.config = this.getConfiguration();
 		this.loadConfiguration();
 		
@@ -121,10 +126,6 @@ public class General extends JavaPlugin {
 				pl, Priority.Monitor, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, pl, Priority.Monitor, this);
 		tagFormat = config.getString("tag-fmt", "name:");
-		
-		logger.info("[Codename: " + General.codename + "] Plugin successfully loaded!");
-		
-		HelpHandler.setup();
 	}
 	
 	private void setupEconomy() {

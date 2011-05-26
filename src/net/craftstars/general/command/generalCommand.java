@@ -94,14 +94,23 @@ public class generalCommand extends CommandBase {
 				return SHOW_USAGE;
 			}
 			return itemEdit(sender, Arrays.copyOfRange(args, 2, args.length));
+		} else if(args[0].equalsIgnoreCase("save")) {
+			if(Toolbox.lacksPermission(sender, "general.admin"))
+				return Messaging.lacksPermission(sender, "administrate the General plugin");
+			doSave(sender);
+			return true;
 		}
 		return SHOW_USAGE;
 	}
 	
 	private void doReload(CommandSender sender) {
-		General.plugin.getPluginLoader().disablePlugin(General.plugin);
-		General.plugin.getPluginLoader().enablePlugin(General.plugin);
+		General.plugin.loadAllConfigs();
 		Messaging.send(sender, "&5General reloaded.");
+	}
+	
+	private void doSave(CommandSender sender) {
+		General.plugin.config.save();
+		Items.save();
 	}
 	
 	private void die(CommandSender sender) {
