@@ -9,13 +9,13 @@ commands:
   info.playerlist:
     description: Displays all players that are online.
     permission: general.playerlist
-    aliases: [playerlist, list, online]
+    aliases: [playerlist]
     usage: |
            /<command>
   info.who:
     permission: general.who
     description: Displays information about a player.
-    aliases: [who, whois, whoami, playerinfo]
+    aliases: [who, whoami]
     usage: |
            /<command> [player]
   misc.time:
@@ -34,12 +34,12 @@ commands:
   info.getpos:
     permission: general.getpos
     description: Displays detailed information about your position.
-    aliases: [getpos, compass, where, pos, coords]
+    aliases: [getpos, compass, where]
     usage: /<command>
   chat.tell:
     permission: general.tell
     description: Sends another player a private message.
-    aliases: [tell, msg, pm, whisper]
+    aliases: [tell]
     usage: /<command> <player> <message>
   teleport.spawn:
     permission: general.spawn
@@ -54,17 +54,17 @@ commands:
   teleport.go:
     permission: general.teleport
     description: Teleports a/multiple/all player(s) to another players location.
-    aliases: [teleport, tele, go] #tp
+    aliases: [go]
     usage: /<command> [<who>] <dest>
   teleport.summon:
     permission: general.teleport.other
     description: Teleports a player to your location.
-    aliases: [summon, tphere, teleporthere, s]
+    aliases: [summon]
     usage: /<command> [player]
   inven.clear:
     permission: general.clear
     description: Clears your inventory.
-    aliases: [clear, clean]
+    aliases: [clear]
     usage: /<command> [player] [pack|armo[u]r|quickbar|all]
   inven.take:
     permission: general.take
@@ -79,7 +79,7 @@ commands:
   misc.mobspawn:
     permission: general.mobspawn
     description: Spawns a mob.
-    aliases: [mobspawn, mob]
+    aliases: [mobspawn]
     usage: /mobspawn <mob-name>[;<mount>] [<how-many>]
   inven.kit:
     permission: general.kit
@@ -94,7 +94,7 @@ commands:
   chat.away:
     permission: general.away
     description: Sets your away message
-    aliases: [away, afk]
+    aliases: [away]
     usage: /<command> [message]
   inven.items:
     permission: general.give.mass

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
+import net.craftstars.general.util.AliasHandler;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -50,23 +51,17 @@ public class getposCommand extends CommandBase {
 	
 	private void showPos(CommandSender sender, Player whose, String subcmd) {
 		Alias which = Alias.MAIN;
-		if(Toolbox.equalsOne(subcmd, "compass"))
+		if(Toolbox.equalsOne(subcmd, AliasHandler.compassAliases))
 			which = Alias.COMPASS;
-		else if( (Toolbox.equalsOne(subcmd, "where", "pos", "coords"))) which = Alias.WHERE;
+		else if( (Toolbox.equalsOne(subcmd, AliasHandler.posAliases))) which = Alias.WHERE;
 		double degrees = getRotation(whose);
 		switch(which) {
 		case MAIN:
 		case WHERE:
-			Messaging.send(
-					sender,
-					"&ePos X: &f"
-							+ whose.getLocation().getX()
-							+ "&e Y: &f"
-							+ whose.getLocation().getY()
-							+ "&e Z: &f"
-							+ whose.getLocation().getZ()
-							+ (General.plugin.config.getBoolean("playerlist.show-world", false) ? "&e in '&f"
-									+ whose.getWorld().getName() + "&e'" : ""));
+			Messaging.send(sender, "&ePos X: &f" + whose.getLocation().getX() + "&e Y: &f"
+					+ whose.getLocation().getY() + "&e Z: &f" + whose.getLocation().getZ()
+					+ (General.plugin.config.getBoolean("playerlist.show-world", false) ? "&e in '&f"
+					+ whose.getWorld().getName() + "&e'" : ""));
 			if(which != Alias.MAIN) break;
 			Messaging.send(sender, "&eRotation: &f" + whose.getLocation().getYaw() + "&e Pitch: &f"
 					+ whose.getLocation().getPitch());

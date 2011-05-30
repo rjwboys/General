@@ -46,6 +46,7 @@ give:
     bedrock: [7]
     fluid: [8, 9, 10, 11]
   others-for-all: true
+  mass: 256
 
 playerlist:
   show-health: false
@@ -78,3 +79,36 @@ economy:
 # may be tagging another player. For example, if you set it to '@name', it will use Twitter-style
 # tagging. Tagging currently only means that the tagger will be informed if the player is away.
 tag-fmt: 'name:'
+
+# If this is changed to true, successful commands will be logged to the console.
+log-commands: false
+
+# The range of the /weather zap command.
+#lightning-range: 50
+
+# Command aliases
+aliases:
+  info:
+    playerlist: [list, online]
+    who: [whois, playerinfo]
+    getpos: []
+    where: [coords, pos]
+    compass: []
+  misc:
+    time: []
+    heal: []
+    mobspawn: [mob]
+    weather: []
+  inven:
+    give: [i, item]
+    clear: [clean]
+    take: []
+    kit: []
+    items: []
+  chat:
+    tell: [msg, pm, whisper]
+    away: [afk]
+  teleport:
+    setspawn: []
+    go: [teleport, tele, tp]
+    summon: [tphere, teleporthere, s]

@@ -13,6 +13,7 @@ import net.craftstars.general.items.Kits;
 import net.craftstars.general.money.EconomyBase;
 import net.craftstars.general.security.BasicPermissionsHandler;
 import net.craftstars.general.security.PermissionsHandler;
+import net.craftstars.general.util.AliasHandler;
 import net.craftstars.general.util.HelpHandler;
 import net.craftstars.general.util.MessageOfTheDay;
 import net.craftstars.general.util.Messaging;
@@ -109,6 +110,7 @@ public class General extends JavaPlugin {
 		loadAllConfigs();
 		logger.info("[Codename: " + General.codename + "] Plugin successfully loaded!");
 		HelpHandler.setup();
+		AliasHandler.setup();
 	}
 
 	public void loadAllConfigs() {
