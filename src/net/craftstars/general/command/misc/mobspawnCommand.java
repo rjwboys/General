@@ -73,6 +73,7 @@ public class mobspawnCommand extends CommandBase {
 		LivingEntity entity = mob.spawn(sender, where);
 		if(split.length == 2) {
 			if(!mob.setData(entity, sender, split[1])) Messaging.send(sender, "&cError setting the data.");
+			// TODO: Looks like this message is sent even when the error is "lacks permission".
 		}
 		return entity;
 	}

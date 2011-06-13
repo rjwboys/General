@@ -52,6 +52,7 @@ playerlist:
   show-health: false
   show-coords: false
   show-world: false
+  show-ip: false
 
 # If true, show the message of the day on login.
 show-motd: true

@@ -179,7 +179,7 @@ public class Destination {
 		// TODO: Rewrite to use Bukkit API
 		CraftPlayer cp = (CraftPlayer) player;
 		EntityPlayer ep = cp.getHandle();
-		ChunkCoordinates coords = ep.K();
+		ChunkCoordinates coords = ep.M();
 		if(coords != null) {
 			Location loc = new Location(player.getWorld(), coords.x, coords.y, coords.z);
 			String name = player.getDisplayName() + "'s home";

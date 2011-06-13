@@ -28,13 +28,13 @@ public class Toolbox {
 			String dname = p.getDisplayName();
 			if(name.equalsIgnoreCase(pat) || dname.equalsIgnoreCase(pat)) {
 				closeness.put(p, 0);
-			} else if(name.startsWith(pat)) {
+			} else if(name.toLowerCase().startsWith(pat.toLowerCase())) {
 				closeness.put(p, name.length() - pat.length());
-			} else if(dname.startsWith(pat)) {
+			} else if(dname.toLowerCase().startsWith(pat.toLowerCase())) {
 				closeness.put(p, dname.length() - pat.length());
-			} else if(name.contains(pat)) {
+			} else if(name.toLowerCase().contains(pat.toLowerCase())) {
 				closeness.put(p, 1 + name.length() - pat.length());
-			} else if(dname.contains(pat)) {
+			} else if(dname.toLowerCase().contains(pat.toLowerCase())) {
 				closeness.put(p, 1 + dname.length() - pat.length());
 			}
 		}
@@ -57,9 +57,9 @@ public class Toolbox {
 			String name = w.getName();
 			if(name.equalsIgnoreCase(pat)) {
 				closeness.put(w, 0);
-			} else if(name.startsWith(pat)) {
+			} else if(name.toLowerCase().startsWith(pat.toLowerCase())) {
 				closeness.put(w, name.length() - pat.length());
-			} else if(name.contains(pat)) {
+			} else if(name.toLowerCase().contains(pat.toLowerCase())) {
 				closeness.put(w, 1 + name.length() - pat.length());
 			}
 		}
