@@ -63,7 +63,7 @@ public class whoCommand extends CommandBase {private String name;
 	
 	private String formatLocation(Location loc) {
 		Formatter fmt = new Formatter();
-		fmt.format("(%d, %d, %d) facing (%d, %d)", loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+		fmt.format("(%f, %f, %f) facing (%f, %f)", loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
 		return fmt.toString();
 	}
 
