@@ -87,6 +87,9 @@ log-commands: false
 # The range of the /weather zap command.
 #lightning-range: 50
 
+# Other options in this list are target, compass, coords
+teleport-basics: [world, player, home, spawn]
+
 # Command aliases
 aliases:
   info:

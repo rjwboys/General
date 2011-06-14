@@ -1,6 +1,9 @@
 
 package net.craftstars.general.teleport;
 
+import java.util.List;
+
+import net.craftstars.general.General;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -24,11 +27,17 @@ public enum DestinationType {
 	
 	public boolean hasPermission(Player who, String action, String base) {
 		if(who.isOp()) return true;
+		if(isBasic() && Toolbox.hasPermission(who, base + ".basic")) return true;
 		if(Toolbox.hasPermission(who, getPermission(base))) return true;
 		Messaging.lacksPermission(who, getAction(action, false));
 		return false;
 	}
 	
+	private boolean isBasic() {
+		List<String> basics = General.plugin.config.getStringList("teleport-basics", null);
+		return basics.contains(toString().toLowerCase().trim());
+	}
+
 	public boolean hasOtherPermission(Player who, String action, String base) {
 		if(who.isOp()) return true;
 		if(Toolbox.hasPermission(who, getPermission(base + ".other"))) return true;

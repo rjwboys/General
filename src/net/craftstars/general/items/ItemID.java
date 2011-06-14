@@ -186,6 +186,8 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 				permissions.add("general.give.group." + group);
 			}
 		}
+		if(permissions.size() <= 2) 
+			permissions.add("general.give.groupless");
 		String[] permNodes = new String[permissions.size()];
 		permNodes = permissions.toArray(permNodes);
 		boolean hasPermission = Toolbox.hasPermission(who, permNodes) && config.getBoolean("others-for-all", true);

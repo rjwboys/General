@@ -7,7 +7,13 @@ import net.craftstars.general.util.Toolbox;
 import org.bukkit.entity.Player;
 
 public enum TargetType {
-	SELF("yourself"), OTHER("others"), MOB("mobs");
+	SELF("yourself") {
+		@Override
+		public boolean hasPermission(Player who) {
+			if(Toolbox.hasPermission(who, "general.teleport.basic")) return true;
+			return super.hasPermission(who);
+		}
+	}, OTHER("others"), MOB("mobs");
 	private String msg;
 	
 	private TargetType(String message) {
