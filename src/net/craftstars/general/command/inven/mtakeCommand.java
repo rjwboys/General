@@ -2,6 +2,8 @@
 package net.craftstars.general.command.inven;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
@@ -14,6 +16,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.ItemStack;
 
 public class mtakeCommand extends CommandBase {
 	private Player who;
@@ -77,9 +80,24 @@ public class mtakeCommand extends CommandBase {
 	private int doTake() {
 		int removed = 0;
 		PlayerInventory i = who.getInventory();
-		for (ItemID item : items) {
-			i.remove(item.getId());
+		ArrayList<ItemStack> inventItems = new ArrayList<ItemStack>(Arrays.asList(i.getContents()));
+		for (ItemStack stk : inventItems) {
+			int n, d;
+			n = stk.getAmount();
+			d = stk.getDurability();
+			if(!items.contains(d)) continue;
+			// if(!Items.isDamageable(item.getId()) && item.getData() != d) continue;
+			i.setItem(inventItems.indexOf(stk), null);
 		}
+		/*for (ItemID item : items) {
+			if(item.getData() != null){
+				Messaging.broadcast("Data:"+item.getId()+":"+item.getData().toString());
+				byte data = item.getData().byteValue();
+				i.removeItem(new ItemStack(item.getId(), 1, (short)0, data));
+			}else{
+				i.removeItem(new ItemStack(item.getId(), 1, (short)0, null));
+			}
+		}*/
 		Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &fvarious items&2 was taken from you.");
 		return removed;
 	}
