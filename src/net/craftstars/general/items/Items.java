@@ -5,15 +5,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -22,6 +26,8 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import net.craftstars.general.General;
 import net.craftstars.general.util.Toolbox;
+import net.minecraft.server.World;
+import net.minecraft.server.WorldMapCollection;
 
 public class Items {
 	private static Configuration config;
@@ -405,6 +411,25 @@ public class Items {
 		case LONG_GRASS:
 			if(ret.getData() == null) break;
 			if(ret.getData() > 2 || ret.getData() < 0) ret.invalidate(true);
+		break;
+		case MAP:
+			// No action; any data value is presumed valid...
+			if(ret.getData() == null) break;
+			{ // TODO: Rewrite to use Bukkit API
+				World w = ((CraftWorld) Bukkit.getServer().getWorlds().get(0)).getHandle();
+				String mapName = "map_" + ret.getData();
+				Field mapMap;
+				try {
+					mapMap = WorldMapCollection.class.getDeclaredField("b");
+					mapMap.setAccessible(true);
+					@SuppressWarnings("rawtypes")
+					Object map = ((Map) mapMap.get(w.z)).get(mapName);
+					if(map == null) ret.invalidate(true);
+				} catch(SecurityException e) {}
+				catch(NoSuchFieldException e) {}
+				catch(IllegalArgumentException e) {}
+				catch(IllegalAccessException e) {}
+			}
 		break;
 		}
 		// --- end hacky workaround for missing MaterialData classes ---
