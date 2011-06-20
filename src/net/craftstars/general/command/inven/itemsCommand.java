@@ -40,7 +40,9 @@ public class itemsCommand extends CommandBase {
 			text.append("&2, &f");
 			Items.giveItem(toWhom, what, 1);
 		}
-		text.delete(text.lastIndexOf("&2, &f"), text.length());
+		int lastComma = text.lastIndexOf("&2, &f");
+		if(lastComma >= 0 && lastComma < text.length())
+			text.delete(lastComma, text.length());
 		if(toWhom == sender) {
 			Messaging.send(sender, "&2Enjoy! " + text + "&f!");
 		} else {
