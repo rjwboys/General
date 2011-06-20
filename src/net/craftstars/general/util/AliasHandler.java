@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 import net.craftstars.general.General;
 
@@ -11,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.util.config.Configuration;
 
 public class AliasHandler {
@@ -25,36 +27,55 @@ public class AliasHandler {
 		if(commandMap == null && !getCommandMap()) return;
 		if(register == null && !getRegisterMethod()) return;
 		Configuration config = General.plugin.config;
+		PluginDescriptionFile plug = General.plugin.getDescription();
 		try {
-			for(String cat : config.getKeys("aliases")) {
-				for(String cmd : config.getKeys("aliases." + cat)) {
-					Command generalCommand = General.plugin.getCommand(cat + '.' + cmd);
-					if(Toolbox.equalsOne(cat + '.' + cmd, "info.compass", "info.where")) {
-						if(cmd.equals("compass")) {
-							List<String> ls = config.getStringList("aliases.info.compass", null);
-							compassAliases = new String[ls.size() + 1];
-							compassAliases[0] = "compass";
-							for(int i = 1; i <= ls.size(); i++)
-								compassAliases[i] = ls.get(i-1);
-						} else if(cmd.equals("where")) {
-							List<String> ls = config.getStringList("aliases.info.where", null);
-							posAliases = new String[ls.size() + 1];
-							posAliases[0] = "where";
-							for(int i = 1; i <= ls.size(); i++)
-								posAliases[i] = ls.get(i-1);
-						}
-					} else for(String alias : config.getStringList("aliases." + cat + '.' + cmd, null))
+			@SuppressWarnings({"unchecked", "rawtypes"})
+			Map<String,Map> commands = (Map<String, Map>) plug.getCommands();
+			for(String key : commands.keySet()) {
+				if(!key.equals("general")) {
+					String[] split = key.split(".");
+					String cat = split[0], cmd = split[1];
+					Command generalCommand = General.plugin.getCommand(key);
+					register(cmd, generalCommand);
+					for(String alias : config.getStringList("aliases." + key, null))
 						register(alias, generalCommand);
+				} else {
+					
 				}
+			}
+			Command posCommand = General.plugin.getCommand("info.getpos");
+			// Compass
+			List<String> ls = config.getStringList("aliases.info.compass", null);
+			compassAliases = new String[ls.size() + 1];
+			compassAliases[0] = "compass";
+			register("compass", posCommand);
+			for(int i = 1; i <= ls.size(); i++) {
+				compassAliases[i] = ls.get(i-1);
+				register(compassAliases[i], posCommand);
+			}
+			// Where
+			ls = config.getStringList("aliases.info.where", null);
+			posAliases = new String[ls.size() + 1];
+			posAliases[0] = "where";
+			register("where", posCommand);
+			for(int i = 1; i <= ls.size(); i++) {
+				posAliases[i] = ls.get(i-1);
+				register(posAliases[i], posCommand);
 			}
 		} catch(NullPointerException e) {
 			return;
+		} catch(ClassCastException e) {
+			General.logger.error("Commands are of wrong type!",e);
 		}
 	}
 	
 	public static boolean register(String label, Command command) {
 		try {
-			return (Boolean) register.invoke(commandMap, label, "General.dynalias", command, true);
+			boolean success = (Boolean) register.invoke(commandMap, label, "General.dynalias", command, true);
+			if(!success)
+				General.logger.info("Command alias " + label + 
+					" was not registered because another plugin claimed it.");
+			return success;
 		} catch(IllegalArgumentException e) {
 			General.logger.warn(e.getMessage());
 		} catch(IllegalAccessException e) {
