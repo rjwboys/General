@@ -72,6 +72,9 @@ public class giveCommand extends CommandBase {
 			return SHOW_USAGE;
 		}
 		
+		if(!who.equals(sender) && Toolbox.lacksPermission(sender, "general.give.other"))
+			return Messaging.lacksPermission(sender, "give items to others");
+		
 		if(item == null || !item.isIdValid()) {
 			Messaging.send(sender, "&rose;Invalid item.");
 			return true;
