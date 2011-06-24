@@ -57,8 +57,10 @@ public class iConomy5EconomyHandler implements EconomyBase {
 	@Override
 	public String getBalanceForDisplay(Player who) {
 		String player = who.getName();
-		if(!iConomy.hasAccount(player)) return iConomy.format(0);
-		return iConomy.format(player);
+		String balance = iConomy.format(player);
+		if(balance == null) return "0";
+		return balance;
+		
 	}
 	
 	@Override
