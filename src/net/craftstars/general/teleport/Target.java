@@ -81,6 +81,8 @@ public class Target {
 					bloc = temp;
 				}
 				if(next != null) loc = bloc.getLocation();
+				loc.setX(loc.getX()+0.5);
+				loc.setZ(loc.getZ()+0.5);
 			}
 			victim.teleport(loc);
 			if(victim instanceof Player) {
