@@ -32,16 +32,12 @@ public class AliasHandler {
 			@SuppressWarnings({"unchecked", "rawtypes"})
 			Map<String,Map> commands = (Map<String, Map>) plug.getCommands();
 			for(String key : commands.keySet()) {
-				if(!key.equals("general")) {
-					String[] split = key.split(".");
-					String cat = split[0], cmd = split[1];
-					Command generalCommand = General.plugin.getCommand(key);
-					register(cmd, generalCommand);
-					for(String alias : config.getStringList("aliases." + key, null))
-						register(alias, generalCommand);
-				} else {
-					
-				}
+				Command generalCommand = General.plugin.getCommand(key);
+				if(key.contains("."))
+					register(key.split(".")[1], generalCommand);
+				else register(key, generalCommand);
+				for(String alias : config.getStringList("aliases." + key, null))
+					register(alias, generalCommand);
 			}
 			Command posCommand = General.plugin.getCommand("info.getpos");
 			// Compass
