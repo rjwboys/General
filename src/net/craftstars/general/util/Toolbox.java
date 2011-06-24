@@ -2,6 +2,7 @@
 package net.craftstars.general.util;
 
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -221,5 +222,11 @@ public class Toolbox {
 		default:
 			return true;
 		}
+	}
+
+	public static String formatLocation(Location loc) {
+		Formatter fmt = new Formatter();
+		fmt.format("(%f, %f, %f) facing (%f, %f)", loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+		return fmt.toString();
 	}
 }

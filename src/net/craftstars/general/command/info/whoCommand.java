@@ -1,9 +1,7 @@
 
 package net.craftstars.general.command.info;
 
-import java.util.Formatter;
 
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -52,8 +50,8 @@ public class whoCommand extends CommandBase {private String name;
 		this.name = ofWhom.getName();
 		this.displayName = ofWhom.getDisplayName();
 		this.bar = getHealthBar(ofWhom);
-		this.location = formatLocation(ofWhom.getLocation());
-		this.home = formatLocation(Destination.homeOf(ofWhom).getLoc());
+		this.location = Toolbox.formatLocation(ofWhom.getLocation());
+		this.home = Toolbox.formatLocation(Destination.homeOf(ofWhom).getLoc());
 		this.world = ofWhom.getWorld().getName();
 		this.ip = ofWhom.getAddress().getAddress().getHostAddress();
 		if(General.plugin.isAway(ofWhom))
@@ -61,12 +59,6 @@ public class whoCommand extends CommandBase {private String name;
 		else this.status = "Around";
 	}
 	
-	private String formatLocation(Location loc) {
-		Formatter fmt = new Formatter();
-		fmt.format("(%f, %f, %f) facing (%f, %f)", loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
-		return fmt.toString();
-	}
-
 	private String getHealthBar(Player ofWhom) {
 		String healthBar = "[";
 		double health = ((double) ofWhom.getHealth()) / 2.0;

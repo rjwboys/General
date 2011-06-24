@@ -106,3 +106,8 @@ commands:
     description: Affects the weather
     aliases: []
     usage: /<command> [<world>] <weather>
+  info.worldinfo:
+    permission: general.worldinfo
+    description: Gives info on a world
+    aliases: []
+    usage: /<command> [<world>]
