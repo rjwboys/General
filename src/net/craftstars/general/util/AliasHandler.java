@@ -33,8 +33,9 @@ public class AliasHandler {
 			Map<String,Map> commands = (Map<String, Map>) plug.getCommands();
 			for(String key : commands.keySet()) {
 				Command generalCommand = General.plugin.getCommand(key);
+				//General.logger.debug("Registering aliases for command: " + key);
 				if(key.contains("."))
-					register(key.split(".")[1], generalCommand);
+					register(key.split("\\.")[1], generalCommand);
 				else register(key, generalCommand);
 				for(String alias : config.getStringList("aliases." + key, null))
 					register(alias, generalCommand);
@@ -67,6 +68,7 @@ public class AliasHandler {
 	
 	public static boolean register(String label, Command command) {
 		try {
+			//General.logger.debug("Registering " + label + " as an alias for " + command.getName());
 			boolean success = (Boolean) register.invoke(commandMap, label, "General.dynalias", command, true);
 			if(!success)
 				General.logger.info("Command alias " + label + 
