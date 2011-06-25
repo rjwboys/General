@@ -96,7 +96,7 @@ public enum MobType {
 		public boolean setData(LivingEntity mob, Player setter, String data) {
 			if(! (mob instanceof Sheep)) return false;
 			Sheep sheep = (Sheep) mob;
-			if(Toolbox.equalsOne(data, "sheared", "nude", "naked", "bald")) {
+			if(Toolbox.equalsOne(data, "sheared", "nude", "naked", "bald", "bare")) {
 				sheep.setSheared(true);
 			} else {
 				if(Toolbox.lacksPermission(setter, "general.mobspawn.sheep.coloured", "general.mobspawn.sheep.colored",

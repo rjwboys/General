@@ -4,7 +4,7 @@ authors:
   - Celtic Minstrel
   - Plutonium239
   - Nijikokun
-version: 3.4.4
+version: 3.4.5
 commands:
   info.playerlist:
     description: Displays all players that are online.
@@ -21,7 +21,7 @@ commands:
   misc.time:
     permission: general.time
     description: Displays or modifies current world time.
-    aliases: [time]
+    aliases: []
     usage: |
            /<command> [<world>] [=|+|-]<time|duration>
            /<command> add|set <time|duration>
@@ -41,11 +41,6 @@ commands:
     description: Sends another player a private message.
     aliases: []
     usage: /<command> <player> <message>
-  teleport.spawn:
-    permission: general.spawn
-    description: Shows you the spawn location the specified current world.
-    aliases: []
-    usage: /<command> [<world>]
   teleport.setspawn:
     permission: general.spawn.set
     description: Sets to the spawn location of your current world (or the specified one).

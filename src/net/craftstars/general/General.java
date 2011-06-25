@@ -109,8 +109,8 @@ public class General extends JavaPlugin {
 		logger.setPluginVersion(this.getDescription().getVersion());
 		loadAllConfigs();
 		logger.info("[Codename: " + General.codename + "] Plugin successfully loaded!");
-		HelpHandler.setup();
 		AliasHandler.setup();
+		HelpHandler.setup();
 	}
 
 	public void loadAllConfigs() {
@@ -232,8 +232,10 @@ public class General extends JavaPlugin {
 			cmdStr += " " + x;
 		try {
 			boolean result;
-			if(args.length > 0 && args[0].equalsIgnoreCase("help") && HelpHandler.hasEntry(command.getName())) result =
-					HelpHandler.displayEntry(sender, command.getName());
+			if(isGeneralSubcommandHelp(command, args))
+				result = HelpHandler.displayEntry(sender, "general_" + args[0]);
+			else if(isMainCommandHelp(command, args))
+				result = HelpHandler.displayEntry(sender, command.getName());
 			else {
 				Class<? extends CommandBase> clazz =
 						this.getClass()
@@ -257,5 +259,19 @@ public class General extends JavaPlugin {
 			ex.printStackTrace();
 			return false;
 		}
+	}
+
+	private boolean isMainCommandHelp(Command command, String[] args) {
+		return !command.getName().equals("general")
+			&& args.length > 0
+			&& args[0].equalsIgnoreCase("help")
+			&& HelpHandler.hasEntry(command.getName());
+	}
+
+	private boolean isGeneralSubcommandHelp(Command command, String[] args) {
+		return command.getName().equals("general")
+			&& args.length > 1
+			&& args[1].equalsIgnoreCase("help")
+			&& HelpHandler.hasEntry("general_" + args[0]);
 	}
 }
