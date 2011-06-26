@@ -10,8 +10,10 @@ import net.craftstars.general.General;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.util.config.Configuration;
 
@@ -27,6 +29,8 @@ public class AliasHandler {
 		if(commandMap == null && !getCommandMap()) return;
 		if(register == null && !getRegisterMethod()) return;
 		Configuration config = General.plugin.config;
+		if(!config.getKeys(null).contains("aliases"))
+			General.logger.warn("No aliases defined; did you forget to copy the aliases section from the example config.yml?");
 		PluginDescriptionFile plug = General.plugin.getDescription();
 		try {
 			@SuppressWarnings({"unchecked", "rawtypes"})
@@ -36,7 +40,6 @@ public class AliasHandler {
 				//General.logger.debug("Registering aliases for command: " + key);
 				if(key.contains("."))
 					register(key.split("\\.")[1], generalCommand);
-				else register(key, generalCommand);
 				for(String alias : config.getStringList("aliases." + key, null))
 					register(alias, generalCommand);
 			}
@@ -70,9 +73,16 @@ public class AliasHandler {
 		try {
 			//General.logger.debug("Registering " + label + " as an alias for " + command.getName());
 			boolean success = (Boolean) register.invoke(commandMap, label, "General.dynalias", command, true);
-			if(!success)
+			if(!success) {
+				Command cmd = Bukkit.getServer().getPluginCommand(label);
+				String claimant;
+				if(cmd instanceof PluginCommand)
+					claimant = ((PluginCommand) cmd).getPlugin().getDescription().getName();
+				else
+					claimant = Bukkit.getServer().getName();
 				General.logger.info("Command alias " + label + 
-					" was not registered because another plugin claimed it.");
+					" was not registered because [" + claimant + "] claimed it.");
+			}
 			return success;
 		} catch(IllegalArgumentException e) {
 			General.logger.warn(e.getMessage());

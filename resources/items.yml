@@ -420,6 +420,7 @@ aliases: {
   SoulMud: 88, SoulDirt: 88, SlowSand: 88, SlowMud: 88, SlowDirt: 88, QuickSand: 88, QuickMud: 88, QuickDirt: 88,
   BrittleGold: 89, Lightstone: 89, GlowRock: 89, GlowingRock: 89, GlowstoneBlock: 89, GlowstoneOre: 89,
   Jack'o'lantern: 91, LitPumpkin: 91, PumpkinOff: 91, Jack: 91, PumpkinLit: 91, PumpkinLight: 91, WaterLantern: 91,
+  Hatch: 96,
   # Shovels
   WoodenShovel: 269, WoodenSpade: 269, WoodShovel: 269, WShovel: 269, WSpade: 269,
   StoneShovel: 273, SShovel: 273, SSword: 273,
