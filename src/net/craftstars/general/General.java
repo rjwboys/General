@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.util.HashMap;
 
-import me.taylorkelly.help.Help;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.items.Kits;
@@ -28,32 +27,21 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
 public class General extends JavaPlugin {
-	private class PluginListener extends ServerListener {
-		@Override
-		public void onPluginEnable(PluginEnableEvent event) {
-			if(!HelpHandler.gotHelp && event.getPlugin() instanceof Help) HelpHandler.setup();
-			else if(!gotRequestedPermissions) setupPermissions(false);
-			else if(!gotRequestedEconomy) setupPermissions(false);
-		}
-	}
-	
 	public static General plugin = null;
 	
 	public static final boolean DEBUG = true;
 	public static final String codename = "Hindemith";
 	
-	public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG); // NOTE: Was private. Should be
-																					// changed back? [celticminstrel]
+	public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG);
 	
-	public Configuration config; // NOTE: This was private. Should it be changed back? [celticminstrel]
+	public Configuration config;
 	public PermissionsHandler permissions;
 	public EconomyBase economy;
+	@SuppressWarnings("unused")
 	private boolean gotRequestedPermissions, gotRequestedEconomy;
 	
 	private HashMap<String, String> playersAway = new HashMap<String, String>();
@@ -120,8 +108,6 @@ public class General extends JavaPlugin {
 		Time.setup();
 		Items.setup();
 		Kits.loadKits();
-		// getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE, new
-		// PluginListener(), Priority.Monitor, this);
 		setupPermissions(true);
 		setupEconomy();
 		if(config.getBoolean("show-motd", true)) getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN,
@@ -167,7 +153,6 @@ public class General extends JavaPlugin {
 			try {
 				permType = config.getNode("permissions").getString("system");
 				permType.isEmpty(); // To trigger NPE if applicable. <_< Why? Avoiding duplication.
-				// [celticminstrel]
 			} catch(Exception ex) {
 				permType = "Basic";
 			}
@@ -195,7 +180,6 @@ public class General extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		Items.save();
-		// config.save();
 		General.logger.info("Plugin disabled!");
 	}
 	

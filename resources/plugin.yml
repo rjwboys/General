@@ -5,6 +5,12 @@ authors:
   - Plutonium239
   - Nijikokun
 version: 3.4.5
+softdepend:
+  - BOSEconomy
+  - iConomy
+  - Permissions
+  - WorldEdit
+  - Help
 commands:
   info.playerlist:
     description: Displays all players that are online.

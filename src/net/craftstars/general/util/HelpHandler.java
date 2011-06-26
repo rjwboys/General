@@ -177,6 +177,7 @@ public class HelpHandler {
 	
 	private static String fetchAliases(String command, String... skip) {
 		PluginCommand cmd = General.plugin.getCommand(command);
+		if(cmd == null) return "";
 		List<String> aliases = cmd.getAliases();
 		aliases.add(cmd.getName());
 		for(String what : skip) {
