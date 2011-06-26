@@ -48,7 +48,7 @@ public class Target {
 				title = "several mobs";
 			else {
 				LivingEntity entity = l.get(0);
-				title = "a " + entity.getClass().getSimpleName().replace("Craft", "");
+				title = "a " + entity.getClass().getSimpleName().replace("Craft", "").toLowerCase();
 			}
 		break;
 		}
@@ -87,7 +87,8 @@ public class Target {
 			victim.teleport(loc);
 			if(victim instanceof Player) {
 				Player who = (Player) victim;
-				Messaging.send(who, "&fYou have been teleported to &9" + to.getName() + "&f!");
+				if(type != TargetType.SELF)
+					Messaging.send(who, "&fYou have been teleported to &9" + to.getName() + "&f!");
 			}
 		}
 	}

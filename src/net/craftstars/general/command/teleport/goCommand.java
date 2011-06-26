@@ -9,6 +9,7 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.teleport.Destination;
 import net.craftstars.general.teleport.Target;
+import net.craftstars.general.teleport.TargetType;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -38,7 +39,10 @@ public class goCommand extends CommandBase {
 		if(dest == null || target == null) return true;
 		if(target.hasPermission(sender) && hasDestPermission(sender, target, dest)) {
 			target.teleport(dest);
-			Messaging.send(sender, "&fYou teleported &9" + target.getName() + "&f to &9" + dest.getName() + "&f!");
+			if(target.getType() == TargetType.SELF)
+				Messaging.send(sender, "&fYou teleported to &9" + dest.getName() + "&f!");
+			else
+				Messaging.send(sender, "&fYou teleported &9" + target.getName() + "&f to &9" + dest.getName() + "&f!");
 		}
 		return true;
 	}
