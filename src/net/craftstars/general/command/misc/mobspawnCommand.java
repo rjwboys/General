@@ -1,7 +1,10 @@
 
 package net.craftstars.general.command.misc;
 
+import java.util.Random;
+
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.LivingEntity;
@@ -17,6 +20,7 @@ public class mobspawnCommand extends CommandBase {
 	public mobspawnCommand(General instance) {
 		super(instance);
 	}
+	Random offsetGenerator = new Random();
 
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
@@ -70,7 +74,10 @@ public class mobspawnCommand extends CommandBase {
 			Messaging.send(sender, "&cInvalid mob type: " + mobName);
 			return null;
 		}
-		LivingEntity entity = mob.spawn(sender, where);
+		double xOffset = offsetGenerator.nextDouble(), zOffset = offsetGenerator.nextDouble();
+		Location actual = where.add(xOffset, 0, zOffset);
+		while(actual.getBlock().getType() != Material.AIR) actual.add(0, 1, 0);
+		LivingEntity entity = mob.spawn(sender, actual);
 		if(split.length == 2) {
 			if(!mob.setData(entity, sender, split[1])) Messaging.send(sender, "&cError setting the data.");
 			// TODO: Looks like this message is sent even when the error is "lacks permission".
