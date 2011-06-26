@@ -11,7 +11,6 @@
   <property name="craftbukkit.jar"  value="craftbukkit.jar"/>
   <property name="permissions.jar"  value="Permissions.jar"/>
   <property name="worldedit.jar"    value="WorldEdit.jar"/>
-  <property name="groupmanager.jar" value="GroupManager.jar"/>
   <property name="help.jar" value="Help.jar"/>
   <property name="iconomy4.jar" value="iConomy4.jar"/>
   <property name="iconomy.jar" value="iConomy.jar"/>
@@ -44,7 +43,6 @@
         <pathelement location="${lib}/${craftbukkit.jar}"/>
         <pathelement location="${lib}/${permissions.jar}"/>
         <pathelement location="${lib}/${worldedit.jar}"/>
-        <pathelement location="${lib}/${groupmanager.jar}"/>
         <pathelement location="${lib}/${help.jar}"/>
         <pathelement location="${lib}/${iconomy.jar}"/>
         <pathelement location="${lib}/${iconomy4.jar}"/>

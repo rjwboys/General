@@ -4,21 +4,16 @@ package net.craftstars.general.mobs;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
-import net.craftstars.general.General;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
-import net.minecraft.server.EntityPig;
 import net.minecraft.server.EntityPigZombie;
-import net.minecraft.server.EntityWolf;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.entity.CraftPig;
 import org.bukkit.craftbukkit.entity.CraftPigZombie;
-import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.LivingEntity;
