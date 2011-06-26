@@ -22,11 +22,13 @@ import net.craftstars.general.util.Time;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import static org.bukkit.event.Event.Type.*;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
@@ -45,6 +47,7 @@ public class General extends JavaPlugin {
 	private boolean gotRequestedPermissions, gotRequestedEconomy;
 	
 	private HashMap<String, String> playersAway = new HashMap<String, String>();
+	private HashMap<String,String> lastMessager = new HashMap<String,String>();
 	private String tagFormat;
 	
 	public boolean isAway(Player who) {
@@ -62,6 +65,14 @@ public class General extends JavaPlugin {
 	public String whyAway(Player who) {
 		if(isAway(who)) return playersAway.get(who.getName());
 		return "";
+	}
+	
+	public void hasMessaged(String from, String to) {
+		lastMessager.put(from, to);
+	}
+	
+	public String lastMessaged(String to) {
+		return lastMessager.get(to);
 	}
 	
 	public General() {
@@ -90,6 +101,11 @@ public class General extends JavaPlugin {
 				}
 			}
 		}
+		
+		@Override
+		public void onPlayerLogin(PlayerLoginEvent event) {
+			lastMessager.remove(event.getPlayer().getName());
+		}
 	};
 	
 	@Override
@@ -99,6 +115,7 @@ public class General extends JavaPlugin {
 		logger.info("[Codename: " + General.codename + "] Plugin successfully loaded!");
 		AliasHandler.setup();
 		HelpHandler.setup();
+		registerEvents();
 	}
 
 	public void loadAllConfigs() {
@@ -110,10 +127,15 @@ public class General extends JavaPlugin {
 		Kits.loadKits();
 		setupPermissions(true);
 		setupEconomy();
-		if(config.getBoolean("show-motd", true)) getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN,
-				pl, Priority.Monitor, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, pl, Priority.Monitor, this);
 		tagFormat = config.getString("tag-fmt", "name:");
+	}
+
+	private void registerEvents() {
+		PluginManager pm = getServer().getPluginManager();
+		if(config.getBoolean("show-motd", true))
+			pm.registerEvent(PLAYER_JOIN, pl, Priority.Monitor, this);
+		pm.registerEvent(PLAYER_CHAT, pl, Priority.Monitor, this);
+		pm.registerEvent(PLAYER_LOGIN, pl, Priority.Monitor, this);
 	}
 	
 	private void setupEconomy() {
