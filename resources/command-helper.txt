@@ -1,0 +1,3 @@
+/spawn = /teleport spawn
+/home = /teleport home
+/sethome [$dest=here] = /setspawn self $dest
