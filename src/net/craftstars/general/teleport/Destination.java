@@ -89,7 +89,7 @@ public class Destination {
 		Player who = Toolbox.matchPlayer(dest.replaceFirst("^!", ""));
 		if(who != null) return locOf(who);
 		// Is it a world? Optionally prefixed with @
-		World globe = mc.getWorld(dest.replaceFirst("^@", ""));
+		World globe = Toolbox.matchWorld(dest.replaceFirst("^@", ""));
 		if(globe != null) return fromWorld(globe);
 		if(keystone != null) {
 			// Is it a special keyword? Optionally prefixed with $
@@ -113,7 +113,7 @@ public class Destination {
 		// Is it a world + coordinate? world(x,y,z)
 		Matcher m = locPat.matcher(dest);
 		if(m.matches()) {
-			World flat = mc.getWorld(m.group(1));
+			World flat = Toolbox.matchWorld(m.group(1));
 			if(flat != null) {
 				try {
 					double x = Double.valueOf(m.group(2));
@@ -130,7 +130,7 @@ public class Destination {
 			String[] split = dest.split("\\$");
 			General.logger.debug(Arrays.asList(split).toString());
 			if(split.length == 2) {
-				Player target = mc.getPlayer(split[0]);
+				Player target = Toolbox.matchPlayer(split[0]);
 				if(split[1].equalsIgnoreCase("there")) return targetOf(target);
 				if(split[1].equalsIgnoreCase("home")) return homeOf(target);
 				if(split[1].equalsIgnoreCase("spawn")) return spawnOf(target);

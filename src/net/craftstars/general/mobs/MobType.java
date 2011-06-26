@@ -221,4 +221,12 @@ public enum MobType {
 			return byName(string);
 		}
 	}
+	
+	public String getName() {
+		return singular;
+	}
+	
+	public String getPluralName() {
+		return plural;
+	}
 }

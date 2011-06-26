@@ -107,7 +107,7 @@ public class Target {
 			return new Target(Arrays.asList(victim), tt);
 		}
 		// Is it a world? Optionally prefixed by @
-		World globe = mc.getWorld(targ.replaceFirst("^@", ""));
+		World globe = Toolbox.matchWorld(targ.replaceFirst("^@", ""));
 		if(globe != null) {
 			List<Player> players = globe.getPlayers();
 			return new Target(new ArrayList<LivingEntity>(players), TargetType.OTHER);
