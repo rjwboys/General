@@ -57,11 +57,6 @@ commands:
     description: Teleports a/multiple/all player(s) to another players location.
     aliases: []
     usage: /<command> [<who>] <dest>
-  teleport.summon:
-    permission: general.teleport.other
-    description: Teleports a player to your location.
-    aliases: []
-    usage: /<command> [player]
   inven.clear:
     permission: general.clear
     description: Clears your inventory.

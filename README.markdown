@@ -1,5 +1,5 @@
 # General Plugin for CraftBukkit #
-## Version 3.4.4 [Hindemith]
+## Version 3.4.5 [Hindemith]
 ### README
 - - -
 
@@ -17,3 +17,6 @@ to the root directory of the repository:
 Once you have done this, you can build with ant. For a full build, type
 ```ant dist
 ```
+
+The command-helper.txt file (in resources/) contains suggested aliases to add to CommandHelper's config.txt
+if you are using CommandHelper. This includes things like /home, /spawn, /sethome, /reply, and /summon.
