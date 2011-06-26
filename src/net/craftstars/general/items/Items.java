@@ -408,10 +408,6 @@ public class Items {
 			if(ret.getData() == null) break;
 			if(ret.getData() > 14 || ret.getData() < 0) ret.invalidate(true);
 		break;
-		case LONG_GRASS:
-			if(ret.getData() == null) break;
-			if(ret.getData() > 2 || ret.getData() < 0) ret.invalidate(true);
-		break;
 		case MAP:
 			// No action; any data value is presumed valid...
 			if(ret.getData() == null) break;

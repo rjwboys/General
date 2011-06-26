@@ -36,10 +36,7 @@ names:
   item27: Powered Rail
   item28: Detector Rail
   item30: Spiderweb
-  item31:
-   - Dead Shrub
-   - Tall Grass
-   - Shrub
+  item31: Tall Grass
   item32: Dead Shrub
   item35:
    - White Wool
@@ -264,7 +261,7 @@ names:
   item355: Bed
   item356: Redstone Repeater
   item357: Cookie
-  item385: Map
+  item358: Map
   item2256: Gold Music Disc
   item2257: Green Music Disc
 
