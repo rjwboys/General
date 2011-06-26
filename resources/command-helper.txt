@@ -1,4 +1,4 @@
 /spawn = /teleport spawn
 /home = /teleport home
 /sethome [$dest=here] = /setspawn self $dest
-/reply = /tell @
+/reply $ = /tell @ $
