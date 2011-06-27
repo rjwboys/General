@@ -3,7 +3,7 @@ package net.craftstars.general.mobs;
 
 import org.bukkit.entity.Player;
 
-import net.craftstars.general.General;
+import net.craftstars.general.util.Toolbox;
 
 public enum MobAlignment {
 	FRIENDLY, NEUTRAL, ENEMY;
@@ -11,6 +11,6 @@ public enum MobAlignment {
 	
 	public boolean hasPermission(Player who) {
 		String x = this.toString().toLowerCase();
-		return General.plugin.permissions.hasPermission(who, "general.mobspawn." + x);
+		return Toolbox.hasPermission(who, "general.mobspawn." + x);
 	}
 }

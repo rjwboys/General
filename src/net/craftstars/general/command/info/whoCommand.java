@@ -100,7 +100,7 @@ public class whoCommand extends CommandBase {private String name;
 			Player p = (Player) who;
 			if(p.getName().equals(name))
 				canSeeIp = true;
-			else canSeeIp = General.plugin.permissions.hasPermission(p, "general.who.ip");
+			else canSeeIp = Toolbox.hasPermission(p, "general.who.ip");
 		} else if(who instanceof ConsoleCommandSender) canSeeIp = true;
 		return canSeeIp;
 	}

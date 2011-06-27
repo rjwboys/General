@@ -80,7 +80,7 @@ public class kitCommand extends CommandBase {
 	}
 	
 	private boolean canBypassDelay(Player sender) {
-		return General.plugin.permissions.hasPermission(sender, "general.kit-now");
+		return Toolbox.hasPermission(sender, "general.kit-now");
 	}
 	
 	private void insertIntoPlayerList(GotKit what) {
