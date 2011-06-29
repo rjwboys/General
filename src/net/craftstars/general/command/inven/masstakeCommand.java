@@ -18,11 +18,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.ItemStack;
 
-public class mtakeCommand extends CommandBase {
+public class masstakeCommand extends CommandBase {
 	private Player who;
 	private ArrayList<ItemID> items = new ArrayList<ItemID>();
 	
-	public mtakeCommand(General instance) {
+	public masstakeCommand(General instance) {
 		super(instance);
 	}
 	

@@ -108,7 +108,7 @@ aliases:
     give: [i, item]
     clear: [clean]
     take: []
-    mtake: [mt]
+    masstake: [mtake, mt]
     kit: []
     items: []
   chat:
