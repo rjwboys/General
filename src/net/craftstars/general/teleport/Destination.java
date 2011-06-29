@@ -76,6 +76,8 @@ public class Destination {
 				perm = perm && canOther;
 			}
 		}
+		if(!player.getWorld().equals(calc.getWorld()))
+			perm = perm && Toolbox.hasPermission(player, base + ".into." + calc.getWorld().getName());
 		return perm;
 	}
 	
