@@ -67,6 +67,11 @@ commands:
     description: Removes something from your inventory.
     aliases: []
     usage: /<command> item[:data] [amount] [player]
+  inven.mtake:
+    permission: general.take.mass
+    description: Removes multiple things from your inventory.
+    aliases: [mt]
+    usage: /<command> item1 item2 ... itemn [player]
   misc.heal:
     permission: general.heal
     description: Restores your health. (Can also reduce it if you give a negative amount.)
