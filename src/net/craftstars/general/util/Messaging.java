@@ -4,6 +4,7 @@ package net.craftstars.general.util;
 import java.util.Formatter;
 
 import net.craftstars.general.General;
+import net.craftstars.general.money.AccountStatus;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -137,5 +138,15 @@ public class Messaging {
 	public static boolean lacksPermission(CommandSender from, String message) {
 		Messaging.send(from, "&rose;You don't have permission to " + message + ".");
 		return true;
+	}
+	
+	public static void showCost(Player sender) {
+		String cost = General.plugin.economy.formatCost(AccountStatus.price);
+		Messaging.send(sender, "&eThat would cost " + cost + ".");
+	}
+	
+	public static void showPayment(Player sender) {
+		String cost = General.plugin.economy.formatCost(AccountStatus.price);
+		Messaging.send(sender, "&eYou pay " + cost + ".");
 	}
 }

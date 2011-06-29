@@ -142,17 +142,39 @@ public class Toolbox {
 		return foundPermission;
 	}
 	
-	public static AccountStatus hasFunds(CommandSender sender, String... permissions) {
+	public static AccountStatus hasFunds(CommandSender sender, int quantity, String... permissions) {
 		if(hasPermission(sender, "general.no-money") || sender instanceof ConsoleCommandSender)
 			return AccountStatus.BYPASS;
 		Player player = (Player) sender;
 		if(General.plugin.isFrozen(player)) return AccountStatus.FROZEN;
-		double amount = 0;
+		AccountStatus.price = 0;
 		for(String permission : permissions)
-			amount += General.plugin.config.getDouble(permission.replace("general", "economy"), 0);
-		if(General.plugin.economy.getBalance(player) >= amount)
+			AccountStatus.price += General.plugin.config.getDouble(permission, 0) * quantity;
+		if(General.plugin.economy.getBalance(player) >= AccountStatus.price)
 			return AccountStatus.SUFFICIENT;
 		return AccountStatus.INSUFFICIENT;
+	}
+	
+	public static boolean canPay(Player sender, int quantity, String... permissions) {
+		// Don't want the price to change between checking for funds and removing them!
+		synchronized(AccountStatus.class) {
+			AccountStatus canPay = Toolbox.hasFunds(sender, quantity, permissions);
+			switch(canPay) {
+			case BYPASS:
+				break;
+			case FROZEN:
+				Messaging.showCost(sender);
+				return false;
+			case INSUFFICIENT:
+				Messaging.showCost(sender);
+				Messaging.send(sender, "&cUnfortunately, you don't have that much.");
+				return false;
+			case SUFFICIENT:
+				Messaging.showPayment(sender);
+				General.plugin.economy.takePayment(sender, AccountStatus.price);
+			}
+			return true;
+		}
 	}
 	
 	public static String combineSplit(String[] args, int startAt) {
