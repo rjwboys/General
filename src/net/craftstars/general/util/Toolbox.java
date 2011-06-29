@@ -155,23 +155,26 @@ public class Toolbox {
 		return AccountStatus.INSUFFICIENT;
 	}
 	
-	public static boolean canPay(Player sender, int quantity, String... permissions) {
+	public static boolean canPay(CommandSender sender, int quantity, String... permissions) {
+		if(sender instanceof ConsoleCommandSender) return true;
+		if(!(sender instanceof Player)) return false;
+		Player player = (Player) sender;
 		// Don't want the price to change between checking for funds and removing them!
 		synchronized(AccountStatus.class) {
-			AccountStatus canPay = Toolbox.hasFunds(sender, quantity, permissions);
+			AccountStatus canPay = Toolbox.hasFunds(player, quantity, permissions);
 			switch(canPay) {
 			case BYPASS:
 				break;
 			case FROZEN:
-				Messaging.showCost(sender);
+				Messaging.showCost(player);
 				return false;
 			case INSUFFICIENT:
-				Messaging.showCost(sender);
+				Messaging.showCost(player);
 				Messaging.send(sender, "&cUnfortunately, you don't have that much.");
 				return false;
 			case SUFFICIENT:
-				Messaging.showPayment(sender);
-				General.plugin.economy.takePayment(sender, AccountStatus.price);
+				Messaging.showPayment(player);
+				General.plugin.economy.takePayment(player, AccountStatus.price);
 			}
 			return true;
 		}
