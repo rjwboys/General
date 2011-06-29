@@ -57,7 +57,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 	
 	@Override
 	public String toString() {
-		if(dataMatters) return Integer.toString(ID) + ":" + Integer.toString(data);
+		if(dataMatters) return Integer.toString(ID) + "/" + Integer.toString(data);
 		return Integer.toString(ID);
 	}
 	
