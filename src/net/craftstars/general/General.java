@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.items.Items;
@@ -48,6 +49,7 @@ public class General extends JavaPlugin {
 	
 	private HashMap<String, String> playersAway = new HashMap<String, String>();
 	private HashMap<String,String> lastMessager = new HashMap<String,String>();
+	private HashSet<String> frozenAccounts = new HashSet<String>();
 	private String tagFormat;
 	
 	public boolean isAway(Player who) {
@@ -279,5 +281,17 @@ public class General extends JavaPlugin {
 			&& args.length > 1
 			&& args[1].equalsIgnoreCase("help")
 			&& HelpHandler.hasEntry("general_" + args[0]);
+	}
+
+	public boolean isFrozen(Player sender) {
+		return frozenAccounts.contains(sender.getName());
+	}
+	
+	public void freeze(Player sender) {
+		frozenAccounts.add(sender.getName());
+	}
+	
+	public void unfreeze(Player sender) {
+		frozenAccounts.remove(sender.getName());
 	}
 }

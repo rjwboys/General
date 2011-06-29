@@ -3,6 +3,7 @@ package net.craftstars.general.command;
 
 import java.util.Arrays;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -56,6 +57,8 @@ public class generalCommand extends CommandBase {
 				return SHOW_USAGE;
 			}
 			return itemEdit(sender, Arrays.copyOfRange(args, 1, args.length));
+		} else if(args[0].equalsIgnoreCase("cost")) {
+			sender.sendMessage("Currently you need to be a player to check the cost of a command.");
 		}
 		return SHOW_USAGE;
 	}
@@ -99,6 +102,11 @@ public class generalCommand extends CommandBase {
 				return Messaging.lacksPermission(sender, "administrate the General plugin");
 			doSave(sender);
 			return true;
+		} else if(args[0].equalsIgnoreCase("cost")) {
+			String check = Toolbox.combineSplit(args, 1);
+			if(check.charAt(0) == '/') check = check.substring(1);
+			General.plugin.freeze(sender);
+			Bukkit.getServer().dispatchCommand(sender, check);
 		}
 		return SHOW_USAGE;
 	}

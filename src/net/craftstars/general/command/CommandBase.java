@@ -20,7 +20,9 @@ public abstract class CommandBase {
 	public boolean runCommand(CommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		if(sender instanceof Player) {
-			return this.fromPlayer((Player) sender, command, commandLabel, args);
+			boolean result = this.fromPlayer((Player) sender, command, commandLabel, args);
+			General.plugin.unfreeze((Player) sender);
+			return result;
 		} else if(sender instanceof ConsoleCommandSender) {
 			return this.fromConsole((ConsoleCommandSender) sender, command, commandLabel, args);
 		} else {

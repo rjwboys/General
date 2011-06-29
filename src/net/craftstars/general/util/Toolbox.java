@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import net.craftstars.general.General;
+import net.craftstars.general.money.AccountStatus;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -139,6 +140,19 @@ public class Toolbox {
 			if(General.plugin.permissions.hasPermission(who, permission)) foundPermission = true;
 		}
 		return foundPermission;
+	}
+	
+	public static AccountStatus hasFunds(CommandSender sender, String... permissions) {
+		if(hasPermission(sender, "general.no-money") || sender instanceof ConsoleCommandSender)
+			return AccountStatus.BYPASS;
+		Player player = (Player) sender;
+		if(General.plugin.isFrozen(player)) return AccountStatus.FROZEN;
+		double amount = 0;
+		for(String permission : permissions)
+			amount += General.plugin.config.getDouble(permission.replace("general", "economy"), 0);
+		if(General.plugin.economy.getBalance(player) >= amount)
+			return AccountStatus.SUFFICIENT;
+		return AccountStatus.INSUFFICIENT;
 	}
 	
 	public static String combineSplit(String[] args, int startAt) {
