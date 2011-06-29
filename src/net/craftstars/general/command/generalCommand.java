@@ -107,6 +107,7 @@ public class generalCommand extends CommandBase {
 			if(check.charAt(0) == '/') check = check.substring(1);
 			General.plugin.freeze(sender);
 			Bukkit.getServer().dispatchCommand(sender, check);
+			return true;
 		}
 		return SHOW_USAGE;
 	}

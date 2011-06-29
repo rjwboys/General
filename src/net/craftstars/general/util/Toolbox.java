@@ -142,20 +142,22 @@ public class Toolbox {
 		return foundPermission;
 	}
 	
-	public static AccountStatus hasFunds(CommandSender sender, int quantity, String... permissions) {
+	private static AccountStatus hasFunds(CommandSender sender, int quantity, String... permissions) {
 		if(hasPermission(sender, "general.no-money") || sender instanceof ConsoleCommandSender)
 			return AccountStatus.BYPASS;
 		Player player = (Player) sender;
-		if(General.plugin.isFrozen(player)) return AccountStatus.FROZEN;
 		AccountStatus.price = 0;
 		for(String permission : permissions)
 			AccountStatus.price += General.plugin.config.getDouble(permission, 0) * quantity;
+		if(General.plugin.isFrozen(player)) return AccountStatus.FROZEN;
 		if(General.plugin.economy.getBalance(player) >= AccountStatus.price)
 			return AccountStatus.SUFFICIENT;
 		return AccountStatus.INSUFFICIENT;
 	}
 	
 	public static boolean canPay(CommandSender sender, int quantity, String... permissions) {
+		//General.logger.debug("Checking cost of: " + Arrays.toString(permissions));
+		if(General.plugin.economy == null) return true;
 		if(sender instanceof ConsoleCommandSender) return true;
 		if(!(sender instanceof Player)) return false;
 		Player player = (Player) sender;

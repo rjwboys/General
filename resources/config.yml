@@ -71,7 +71,7 @@ economy:
     heal: 0
     mobspawn: 0
     kit: 0
-  items:
+  give:
     351: 0
     276: 0
     # etc

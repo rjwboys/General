@@ -98,7 +98,7 @@ public class giveCommand extends CommandBase {
 			return true;
 		}
 		// Make sure the player has enough money for this item
-		if(!Toolbox.canPay(sender, amount, "economy.give." + item.toString())) return true;
+		if(!Toolbox.canPay(sender, amount, "economy.give.item" + item.toString())) return true;
 		
 		boolean isGift = !who.getName().equals(sender.getName());
 		doGive(isGift);
