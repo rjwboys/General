@@ -141,14 +141,14 @@ public class Messaging {
 	}
 	
 	public static void showCost(Player sender) {
-		if(AccountStatus.price > 0) {
-			String cost = General.plugin.economy.formatCost(AccountStatus.price);
-			Messaging.send(sender, "&eThat would cost " + cost + ".");
-		}
+		String cost = General.plugin.economy.formatCost(AccountStatus.price);
+		Messaging.send(sender, "&eThat would cost " + cost + ".");
 	}
 	
 	public static void showPayment(Player sender) {
-		String cost = General.plugin.economy.formatCost(AccountStatus.price);
-		Messaging.send(sender, "&eYou pay " + cost + ".");
+		if(AccountStatus.price > 0) {
+			String cost = General.plugin.economy.formatCost(AccountStatus.price);
+			Messaging.send(sender, "&eYou pay " + cost + ".");
+		}
 	}
 }

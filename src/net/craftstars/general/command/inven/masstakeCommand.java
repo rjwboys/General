@@ -2,7 +2,6 @@
 package net.craftstars.general.command.inven;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
@@ -87,7 +86,16 @@ public class masstakeCommand extends CommandBase {
 				if(id.getId() == invenItems[j].getTypeId() && Items.dataEquiv(id, d))
 					i.setItem(j, null);
 		}
-		Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &fvarious items&2 was taken from you.");
+		StringBuilder itemsText = new StringBuilder();
+		for(ItemID item : items) {
+			itemsText.append(Items.name(item));
+			itemsText.append("&2, &f");
+		}
+		int lastComma = itemsText.lastIndexOf("&2, &f");
+		if(lastComma >= 0 && lastComma < itemsText.length())
+			itemsText.delete(lastComma, itemsText.length());
+		Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &f" + itemsText.toString()
+			+ "&2 was taken from you.");
 		return removed;
 	}
 }
