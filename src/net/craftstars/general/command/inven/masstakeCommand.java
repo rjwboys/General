@@ -3,7 +3,6 @@ package net.craftstars.general.command.inven;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
@@ -80,24 +79,14 @@ public class masstakeCommand extends CommandBase {
 	private int doTake() {
 		int removed = 0;
 		PlayerInventory i = who.getInventory();
-		ArrayList<ItemStack> inventItems = new ArrayList<ItemStack>(Arrays.asList(i.getContents()));
-		for (ItemStack stk : inventItems) {
-			int n, d;
-			n = stk.getAmount();
-			d = stk.getDurability();
-			if(!items.contains(d)) continue;
-			// if(!Items.isDamageable(item.getId()) && item.getData() != d) continue;
-			i.setItem(inventItems.indexOf(stk), null);
+		ItemStack[] invenItems = i.getContents();
+		for(int j = 0; j < invenItems.length; j++) {
+			if(invenItems[j] == null) continue;
+			int d = invenItems[j].getDurability();
+			for(ItemID id : items)
+				if(id.getId() == invenItems[j].getTypeId() && Items.dataEquiv(id, d))
+					i.setItem(j, null);
 		}
-		/*for (ItemID item : items) {
-			if(item.getData() != null){
-				Messaging.broadcast("Data:"+item.getId()+":"+item.getData().toString());
-				byte data = item.getData().byteValue();
-				i.removeItem(new ItemStack(item.getId(), 1, (short)0, data));
-			}else{
-				i.removeItem(new ItemStack(item.getId(), 1, (short)0, null));
-			}
-		}*/
 		Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &fvarious items&2 was taken from you.");
 		return removed;
 	}

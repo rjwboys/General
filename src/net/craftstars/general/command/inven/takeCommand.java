@@ -140,9 +140,6 @@ public class takeCommand extends CommandBase {
 	
 	private void doTake() {
 		int removed = 0;
-		// if(amount <= 0) {
-		// who.getInventory().remove(item.getId());
-		// } else {
 		PlayerInventory i = who.getInventory();
 		Map<Integer, ? extends ItemStack> items = i.all(item.getId());
 		for(int x : items.keySet()) {
@@ -150,8 +147,7 @@ public class takeCommand extends CommandBase {
 			int n, d;
 			n = stk.getAmount();
 			d = stk.getDurability();
-			if(!dataEquiv(item, d)) continue;
-			// if(!Items.isDamageable(item.getId()) && item.getData() != d) continue;
+			if(!Items.dataEquiv(item, d)) continue;
 			if(amount > 0 && n > amount) {
 				stk.setAmount(n - amount);
 				removed += amount;
@@ -163,14 +159,7 @@ public class takeCommand extends CommandBase {
 				i.setItem(x, null);
 			} else if(amount <= 0) i.setItem(x, null);
 		}
-		// }
 		Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &f" + Items.name(item)
 				+ "&2 was taken from you.");
-	}
-	
-	private boolean dataEquiv(ItemID id, int data) {
-		if(Items.isDamageable(id.getId())) return true;
-		if(id.getData() == null) return true;
-		return data == id.getData();
 	}
 }

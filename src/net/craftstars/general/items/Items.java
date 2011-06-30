@@ -588,4 +588,10 @@ public class Items {
 	public static void setHook(String main, String sub, ItemID id) {
 		hooks.put(main + ":" + sub, id);
 	}
+
+	public static boolean dataEquiv(ItemID id, int data) {
+		if(isDamageable(id.getId())) return true;
+		if(id.getData() == null) return true;
+		return data == id.getData();
+	}
 }
