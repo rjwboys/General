@@ -77,8 +77,10 @@ public class healCommand extends CommandBase {
 		if(who == null) return Messaging.invalidPlayer(sender, args[0]);
 		
 		if(commandLabel.equalsIgnoreCase("hurt")) amount = -amount;
+		else commandLabel = "heal";
 		if(amount < 0 && !who.equals(sender) && Toolbox.lacksPermission(sender, "general.hurt"))
 			return Messaging.lacksPermission(sender, "hurt players");
+		if(!Toolbox.canPay(sender, 1, "economy." + commandLabel)) return true;
 		amount = doHeal(who, amount);
 		if(!sender.equals(who)) {
 			Messaging.send(sender, "&e" + who.getName() + "&f has been " + (amount < 0 ? "hurt" : "healed")

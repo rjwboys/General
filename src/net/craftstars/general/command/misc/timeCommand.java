@@ -67,30 +67,37 @@ public class timeCommand extends CommandBase {
 		if(Toolbox.lacksPermission(sender, "general.time.set"))
 			return Messaging.lacksPermission(sender, "set the time");
 		if(time.equalsIgnoreCase("day")) { // 6am
+			if(!Toolbox.canPay(sender, 1, "economy.time.day")) return true;
 			this.world.setTime(this.getStartTime());
 			Messaging.send(sender, "Time set to day: " + Time.formatTime(0, Time.currentFormat) + "!");
 			return true;
 		} else if(time.equalsIgnoreCase("night")) { // 7:48pm
+			if(!Toolbox.canPay(sender, 1, "economy.time.night")) return true;
 			this.world.setTime(this.getStartTime() + 13800);
 			Messaging.send(sender, "Time set to night: " + Time.formatTime(13800, Time.currentFormat) + "!");
 			return true;
 		} else if(Toolbox.equalsOne(time, "dusk", "sunset", "evening")) { // 6pm
+			if(!Toolbox.canPay(sender, 1, "economy.time.dusk")) return true;
 			this.world.setTime(this.getStartTime() + 12000);
 			Messaging.send(sender, "Time set to dusk: " + Time.formatTime(12000, Time.currentFormat) + "!");
 			return true;
 		} else if(Toolbox.equalsOne(time, "dawn", "sunrise", "morning")) { // 4:12am
+			if(!Toolbox.canPay(sender, 1, "economy.time.dawn")) return true;
 			this.world.setTime(this.getStartTime() + 22200);
 			Messaging.send(sender, "Time set to dawn: " + Time.formatTime(22200, Time.currentFormat) + "!");
 			return true;
 		} else if(Toolbox.equalsOne(time, "midday", "noon")) { // 12am
+			if(!Toolbox.canPay(sender, 1, "economy.time.noon")) return true;
 			this.world.setTime(this.getStartTime() + 6000);
 			Messaging.send(sender, "Time set to noon: " + Time.formatTime(6000, Time.currentFormat) + "!");
 			return true;
 		} else if(Toolbox.equalsOne(time, "midnight")) { // 12pm
+			if(!Toolbox.canPay(sender, 1, "economy.time.midnight")) return true;
 			this.world.setTime(this.getStartTime() + 18000);
 			Messaging.send(sender, "Time set to midnight: " + Time.formatTime(18000, Time.currentFormat) + "!");
 			return true;
 		} else if(time.startsWith("+")) {
+			if(!Toolbox.canPay(sender, 1, "economy.time.set")) return true;
 			try {
 				long now = this.world.getTime();
 				long ticks = Time.extractDuration(time.substring(1));
@@ -103,6 +110,7 @@ public class timeCommand extends CommandBase {
 				return SHOW_USAGE;
 			}
 		} else if(time.startsWith("-")) {
+			if(!Toolbox.canPay(sender, 1, "economy.time.set")) return true;
 			try {
 				long now = this.world.getTime();
 				long ticks = Time.extractDuration(time.substring(1));
@@ -115,6 +123,7 @@ public class timeCommand extends CommandBase {
 				return SHOW_USAGE;
 			}
 		} else {
+			if(!Toolbox.canPay(sender, 1, "economy.time.set")) return true;
 			if(time.startsWith("=")) time = time.substring(1);
 			try {
 				long ticks = Time.extractTime(time);

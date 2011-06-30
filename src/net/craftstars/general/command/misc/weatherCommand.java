@@ -96,6 +96,7 @@ public class weatherCommand extends CommandBase {
 	private void doThunder(CommandSender sender, World world) {
 		if(Toolbox.lacksPermission(sender, "general.weather.thunder"))
 			Messaging.lacksPermission(sender, "toggle thunder");
+		if(!Toolbox.canPay(sender, 1, "economy.weather.thunder")) return;
 		else if(world.isThundering()) {
 			world.setThundering(false);
 			Messaging.send(sender, "Thunder stopped!");
@@ -107,6 +108,7 @@ public class weatherCommand extends CommandBase {
 	}
 	
 	private void doWeather(CommandSender sender, World world, long duration) {
+		if(!Toolbox.canPay(sender, 1, "economy.weather.storm")) return;
 		boolean state = duration != 0;
 		boolean hasStorm = world.hasStorm();
 		world.setStorm(state);
@@ -123,6 +125,7 @@ public class weatherCommand extends CommandBase {
 	private void doLightning(CommandSender sender, World world, Location centre) {
 		if(Toolbox.lacksPermission(sender, "general.weather.zap"))
 			Messaging.lacksPermission(sender, "summon lightning");
+		if(!Toolbox.canPay(sender, 1, "economy.weather.zap")) return;
 		else {
 			int x, y, z;
 			x = centre.getBlockX();

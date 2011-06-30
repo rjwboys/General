@@ -66,6 +66,20 @@ time:
 
 economy:
   system: None
+  heal: 0
+  hurt: 0
+  time:
+    day: 0
+    night: 0
+    dawn: 0
+    dusk: 0
+    noon: 0
+    midnight: 0
+    set: 0
+  weather:
+    storm: 0
+    thunder: 0
+    zap: 0
   commands:
     timeset: 0
     heal: 0
