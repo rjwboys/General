@@ -26,9 +26,9 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.DyeColor;
 
 public enum MobType {
-	CHICKEN(MobAlignment.FRIENDLY, CreatureType.CHICKEN, 1, "Chicken", "Chickens", "Chicken", "Duck"),
-	COW(MobAlignment.FRIENDLY, CreatureType.COW, 2, "Cow", "Cows", "Cow"),
-	CREEPER(MobAlignment.ENEMY, CreatureType.CREEPER, 5, "Creeper", "Creepers", "Creeper") {
+	CHICKEN(MobAlignment.FRIENDLY, CreatureType.CHICKEN, 1, "Chicken", "Chickens", "Duck"),
+	COW(MobAlignment.FRIENDLY, CreatureType.COW, 2, "Cow", "Cows"),
+	CREEPER(MobAlignment.ENEMY, CreatureType.CREEPER, 5, "Creeper", "Creepers") {
 		@Override
 		public boolean setData(LivingEntity mob, Player setter, String data) {
 			if(! (mob instanceof Creeper)) return false;
@@ -42,10 +42,10 @@ public enum MobType {
 			return false;
 		}
 	},
-	GHAST(MobAlignment.ENEMY, CreatureType.GHAST, 6, "Ghast", "Ghasts", "Ghast", "NetherSquid"),
-	GIANT_ZOMBIE(MobAlignment.ENEMY, CreatureType.GIANT, 13, "Giant", "Giants", "GiantZombie", "ZombieGiant", "Giant"),
-	HUMAN(MobAlignment.ENEMY, CreatureType.MONSTER, 12, "Human", "Humans", "Human", "Monster", "Bandit"),
-	PIG(MobAlignment.FRIENDLY, CreatureType.PIG, 0, "Pig", "Pigs", "Pig") {
+	GHAST(MobAlignment.ENEMY, CreatureType.GHAST, 6, "Ghast", "Ghasts", "NetherSquid"),
+	GIANT_ZOMBIE(MobAlignment.ENEMY, CreatureType.GIANT, 13, "Giant", "Giants", "GiantZombie", "ZombieGiant"),
+	HUMAN(MobAlignment.ENEMY, CreatureType.MONSTER, 12, "Human", "Humans", "Monster", "Bandit"),
+	PIG(MobAlignment.FRIENDLY, CreatureType.PIG, 0, "Pig", "Pigs") {
 		@Override
 		public boolean setData(LivingEntity mob, Player setter, String data) {
 			if(! (mob instanceof Pig)) return false;
@@ -59,8 +59,7 @@ public enum MobType {
 			return false;
 		}
 	},
-	PIG_ZOMBIE(MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 7, "Zombie Pigman", "Zombie Pigmen", "PigZombie",
-			"ZombiePigman") {
+	PIG_ZOMBIE(MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 7, "Zombie Pigman", "Zombie Pigmen", "PigZombie") {
 		@Override
 		public boolean setData(LivingEntity mob, Player setter, String data) {
 			if(! (mob instanceof PigZombie)) return false;
@@ -86,7 +85,7 @@ public enum MobType {
 			return true;
 		}
 	},
-	SHEEP(MobAlignment.FRIENDLY, CreatureType.SHEEP, 3, "Sheep", "Sheep", "Sheep") {
+	SHEEP(MobAlignment.FRIENDLY, CreatureType.SHEEP, 3, "Sheep", "Sheep") {
 		@Override
 		public boolean setData(LivingEntity mob, Player setter, String data) {
 			if(! (mob instanceof Sheep)) return false;
@@ -106,7 +105,7 @@ public enum MobType {
 		}
 	},
 	SKELETON(MobAlignment.ENEMY, CreatureType.SKELETON, 8, "Skeleton", "Skeletons", "Skeleton"),
-	SLIME(MobAlignment.ENEMY, CreatureType.SLIME, 11, "Slime", "Slimes", "Slime", "GelatinousCube", "Goo", "Gooey") {
+	SLIME(MobAlignment.ENEMY, CreatureType.SLIME, 11, "Slime", "Slimes", "GelatinousCube", "Goo", "Gooey") {
 		@Override
 		public boolean setData(LivingEntity mob, Player setter, String data) {
 			if(! (mob instanceof Slime)) return false;
@@ -125,7 +124,7 @@ public enum MobType {
 	},
 	SPIDER(MobAlignment.ENEMY, CreatureType.SPIDER, 9, "Spider", "Spiders", "Spider"),
 	SQUID(MobAlignment.FRIENDLY, CreatureType.SQUID, 4, "Squid", "Squid", "Squid"),
-	WOLF(MobAlignment.NEUTRAL, CreatureType.WOLF, 14, "Wolf", "Wolves", "Wolf", "Dog") {
+	WOLF(MobAlignment.NEUTRAL, CreatureType.WOLF, 14, "Wolf", "Wolves", "Dog", "Dogs") {
 		@Override
 		public boolean setData(LivingEntity mob, Player setter, String data) {
 			if(! (mob instanceof Wolf)) return false;
@@ -152,7 +151,7 @@ public enum MobType {
 			return true;
 		}
 	},
-	ZOMBIE(MobAlignment.ENEMY, CreatureType.ZOMBIE, 10, "Zombie", "Zombies", "Zombie");
+	ZOMBIE(MobAlignment.ENEMY, CreatureType.ZOMBIE, 10, "Zombie", "Zombies");
 	private MobAlignment alignment;
 	private CreatureType ctype;
 	private String[] aliases;
@@ -202,6 +201,8 @@ public enum MobType {
 				namesToEnumMapping.put(name.toLowerCase(), t);
 			}
 			idToEnumMapping.put(t.id, t);
+			namesToEnumMapping.put(t.singular.toLowerCase(), t);
+			namesToEnumMapping.put(t.plural.toLowerCase(), t);
 		}
 	}
 	
