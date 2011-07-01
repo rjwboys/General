@@ -413,7 +413,7 @@ public class Items {
 		break;
 		case MAP:
 			// No action; any data value is presumed valid...
-			if(ret.getData() == null) break;
+			if(ret.getData() == null) ret.setData(0);
 			{ // TODO: Rewrite to use Bukkit API
 				World w = ((CraftWorld) Bukkit.getServer().getWorlds().get(0)).getHandle();
 				String mapName = "map_" + ret.getData();
@@ -422,7 +422,7 @@ public class Items {
 					mapMap = WorldMapCollection.class.getDeclaredField("b");
 					mapMap.setAccessible(true);
 					@SuppressWarnings("rawtypes")
-					Object map = ((Map) mapMap.get(w.z)).get(mapName);
+					Object map = ((Map) mapMap.get(w.worldMaps)).get(mapName);
 					if(map == null) ret.invalidate(true);
 				} catch(SecurityException e) {}
 				catch(NoSuchFieldException e) {}

@@ -13,8 +13,8 @@ import net.craftstars.general.teleport.Destination;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
-public class whoCommand extends CommandBase {private String name;
-	private String displayName, bar, location, home, world, ip, status;
+public class whoCommand extends CommandBase {
+	private String name, displayName, bar, location, home, world, ip, status;
 	
 	public whoCommand(General instance) {
 		super(instance);
