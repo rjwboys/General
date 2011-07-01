@@ -35,9 +35,12 @@ names:
   item26: Bed
   item27: Powered Rail
   item28: Detector Rail
+  item29: Sticky Piston
   item30: Spiderweb
   item31: Tall Grass
   item32: Dead Shrub
+  item33: Piston
+  item34: Piston Head
   item35:
    - White Wool
    - Orange Wool
@@ -262,6 +265,7 @@ names:
   item356: Redstone Repeater
   item357: Cookie
   item358: Map
+  item359: Shears
   item2256: Gold Music Disc
   item2257: Green Music Disc
 
@@ -271,6 +275,10 @@ variants:
     type1: [pine, red, redwood, spruce]
     type2: [birch, white]
   item17:
+    type0: [oak]
+    type1: [pine, red, redwood, spruce]
+    type2: [birch, white]
+  item18:
     type0: [oak]
     type1: [pine, red, redwood, spruce]
     type2: [birch, white]
@@ -373,8 +381,10 @@ aliases: {
   Sandstone: 24,
   MidiBlock: 24,
   PowerRail: 27,
-  Spiderweb: 30,
+  StickyPiston: 29,
+  Spiderweb: 30, Cobweb: 30,
   DeadShrub: 32,
+  Piston: 33,
   Cloth: 35, Fabric: 35,
   Dandelion: 37, YellowDandelion: 37,
   Rose: 38, RedFlower: 38,

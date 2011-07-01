@@ -396,6 +396,7 @@ public class Items {
 		break;
 		case SAPLING:
 		case LOG:
+		case LEAVES:
 			if(ret.getData() == null) break;
 			if(ret.getData() > 2 || ret.getData() < 0) ret.invalidate(true);
 		break;
@@ -406,6 +407,8 @@ public class Items {
 		break;
 		case MOB_SPAWNER: // creaturebox support TODO: Why do I need this here?
 			if(ret.getData() == null) break;
+			if(Bukkit.getServer().getPluginManager().getPlugin("creaturebox") == null && ret.getData() != 0)
+				ret.invalidate(true);
 			if(ret.getData() > 14 || ret.getData() < 0) ret.invalidate(true);
 		break;
 		case MAP:
