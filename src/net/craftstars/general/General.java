@@ -77,16 +77,6 @@ public class General extends JavaPlugin {
 		return lastMessager.get(to);
 	}
 	
-	public General() {
-		if(plugin != null) General.logger.warn("Seems to have loaded twice for some reason.");
-		plugin = this;
-	}
-	
-	@Override
-	public void onLoad() {
-		logger.info("Loaded.");
-	}
-	
 	PlayerListener pl = new PlayerListener() {
 		@Override
 		public void onPlayerJoin(PlayerJoinEvent event) {
@@ -112,6 +102,11 @@ public class General extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		if(plugin != null) {
+			General.logger.warn("Seems to have loaded twice for some reason; skipping initialization.");
+			return;
+		}
+		plugin = this;
 		logger.setPluginVersion(this.getDescription().getVersion());
 		loadAllConfigs();
 		logger.info("[Codename: " + General.codename + "] Plugin successfully loaded!");
@@ -150,7 +145,10 @@ public class General extends JavaPlugin {
 			} catch(Exception ex) {
 				econType = "None";
 			}
-			if(econType.equalsIgnoreCase("None")) return;
+			if(econType.equalsIgnoreCase("None")) {
+				logger.info("No economy system detected.");
+				return;
+			}
 			Class<? extends EconomyBase> clazz =
 					this.getClass()
 							.getClassLoader()
@@ -166,7 +164,9 @@ public class General extends JavaPlugin {
 			ex.printStackTrace();
 			gotRequestedEconomy = false;
 		}
-		logger.info(" Using [" + economy.getName() + " " + economy.getVersion() + "] for economy.");
+		if(economy != null)
+			logger.info("Using [" + economy.getName() + " " + economy.getVersion() + "] for economy.");
+		else logger.info("Requested economy failed to load; no economy will be used.");
 	}
 	
 	private void setupPermissions(boolean firstTime) {

@@ -22,7 +22,8 @@ public class Time {
 			if(in24hr) currentFormat = TimeFormat.TWENTY_FOUR_HOUR;
 			showTicks = General.plugin.config.getBoolean("time.show-ticks", true);
 		} catch(Exception x) {
-			General.logger.warn("Error loading time configuration settings: " + x);
+			General.logger.warn("Error loading time configuration settings:");
+			x.printStackTrace();
 		}
 	}
 	
