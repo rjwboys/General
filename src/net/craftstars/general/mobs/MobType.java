@@ -145,14 +145,16 @@ public enum MobType {
 			} else if(Toolbox.equalsOne(data, "tame", "pet")) {
 				if(Toolbox.lacksPermission(setter, "general.mobspawn.wolf.tamed", "general.mobspawn.variants"))
 					return !Messaging.lacksPermission(setter, "spawn tamed wolves");
-				String owner = setter.getName();
 				dog.setTamed(true);
-				dog.setOwner(Bukkit.getServer().getPlayer(owner));
+				dog.setOwner(setter);
 			} else {
 				if(Toolbox.lacksPermission(setter, "general.mobspawn.wolf.tamed", "general.mobspawn.variants"))
 					return !Messaging.lacksPermission(setter, "spawn tamed wolves");
+				Player owner = Toolbox.matchPlayer(data);
+				if(owner == null)
+					Messaging.send(setter, "&dWarning: that player doesn't seem to exist.");
 				dog.setTamed(true);
-				dog.setOwner(Bukkit.getServer().getPlayer(data));
+				dog.setOwner(owner);
 			}
 			return true;
 		}
