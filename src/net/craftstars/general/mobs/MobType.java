@@ -64,7 +64,14 @@ public enum MobType {
 		public boolean setData(LivingEntity mob, Player setter, String data) {
 			if(! (mob instanceof PigZombie)) return false;
 			if(Toolbox.equalsOne(data, "calm", "passive")) return true;
-			if(!Toolbox.equalsOne(data, "angry", "mad", "aggressive", "hostile")) return false;
+			int anger = 400;
+			if(!Toolbox.equalsOne(data, "angry", "mad", "aggressive", "hostile")) {
+				try {
+					anger = Integer.parseInt(data);
+				} catch(NumberFormatException e) {
+					return false;
+				}
+			}
 			if(Toolbox.lacksPermission(setter, "general.mobspawn.pig-zombie.angry", "general.mobspawn.neutral.angry",
 					"general.mobspawn.variants"))
 				return !Messaging.lacksPermission(setter, "spawn angry zombie pigmen");
@@ -74,9 +81,9 @@ public enum MobType {
 			CraftPigZombie cpz = (CraftPigZombie) zom;
 			EntityPigZombie epz = (EntityPigZombie) cpz.getHandle();
 			try {
-				Field anger = EntityPigZombie.class.getDeclaredField("angerLevel");
-				anger.setAccessible(true);
-				anger.setInt(epz, 400);
+				Field angerLevel = EntityPigZombie.class.getDeclaredField("angerLevel");
+				angerLevel.setAccessible(true);
+				angerLevel.setInt(epz, anger);
 			} catch(SecurityException e) {}
 			catch(NoSuchFieldException e) {}
 			catch(IllegalArgumentException e) {}
@@ -147,7 +154,6 @@ public enum MobType {
 				dog.setTamed(true);
 				dog.setOwner(Bukkit.getServer().getPlayer(data));
 			}
-			// End section of accessing internal Minecraft code
 			return true;
 		}
 	},
