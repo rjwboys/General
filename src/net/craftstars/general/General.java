@@ -58,10 +58,14 @@ public class General extends JavaPlugin {
 	
 	public void goAway(Player who, String reason) {
 		playersAway.put(who.getName(), reason);
+		if(config.getBoolean("away-sleep", true))
+			who.setSleepingIgnored(true);
 	}
 	
 	public void unAway(Player who) {
 		playersAway.remove(who.getName());
+		if(config.getBoolean("away-sleep", true))
+			who.setSleepingIgnored(false);
 	}
 	
 	public String whyAway(Player who) {
