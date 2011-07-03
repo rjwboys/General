@@ -2,6 +2,7 @@
 package net.craftstars.general.command.info;
 
 
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -14,7 +15,6 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class whoCommand extends CommandBase {
-	private String name, displayName, bar, location, home, world, ip, status;
 	
 	public whoCommand(General instance) {
 		super(instance);
@@ -22,16 +22,16 @@ public class whoCommand extends CommandBase {
 	
 	@Override
 	public boolean fromPlayer(Player toWhom, Command command, String commandLabel, String[] args) {
+		Player who;
 		if(args.length < 1 || commandLabel.equalsIgnoreCase("whoami"))
-			getInfo(toWhom);
+			who = toWhom;
 		else if(args.length == 1) {
-			Player who = Toolbox.matchPlayer(args[0]);
+			who = Toolbox.matchPlayer(args[0]);
 			if(!toWhom.equals(who) && Toolbox.lacksPermission(toWhom, "general.who", "general.basic"))
 				return Messaging.lacksPermission(toWhom, "view info on users other than yourself");
 			if(who == null) return true;
-			getInfo(who);
 		} else return SHOW_USAGE;
-		showInfo(toWhom);
+		showInfo(who, toWhom);
 		return true;
 	}
 	
@@ -41,22 +41,8 @@ public class whoCommand extends CommandBase {
 		if(args.length != 1) return SHOW_USAGE;
 		Player who = Toolbox.matchPlayer(args[0]);
 		if(who == null) return true;
-		getInfo(who);
-		showInfo(toWhom);
+		showInfo(who, toWhom);
 		return true;
-	}
-	
-	private void getInfo(Player ofWhom) {
-		this.name = ofWhom.getName();
-		this.displayName = ofWhom.getDisplayName();
-		this.bar = getHealthBar(ofWhom);
-		this.location = Toolbox.formatLocation(ofWhom.getLocation());
-		this.home = Toolbox.formatLocation(Destination.homeOf(ofWhom).getLoc());
-		this.world = ofWhom.getWorld().getName();
-		this.ip = ofWhom.getAddress().getAddress().getHostAddress();
-		if(General.plugin.isAway(ofWhom))
-			this.status = "Away (" + General.plugin.whyAway(ofWhom) + ")";
-		else this.status = "Around";
 	}
 	
 	private String getHealthBar(Player ofWhom) {
@@ -73,32 +59,37 @@ public class whoCommand extends CommandBase {
 		return healthBar;
 	}
 
-	private void showInfo(CommandSender toWhom) {
+	private void showInfo(Player ofWhom, CommandSender toWhom) {
 		Messaging.send(toWhom, "&f------------------------------------------------");
-		Messaging.send(toWhom, "&e Player &f[" + this.name + "]&e Info");
+		Messaging.send(toWhom, "&e Player &f[" + ofWhom.getName() + "]&e Info");
 		Messaging.send(toWhom, "&f------------------------------------------------");
-		Messaging.send(toWhom, "&6 Username: &f" + this.name);
-		Messaging.send(toWhom, "&6 DisplayName: &f" + this.displayName);
+		Messaging.send(toWhom, "&6 Username: &f" + ofWhom.getName());
+		Messaging.send(toWhom, "&6 DisplayName: &f" + ofWhom.getDisplayName());
 		if(General.plugin.config.getBoolean("playerlist.show-health", true))
-			Messaging.send(toWhom, "&6 -&e Health: &f" + this.bar);
+			Messaging.send(toWhom, "&6 -&e Health: &f" + getHealthBar(ofWhom));
 		if(General.plugin.config.getBoolean("playerlist.show-coords", true)) {
-			Messaging.send(toWhom, "&6 -&e Location: &f" + this.location);
-			Messaging.send(toWhom, "&6 -&e Spawn: &f" + this.home);
+			Location loc = ofWhom.getLocation(), home = Destination.homeOf(ofWhom).getLoc();
+			Messaging.send(toWhom, "&6 -&e Location: &f" + Toolbox.formatLocation(loc));
+			Messaging.send(toWhom, "&6 -&e Spawn: &f" + Toolbox.formatLocation(home));
 		}
 		if(General.plugin.config.getBoolean("playerlist.show-world", false))
-			Messaging.send(toWhom, "&6 -&e World: &f" + this.world);
-		if(General.plugin.config.getBoolean("playerlist.show-ip", false)) {
-			if(canSeeIp(toWhom)) Messaging.send(toWhom, "&6 -&e IP: &f" + this.ip);
+			Messaging.send(toWhom, "&6 -&e World: &f" + ofWhom.getWorld().getName());
+		if(General.plugin.config.getBoolean("playerlist.show-ip", false) && canSeeIp(ofWhom, toWhom)) {
+			String ip = ofWhom.getAddress().getAddress().getHostAddress();
+			Messaging.send(toWhom, "&6 -&e IP: &f" + ip);
 		}
-		Messaging.send(toWhom, "&6 -&e Status: &f" + this.status + ".");
+		String status = "Around";
+		if(General.plugin.isAway(ofWhom))
+			status = "Away (" + General.plugin.whyAway(ofWhom) + ")";
+		Messaging.send(toWhom, "&6 -&e Status: &f" + status + ".");
 		Messaging.send(toWhom, "&f------------------------------------------------");
 	}
 	
-	public boolean canSeeIp(CommandSender who) {
+	public boolean canSeeIp(Player ofWhom, CommandSender who) {
 		boolean canSeeIp = false;
 		if(who instanceof Player) {
 			Player p = (Player) who;
-			if(p.getName().equals(name))
+			if(p.getName().equals(ofWhom.getName()))
 				canSeeIp = true;
 			else canSeeIp = Toolbox.hasPermission(p, "general.who.ip");
 		} else if(who instanceof ConsoleCommandSender) canSeeIp = true;
