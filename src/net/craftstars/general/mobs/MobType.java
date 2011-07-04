@@ -67,9 +67,7 @@ public enum MobType {
 	}
 	
 	public boolean hasPermission(Player byWhom) {
-		if(byWhom.isOp())
-			return true;
-		else if(Toolbox.hasPermission(byWhom, "general.mobspawn.all"))
+		if(Toolbox.hasPermission(byWhom, "general.mobspawn.all"))
 			return true;
 		else if(alignment.hasPermission(byWhom))
 			return true;

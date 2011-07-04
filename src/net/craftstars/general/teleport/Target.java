@@ -55,7 +55,6 @@ public class Target {
 	}
 	
 	public boolean hasPermission(Player who) {
-		if(who.isOp()) return true;
 		boolean perm = type.hasPermission(who);
 		if(teleportees.size() > 1) {
 			boolean canMass = Toolbox.hasPermission(who, "general.teleport.mass");

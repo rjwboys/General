@@ -26,7 +26,6 @@ public enum DestinationType {
 	}
 	
 	public boolean hasPermission(Player who, String action, String base) {
-		if(who.isOp()) return true;
 		if(isBasic() && Toolbox.hasPermission(who, base + ".basic")) return true;
 		if(Toolbox.hasPermission(who, getPermission(base))) return true;
 		Messaging.lacksPermission(who, getAction(action, false));
@@ -39,7 +38,6 @@ public enum DestinationType {
 	}
 
 	public boolean hasOtherPermission(Player who, String action, String base) {
-		if(who.isOp()) return true;
 		if(Toolbox.hasPermission(who, getPermission(base + ".other"))) return true;
 		Messaging.lacksPermission(who, getAction(action, true));
 		return false;

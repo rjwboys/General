@@ -66,7 +66,6 @@ public class Destination {
 		if(sender instanceof ConsoleCommandSender) return true;
 		if(! (sender instanceof Player)) return false;
 		Player player = (Player) sender;
-		if(player.isOp()) return true;
 		boolean perm = true;
 		for(DestinationType type : t) {
 			boolean can = type.hasPermission(player, action, base);

@@ -21,7 +21,6 @@ public enum TargetType {
 	}
 	
 	public boolean hasPermission(Player who) {
-		if(who.isOp()) return true;
 		if(Toolbox.hasPermission(who, getPermission())) return true;
 		Messaging.lacksPermission(who, "teleport " + msg);
 		return false;
