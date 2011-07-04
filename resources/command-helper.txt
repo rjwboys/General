@@ -3,3 +3,5 @@
 /sethome [$dest=here] = /setspawn self $dest
 /reply $ = /tell @ $
 /summon $player = /teleport $player here
+/tphere $player = /teleport $player here
+/teleporthere $player = /teleport $player here

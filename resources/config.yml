@@ -80,14 +80,47 @@ economy:
     storm: 0
     thunder: 0
     zap: 0
-  commands:
-    timeset: 0
-    heal: 0
-    mobspawn: 0
-    kit: 0
+  mobspawn:
+    chicken: 0
+    cow: 0
+    creeper:
+      regular: 0
+      powered: 0
+    ghast: 0
+    giant: 0
+    human: 0
+    pig:
+      regular: 0
+      saddled: 0
+    zombie-pigman:
+      regular: 0
+      angry: 0
+    sheep:
+      default: 0
+      sheared: 0
+      red: 0
+      # etc; colours not specified get the default price
+    skeleton: # Example of specifying special costs for certain combinations
+      free: 0
+      riding:
+        spider: 0 # cost for spider jockey
+    slime:
+      tiny: 0
+      small: 0
+      medium: 0
+      large: 0
+      huge: 0
+      colossal: 0
+    spider: 0
+    squid: 0
+    wolf:
+      wild: 0
+      angry: 0
+      tame: 0
+    zombie: 0
   give:
-    351: 0
-    276: 0
+    item351: 0
+    item276: 0
     # etc
 
 # The format that a chat message's first word must take for General to assume that the player

@@ -1,165 +1,36 @@
 
 package net.craftstars.general.mobs;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 
-import net.craftstars.general.items.ItemID;
-import net.craftstars.general.items.Items;
+import net.craftstars.general.General;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
-import net.minecraft.server.EntityPigZombie;
-
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.entity.CraftPigZombie;
 import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.Creeper;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Pig;
-import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Wolf;
-import org.bukkit.DyeColor;
+import org.bukkit.util.config.Configuration;
 
 public enum MobType {
-	CHICKEN(MobAlignment.FRIENDLY, CreatureType.CHICKEN, 1, "Chicken", "Chickens", "Duck"),
-	COW(MobAlignment.FRIENDLY, CreatureType.COW, 2, "Cow", "Cows"),
-	CREEPER(MobAlignment.ENEMY, CreatureType.CREEPER, 5, "Creeper", "Creepers") {
-		@Override
-		public boolean setData(LivingEntity mob, Player setter, String data) {
-			if(! (mob instanceof Creeper)) return false;
-			if(Toolbox.equalsOne(data, "powered", "power", "zapped", "zap", "on", "high")) {
-				if(Toolbox.lacksPermission(setter, "general.mobspawn.creeper.powered", "general.mobspawn.variants"))
-					return !Messaging.lacksPermission(setter, "spawn powered creepers");
-				Creeper creep = (Creeper) mob;
-				creep.setPowered(true);
-			}
-			if(Toolbox.equalsOne(data, "weak", "off", "low")) return true;
-			return false;
-		}
-	},
-	GHAST(MobAlignment.ENEMY, CreatureType.GHAST, 6, "Ghast", "Ghasts", "NetherSquid"),
-	GIANT_ZOMBIE(MobAlignment.ENEMY, CreatureType.GIANT, 13, "Giant", "Giants", "GiantZombie", "ZombieGiant"),
-	HUMAN(MobAlignment.ENEMY, CreatureType.MONSTER, 12, "Human", "Humans", "Monster", "Bandit"),
-	PIG(MobAlignment.FRIENDLY, CreatureType.PIG, 0, "Pig", "Pigs") {
-		@Override
-		public boolean setData(LivingEntity mob, Player setter, String data) {
-			if(! (mob instanceof Pig)) return false;
-			Pig swine = (Pig) mob;
-			if(Toolbox.equalsOne(data, "tame", "saddle", "saddled")) {
-				if(Toolbox.lacksPermission(setter, "general.mobspawn.pig.saddled", "general.mobspawn.variants"))
-					return !Messaging.lacksPermission(setter, "spawn saddled pigs");
-				swine.setSaddle(true);
-				return true;
-			} else if(Toolbox.equalsOne(data, "wild", "unsaddled")) return true;
-			return false;
-		}
-	},
-	PIG_ZOMBIE(MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 7, "Zombie Pigman", "Zombie Pigmen", "PigZombie") {
-		@Override
-		public boolean setData(LivingEntity mob, Player setter, String data) {
-			if(! (mob instanceof PigZombie)) return false;
-			if(Toolbox.equalsOne(data, "calm", "passive")) return true;
-			int anger = 400;
-			if(!Toolbox.equalsOne(data, "angry", "mad", "aggressive", "hostile")) {
-				try {
-					anger = Integer.parseInt(data);
-				} catch(NumberFormatException e) {
-					return false;
-				}
-			}
-			if(Toolbox.lacksPermission(setter, "general.mobspawn.pig-zombie.angry", "general.mobspawn.neutral.angry",
-					"general.mobspawn.variants"))
-				return !Messaging.lacksPermission(setter, "spawn angry zombie pigmen");
-			PigZombie zom = (PigZombie) mob;
-			// Begin section of accessing internal Minecraft code
-			// TODO: Rewrite using only Bukkit API
-			CraftPigZombie cpz = (CraftPigZombie) zom;
-			EntityPigZombie epz = (EntityPigZombie) cpz.getHandle();
-			try {
-				Field angerLevel = EntityPigZombie.class.getDeclaredField("angerLevel");
-				angerLevel.setAccessible(true);
-				angerLevel.setInt(epz, anger);
-			} catch(SecurityException e) {}
-			catch(NoSuchFieldException e) {}
-			catch(IllegalArgumentException e) {}
-			catch(IllegalAccessException e) {}
-			// End section of accessing internal Minecraft code
-			return true;
-		}
-	},
-	SHEEP(MobAlignment.FRIENDLY, CreatureType.SHEEP, 3, "Sheep", "Sheep") {
-		@Override
-		public boolean setData(LivingEntity mob, Player setter, String data) {
-			if(! (mob instanceof Sheep)) return false;
-			Sheep sheep = (Sheep) mob;
-			if(Toolbox.equalsOne(data, "sheared", "nude", "naked", "bald", "bare")) {
-				sheep.setSheared(true);
-			} else {
-				if(Toolbox.lacksPermission(setter, "general.mobspawn.sheep.coloured", "general.mobspawn.sheep.colored",
-						"general.mobspawn.variants"))
-					return !Messaging.lacksPermission(setter, "spawn coloured sheep");
-				ItemID wool = Items.validate("35:" + data);
-				if(wool == null || !wool.isValid()) return false;
-				DyeColor clr = DyeColor.getByData((byte) (int) wool.getData());
-				sheep.setColor(clr);
-			}
-			return true;
-		}
-	},
-	SKELETON(MobAlignment.ENEMY, CreatureType.SKELETON, 8, "Skeleton", "Skeletons", "Skeleton"),
-	SLIME(MobAlignment.ENEMY, CreatureType.SLIME, 11, "Slime", "Slimes", "GelatinousCube", "Goo", "Gooey") {
-		@Override
-		public boolean setData(LivingEntity mob, Player setter, String data) {
-			if(! (mob instanceof Slime)) return false;
-			Slime goo = (Slime) mob;
-			try {
-				int size = Integer.valueOf(data);
-				goo.setSize(size);
-				return true;
-			} catch(NumberFormatException e) {
-				SlimeSize size = SlimeSize.fromName(data);
-				if(size == null) return false;
-				goo.setSize(size.getSize());
-				return true;
-			}
-		}
-	},
-	SPIDER(MobAlignment.ENEMY, CreatureType.SPIDER, 9, "Spider", "Spiders", "Spider"),
-	SQUID(MobAlignment.FRIENDLY, CreatureType.SQUID, 4, "Squid", "Squid", "Squid"),
-	WOLF(MobAlignment.NEUTRAL, CreatureType.WOLF, 14, "Wolf", "Wolves", "Dog", "Dogs") {
-		@Override
-		public boolean setData(LivingEntity mob, Player setter, String data) {
-			if(! (mob instanceof Wolf)) return false;
-			if(Toolbox.equalsOne(data, "wild", "calm", "passive")) return true;
-			Wolf dog = (Wolf) mob;
-			if(Toolbox.equalsOne(data, "angry", "mad", "hostile", "aggressive")) {
-				if(Toolbox.lacksPermission(setter, "general.mobspawn.wolf.angry", "general.mobspawn.neutral.angry",
-						"general.mobspawn.variants"))
-					return !Messaging.lacksPermission(setter, "spawn angry wolves");
-				dog.setAngry(true);
-			} else if(Toolbox.equalsOne(data, "tame", "pet")) {
-				if(Toolbox.lacksPermission(setter, "general.mobspawn.wolf.tamed", "general.mobspawn.variants"))
-					return !Messaging.lacksPermission(setter, "spawn tamed wolves");
-				dog.setTamed(true);
-				dog.setOwner(setter);
-			} else {
-				if(Toolbox.lacksPermission(setter, "general.mobspawn.wolf.tamed", "general.mobspawn.variants"))
-					return !Messaging.lacksPermission(setter, "spawn tamed wolves");
-				Player owner = Toolbox.matchPlayer(data);
-				if(owner == null)
-					Messaging.send(setter, "&dWarning: that player doesn't seem to exist.");
-				dog.setTamed(true);
-				dog.setOwner(owner);
-			}
-			return true;
-		}
-	},
-	ZOMBIE(MobAlignment.ENEMY, CreatureType.ZOMBIE, 10, "Zombie", "Zombies");
+	CHICKEN(null, MobAlignment.FRIENDLY, CreatureType.CHICKEN, 1, "Chicken", "Chickens", "Duck"),
+	COW(null, MobAlignment.FRIENDLY, CreatureType.COW, 2, "Cow", "Cows"),
+	CREEPER(CreeperState.class, MobAlignment.ENEMY, CreatureType.CREEPER, 5, "Creeper", "Creepers"),
+	GHAST(null, MobAlignment.ENEMY, CreatureType.GHAST, 6, "Ghast", "Ghasts", "NetherSquid"),
+	GIANT_ZOMBIE(null, MobAlignment.ENEMY, CreatureType.GIANT, 13, "Giant", "Giants", "GiantZombie", "ZombieGiant"),
+	HUMAN(null, MobAlignment.ENEMY, CreatureType.MONSTER, 12, "Human", "Humans", "Monster", "Bandit"),
+	PIG(PigState.class, MobAlignment.FRIENDLY, CreatureType.PIG, 0, "Pig", "Pigs"),
+	PIG_ZOMBIE(PigZombieAttitude.class, MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 7, "Zombie Pigman",
+		"Zombie Pigmen", "PigZombie"),
+	SHEEP(SheepState.class, MobAlignment.FRIENDLY, CreatureType.SHEEP, 3, "Sheep", "Sheep"),
+	SKELETON(null, MobAlignment.ENEMY, CreatureType.SKELETON, 8, "Skeleton", "Skeletons", "Skeleton"),
+	SLIME(SlimeSize.class, MobAlignment.ENEMY, CreatureType.SLIME, 11, "Slime", "Slimes", "GelatinousCube",
+		"Goo", "Gooey"),
+	SPIDER(null, MobAlignment.ENEMY, CreatureType.SPIDER, 9, "Spider", "Spiders", "Spider"),
+	SQUID(null, MobAlignment.FRIENDLY, CreatureType.SQUID, 4, "Squid", "Squid", "Squid"),
+	WOLF(WolfAttitude.class, MobAlignment.NEUTRAL, CreatureType.WOLF, 14, "Wolf", "Wolves", "Dog", "Dogs"),
+	ZOMBIE(null, MobAlignment.ENEMY, CreatureType.ZOMBIE, 10, "Zombie", "Zombies");
 	private MobAlignment alignment;
 	private CreatureType ctype;
 	private String[] aliases;
@@ -167,8 +38,10 @@ public enum MobType {
 	private String singular, plural;
 	private static HashMap<String, MobType> namesToEnumMapping = new HashMap<String, MobType>();
 	private static HashMap<Integer, MobType> idToEnumMapping = new HashMap<Integer, MobType>();
+	private Class<? extends MobData> data;
 	
-	private MobType(MobAlignment align, CreatureType type, int cboxId, String title, String titles, String... names) {
+	private MobType(Class<? extends MobData> clz, MobAlignment align, CreatureType type, int cboxId, String title, String titles, String... names) {
+		this.data = clz;
 		this.alignment = align;
 		this.ctype = type;
 		this.aliases = names;
@@ -186,8 +59,11 @@ public enum MobType {
 		return null;
 	}
 	
-	public boolean setData(LivingEntity mob, Player setter, String data) {
-		return false;
+	public void setData(LivingEntity mob, Player setter, MobData info) {
+		if(info == null) return;
+		if(info.hasPermission(setter))
+			info.setForMob(mob);
+		else info.lacksPermission(setter);
 	}
 	
 	public boolean hasPermission(Player byWhom) {
@@ -231,11 +107,66 @@ public enum MobType {
 		}
 	}
 	
+	public String getCostClass(MobData info) {
+		if(info == null) try {
+			info = data == null ? MobData.none : data.newInstance();
+		} catch(InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String baseNode = "economy.mobspawn.";
+		baseNode += toString().toLowerCase().replace('_', '-');
+		return getCostClassHelper(info, baseNode);
+	}
+
+	private String getCostClassHelper(MobData info, String baseNode) {
+		Configuration config = General.plugin.config;
+		// Case 1: There's no entry for it, thus it costs nothing.
+		if(!Toolbox.nodeExists(config, baseNode)) return "";
+		// Case 2: There's an entry for it, and it's a number. Then that's the cost.
+		if(config.getProperty(baseNode) instanceof Number) return baseNode;
+		// Case 3: This entry has sub-entries for when the mob is riding something.
+		if(Toolbox.nodeExists(config, baseNode + ".free")) return baseNode + ".free";
+		// Case 4: This entry has sub-entries for various data values.
+		baseNode = info.getCostNode(baseNode);
+		if(!Toolbox.nodeExists(config, baseNode)) return "";
+		// Case 5: There's an entry for it, and it's a number. Then that's the cost.
+		if(config.getProperty(baseNode) instanceof Number) return baseNode;
+		// Case 6: A combination of cases 3 and 4.
+		if(Toolbox.nodeExists(config, baseNode + ".free")) return baseNode + ".free";
+		// Case 7: There's no entry for it after all, thus it costs nothing.
+		return "";
+	}
+	
+	public String getMountedCostClass(String baseNode, MobData info) {
+		// The baseNode refers to the rider, and this is called on the mount
+		if(baseNode.contains(".free"))
+			baseNode = baseNode.replace(".free", ".riding.");
+		else baseNode += ".riding.";
+		baseNode += toString().toLowerCase().replace('_', '-');
+		return getCostClassHelper(info, baseNode);
+	}
+	
 	public String getName() {
 		return singular;
 	}
 	
 	public String getPluralName() {
 		return plural;
+	}
+	
+	public MobData getNewData() {
+		try {
+			return data.newInstance();
+		} catch(InstantiationException e) {
+			return MobData.none;
+		} catch(IllegalAccessException e) {
+			return MobData.none;
+		} catch(NullPointerException e) {
+			return MobData.none;
+		}
 	}
 }

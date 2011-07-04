@@ -3,25 +3,90 @@ package net.craftstars.general.mobs;
 
 import java.util.HashMap;
 
-public enum SlimeSize {
-	TINY(1), SMALL(2), MEDIUM(3), LARGE(4), HUGE(8), COLOSSAL(16);
-	private int n;
-	private static HashMap<String, SlimeSize> mapping = new HashMap<String, SlimeSize>();
-	
-	private SlimeSize(int sz) {
-		n = sz;
+import net.craftstars.general.General;
+import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Toolbox;
+
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Slime;
+
+public class SlimeSize extends MobData {
+	public enum NamedSize {
+		COLOSSAL(16), HUGE(8), LARGE(4), MEDIUM(3), SMALL(2), TINY(1);
+		private static HashMap<String, NamedSize> mapping = new HashMap<String, NamedSize>();
+		private int n;
+		
+		private NamedSize(int sz) {
+			n = sz;
+		}
+		
+		public int getSize() {
+			return n;
+		}
+		
+		static {
+			for(NamedSize x : values())
+				mapping.put(x.toString().toLowerCase(), x);
+		}
+		
+		public static NamedSize fromName(String name) {
+			return mapping.get(name.toLowerCase());
+		}
+		
+		public static NamedSize closestMatch(int sz) {
+			if(sz <= 0) return MEDIUM;
+			NamedSize match = COLOSSAL;
+			for(NamedSize check : values()) {
+				if(sz <= check.n) match = check;
+			}
+			return match;
+		}
+
+		public String getPermission() {
+			return "general.mobspawn.slime." + toString().toLowerCase();
+		}
 	}
-	
-	public int getSize() {
-		return n;
+	private NamedSize size = NamedSize.MEDIUM;
+	private int sz = 0;
+
+	@Override
+	public boolean hasPermission(Player byWhom) {
+		return Toolbox.hasPermission(byWhom, "general.mobspawn.variants", size.getPermission());
 	}
-	
-	static {
-		for(SlimeSize x : values())
-			mapping.put(x.toString().toLowerCase(), x);
+
+	@Override
+	public void setForMob(LivingEntity mob) {
+		if(sz == 0) return; // No data was specified; leave at default
+		if(!(mob instanceof Slime)) return;
+		Slime goo = (Slime) mob;
+		goo.setSize(sz);
 	}
-	
-	public static SlimeSize fromName(String name) {
-		return mapping.get(name.toLowerCase());
+
+	@Override
+	public void parse(Player setter, String data) {
+		size = NamedSize.fromName(data);
+		if(size == null) {
+			try {
+				sz = Integer.parseInt(data);
+				size = NamedSize.closestMatch(sz);
+			} catch(NumberFormatException e) {
+				invalidate();
+				size = NamedSize.TINY;
+			}
+		} else sz = size.getSize();
+		if(size == null) return;
+	}
+
+	@Override
+	public String getCostNode(String base) {
+		String node = base + "." + size.toString().toLowerCase();
+		if(Toolbox.nodeExists(General.plugin.config, node)) return node;
+		else return base + ".default";
+	}
+
+	@Override
+	public void lacksPermission(Player fromWhom) {
+		Messaging.lacksPermission(fromWhom, "spawn " + size.toString().toLowerCase() + " slimes");
 	}
 }

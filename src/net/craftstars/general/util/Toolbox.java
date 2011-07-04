@@ -19,6 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
+import org.bukkit.util.config.Configuration;
 
 public class Toolbox {
 	public static Player matchPlayer(String pat) {
@@ -269,5 +270,10 @@ public class Toolbox {
 		Formatter fmt = new Formatter();
 		fmt.format("(%f, %f, %f) facing (%f, %f)", loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
 		return fmt.toString();
+	}
+
+	public static boolean nodeExists(Configuration config, String node) {
+		Object prop = config.getProperty(node);
+		return prop != null;
 	}
 }
