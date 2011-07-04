@@ -167,4 +167,8 @@ public enum MobType {
 			return MobData.none;
 		}
 	}
+
+	public MobAlignment getAlignment() {
+		return alignment;
+	}
 }

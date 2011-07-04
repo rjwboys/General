@@ -112,3 +112,201 @@ commands:
     description: Gives info on a world
     aliases: []
     usage: /<command> [<world>]
+permissions:
+  general.*:
+    children:
+      general.give.*: true
+      general.clear.*: true
+      general.take.*: true
+      general.kit.*: true
+      general.kit-now: true
+      general.teleport.*: true
+      general.mobspawn.*: true
+      general.away: true
+      general.worldinfo: true
+      general.setspawn.*: true
+      general.time.*: true
+      general.playerlist: true
+      general.who.*: true
+      general.getpos.*: true
+      general.heal.*: true
+      general.weather.*: true
+      general.admin.*: true
+      general.tell: true
+  general.basic:
+    default: true
+    children:
+      general.time: true
+      general.playerlist: true
+      general.who: true
+      general.away: true
+      general.getpos: true
+      general.tell: true
+  general.give.*:
+    children:
+      general.give: true
+      general.give.infinite: true
+      general.give.mass: true
+      general.give.group.*: true # defined dynamically
+      general.give.item.*: true  # defined dynamically
+      general.give.groupless: true
+  general.give.any:
+    children:
+      general.give.groupless: true
+      general.give.group.*: true
+  general.clear.*:
+    children:
+      general.clear: true
+      general.clear.other: true
+  general.take.*:
+    children:
+      general.take: true
+      general.take.other: true
+  general.kit.*
+    children: # extended dynamically
+      general.kit: true
+  general.teleport.*:
+    children:
+      general.teleport: true
+      general.teleport.any: true
+      general.teleport.to.*: true
+  general.teleport.any:
+    children:
+      general.teleport.self: true
+      general.teleport.other: true
+      general.teleport.mob: true
+      general.teleport.mass: true
+  general.teleport.self:
+    children:
+      general.teleport.self.to.world: true
+      general.teleport.self.to.player: true
+      general.teleport.self.to.coords: true
+      general.teleport.self.to.home: true
+      general.teleport.self.to.spawn: true
+      general.teleport.self.to.target: true
+      general.teleport.self.to.compass: true
+  general.teleport.other:
+    children:
+      general.teleport.other.to.world: true
+      general.teleport.other.to.player: true
+      general.teleport.other.to.coords: true
+      general.teleport.other.to.home: true
+      general.teleport.other.to.spawn: true
+      general.teleport.other.to.target: true
+      general.teleport.other.to.compass: true
+  general.teleport.mob:
+    children:
+      general.teleport.mob.to.world: true
+      general.teleport.mob.to.player: true
+      general.teleport.mob.to.coords: true
+      general.teleport.mob.to.home: true
+      general.teleport.mob.to.spawn: true
+      general.teleport.mob.to.target: true
+      general.teleport.mob.to.compass: true
+  general.teleport.to.*:
+    children:
+      general.teleport.to.world: true
+      general.teleport.to.player: true
+      general.teleport.to.coords: true
+      general.teleport.to.home: true
+      general.teleport.to.spawn: true
+      general.teleport.to.target: true
+      general.teleport.to.compass: true
+  general.mobspawn.*:
+    children:
+      general.mobspawn.all: true
+      general.mobspawn.variants: true
+  general.mobspawn.all:
+    children:
+      general.mobspawn: true
+      general.mobspawn.friendly: true # defined dynamically
+      general.mobspawn.hostile: true  # defined dynamically
+      general.mobspawn.neutral: true  # defined dynamically
+  general.mobspawn.variants:
+    children:
+      general.mobspawn.creeper.*: true
+      general.mobspawn.pig.*: true
+      general.mobspawn.pig-zombie.*: true
+      general.mobspawn.wolf.*: true
+      general.mobspawn.slime.*: true
+      general.mobspawn.sheep.*: true
+  general.mobspawn.neutral.angry:
+    children:
+      general.mobspawn.neutral: true
+      general.mobspawn.wolf.angry: true
+      general.mobspawn.pig-zombie.angry: true 
+  general.mobspawn.creeper.*:
+    children:
+      general.mobspawn.creeper: true
+      general.mobspawn.creeper.powered: true
+  general.mobspawn.pig.*:
+    children:
+      general.mobspawn.pig: true
+      general.mobspawn.pig.saddled: true
+  general.mobspawn.pig-zombie.*:
+    children:
+      general.mobspawn.pig-zombie: true
+      general.mobspawn.pig-zombie.angry: true
+  general.mobspawn.wolf.*:
+    children:
+      general.mobspawn.wolf: true
+      general.mobspawn.wolf.angry: true
+      general.mobspawn.wolf.tamed: true
+  general.mobspawn.slime.*:
+    children: # extended dynamically
+      general.mobspawn.slime: true
+  general.mobspawn.sheep.*:
+    children: # extended dynamically
+      general.mobspawn.sheep: true
+      general.mobspawn.sheep.sheared: true
+      general.mobspawn.sheep.coloured.*: true # defined dynamically
+  general.mobspawn.sheep.colored.*:
+    children:
+      general.mobspawn.sheep.coloured.*: true
+  general.mobspawn.sheep.natural:
+    children:
+      general.mobspawn.sheep.coloured.silver: true
+      general.mobspawn.sheep.coloured.gray: true
+      general.mobspawn.sheep.coloured.black: true
+      general.mobspawn.sheep.coloured.brown: true
+      general.mobspawn.sheep.coloured.pink: true
+  general.setspawn.*:
+    children:
+      general.setspawn.to.*: true
+  general.setspawn.to.*:
+    children:
+      general.setspawn.to.world: true
+      general.setspawn.to.player: true
+      general.setspawn.to.coords: true
+      general.setspawn.to.home: true
+      general.setspawn.to.spawn: true
+      general.setspawn.to.target: true
+      general.setspawn.to.compass: true
+  general.time.*:
+    children:
+      general.time: true
+      general.time.set: true
+  general.who.*:
+    children:
+      general.who: true
+      general.who.ip: true
+  general.getpos.*:
+    general.getpos: true
+    general.getpos.other: true
+  general.weather.*:
+    children:
+      general.weather: true
+      general.weather.thunder: true
+      general.weather.zap: true
+  general.heal.*:
+    children:
+      general.heal: true
+      general.hurt: true
+  general.admin.*:
+    children:
+      general.admin.reload: true
+      general.admin.item: true
+      general.admin.save: true
+  general.admin:
+    children:
+      general.admin.*: true
