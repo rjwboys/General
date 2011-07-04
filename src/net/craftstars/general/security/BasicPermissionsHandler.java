@@ -1,18 +1,27 @@
 
 package net.craftstars.general.security;
 
+import java.util.List;
+
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
 import net.craftstars.general.security.PermissionsHandler;
+import net.craftstars.general.util.Messaging;
 
 public class BasicPermissionsHandler implements PermissionsHandler {
 	
 	public boolean hasPermission(Player who, String what) {
 		try {
-			if(General.plugin.config.getNode("permissions").getList("ops-only").contains(what)) return who.isOp();
+			List<String> permsList = General.plugin.config.getStringList("permissions.ops-only", null);
+			if(permsList.contains(what)) return who.isOp();
+			while(what.matches(".*\\..+$")) {
+				if(permsList.contains(what + ".*")) return who.isOp();
+				what = what.substring(0, what.lastIndexOf('.'));
+			}
 			return true;
 		} catch(NullPointerException ex) {
+			Messaging.send(who, "&cError checking permissions.");
 			return false;
 		}
 	}
