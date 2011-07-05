@@ -61,14 +61,13 @@ public class takeCommand extends CommandBase {
 		}
 		
 		if(!item.isDataValid()) {
-			Messaging.send(sender,
-					"&f" + item.getVariant() + "&rose; is not a valid data type for &f" + Items.name(item)
-							+ "&rose;.");
+			Messaging.send(sender, "&f" + item.getVariant() + "&rose; is not a valid data type for &f" +
+				item.getName() + "&rose;.");
 			return true;
 		}
 		
 		doTake();
-		Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + Items.name(item) + "&2 from &f" + who.getName()
+		Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + item.getName() + "&2 from &f" + who.getName()
 				+ "&2!");
 		return true;
 	}
@@ -125,16 +124,14 @@ public class takeCommand extends CommandBase {
 		}
 		
 		if(!item.isDataValid()) {
-			Messaging.send(sender,
-					"&f" + item.getVariant() + "&rose; is not a valid data type for &f" + Items.name(item)
-							+ "&rose;.");
+			Messaging.send(sender, "&f" + item.getVariant() + "&rose; is not a valid data type for &f" + 
+				item.getName() + "&rose;.");
 			return true;
 		}
 		
 		doTake();
 		if(!sender.getName().equalsIgnoreCase(who.getName()))
-			Messaging.send(sender,
-					"&2Took &f" + amount + "&2 of &f" + Items.name(item) + "&2 from &f" + who.getName());
+			Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + item.getName() + "&2 from &f" + who.getName());
 		return true;
 	}
 	
@@ -159,7 +156,7 @@ public class takeCommand extends CommandBase {
 				i.setItem(x, null);
 			} else if(amount <= 0) i.setItem(x, null);
 		}
-		Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &f" + Items.name(item)
+		Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &f" + item.getName()
 				+ "&2 was taken from you.");
 	}
 }

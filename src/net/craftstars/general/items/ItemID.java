@@ -19,7 +19,7 @@ import org.bukkit.util.config.ConfigurationNode;
 public class ItemID implements Cloneable, Comparable<ItemID> {
 	private int ID;
 	private int data;
-	private boolean dataMatters, isValid;
+	private boolean dataMatters, isValid, nameDefaulted;
 	private String itemName = null, dataName = null;
 	
 	public ItemID() {
@@ -40,6 +40,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 			this.dataMatters = true;
 		}
 		this.isValid = true;
+		this.nameDefaulted = true;
 	}
 	
 	public ItemID(ItemID item) {
@@ -49,6 +50,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		this.isValid = item.isValid;
 		this.itemName = item.itemName;
 		this.dataName = item.dataName;
+		this.nameDefaulted = item.nameDefaulted;
 	}
 	
 	public ItemID(Material m) {
@@ -106,8 +108,25 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		return itemName;
 	}
 	
+	public ItemID setName() {
+		return setName(false);
+	}
+	
+	public ItemID setName(boolean isDefault) {
+		if(nameDefaulted || itemName == null) {
+			itemName = Items.name(this);
+			nameDefaulted = isDefault;
+		}
+		return this;
+	}
+	
 	public ItemID setName(String newName) {
+		return setName(newName, false);
+	}
+	
+	public ItemID setName(String newName, boolean isDefault) {
 		itemName = newName;
+		nameDefaulted = isDefault;
 		return this;
 	}
 	
@@ -193,7 +212,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		permNodes = permissions.toArray(permNodes);
 		boolean hasPermission = Toolbox.hasPermission(who, permNodes);
 		if(!hasPermission && othersForAll && permissions.size() <= 2) hasPermission = true;
-		if(!hasPermission) Messaging.lacksPermission(who, "give " + Items.name(this));
+		if(!hasPermission) Messaging.lacksPermission(who, "give " + getName());
 		return hasPermission;
 	}
 }

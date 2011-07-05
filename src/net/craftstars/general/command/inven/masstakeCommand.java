@@ -88,7 +88,7 @@ public class masstakeCommand extends CommandBase {
 		}
 		StringBuilder itemsText = new StringBuilder();
 		for(ItemID item : items) {
-			itemsText.append(Items.name(item));
+			itemsText.append(item.getName());
 			itemsText.append("&2, &f");
 		}
 		int lastComma = itemsText.lastIndexOf("&2, &f");

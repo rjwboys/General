@@ -81,9 +81,8 @@ public class giveCommand extends CommandBase {
 		}
 		
 		if(!item.isDataValid()) {
-			Messaging.send(sender,
-					"&f" + item.getVariant() + "&rose; is not a valid data type for &f" + Items.name(item)
-							+ "&rose;.");
+			Messaging.send(sender, "&f" + item.getVariant() + "&rose; is not a valid data type for &f" +
+				item.getName() + "&rose;.");
 			return true;
 		}
 		
@@ -94,7 +93,7 @@ public class giveCommand extends CommandBase {
 			return Messaging.lacksPermission(sender, "give masses of items");
 		// Make sure this player is allowed this particular item
 		if(!item.canGive(sender)) {
-			Messaging.send(sender, "&2You're not allowed to get &f" + Items.name(item) + "&2.");
+			Messaging.send(sender, "&2You're not allowed to get &f" + item.getName() + "&2.");
 			return true;
 		}
 		// Make sure the player has enough money for this item
@@ -103,7 +102,7 @@ public class giveCommand extends CommandBase {
 		boolean isGift = !who.getName().equals(sender.getName());
 		doGive(isGift);
 		if(isGift) {
-			Messaging.send(sender, "&2Gave &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" + Items.name(item)
+			Messaging.send(sender, "&2Gave &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" + item.getName()
 					+ "&2 to &f" + who.getName() + "&2!");
 		}
 		
@@ -124,13 +123,11 @@ public class giveCommand extends CommandBase {
 		}
 		
 		if(isGift) {
-			Messaging.send(who,
-					"&2Enjoy the gift! &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" + Items.name(item)
-							+ "&2!");
+			Messaging.send(who, "&2Enjoy the gift! &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" +
+				item.getName() + "&2!");
 		} else {
-			Messaging.send(who,
-					"&2Enjoy! Giving &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" + Items.name(item)
-							+ "&2.");
+			Messaging.send(who, "&2Enjoy! Giving &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" +
+				item.getName() + "&2.");
 		}
 	}
 	
@@ -178,13 +175,13 @@ public class giveCommand extends CommandBase {
 		
 		if(!item.isDataValid()) {
 			Messaging.send(sender,
-					"&f" + item.getVariant() + "&rose; is not a valid data type for &f" + Items.name(item)
+					"&f" + item.getVariant() + "&rose; is not a valid data type for &f" + item.getName()
 							+ "&rose;.");
 			return true;
 		}
 		
 		doGive(true);
-		Messaging.send(sender, "&2Gave &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" + Items.name(item)
+		Messaging.send(sender, "&2Gave &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" + item.getName()
 				+ "&2 to &f" + who.getName() + "&2!");
 		
 		return true;

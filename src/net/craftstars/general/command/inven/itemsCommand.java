@@ -37,7 +37,7 @@ public class itemsCommand extends CommandBase {
 			if(what == null || !what.isValid()) continue;
 			if(!what.canGive(sender)) continue;
 			if(!Toolbox.canPay(sender, 1, "economy.give.item" + item.toString())) continue;
-			text.append(Items.name(what));
+			text.append(what.getName());
 			text.append("&2, &f");
 			Items.giveItem(toWhom, what, 1);
 		}

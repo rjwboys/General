@@ -21,8 +21,12 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
+
+import com.nisovin.bookworm.Book;
+import com.nisovin.bookworm.BookWorm;
 
 import net.craftstars.general.General;
 import net.craftstars.general.util.Toolbox;
@@ -407,8 +411,12 @@ public class Items {
 		break;
 		case MOB_SPAWNER: // creaturebox support TODO: Why do I need this here?
 			if(ret.getData() == null) break;
-			if(Bukkit.getServer().getPluginManager().getPlugin("creaturebox") == null && ret.getData() != 0)
-				ret.invalidate(true);
+			if(Bukkit.getServer().getPluginManager().getPlugin("creaturebox") == null) {
+				ItemID tmp = ret.clone();
+				tmp.setData(null);
+				ret.setName(name(tmp));
+				if(ret.getData() != 0) ret.invalidate(true);
+			}
 			if(ret.getData() > 14 || ret.getData() < 0) ret.invalidate(true);
 		break;
 		case MAP:
@@ -430,8 +438,30 @@ public class Items {
 				catch(IllegalAccessException e) {}
 			}
 		break;
+		case BOOK:
+			Plugin bookworm = Bukkit.getServer().getPluginManager().getPlugin("BookWorm");
+			if(bookworm == null) {
+				if(ret.getData() != 0) ret.invalidate(true);
+				break;
+			}
+			if(ret.getData() == null) ret.setData(0);
+			if(ret.getData() > 0) { // TODO: Reflecting into someone else's plugin... ugh...
+				File bookFile = new File(bookworm.getDataFolder(), ret.getData() + ".txt");
+				if(!bookFile.exists()) {
+					// TODO: If it doesn't exist, it may be of the form <num>_<author>_<title>.txt; how to catch that?
+					ret.invalidate(true);
+				} else {
+					Book book = BookWorm.getBook(ret.getData().shortValue());
+					if(book != null)
+						ret.setName('"' + book.getTitle() + '"' + " by " + book.getAuthor());
+					else ret.invalidate(true);
+				}
+			}
+		break;
 		}
 		// --- end hacky workaround for missing MaterialData classes ---
+		
+		ret.setName();
 		
 		return ret;
 	}
@@ -465,14 +495,14 @@ public class Items {
 			else for(String alias : aliases.keySet()) {
 				if(!alias.equalsIgnoreCase(item)) continue;
 				ret = new ItemID(aliases.get(alias));
-				ret.setName(alias);
+				ret.setName(alias, true);
 			}
 			if(ret == null) {
 				for(Material material : Material.values()) {
 					String mat = material.toString();
 					if(mat.equalsIgnoreCase(item) || mat.replace("_", "-").equalsIgnoreCase(item)
 							|| mat.replace("_", "").equalsIgnoreCase(item)) {
-						ret = new ItemID(material).setName(material.toString());
+						ret = new ItemID(material).setName(material.toString(), true);
 					}
 				}
 			}
