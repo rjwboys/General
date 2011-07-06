@@ -39,7 +39,8 @@ public class goCommand extends CommandBase {
 		if(dest == null || target == null) return true;
 		if(target.hasPermission(sender) && hasDestPermission(sender, target, dest)) {
 			String[] costs = dest.getCostClasses(sender, "general.teleport");
-			costs = Toolbox.arrayCopy(costs, 0, new String[costs.length+1], 0, costs.length);
+			costs = Toolbox.arrayCopy(costs, 0, new String[costs.length+1], 1, costs.length);
+			costs[0] = target.getCostClass();
 			if(!Toolbox.canPay(sender, target.count(), costs)) return true;
 			target.teleport(dest);
 			if(target.getType() == TargetType.SELF)
