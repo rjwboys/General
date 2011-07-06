@@ -2,6 +2,8 @@
 package net.craftstars.general.teleport;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,6 +20,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.util.config.Configuration;
 
 public class Destination {
 	private Location calc;
@@ -64,7 +67,7 @@ public class Destination {
 	
 	public boolean hasPermission(CommandSender sender, String action, String base) {
 		if(sender instanceof ConsoleCommandSender) return true;
-		if(! (sender instanceof Player)) return false;
+		if(!(sender instanceof Player)) return false;
 		Player player = (Player) sender;
 		boolean perm = true;
 		for(DestinationType type : t) {
@@ -80,6 +83,33 @@ public class Destination {
 			perm = perm && Toolbox.hasPermission(player, base + ".from." + player.getWorld().getName());
 		}
 		return perm;
+	}
+	
+	public String[] getCostClasses(Player sender, String base) {
+		// First work out the possible nodes
+		LinkedList<String> genericNodes = new LinkedList<String>();
+		for(DestinationType type : t)
+			genericNodes.add(type.getPermission(base));
+		String[] worldNodes = new String[] {
+			base + ".into." + calc.getWorld().getName(),
+			base + ".from." + sender.getWorld().getName()
+		};
+		Configuration config = General.plugin.config;
+		// World nodes override generic nodes if they exist, so check if they do
+		if(Toolbox.nodeExists(config, worldNodes[0]))
+			if(Toolbox.nodeExists(config, worldNodes[1]))
+				return worldNodes;
+			else return new String[] {worldNodes[0]};
+		else if(Toolbox.nodeExists(config, worldNodes[1]))
+			return new String[] {worldNodes[1]};
+		// Otherwise, prune the generic nodes of ones that don't exist and return them.
+		Iterator<String> iter = genericNodes.iterator();
+		while(iter.hasNext()) {
+			String node = iter.next();
+			if(!Toolbox.nodeExists(config, node))
+				iter.remove();
+		}
+		return genericNodes.toArray(new String[0]);
 	}
 	
 	public static Destination get(String dest, Player keystone) {

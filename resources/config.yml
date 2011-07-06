@@ -118,6 +118,44 @@ economy:
       angry: 0
       tame: 0
     zombie: 0
+  teleport:
+    self: 0
+    other: 0
+    mob: 0
+    to:
+      world: 0
+      player: 0
+      coords: 0
+      home: 0
+      spawn: 0
+      target: 0
+      compass: 0
+    # The into/from prices will override the to prices, not supplement them
+    into:
+      world: 0
+      world_nether: 0
+    from:
+      world: 0
+      world_nether: 0
+  setspawn:
+    self: 0
+    other: 0
+    world: 0
+    to:
+      world: 0
+      player: 0
+      coords: 0
+      home: 0
+      spawn: 0
+      target: 0
+      compass: 0
+    # The into/from prices will override the to prices, not supplement them
+    into:
+      world: 0
+      world_nether: 0
+    from:
+      world: 0
+      world_nether: 0
   give:
     item351: 0
     item276: 0
