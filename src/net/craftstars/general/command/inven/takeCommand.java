@@ -20,6 +20,7 @@ public class takeCommand extends CommandBase {
 	private Player who;
 	private ItemID item;
 	private int amount;
+	private boolean sell;
 	
 	public takeCommand(General instance) {
 		super(instance);
@@ -66,7 +67,7 @@ public class takeCommand extends CommandBase {
 			return true;
 		}
 		
-		doTake();
+		amount = doTake();
 		Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + item.getName() + "&2 from &f" + who.getName()
 				+ "&2!");
 		return true;
@@ -128,14 +129,17 @@ public class takeCommand extends CommandBase {
 				item.getName() + "&rose;.");
 			return true;
 		}
-		
-		doTake();
+
+		sell = who.equals(sender);
+		amount = doTake();
 		if(!sender.getName().equalsIgnoreCase(who.getName()))
 			Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + item.getName() + "&2 from &f" + who.getName());
 		return true;
 	}
 	
-	private void doTake() {
+	private int doTake() {
+		sell = sell && plugin.economy != null;
+		sell = sell && plugin.config.getString("economy.give.take", "sell").equalsIgnoreCase("sell");
 		int removed = 0;
 		PlayerInventory i = who.getInventory();
 		Map<Integer, ? extends ItemStack> items = i.all(item.getId());
@@ -157,6 +161,11 @@ public class takeCommand extends CommandBase {
 			} else if(amount <= 0) i.setItem(x, null);
 		}
 		Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &f" + item.getName()
-				+ "&2 was taken from you.");
+			+ "&2 was taken from you.");
+		if(sell) {
+			double revenue = Toolbox.sellItem(item, removed);
+			Messaging.earned(who, revenue);
+		}
+		return removed;
 	}
 }

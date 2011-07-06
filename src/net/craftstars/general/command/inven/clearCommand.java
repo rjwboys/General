@@ -2,6 +2,7 @@
 package net.craftstars.general.command.inven;
 
 import net.craftstars.general.command.CommandBase;
+import net.craftstars.general.items.ItemID;
 import net.craftstars.general.General;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
@@ -10,9 +11,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 public class clearCommand extends CommandBase {
+	private boolean sell;
 	private enum CleanType {
 		FULL("inventory"), QUICKBAR("quick-bar"), PACK("pack"), ARMOUR("armour");
 		private String name;
@@ -98,20 +101,31 @@ public class clearCommand extends CommandBase {
 	
 	private void doClean(Player who, CommandSender fromWhom, CleanType howMuch) {
 		boolean selfClear = false;
+		double revenue = 0.0;
 		if(fromWhom instanceof Player) {
-			if( ((Player) fromWhom).getName().equalsIgnoreCase(who.getName())) selfClear = true;
+			if(((Player) fromWhom).getName().equalsIgnoreCase(who.getName())) selfClear = true;
 		}
+		sell = selfClear;
 		PlayerInventory i = who.getInventory();
 		switch(howMuch) {
 		case FULL:
+			if(sell) for(ItemStack item : i.getContents())
+				revenue += Toolbox.sellItem(new ItemID(item), item.getAmount());
 			i.clear();
+			// Case fallthrough intentional
 		case ARMOUR:
+			if(sell) for(ItemStack item : i.getArmorContents())
+				revenue += Toolbox.sellItem(new ItemID(item), item.getAmount());
 			clearArmour(i);
 		break;
 		case QUICKBAR:
+			if(sell) for(int j = 0; j < 9; j++)
+				revenue += Toolbox.sellItem(new ItemID(i.getItem(j)), i.getItem(j).getAmount());
 			clearQuickbar(i);
 		break;
 		case PACK:
+			if(sell) for(int j = 9; j < i.getSize(); j++)
+				revenue += Toolbox.sellItem(new ItemID(i.getItem(j)), i.getItem(j).getAmount());
 			clearPack(i);
 		break;
 		}
@@ -121,6 +135,7 @@ public class clearCommand extends CommandBase {
 			Messaging.send(who, "&2Your " + howMuch.getName() + " has been cleared.");
 			Messaging.send(fromWhom, "&f" + who.getName() + "&2's " + howMuch.getName() + " has been cleared.");
 		}
+		if(sell) Messaging.earned(who, revenue);
 	}
 	
 	private void clearArmour(PlayerInventory i) {

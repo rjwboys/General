@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import net.craftstars.general.General;
+import net.craftstars.general.items.ItemID;
 import net.craftstars.general.money.AccountStatus;
 
 import org.bukkit.Location;
@@ -280,5 +281,11 @@ public class Toolbox {
 	public static <T> T[] arrayCopy(T[] src, int srcPos, T[] dest, int destPos, int len) {
 		System.arraycopy(src, srcPos, dest, destPos, len);
 		return dest;
+	}
+
+	public static double sellItem(ItemID item, int amount) {
+		if(General.plugin.economy == null) return 0;
+		String node = "economy.give.item" + item.toString();
+		return General.plugin.config.getDouble(node, 0.0) * amount;
 	}
 }

@@ -18,7 +18,9 @@ import org.bukkit.inventory.ItemStack;
 
 public class masstakeCommand extends CommandBase {
 	private Player who;
+	private boolean sell;
 	private ArrayList<ItemID> items = new ArrayList<ItemID>();
+	private StringBuilder itemsText = new StringBuilder();
 	
 	public masstakeCommand(General instance) {
 		super(instance);
@@ -68,25 +70,32 @@ public class masstakeCommand extends CommandBase {
 		if(!sender.equals(who) && (Toolbox.lacksPermission(sender, "general.take.other") || Toolbox.lacksPermission(sender, "general.take.mass")))
 			return Messaging.lacksPermission(sender, "massively take items from someone else's inventory");
 		
+		sell = who.equals(sender);
 		int amount = doTake();
 		if(!sender.getName().equalsIgnoreCase(who.getName()))
-			Messaging.send(sender,
-					"&2Took &f" + amount + "&2 of &fvarious items&2 from &f" + who.getName());
+			Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + itemsText.toString()
+				+ "&2 from &f" + who.getName());
 		return true;
 	}
 	
 	private int doTake() {
+		sell = sell && plugin.economy != null;
+		sell = sell && plugin.config.getString("economy.give.take", "sell").equalsIgnoreCase("sell");
 		int removed = 0;
+		double revenue = 0.0;
 		PlayerInventory i = who.getInventory();
 		ItemStack[] invenItems = i.getContents();
 		for(int j = 0; j < invenItems.length; j++) {
 			if(invenItems[j] == null) continue;
 			int d = invenItems[j].getDurability();
 			for(ItemID id : items)
-				if(id.getId() == invenItems[j].getTypeId() && Items.dataEquiv(id, d))
+				if(id.getId() == invenItems[j].getTypeId() && Items.dataEquiv(id, d)) {
+					int amount = i.getItem(j).getAmount();
+					removed += amount;
+					if(sell) revenue += Toolbox.sellItem(id, amount);
 					i.setItem(j, null);
+				}
 		}
-		StringBuilder itemsText = new StringBuilder();
 		for(ItemID item : items) {
 			itemsText.append(item.getName());
 			itemsText.append("&2, &f");
@@ -96,6 +105,7 @@ public class masstakeCommand extends CommandBase {
 			itemsText.delete(lastComma, itemsText.length());
 		Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &f" + itemsText.toString()
 			+ "&2 was taken from you.");
+		if(sell) Messaging.earned(who, revenue);
 		return removed;
 	}
 }

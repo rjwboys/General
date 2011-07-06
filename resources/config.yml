@@ -160,6 +160,14 @@ economy:
     item351: 0
     item276: 0
     # etc
+    # The following two are special, handling behaviour of /[mass]take and /clear
+    # Valid values are "trash" or "sell".
+    take: sell
+    clear: sell
+    # This is only used if one of the above is "sell". It should be a percentage.
+    # Setting it to 0 is functionally equivalent to setting "trash" above but will print a message
+    # that would not be printed with "trash".
+    sell: 100
 
 # The format that a chat message's first word must take for General to assume that the player
 # may be tagging another player. For example, if you set it to '@name', it will use Twitter-style

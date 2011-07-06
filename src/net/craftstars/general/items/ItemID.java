@@ -57,6 +57,16 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		this(m.getId());
 	}
 	
+	public ItemID(ItemStack item) {
+		this.ID = item.getTypeId();
+		this.data = item.getDurability();
+		this.dataMatters = true;
+		this.isValid = true;
+		this.itemName = Items.name(this);
+		this.dataName = "";
+		this.nameDefaulted = true;
+	}
+	
 	@Override
 	public String toString() {
 		if(dataMatters) return Integer.toString(ID) + "/" + Integer.toString(data);

@@ -151,4 +151,8 @@ public class Messaging {
 			Messaging.send(sender, "&eYou pay " + cost + ".");
 		}
 	}
+
+	public static void earned(Player who, double revenue) {
+		Messaging.send(who, "You have earned " + General.plugin.economy.formatCost(revenue) + "!");
+	}
 }
