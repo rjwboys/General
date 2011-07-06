@@ -85,6 +85,14 @@ public class setspawnCommand extends CommandBase {
 	}
 	
 	private void setHome(CommandSender sender, Destination dest, Player who) {
+		if(sender instanceof Player) {
+			Player setter = (Player) sender;
+			String targetCost;
+			if(setter.equals(who))
+				targetCost = "economy.setspawn.self";
+			else targetCost = "economy.setspawn.other";
+			if(cannotPay(dest, setter, targetCost)) return;
+		}
 		// Begin accessing Minecraft internals
 		Location loc = dest.getLoc();
 		// TODO Rewrite to use Bukkit API
@@ -98,8 +106,20 @@ public class setspawnCommand extends CommandBase {
 		feedback = fmt.format(feedback, who.getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).toString();
 		Messaging.send(sender, feedback);
 	}
+
+	private boolean cannotPay(Destination dest, Player setter, String targetCost) {
+		String[] costs = dest.getCostClasses(setter, "economy.setspawn");
+		costs = Toolbox.arrayCopy(costs, 0, new String[costs.length+1], 1, costs.length);
+		costs[0] = targetCost;
+		if(!Toolbox.canPay(setter, 1, costs)) return true;
+		return false;
+	}
 	
 	private void setSpawn(CommandSender sender, Destination dest, World from) {
+		if(sender instanceof Player) {
+			Player setter = (Player) sender;
+			if(cannotPay(dest, setter, "economy.setspawn.world")) return;
+		}
 		Formatter fmt = new Formatter();
 		General.logger.debug("Checking more permission...");
 		if(dest.hasPermission(sender, "set the spawn location", "general.spawn.set")) {
