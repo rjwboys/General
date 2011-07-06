@@ -29,24 +29,27 @@ public class setspawnCommand extends CommandBase {
 		Destination dest;
 		switch(args.length) {
 		case 0: // /setspawn
-			General.logger.debug("Setting spawn...");
+			if(Toolbox.lacksPermission(sender, "general.setspawn.world", "general.spawn.set"))
+				return Messaging.lacksPermission(sender, "set the spawn location");
 			dest = Destination.locOf(sender);
+			setSpawn(sender, dest, sender.getWorld());
 		break;
 		case 1: // /setspawn <destination>
-			General.logger.debug("Setting spawn to...");
+			if(Toolbox.lacksPermission(sender, "general.setspawn.world", "general.spawn.set"))
+				return Messaging.lacksPermission(sender, "set the spawn location");
 			dest = Destination.get(args[1], sender);
 			if(dest == null) return true;
+			setSpawn(sender, dest, sender.getWorld());
 		break;
 		case 2: // /setspawn <player> <destination>
-			General.logger.debug("Setting home to...");
 			Player who;
-			if(Toolbox.equalsOne(args[0], "self", "$self", "me")) {
-				if(Toolbox.lacksPermission(sender, "general.spawn.home"))
-					return Messaging.lacksPermission(sender, "see your home location");
+			if(Toolbox.equalsOne(args[0], "self", "$self", "me", sender.getName())) {
+				if(Toolbox.lacksPermission(sender, "general.setspawn.self", "general.spawn.home"))
+					return Messaging.lacksPermission(sender, "set your home location");
 				who = sender;
 			} else {
-				if(Toolbox.lacksPermission(sender, "general.spawn.home.other"))
-					return Messaging.lacksPermission(sender, "see someone else's home location");
+				if(Toolbox.lacksPermission(sender, "general.setspawn.other", "general.spawn.home.other"))
+					return Messaging.lacksPermission(sender, "set someone else's home location");
 				who = Toolbox.matchPlayer(args[0]);
 			}
 			if(who == null) return Messaging.invalidPlayer(sender, args[0]);
@@ -56,11 +59,6 @@ public class setspawnCommand extends CommandBase {
 		default:
 			return SHOW_USAGE;
 		}
-		General.logger.debug("Checking permission...");
-		if(Toolbox.lacksPermission(sender, "general.spawn.set"))
-			return Messaging.lacksPermission(sender, "see the spawn location");
-		General.logger.debug("Setting...");
-		setSpawn(sender, dest, sender.getWorld());
 		return true;
 	}
 	
@@ -124,9 +122,8 @@ public class setspawnCommand extends CommandBase {
 			General.logger.debug("Finally setting...");
 			if(!world.setSpawnLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()))
 				feedback = "&rose;There was an error setting the spawn location. It has not been changed.";
-			feedback =
-					fmt.format(feedback, world.getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())
-							.toString();
+			feedback = fmt.format(feedback, world.getName(), loc.getBlockX(), loc.getBlockY(),
+				loc.getBlockZ()).toString();
 			Messaging.send(sender, feedback);
 		}
 	}
