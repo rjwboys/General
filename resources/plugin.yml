@@ -162,66 +162,36 @@ permissions:
     children:
       general.take: true
       general.take.other: true
-  general.kit.*
-    children: # extended dynamically
+  general.kit.* # extended dynamically
+    children:
       general.kit: true
   general.teleport.*:
     children:
       general.teleport: true
       general.teleport.any: true
       general.teleport.to.*: true
-  general.teleport.any:
+  general.teleport.any: # extended dynamically
+    children:
+      general.teleport.mass: true
+  general.teleport.self.*:
     children:
       general.teleport.self: true
+      general.teleport.self.to.*: true
+  general.teleport.other.*:
+    children:
       general.teleport.other: true
+      general.teleport.other.to.*: true
+  general.teleport.mob.*:
+    children:
       general.teleport.mob: true
-      general.teleport.mass: true
-  general.teleport.self:
-    children:
-      general.teleport.self.to.world: true
-      general.teleport.self.to.player: true
-      general.teleport.self.to.coords: true
-      general.teleport.self.to.home: true
-      general.teleport.self.to.spawn: true
-      general.teleport.self.to.target: true
-      general.teleport.self.to.compass: true
-  general.teleport.other:
-    children:
-      general.teleport.other.to.world: true
-      general.teleport.other.to.player: true
-      general.teleport.other.to.coords: true
-      general.teleport.other.to.home: true
-      general.teleport.other.to.spawn: true
-      general.teleport.other.to.target: true
-      general.teleport.other.to.compass: true
-  general.teleport.mob:
-    children:
-      general.teleport.mob.to.world: true
-      general.teleport.mob.to.player: true
-      general.teleport.mob.to.coords: true
-      general.teleport.mob.to.home: true
-      general.teleport.mob.to.spawn: true
-      general.teleport.mob.to.target: true
-      general.teleport.mob.to.compass: true
-  general.teleport.to.*:
-    children:
-      general.teleport.to.world: true
-      general.teleport.to.player: true
-      general.teleport.to.coords: true
-      general.teleport.to.home: true
-      general.teleport.to.spawn: true
-      general.teleport.to.target: true
-      general.teleport.to.compass: true
+      general.teleport.mob.to.*: true
   general.mobspawn.*:
     children:
       general.mobspawn.all: true
       general.mobspawn.variants: true
-  general.mobspawn.all:
+  general.mobspawn.all: # extended dynamically
     children:
       general.mobspawn: true
-      general.mobspawn.friendly: true # defined dynamically
-      general.mobspawn.hostile: true  # defined dynamically
-      general.mobspawn.neutral: true  # defined dynamically
   general.mobspawn.variants:
     children:
       general.mobspawn.creeper.*: true
@@ -252,36 +222,36 @@ permissions:
       general.mobspawn.wolf: true
       general.mobspawn.wolf.angry: true
       general.mobspawn.wolf.tamed: true
-  general.mobspawn.slime.*:
-    children: # extended dynamically
+  general.mobspawn.slime.*: # extended dynamically
+    children:
       general.mobspawn.slime: true
-  general.mobspawn.sheep.*:
-    children: # extended dynamically
+  general.mobspawn.sheep.*: # extended dynamically
+    children:
       general.mobspawn.sheep: true
       general.mobspawn.sheep.sheared: true
       general.mobspawn.sheep.coloured.*: true # defined dynamically
   general.mobspawn.sheep.colored.*:
     children:
       general.mobspawn.sheep.coloured.*: true
-  general.mobspawn.sheep.natural:
+  general.mobspawn.sheep.coloured.natural:
     children:
       general.mobspawn.sheep.coloured.silver: true
       general.mobspawn.sheep.coloured.gray: true
       general.mobspawn.sheep.coloured.black: true
       general.mobspawn.sheep.coloured.brown: true
       general.mobspawn.sheep.coloured.pink: true
+  general.mobspawn.sheep.colored.natural:
+    children:
+      general.mobspawn.sheep.coloured.natural: true
   general.setspawn.*:
     children:
+      general.setspawn.self: true
+      general.setspawn.other: true
+      general.setspawn.world: true
       general.setspawn.to.*: true
-  general.setspawn.to.*:
+  general.setspawn:
     children:
-      general.setspawn.to.world: true
-      general.setspawn.to.player: true
-      general.setspawn.to.coords: true
-      general.setspawn.to.home: true
-      general.setspawn.to.spawn: true
-      general.setspawn.to.target: true
-      general.setspawn.to.compass: true
+      general.setspawn.world: true
   general.time.*:
     children:
       general.time: true
