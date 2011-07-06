@@ -92,6 +92,14 @@ public class Target {
 		}
 	}
 	
+	public String getCostClass() {
+		return type.getPermission("economy.teleport");
+	}
+	
+	public int count() {
+		return teleportees.size();
+	}
+	
 	public static Target get(String targ, Player teleporter) {
 		Server mc = General.plugin.getServer();
 		CommandSender notify;

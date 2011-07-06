@@ -276,4 +276,9 @@ public class Toolbox {
 		Object prop = config.getProperty(node);
 		return prop != null;
 	}
+	
+	public static <T> T[] arrayCopy(T[] src, int srcPos, T[] dest, int destPos, int len) {
+		System.arraycopy(src, srcPos, dest, destPos, len);
+		return dest;
+	}
 }

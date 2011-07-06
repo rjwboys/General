@@ -21,12 +21,12 @@ public enum TargetType {
 	}
 	
 	public boolean hasPermission(Player who) {
-		if(Toolbox.hasPermission(who, getPermission())) return true;
+		if(Toolbox.hasPermission(who, getPermission("general.teleport"))) return true;
 		Messaging.lacksPermission(who, "teleport " + msg);
 		return false;
 	}
 	
-	public String getPermission() {
-		return "general.teleport." + this.toString().toLowerCase();
+	public String getPermission(String base) {
+		return base + "." + this.toString().toLowerCase();
 	}
 }
