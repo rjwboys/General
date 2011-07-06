@@ -11,6 +11,7 @@ softdepend:
   - Permissions
   - WorldEdit
   - Help
+  - BookWorm
 commands:
   info.playerlist:
     description: Displays all players that are online.
