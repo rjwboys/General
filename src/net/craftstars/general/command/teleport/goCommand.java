@@ -7,9 +7,7 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
-import net.craftstars.general.teleport.Destination;
-import net.craftstars.general.teleport.Target;
-import net.craftstars.general.teleport.TargetType;
+import net.craftstars.general.teleport.*;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 

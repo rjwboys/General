@@ -161,7 +161,7 @@ public class Items {
 	
 	private static final String invalidItemAlias = "I am not a valid item.";
 	private static Pattern itemPat = Pattern.compile("([0-9]+)(?:[.,:/|]([0-9]+))?");
-	
+	@Deprecated
 	private static void loadItemsDB(Properties itemsdb) {
 		for(String alias : itemsdb.stringPropertyNames()) {
 			ItemID val;

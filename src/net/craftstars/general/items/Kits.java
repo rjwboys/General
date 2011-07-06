@@ -9,81 +9,49 @@ import java.util.InputMismatchException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.craftstars.general.General;
-import net.craftstars.general.items.ItemID;
-import net.craftstars.general.items.Items;
+import org.bukkit.util.config.Configuration;
+import org.bukkit.util.config.ConfigurationNode;
 
-import org.bukkit.entity.Player;
+import net.craftstars.general.General;
 
 public class Kits {
 	public static HashMap<String, Kit> kits = new HashMap<String, Kit>();
 	public static HashMap<GotKit, Long> players = new HashMap<GotKit, Long>();
 	
-	public static class Kit {
-		public HashMap<ItemID, Integer> items;
-		public int delay;
-		private String name;
-		
-		@SuppressWarnings("hiding")
-		Kit(String name, HashMap<ItemID, Integer> item, int delay) {
-			this.name = name;
-			this.items = item;
-			this.delay = delay;
-		}
-		
-		@Override
-		public int hashCode() {
-			return items.hashCode() * delay;
-		}
-		
-		@Override
-		public boolean equals(Object other) {
-			if(other instanceof Kit) {
-				return items.equals( ((Kit) other).items);
-			}
-			return false;
-		}
-		
-		public String getName() {
-			return name;
-		}
-	}
-	
-	public static class GotKit {
-		private String who;
-		private String which;
-		private int id;
-		
-		@SuppressWarnings("hiding")
-		public GotKit(Player who, Kit which) {
-			this.who = who.getName();
-			this.which = which.getName();
-			this.id = who.getEntityId();
-		}
-		
-		@Override
-		public int hashCode() {
-			int items = which.hashCode();
-			// return (id << 16) | (item & 0xFFFF);
-			return id ^ items;
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			if(obj instanceof GotKit) {
-				GotKit other = (GotKit) obj;
-				if(this.which.equals(other.which) && this.who.equals(other.who)) return true;
-			}
-			return false;
-		}
-		
-		@Override
-		public String toString() {
-			return "(" + who + "[" + id + "], " + which + ")";
-		}
-	}
-	
 	public static boolean loadKits() {
+		kits.clear();
+		File folder = General.plugin.getDataFolder();
+		File oldKits = new File(folder, "general.kits");
+		if(oldKits.exists()) loadOldKits();
+		File kitsFile = new File(folder, "kits.yml");
+		if(!kitsFile.exists()) return !kits.isEmpty();
+		Configuration kitsYml = new Configuration(kitsFile);
+		kitsYml.load();
+		for(String key : kitsYml.getKeys()) {
+			ConfigurationNode kitNode = kitsYml.getNode(key);
+			ConfigurationNode itemsNode = kitNode.getNode("items");
+			if(itemsNode == null) {
+				General.logger.warn("Kit '" + key + "' has no items and has been skipped.");
+				continue;
+			}
+			HashMap<ItemID, Integer> items = new HashMap<ItemID, Integer>();
+			for(String id : itemsNode.getKeys()) {
+				ItemID item = Items.validate(id);
+				if(!item.isValid()) {
+					General.logger.warn("Kit '" + key + "' has an invalid item '" + id + "' which has been skipped.");
+					continue;
+				}
+				items.put(item, itemsNode.getInt(id, 1));
+			}
+			int delay = kitNode.getInt("delay", 0);
+			double cost = kitNode.getDouble("cost", 0.0);
+			kits.put(key, new Kit(key, items, delay, cost));
+		}
+		return true;
+	}
+	
+	@Deprecated
+	public static boolean loadOldKits() {
 		boolean foundAnException = false;
 		Exception exceptionToShow = null;
 		try {
@@ -132,7 +100,7 @@ public class Kits {
 								throw new IllegalArgumentException(id + ":" + data + ", null: " + (item == null));
 							components.put(new ItemID(type), n);
 						}
-						Kit theKit = new Kit(listing[0], components, delay);
+						Kit theKit = new Kit(listing[0], components, delay, 0);
 						kits.put(listing[0].toLowerCase(), theKit);
 						if(listing.length > 3) {
 							General.logger.warn("Note: line " + lineNumber
@@ -152,12 +120,32 @@ public class Kits {
 			}
 		} catch(Exception e) {
 			General.logger.warn("An error occured: either general.kits does not exist or it could not be read; kits ignored");
+			return false;
 		}
 		if(foundAnException) {
 			General.logger.error("First exception loading the kits:");
 			exceptionToShow.printStackTrace();
 		}
+		save();
+		General.logger.info("A general.kits file was found and converted to the new kits.yml format. You may now delete the general.kits file without information loss.");
 		// Return success
 		return true;
+	}
+	
+	public static void save() {
+		File kitsFile = new File(General.plugin.getDataFolder(), "kits.yml");
+		Configuration kitsYml = new Configuration(kitsFile);
+		for(String key : kits.keySet()) {
+			HashMap<String, Object> yaml = new HashMap<String, Object>();
+			Kit kit = kits.get(key);
+			yaml.put("delay", kit.delay);
+			yaml.put("cost", kit.getCost());
+			HashMap<String, Integer> items = new HashMap<String, Integer>();
+			for(ItemID item : kit.items.keySet())
+				items.put(item.getName(), kit.items.get(item));
+			yaml.put("items", items);
+			kitsYml.setProperty(key, yaml);
+		}
+		kitsYml.save();
 	}
 }

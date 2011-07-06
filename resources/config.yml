@@ -168,6 +168,14 @@ economy:
     # Setting it to 0 is functionally equivalent to setting "trash" above but will print a message
     # that would not be printed with "trash".
     sell: 100
+    # This determines the behaviour of /kit
+    # If "cumulative", the cost of a kit is the cost of its contents.
+    # If "discount", the cost of a kit is a percentage of its contents.
+    # If "individual", each kit has its own cost set in kits.yml.
+    kits: individual
+    # If the above is "discount", this is the percentage to use.
+    # For example, 80 means 20% off (this is the default if not specified).
+    discount: 80
 
 # The format that a chat message's first word must take for General to assume that the player
 # may be tagging another player. For example, if you set it to '@name', it will use Twitter-style

@@ -150,7 +150,11 @@ public class Toolbox {
 		Player player = (Player) sender;
 		AccountStatus.price = 0;
 		for(String permission : permissions)
-			AccountStatus.price += General.plugin.config.getDouble(permission, 0) * quantity;
+			if(permission.startsWith("$"))
+				AccountStatus.price += Double.parseDouble(permission.substring(1));
+			else if(permission.startsWith("%"))
+				AccountStatus.price *= Double.parseDouble(permission.substring(1)) / 100.0;
+			else AccountStatus.price += General.plugin.config.getDouble(permission, 0) * quantity;
 		if(General.plugin.isFrozen(player)) return AccountStatus.FROZEN;
 		if(General.plugin.economy.getBalance(player) >= AccountStatus.price)
 			return AccountStatus.SUFFICIENT;
