@@ -125,8 +125,8 @@ public class General extends JavaPlugin {
 		
 		Time.setup();
 		Items.setup();
-		Kits.loadKits();
 		setupPermissions(true);
+		Kits.loadKits();
 		setupEconomy();
 		tagFormat = config.getString("tag-fmt", "name:");
 	}

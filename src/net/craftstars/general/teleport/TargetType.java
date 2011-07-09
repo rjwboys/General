@@ -29,4 +29,8 @@ public enum TargetType {
 	public String getPermission() {
 		return "general.teleport." + this.toString().toLowerCase();
 	}
+	
+	public String getName() {
+		return msg;
+	}
 }

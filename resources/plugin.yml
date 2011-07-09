@@ -114,6 +114,9 @@ commands:
     usage: /<command> [<world>]
 permissions:
   general.*:
+    description: Gives all General permissions.
+    # General defines no permissions that an op should not have.
+    default: op
     children:
       general.give.*: true
       general.clear.*: true
@@ -134,7 +137,8 @@ permissions:
       general.admin.*: true
       general.tell: true
   general.basic:
-    default: true
+    description: Gives a set of basic, harmless General permissions.
+    default: not op
     children:
       general.time: true
       general.playerlist: true
@@ -143,6 +147,7 @@ permissions:
       general.getpos: true
       general.tell: true
   general.give.*:
+    description: Gives full access to the /give command.
     children:
       general.give: true
       general.give.infinite: true
@@ -150,90 +155,85 @@ permissions:
       general.give.group.*: true # defined dynamically
       general.give.item.*: true  # defined dynamically
       general.give.groupless: true
+  general.give:
+    description: Gives basic access to the /give command.
+  general.give.infinite:
+    description: Gives access to /give for infinite stacks.
+  general.give.mass:
+    description: Gives access to /give for large quantities, and to /items.
   general.give.any:
+    description: Gives permission to bypass the item whitelist/blacklist.
     children:
       general.give.groupless: true
       general.give.group.*: true
+  general.give.items.*:
+    description: Gives access to all items, without exception.
+    children:
+      general.give.any: true
   general.clear.*:
+    description: Gives full access to the /clear command
     children:
       general.clear: true
       general.clear.other: true
+  general.clear:
+    description: Gives basic access to the /clear command
+  general.clear.other:
+    description: Lets you clear the inventory of others.
   general.take.*:
+    description: Gives full access to the /take command
     children:
       general.take: true
       general.take.other: true
-  general.kit.* # extended dynamically
-    children:
-      general.kit: true
-  general.teleport.*:
-    children:
-      general.teleport: true
-      general.teleport.any: true
-      general.teleport.to.*: true
-  general.teleport.any: # extended dynamically
-    children:
-      general.teleport.mass: true
-  general.teleport.self.*:
-    children:
-      general.teleport.self: true
-      general.teleport.self.to.*: true
-  general.teleport.other.*:
-    children:
-      general.teleport.other: true
-      general.teleport.other.to.*: true
-  general.teleport.mob.*:
-    children:
-      general.teleport.mob: true
-      general.teleport.mob.to.*: true
+  general.take:
+    description: Gives basic access to the /take command
+  general.take.other:
+    description: Lets you take from the inventory of others.
+  general.mobspawn:
+    description: Gives basic access to the /mobspawn command, which is no access at all but required to use it.
   general.mobspawn.*:
+    description: Gives full access to the /mobspawn command.
     children:
       general.mobspawn.all: true
       general.mobspawn.variants: true
-  general.mobspawn.all: # extended dynamically
-    children:
-      general.mobspawn: true
-  general.mobspawn.variants:
-    children:
-      general.mobspawn.creeper.*: true
-      general.mobspawn.pig.*: true
-      general.mobspawn.pig-zombie.*: true
-      general.mobspawn.wolf.*: true
-      general.mobspawn.slime.*: true
-      general.mobspawn.sheep.*: true
   general.mobspawn.neutral.angry:
+    description: Allows you to spawn any neutral mob you have access to as already angry.
     children:
-      general.mobspawn.neutral: true
       general.mobspawn.wolf.angry: true
       general.mobspawn.pig-zombie.angry: true 
   general.mobspawn.creeper.*:
+    description: Lets you spawn any type of creeper.
     children:
       general.mobspawn.creeper: true
       general.mobspawn.creeper.powered: true
   general.mobspawn.pig.*:
+    description: Lets you spawn any type of pig.
     children:
       general.mobspawn.pig: true
       general.mobspawn.pig.saddled: true
   general.mobspawn.pig-zombie.*:
+    description: Lets you spawn any type of pig zombie.
     children:
       general.mobspawn.pig-zombie: true
       general.mobspawn.pig-zombie.angry: true
   general.mobspawn.wolf.*:
+    description: Lets you spawn any type of wolf.
     children:
       general.mobspawn.wolf: true
       general.mobspawn.wolf.angry: true
       general.mobspawn.wolf.tamed: true
-  general.mobspawn.slime.*: # extended dynamically
+  general.mobspawn.sheep.*:
+    description: Lets you spawn any type of sheep.
     children:
-      general.mobspawn.slime: true
-  general.mobspawn.sheep.*: # extended dynamically
-    children:
-      general.mobspawn.sheep: true
       general.mobspawn.sheep.sheared: true
       general.mobspawn.sheep.coloured.*: true # defined dynamically
+  general.mobspawn.sheep.sheared:
+    description: Lets you spawn sheep that are already sheared.
   general.mobspawn.sheep.colored.*:
+    description: Lets you spawn any colour of sheep.
     children:
       general.mobspawn.sheep.coloured.*: true
   general.mobspawn.sheep.coloured.natural:
+    description: Lets you spawn any naturally-occurring colour of sheep.
     children:
       general.mobspawn.sheep.coloured.silver: true
       general.mobspawn.sheep.coloured.gray: true
@@ -241,8 +241,18 @@ permissions:
       general.mobspawn.sheep.coloured.brown: true
       general.mobspawn.sheep.coloured.pink: true
   general.mobspawn.sheep.colored.natural:
+    description: Lets you spawn any naturally-occurring colour of sheep.
     children:
       general.mobspawn.sheep.coloured.natural: true
+  general.teleport:
+    description: Gives basic access to the /teleport command, which is no access at all but required to use it.
+  general.teleport.*:
+    children:
+      general.teleport: true
+      general.teleport.any: true
+      general.teleport.to.*: true
+  general.teleport.mass:
+    description: Allows you to teleport several entities at a time.
   general.setspawn.*:
     children:
       general.setspawn.self: true
