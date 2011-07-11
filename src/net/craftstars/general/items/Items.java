@@ -385,6 +385,11 @@ public class Items {
 				if(check.getData() != null) isInvalid = false;
 				if(isInvalid)
 					ret.invalidate(true);
+				// TODO: Get rid of hack
+				// --- begin hacky workaround for incorrect getMaxDurability
+				else if(ret.getId() == 359)
+					if(ret.getData() > 238) ret.invalidate(true); 
+				// --- begin hacky workaround for incorrect getMaxDurability
 				else if(ret.getData() > check.getMaxDurability()) ret.invalidate(true);
 			}
 			// --- resume hacky workaround for missing MaterialData classes ---
@@ -533,13 +538,16 @@ public class Items {
 	}
 	
 	public static boolean isDamageable(int id) {
+		// TODO: Get rid of hack
+		// --- begin hacky workaround for incorrect getMaxDurability
+		if(id == 359) return true;
+		// --- end hacky workaround for incorrect getMaxDurability
 		return Material.getMaterial(id).getMaxDurability() != -1;
 	}
 	
 	public static int maxStackSize(int id) {
 		// TODO: Get rid of hack
 		// --- begin hacky workaround for incorrect getMaxStackSize
-		if(id == 346) return 64;
 		if(id == 335 || id == 349 || id == 350 || id == 355) return 1;
 		// --- end hacky workaround for incorrect getMaxStackSize
 		return Material.getMaterial(id).getMaxStackSize();
