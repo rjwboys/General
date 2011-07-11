@@ -218,7 +218,7 @@ public class generalCommand extends CommandBase {
 				kit = Kits.kits.get(kitName);
 			else {
 				Messaging.send(sender, "New kit '" + kitName + "' created.");
-				kit = new Kit(kitName, new HashMap<ItemID, Integer>(), 0, 0);
+				kit = new Kit(kitName, 0, 0);
 				Kits.kits.put(kitName, kit);
 				if(args.length < 3) return true;
 			}
@@ -231,14 +231,14 @@ public class generalCommand extends CommandBase {
 				Messaging.send(sender, "&cInvalid amount.");
 				return true;
 			}
-			kit.items.put(item, amount);
+			kit.add(item, amount);
 			Messaging.send(sender, amount + " of " + item.getName() + " added to kit '" + kitName + "'.");
 			return true;
 		} else if(args[1].equalsIgnoreCase("remove")) {
 			Kit kit = Kits.kits.get(kitName);
 			if(args.length < 3) return SHOW_USAGE;
 			ItemID item = Items.validate(args[2]);
-			if(!kit.items.containsKey(item)) {
+			if(!kit.contains(item)) {
 				Messaging.send(sender, "The kit '" + kitName + "' does not include " + item.getName());
 				return true;
 			}
@@ -249,9 +249,8 @@ public class generalCommand extends CommandBase {
 				Messaging.send(sender, "&cInvalid amount.");
 				return true;
 			}
-			if(amount >= kit.items.get(item)) kit.items.remove(item);
-			else kit.items.put(item, kit.items.get(item) - amount);
-			Messaging.send(sender, (kit.items.containsKey(item) ? amount : "All") + " of " + item.getName() +
+			kit.add(item, -amount);
+			Messaging.send(sender, (kit.contains(item) ? amount : "All") + " of " + item.getName() +
 				" removed from kit '" + kitName + "'.");
 			return true;
 		} else if(args[1].equalsIgnoreCase("delay")) {
@@ -287,8 +286,8 @@ public class generalCommand extends CommandBase {
 		} else if(args[1].equalsIgnoreCase("list")) {
 			Kit kit = Kits.kits.get(kitName);
 			StringBuilder items = new StringBuilder();
-			for(ItemID item : kit.items.keySet()) {
-				items.append(kit.items.get(item));
+			for(ItemID item : kit) {
+				items.append(kit.get(item));
 				items.append(" of ");
 				items.append(item.getName());
 				items.append(", ");

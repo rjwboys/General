@@ -1,8 +1,6 @@
 
 package net.craftstars.general.command.inven;
 
-import java.util.HashMap;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -82,9 +80,8 @@ public class kitCommand extends CommandBase {
 	}
 	
 	private void getKit(Player sender, Kit kit) {
-		HashMap<ItemID, Integer> items = kit.items;
-		for(ItemID x : items.keySet()) {
-			Items.giveItem(sender, x, items.get(x));
+		for(ItemID x : kit) {
+			Items.giveItem(sender, x, kit.get(x));
 		}
 		Messaging.send(sender, "&2Here you go!");
 	}

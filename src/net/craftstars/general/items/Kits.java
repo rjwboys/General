@@ -34,18 +34,18 @@ public class Kits {
 				General.logger.warn("Kit '" + key + "' has no items and has been skipped.");
 				continue;
 			}
-			HashMap<ItemID, Integer> items = new HashMap<ItemID, Integer>();
+			int delay = kitNode.getInt("delay", 0);
+			double cost = kitNode.getDouble("cost", 0.0);
+			Kit kit = new Kit(key, delay, cost);
 			for(String id : itemsNode.getKeys()) {
 				ItemID item = Items.validate(id);
 				if(!item.isValid()) {
 					General.logger.warn("Kit '" + key + "' has an invalid item '" + id + "' which has been skipped.");
 					continue;
 				}
-				items.put(item, itemsNode.getInt(id, 1));
+				kit.add(item, itemsNode.getInt(id, 1));
 			}
-			int delay = kitNode.getInt("delay", 0);
-			double cost = kitNode.getDouble("cost", 0.0);
-			kits.put(key, new Kit(key, items, delay, cost));
+			kits.put(key, kit);
 		}
 		return true;
 	}
@@ -72,9 +72,7 @@ public class Kits {
 					try {
 						int delay = Integer.valueOf(listing[2]);
 						String[] stuff = listing[1].split(",");
-						HashMap<ItemID, Integer> components = new HashMap<ItemID, Integer>();
-						// ItemID[] components = new ItemID[stuff.length];
-						// int[] amounts = new int[stuff.length];
+						Kit theKit = new Kit(listing[0], delay, 0);
 						for(String item : stuff) {
 							int n = 1;
 							String id, data = "";
@@ -98,9 +96,8 @@ public class Kits {
 							else type = Items.validate(id + ":" + data);
 							if(type == null || !type.isValid())
 								throw new IllegalArgumentException(id + ":" + data + ", null: " + (item == null));
-							components.put(new ItemID(type), n);
+							theKit.add(new ItemID(type), n);
 						}
-						Kit theKit = new Kit(listing[0], components, delay, 0);
 						kits.put(listing[0].toLowerCase(), theKit);
 						if(listing.length > 3) {
 							General.logger.warn("Note: line " + lineNumber
@@ -141,8 +138,8 @@ public class Kits {
 			yaml.put("delay", kit.delay);
 			yaml.put("cost", kit.getCost());
 			HashMap<String, Integer> items = new HashMap<String, Integer>();
-			for(ItemID item : kit.items.keySet())
-				items.put(item.getName(), kit.items.get(item));
+			for(ItemID item : kit)
+				items.put(item.getName(), kit.get(item));
 			yaml.put("items", items);
 			kitsYml.setProperty(key, yaml);
 		}

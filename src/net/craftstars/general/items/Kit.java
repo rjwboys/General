@@ -1,6 +1,7 @@
 package net.craftstars.general.items;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.bukkit.entity.Player;
@@ -8,17 +9,17 @@ import org.bukkit.entity.Player;
 import net.craftstars.general.General;
 import net.craftstars.general.util.Toolbox;
 
-public class Kit {
-	public HashMap<ItemID, Integer> items;
+public class Kit implements Iterable<ItemID> {
+	private HashMap<ItemID, Integer> items;
 	public int delay;
 	private double savedCost;
 	private String[] cost;
 	private String name;
 	
 	@SuppressWarnings("hiding")
-	public Kit(String name, HashMap<ItemID, Integer> item, int delay, double cost) {
+	public Kit(String name, int delay, double cost) {
 		this.name = name;
-		this.items = item;
+		this.items = new HashMap<ItemID, Integer>();
 		this.delay = delay;
 		this.savedCost = cost;
 		calculateCost();
@@ -32,7 +33,7 @@ public class Kit {
 	@Override
 	public boolean equals(Object other) {
 		if(other instanceof Kit) {
-			return items.equals( ((Kit) other).items);
+			return items.equals(((Kit) other).items);
 		}
 		return false;
 	}
@@ -78,5 +79,26 @@ public class Kit {
 	@SuppressWarnings("hiding")
 	public void setSavedCost(double cost) {
 		savedCost = cost;
+	}
+
+	@Override
+	public Iterator<ItemID> iterator() {
+		return items.keySet().iterator();
+	}
+
+	public void add(ItemID item, int amount) {
+		int current = 0;
+		if(items.containsKey(item)) current = items.get(item);
+		amount += current;
+		if(amount <= 0) items.remove(item);
+		else items.put(item, amount);
+	}
+
+	public int get(ItemID item) {
+		return items.get(item);
+	}
+
+	public boolean contains(ItemID item) {
+		return items.containsKey(item);
 	}
 }
