@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +31,7 @@ public class Kits {
 		kitsYml.load();
 		for(String key : kitsYml.getKeys()) {
 			ConfigurationNode kitNode = kitsYml.getNode(key);
-			ConfigurationNode itemsNode = kitNode.getNode("items");
+			List<?> itemsNode = kitNode.getList("items");
 			if(itemsNode == null) {
 				General.logger.warn("Kit '" + key + "' has no items and has been skipped.");
 				continue;
@@ -37,17 +39,49 @@ public class Kits {
 			int delay = kitNode.getInt("delay", 0);
 			double cost = kitNode.getDouble("cost", 0.0);
 			Kit kit = new Kit(key, delay, cost);
-			for(String id : itemsNode.getKeys()) {
-				ItemID item = Items.validate(id);
+			for(Object id : itemsNode) {
+				String itemName;
+				int amount = 1;
+				if(id instanceof String)
+					itemName = (String) id;
+				else if(id instanceof Integer)
+					itemName = ((Integer) id).toString();
+				else if(id instanceof Map) {
+					Map<?,?> map = (Map<?,?>) id;
+					if(map.size() != 1) {
+						warnMalformed(key, id);
+						continue;
+					}
+					Object[] keys = map.keySet().toArray(), values = map.values().toArray();
+					if(keys[0] instanceof String) itemName = (String) keys[0];
+					else if(keys[0] instanceof Integer) itemName = ((Integer) keys[0]).toString();
+					else {
+						warnMalformed(key, id);
+						continue;
+					}
+					if(values[0] instanceof Integer) amount = (Integer) values[0];
+					else {
+						warnMalformed(key, id);
+						continue;
+					}
+				} else {
+					warnMalformed(key, id);
+					continue;
+				}
+				ItemID item = Items.validate(itemName);
 				if(!item.isValid()) {
 					General.logger.warn("Kit '" + key + "' has an invalid item '" + id + "' which has been skipped.");
 					continue;
 				}
-				kit.add(item, itemsNode.getInt(id, 1));
+				kit.add(item, amount);
 			}
 			kits.put(key, kit);
 		}
 		return true;
+	}
+
+	private static void warnMalformed(String kit, Object id) {
+		General.logger.warn("Kit '" + kit + "' has a malformed entry: \"" + id.toString() + "\"");
 	}
 	
 	@Deprecated
