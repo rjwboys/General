@@ -70,7 +70,7 @@ public class MessageOfTheDay {
 	}
 	
 	private static double getHealth(CommandSender sender) {
-		if(sender instanceof Player) return ((double) ((Player) sender).getHealth()) / 2.0;
+		if(sender instanceof Player) return ((Player) sender).getHealth() / 2.0;
 		return 0;
 	}
 	

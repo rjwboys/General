@@ -11,6 +11,7 @@ import net.craftstars.general.util.Messaging;
 
 public class BasicPermissionsHandler implements PermissionsHandler {
 	
+	@Override
 	public boolean hasPermission(Player who, String what) {
 		try {
 			List<String> permsList = General.plugin.config.getStringList("permissions.ops-only", null);

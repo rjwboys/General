@@ -53,7 +53,7 @@ public class Kits {
 	@Deprecated
 	public static boolean loadOldKits() {
 		boolean foundAnException = false;
-		Exception exceptionToShow = null;
+		Exception exceptionToShow = new Exception("If you see this, something's VERY wrong.");
 		try {
 			File dataFolder = General.plugin.getDataFolder();
 			BufferedReader br = new BufferedReader(new FileReader(new File(dataFolder, "general.kits")));

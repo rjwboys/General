@@ -44,7 +44,7 @@ public class Items {
 			ItemID item = aliases.get(alias);
 			String code = Integer.toString(item.getId());
 			if(item.getData() != null) code += "/" + item.getData();
-			config.setProperty("aliases." + alias, (String) code);
+			config.setProperty("aliases." + alias, code);
 		}
 		HashMap<Integer, TreeSet<ItemID>> tmpList = new HashMap<Integer, TreeSet<ItemID>>();
 		for(ItemID item : names.keySet()) {
@@ -83,7 +83,7 @@ public class Items {
 			ItemID item = hooks.get(hook);
 			String code = Integer.toString(item.getId());
 			if(item.getData() != null) code += "/" + item.getData();
-			config.setProperty(key, (String) code);
+			config.setProperty(key, code);
 		}
 		config.save();
 	}

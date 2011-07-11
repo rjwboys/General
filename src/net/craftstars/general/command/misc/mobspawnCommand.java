@@ -139,6 +139,7 @@ public class mobspawnCommand extends CommandBase {
 		public LivingEntity mob;
 		public MobType type;
 		public MobData data;
+		@SuppressWarnings("unused")
 		SpawnResult rider;
 		
 		SpawnResult(LivingEntity e, MobType t, MobData d) {

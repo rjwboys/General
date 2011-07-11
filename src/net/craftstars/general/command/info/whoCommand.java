@@ -47,7 +47,7 @@ public class whoCommand extends CommandBase {
 	
 	private String getHealthBar(Player ofWhom) {
 		String healthBar = "[";
-		double health = ((double) ofWhom.getHealth()) / 2.0;
+		double health = ofWhom.getHealth() / 2.0;
 		String colour = health < 3 ? "&c" : (health < 7 ? "&e" : "&2");
 		healthBar += colour;
 		healthBar += Toolbox.repeat('|', (int) health);

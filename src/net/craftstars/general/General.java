@@ -158,7 +158,7 @@ public class General extends JavaPlugin {
 							.getClassLoader()
 							.loadClass("net.craftstars.general.money." + econType + "EconomyHandler")
 							.asSubclass(EconomyBase.class);
-			economy = (EconomyBase) clazz.newInstance();
+			economy = clazz.newInstance();
 			if(!economy.wasLoaded()) {
 				logger.info("[" + econType + "] not detected; economy support disabled.");
 				gotRequestedEconomy = false;
@@ -189,7 +189,7 @@ public class General extends JavaPlugin {
 							.getClassLoader()
 							.loadClass("net.craftstars.general.security." + permType + "PermissionsHandler")
 							.asSubclass(PermissionsHandler.class);
-			permissions = (PermissionsHandler) clazz.newInstance();
+			permissions = clazz.newInstance();
 			if(firstTime && (permissions == null || !permissions.wasLoaded())) {
 				logger.info("[" + permType + "] not detected; falling back to [Basic] permissions.");
 				permissions = new BasicPermissionsHandler();
@@ -208,6 +208,10 @@ public class General extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		Items.save();
+		if(config.getBoolean("auto-save", false)) {
+			Kits.save();
+			config.save();
+		}
 		General.logger.info("Plugin disabled!");
 	}
 	
@@ -254,7 +258,7 @@ public class General extends JavaPlugin {
 								.getClassLoader()
 								.loadClass("net.craftstars.general.command." + command.getName() + "Command")
 								.asSubclass(CommandBase.class);
-				CommandBase commandInstance = (CommandBase) clazz.getConstructor(General.class).newInstance(this);
+				CommandBase commandInstance = clazz.getConstructor(General.class).newInstance(this);
 				result = commandInstance.runCommand(sender, command, commandLabel, args);
 			}
 			if(config.getBoolean("log-commands", false)) {

@@ -12,6 +12,7 @@ import com.nijiko.coelho.iConomy.system.Bank;
 
 import net.craftstars.general.money.EconomyBase;
 
+@Deprecated
 public class iConomy4EconomyHandler implements EconomyBase {
 	Bank econ;
 	private boolean wasLoaded;

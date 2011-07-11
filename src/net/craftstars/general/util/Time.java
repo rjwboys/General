@@ -30,7 +30,7 @@ public class Time {
 	public static String formatTime(long time, TimeFormat fmt) {
 		String suffix = "", formatString = "";
 		long minutes = time % 1000, ticks = time;
-		minutes = Math.round( ((double) minutes) * 0.06);
+		minutes = Math.round(minutes * 0.06);
 		time /= 1000;
 		time += 6;
 		while(time > 24)
@@ -107,13 +107,13 @@ public class Time {
 			} else return Long.valueOf(time);
 		}
 		hour *= 1000;
-		minutes = Math.round( ((double) minutes) / 0.06);
+		minutes = Math.round(minutes / 0.06);
 		return hour + minutes;
 	}
 	
 	public static String formatDuration(long time) {
 		long minutes = time % 1000, hours = time / 1000;
-		minutes = Math.round( ((double) minutes) * 0.06);
+		minutes = Math.round(minutes * 0.06);
 		Formatter fmtr = new Formatter();
 		if(minutes + hours == 0) return fmtr.format("%d ticks", time).toString();
 		if(minutes == 0) return fmtr.format("%d hours", hours).toString();
@@ -140,7 +140,7 @@ public class Time {
 			minutes = Long.valueOf(m.group(1));
 			matched = true;
 		}
-		if(matched) return (hours * 1000) + Math.round( ((double) minutes) / 0.06);
+		if(matched) return (hours * 1000) + Math.round(minutes / 0.06);
 		return Long.valueOf(time);
 	}
 }

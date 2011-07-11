@@ -185,6 +185,10 @@ tag-fmt: 'name:'
 # If this is changed to true, successful commands will be logged to the console.
 log-commands: false
 
+# Set to true if you want General to save this file on shutdown.
+# Note that doing so will lose all comments and likely reorder and reformat the file.
+auto-save: false
+
 # The range of the /weather zap command.
 #lightning-range: 50
 

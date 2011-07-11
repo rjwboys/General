@@ -36,6 +36,7 @@ public abstract class CommandBase {
 	public abstract boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args);
 	
+	@SuppressWarnings("unused")
 	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
 		throw new CommandException("Unknown sender type, aborting command.");
 	}

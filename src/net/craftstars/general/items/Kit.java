@@ -74,4 +74,9 @@ public class Kit {
 	public double getCost() {
 		return savedCost;
 	}
+	
+	@SuppressWarnings("hiding")
+	public void setSavedCost(double cost) {
+		savedCost = cost;
+	}
 }

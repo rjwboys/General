@@ -67,6 +67,8 @@ public class WolfAttitude extends MobData {
 		case ANGRY:
 			dog.setAngry(true);
 			break;
+		case WILD:
+			break;
 		}
 	}
 
