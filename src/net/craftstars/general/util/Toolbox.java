@@ -134,8 +134,7 @@ public class Toolbox {
 	public static boolean hasPermission(CommandSender sender, String... permissions) {
 		if(sender instanceof ConsoleCommandSender)
 			return true;
-		else if(!(sender instanceof Player)) return false; // TODO: Some allowance for non-player-or-console
-															// permissions?
+		else if(!(sender instanceof Player)) return false; // TODO: Some allowance for non-player-or-console permissions?
 		Player who = (Player) sender;
 		boolean foundPermission = false;
 		for(String permission : permissions) {

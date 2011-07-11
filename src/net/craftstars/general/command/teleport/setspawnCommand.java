@@ -93,8 +93,8 @@ public class setspawnCommand extends CommandBase {
 			else targetCost = "economy.setspawn.other";
 			if(cannotPay(dest, setter, targetCost)) return;
 		}
-		// Begin accessing Minecraft internals
 		Location loc = dest.getLoc();
+		// Begin accessing Minecraft internals
 		// TODO Rewrite to use Bukkit API
 		CraftPlayer cp = (CraftPlayer) who;
 		EntityPlayer ep = cp.getHandle();

@@ -55,7 +55,6 @@ public class SheepState extends MobData {
 	
 	@Override
 	public void parse(Player setter, String data) {
-		// TODO Auto-generated method stub
 		if(Toolbox.equalsOne(data, "sheared", "nude", "naked", "bald", "bare", "shorn")) {
 			sheared = true;
 		} else if(Toolbox.equalsOne(data, "natural")) {

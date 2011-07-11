@@ -22,8 +22,6 @@ public class HelpHandler {
 		Plugin test = General.plugin.getServer().getPluginManager().getPlugin("Help");
 		if(test != null) {
 			Help helpPlugin = ((Help) test);
-			// TODO: Some of the help should be moved to /<cmd> help; spawn and teleport, in particular.
-			// //////////////////////////--------------------------------------------------
 			helpPlugin.registerCommand("playerlist",
 					"Lists online players." + fetchAliases("playerlist"),
 					General.plugin, "general.playerlist", "general.basic");

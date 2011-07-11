@@ -94,6 +94,7 @@ public class weatherCommand extends CommandBase {
 	}
 	
 	private void doThunder(CommandSender sender, World world) {
+		// TODO: Why doesn't this work?
 		if(Toolbox.lacksPermission(sender, "general.weather.thunder"))
 			Messaging.lacksPermission(sender, "toggle thunder");
 		if(!Toolbox.canPay(sender, 1, "economy.weather.thunder")) return;

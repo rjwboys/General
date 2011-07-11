@@ -108,13 +108,8 @@ public enum MobType {
 	public String getCostClass(MobData info) {
 		if(info == null) try {
 			info = data == null ? MobData.none : data.newInstance();
-		} catch(InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch(InstantiationException e) {}
+		catch(IllegalAccessException e) {}
 		String baseNode = "economy.mobspawn.";
 		baseNode += toString().toLowerCase().replace('_', '-');
 		return getCostClassHelper(info, baseNode);

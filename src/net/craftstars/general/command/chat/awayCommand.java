@@ -18,8 +18,8 @@ public class awayCommand extends CommandBase {
 	@Override
 	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
-		// TODO Auto-generated method stub
-		return false;
+		Messaging.send(sender, "It's not possible for the console to be marked as away.");
+		return true;
 	}
 	
 	@Override
