@@ -414,7 +414,7 @@ public class Items {
 			if(ret.getData() == null) break;
 			if(ret.getData() > 3 || ret.getData() < 0) ret.invalidate(true);
 		break;
-		case MOB_SPAWNER: // creaturebox support TODO: Why do I need this here?
+		case MOB_SPAWNER: // creaturebox support
 			if(ret.getData() == null) break;
 			if(Bukkit.getServer().getPluginManager().getPlugin("creaturebox") == null) {
 				ItemID tmp = ret.clone();
@@ -425,7 +425,6 @@ public class Items {
 			if(ret.getData() > 14 || ret.getData() < 0) ret.invalidate(true);
 		break;
 		case MAP:
-			// No action; any data value is presumed valid...
 			if(ret.getData() == null) ret.setData(0);
 			{ // TODO: Rewrite to use Bukkit API
 				World w = ((CraftWorld) Bukkit.getServer().getWorlds().get(0)).getHandle();
@@ -450,17 +449,25 @@ public class Items {
 				break;
 			}
 			if(ret.getData() == null) ret.setData(0);
-			if(ret.getData() > 0) { // TODO: Reflecting into someone else's plugin... ugh...
+			if(ret.getData() > 0) {
 				File bookFile = new File(bookworm.getDataFolder(), ret.getData() + ".txt");
+				boolean exists = true;
 				if(!bookFile.exists()) {
-					// TODO: If it doesn't exist, it may be of the form <num>_<author>_<title>.txt; how to catch that?
-					ret.invalidate(true);
-				} else {
+					String[] filenames = bookworm.getDataFolder().list();
+					exists = false;
+					for(String file : filenames) {
+						if(file.startsWith(Integer.toString(ret.getData()) + "_") && file.endsWith(".txt")) {
+							exists = true;
+							break;
+						}
+					}
+				}
+				if(exists) {
 					Book book = BookWorm.getBook(ret.getData().shortValue());
 					if(book != null)
 						ret.setName('"' + book.getTitle() + '"' + " by " + book.getAuthor());
 					else ret.invalidate(true);
-				}
+				} else ret.invalidate(true);
 			}
 		break;
 		}
