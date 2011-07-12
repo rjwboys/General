@@ -354,7 +354,7 @@ public class Items {
 	public static ItemID validate(String item) {
 		ItemID ret;
 		// First figure out what the data and ID are.
-		if(Pattern.matches("([a-zA-Z0-9a-zA-Z_'-]+)", item)) {
+		if(Pattern.matches("([a-zA-Z0-9_'-]+)", item)) {
 			ret = validateShortItem(item);
 			if(ret == null) return ret;
 		} else {
@@ -374,106 +374,8 @@ public class Items {
 		if(check == null) return ret.invalidate(false);
 		
 		// Make sure the damage value is valid.
-		// TODO: Get rid of hack
-		// --- begin hacky workaround for missing MaterialData classes ---
-		switch(check) {
-		default:
-			// --- pause hacky workaround for missing MaterialData classes ---
-			if(ret.getData() != null && ret.getData() != 0) {
-				boolean isInvalid = true;
-				if(isDamageable(ret.getId())) isInvalid = false;
-				if(check.getData() != null) isInvalid = false;
-				if(isInvalid)
-					ret.invalidate(true);
-				// TODO: Get rid of hack
-				// --- begin hacky workaround for incorrect getMaxDurability
-				else if(ret.getId() == 359)
-					if(ret.getData() > 238) ret.invalidate(true); else;
-				else if(ret.getId() == 346)
-					if(ret.getData() > 64) ret.invalidate(true); else; 
-				// --- begin hacky workaround for incorrect getMaxDurability
-				else if(ret.getData() > check.getMaxDurability()) ret.invalidate(true);
-			}
-			// --- resume hacky workaround for missing MaterialData classes ---
-		break;
-		case INK_SACK:
-		case WOOL:
-			if(ret.getData() == null) break;
-			if(ret.getData() > 15 || ret.getData() < 0) ret.invalidate(true);
-		break;
-		case COAL:
-			if(ret.getData() == null) break;
-			if(ret.getData() > 1 || ret.getData() < 0) ret.invalidate(true);
-		break;
-		case SAPLING:
-		case LOG:
-		case LEAVES:
-			if(ret.getData() == null) break;
-			if(ret.getData() > 2 || ret.getData() < 0) ret.invalidate(true);
-		break;
-		case STEP:
-		case DOUBLE_STEP:
-			if(ret.getData() == null) break;
-			if(ret.getData() > 3 || ret.getData() < 0) ret.invalidate(true);
-		break;
-		case MOB_SPAWNER: // creaturebox support
-			if(ret.getData() == null) break;
-			if(Bukkit.getServer().getPluginManager().getPlugin("creaturebox") == null) {
-				ItemID tmp = ret.clone();
-				tmp.setData(null);
-				ret.setName(name(tmp));
-				if(ret.getData() != 0) ret.invalidate(true);
-			}
-			if(ret.getData() > 14 || ret.getData() < 0) ret.invalidate(true);
-		break;
-		case MAP:
-			if(ret.getData() == null) ret.setData(0);
-			{ // TODO: Rewrite to use Bukkit API
-				World w = ((CraftWorld) Bukkit.getServer().getWorlds().get(0)).getHandle();
-				String mapName = "map_" + ret.getData();
-				Field mapMap;
-				try {
-					mapMap = WorldMapCollection.class.getDeclaredField("b");
-					mapMap.setAccessible(true);
-					@SuppressWarnings("rawtypes")
-					Object map = ((Map) mapMap.get(w.worldMaps)).get(mapName);
-					if(map == null) ret.invalidate(true);
-				} catch(SecurityException e) {}
-				catch(NoSuchFieldException e) {}
-				catch(IllegalArgumentException e) {}
-				catch(IllegalAccessException e) {}
-			}
-		break;
-		case BOOK:
-			Plugin bookworm = Bukkit.getServer().getPluginManager().getPlugin("BookWorm");
-			if(bookworm == null) {
-				if(ret.getData() != 0) ret.invalidate(true);
-				break;
-			}
-			if(ret.getData() == null) ret.setData(0);
-			if(ret.getData() > 0) {
-				File bookFile = new File(bookworm.getDataFolder(), ret.getData() + ".txt");
-				boolean exists = true;
-				if(!bookFile.exists()) {
-					String[] filenames = bookworm.getDataFolder().list();
-					exists = false;
-					for(String file : filenames) {
-						if(file.startsWith(Integer.toString(ret.getData()) + "_") && file.endsWith(".txt")) {
-							exists = true;
-							break;
-						}
-					}
-				}
-				if(exists) {
-					Book book = BookWorm.getBook(ret.getData().shortValue());
-					if(book != null)
-						ret.setName('"' + book.getTitle() + '"' + " by " + book.getAuthor());
-					else ret.invalidate(true);
-				} else ret.invalidate(true);
-			}
-		break;
-		}
-		// --- end hacky workaround for missing MaterialData classes ---
+		ItemData data = ItemData.getData(check);
+		if(!data.validate(ret, check)) ret.invalidate(true);
 		
 		ret.setName();
 		
@@ -544,14 +446,6 @@ public class Items {
 			}
 		}
 		return false;
-	}
-	
-	public static boolean isDamageable(int id) {
-		// TODO: Get rid of hack
-		// --- begin hacky workaround for incorrect getMaxDurability
-		if(id == 359) return true;
-		// --- end hacky workaround for incorrect getMaxDurability
-		return Material.getMaterial(id).getMaxDurability() != -1;
 	}
 	@Deprecated
 	public static int maxStackSize(int id) {
