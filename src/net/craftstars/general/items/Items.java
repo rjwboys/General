@@ -388,7 +388,9 @@ public class Items {
 				// TODO: Get rid of hack
 				// --- begin hacky workaround for incorrect getMaxDurability
 				else if(ret.getId() == 359)
-					if(ret.getData() > 238) ret.invalidate(true); 
+					if(ret.getData() > 238) ret.invalidate(true); else;
+				else if(ret.getId() == 346)
+					if(ret.getData() > 64) ret.invalidate(true); else; 
 				// --- begin hacky workaround for incorrect getMaxDurability
 				else if(ret.getData() > check.getMaxDurability()) ret.invalidate(true);
 			}
@@ -551,11 +553,12 @@ public class Items {
 		// --- end hacky workaround for incorrect getMaxDurability
 		return Material.getMaterial(id).getMaxDurability() != -1;
 	}
-	
+	@Deprecated
 	public static int maxStackSize(int id) {
 		// TODO: Get rid of hack
 		// --- begin hacky workaround for incorrect getMaxStackSize
-		if(id == 335 || id == 349 || id == 350 || id == 355) return 1;
+		if(id == 335 || id == 346 || id == 349 || id == 350 || id == 355 || id == 358 || id == 359) return 1;
+		if(id == 357) return 8;
 		// --- end hacky workaround for incorrect getMaxStackSize
 		return Material.getMaterial(id).getMaxStackSize();
 	}

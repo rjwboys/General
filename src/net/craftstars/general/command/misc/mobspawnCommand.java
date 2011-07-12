@@ -131,6 +131,7 @@ public class mobspawnCommand extends CommandBase {
 	@Override
 	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
+		// TODO: Implement this
 		Messaging.send(sender, "&cSorry, this command can only be used by a player.");
 		return true;
 	}
