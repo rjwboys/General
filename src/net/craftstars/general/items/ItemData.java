@@ -31,8 +31,9 @@ public abstract class ItemData {
 	public final static ItemData STEP = new ItemData() {
 		@Override
 		public boolean validate(ItemID id, Material check) {
-			// TODO Auto-generated method stub
-			return false;
+			if(id.getData() == null) return true;
+			if(id.getData() > 3 || id.getData() < 0) return false;
+			return true;
 		}
 	};
 	public final static ItemData MAP = new MapData();
@@ -62,6 +63,18 @@ public abstract class ItemData {
 			return MAP;
 		case BOOK: // BookWorm support
 			return BOOK;
+		}
+	}
+
+	public String getName(int data) {
+		return Integer.toString(data);
+	}
+	
+	public Integer fromName(String name) {
+		try {
+			return Integer.valueOf(name);
+		} catch(NumberFormatException e) {
+			return null;
 		}
 	}
 }

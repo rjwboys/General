@@ -173,7 +173,7 @@ public class Kits {
 			yaml.put("cost", kit.getCost());
 			HashMap<String, Integer> items = new HashMap<String, Integer>();
 			for(ItemID item : kit)
-				items.put(item.getName(), kit.get(item));
+				items.put(Items.getPersistentName(item), kit.get(item));
 			yaml.put("items", items);
 			kitsYml.setProperty(key, yaml);
 		}

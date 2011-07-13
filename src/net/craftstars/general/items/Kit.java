@@ -55,7 +55,9 @@ public class Kit implements Iterable<ItemID> {
 	private void calculateCost() {
 		// First, determine method of costing; then, calculate actual cost.
 		String method = General.plugin.config.getString("economy.give.kits");
-		if(Toolbox.equalsOne(method, "cumulative", "discount")) {
+		if(method == null) {
+			cost = new String[0];
+		} else if(Toolbox.equalsOne(method, "cumulative", "discount")) {
 			// Linked-list for constant-time add
 			LinkedList<String> econNodes = new LinkedList<String>();
 			for(ItemID item : items.keySet()) {

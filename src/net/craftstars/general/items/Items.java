@@ -426,7 +426,8 @@ public class Items {
 			if(thisVariant.contains(data)) return i;
 			i++;
 		} while(!thisVariant.isEmpty());
-		return null;
+		ItemData dataType = ItemData.getData(Material.getMaterial(id));
+		return dataType.fromName(data);
 	}
 	
 	public static boolean checkID(int id) {
@@ -528,5 +529,14 @@ public class Items {
 		if(ToolDamage.isDamageable(id.getId())) return true;
 		if(id.getData() == null) return true;
 		return data == id.getData();
+	}
+	
+	public static String getPersistentName(ItemID id) {
+		Material material = Material.getMaterial(id.getId());
+		String itemName = Toolbox.formatItemName(material.toString()).replace(" ", "");
+		ItemData data = ItemData.getData(material);
+		String dataName = data.getName(id.getData());
+		if(dataName.equals("0")) return itemName;
+		return itemName + '/' + dataName;
 	}
 }
