@@ -162,4 +162,8 @@ public enum MobType {
 			return MobData.none;
 		}
 	}
+
+	public int getId() {
+		return id;
+	}
 }

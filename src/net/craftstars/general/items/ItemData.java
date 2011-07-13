@@ -4,38 +4,10 @@ import org.bukkit.Material;
 
 public abstract class ItemData {
 	public final static ItemData DAMAGE = new ToolDamage();
-	public final static ItemData COLOUR = new ItemData() {
-		@Override
-		public boolean validate(ItemID id, Material check) {
-			if(id.getData() == null) return true;
-			if(id.getData() > 15 || id.getData() < 0) return false;
-			return true;
-		}
-	};
-	public final static ItemData TREE = new ItemData() {
-		@Override
-		public boolean validate(ItemID id, Material check) {
-			if(id.getData() == null) return true;
-			if(id.getData() > 2 || id.getData() < 0) return false;
-			return true;
-		}
-	};
-	public final static ItemData COAL = new ItemData() {
-		@Override
-		public boolean validate(ItemID id, Material check) {
-			if(id.getData() == null) return true;
-			if(id.getData() > 1 || id.getData() < 0) return false;
-			return true;
-		}
-	};
-	public final static ItemData STEP = new ItemData() {
-		@Override
-		public boolean validate(ItemID id, Material check) {
-			if(id.getData() == null) return true;
-			if(id.getData() > 3 || id.getData() < 0) return false;
-			return true;
-		}
-	};
+	public final static ItemData COLOUR = new ColourData();
+	public final static ItemData TREE = new TreeData();
+	public final static ItemData COAL = new CoalData();
+	public final static ItemData STEP = new StepData();
 	public final static ItemData MAP = new MapData();
 	public final static ItemData SPAWNER = new CreatureBoxData();
 	public final static ItemData BOOK = new BookWormData();
