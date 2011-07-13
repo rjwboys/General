@@ -5,33 +5,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
-import com.nisovin.bookworm.Book;
-import com.nisovin.bookworm.BookWorm;
-
 import net.craftstars.general.General;
 import net.craftstars.general.util.Toolbox;
-import net.minecraft.server.World;
-import net.minecraft.server.WorldMapCollection;
 
 public class Items {
 	private static Configuration config;
@@ -447,7 +437,7 @@ public class Items {
 		}
 		return false;
 	}
-	@Deprecated
+	
 	public static int maxStackSize(int id) {
 		// TODO: Get rid of hack
 		// --- begin hacky workaround for incorrect getMaxStackSize
@@ -535,7 +525,7 @@ public class Items {
 	}
 
 	public static boolean dataEquiv(ItemID id, int data) {
-		if(isDamageable(id.getId())) return true;
+		if(ToolDamage.isDamageable(id.getId())) return true;
 		if(id.getData() == null) return true;
 		return data == id.getData();
 	}
