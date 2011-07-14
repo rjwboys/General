@@ -540,4 +540,31 @@ public class Items {
 		if(dataName.equals("0")) return itemName;
 		return itemName + '/' + dataName;
 	}
+
+	public static void setGroupItems(String groupName, List<String> groupItems) {
+		ArrayList<Integer> items = new ArrayList<Integer>();
+		for(String item : groupItems) {
+			ItemID thisItem = validate(item);
+			if(thisItem.isValid()) items.add(thisItem.getId());
+		}
+		General.plugin.config.setProperty("give.groups." + groupName, items);
+	}
+
+	public static List<Integer> groupItems(String groupName) {
+		return General.plugin.config.getIntList("give.groups." + groupName, null);
+	}
+
+	public static void addGroupItem(String groupName, String item) {
+		List<Integer> group = groupItems(groupName);
+		ItemID thisItem = validate(item);
+		if(thisItem.isValid()) group.add(thisItem.getId());
+		General.plugin.config.setProperty("give.groups." + groupName, group);
+	}
+
+	public static void removeGroupItem(String groupName, String item) {
+		List<Integer> group = groupItems(groupName);
+		ItemID thisItem = validate(item);
+		if(thisItem.isValid()) group.remove(thisItem.getId());
+		General.plugin.config.setProperty("give.groups." + groupName, group);
+	}
 }

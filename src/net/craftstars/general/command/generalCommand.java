@@ -2,8 +2,8 @@
 package net.craftstars.general.command;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -543,7 +543,52 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("group")) {
-			// TODO
+			String groupName = args[1];
+			//List<Integer> group = plugin.config.getIntList("give.groups." + groupName, null);
+			switch(args.length) {
+			case 2:
+				List<Integer> group = Items.groupItems(groupName);
+				if(group.isEmpty())
+					Messaging.send(sender, "Group '" + groupName + "' does not exist or is empty.");
+				else {
+					StringBuilder items = new StringBuilder();
+					for(int id : group) {
+						items.append(Items.name(new ItemID(id)));
+						items.append(", ");
+					}
+					int lastComma = items.lastIndexOf(", ");
+					if(lastComma >= 0) items.delete(lastComma, items.length());
+					Messaging.send(sender, "Group '" + groupName + "' contains: " + items.toString());
+				}
+				return true;
+			case 3:
+				if(args[2].equalsIgnoreCase("delete")) {
+					Map<String, Object> allGroups = plugin.config.getNode("give.groups").getAll();
+					if(!allGroups.containsKey(groupName))
+						Messaging.send(sender, "Group '" + groupName + "' does not exist or is empty.");
+					else {
+						allGroups.remove(groupName);
+						plugin.config.setProperty("general.groups", allGroups);
+						Messaging.send(sender, "Group '" + groupName + "' has been deleted if it existed.");
+					}
+				} else switch(args[2].charAt(0)) {
+				default:
+					if(args[2].contains(",")) Items.setGroupItems(groupName, Arrays.asList(args[2].split(",")));
+					else Items.addGroupItem(groupName, args[2]);
+				break;
+				case '+':
+					Items.addGroupItem(groupName, args[2].substring(1));
+				break;
+				case '-':
+					Items.removeGroupItem(groupName, args[2].substring(1));
+				break;
+				case '=':
+					Items.setGroupItems(groupName, Arrays.asList(args[2].substring(1).split(",")));
+				break;
+				}
+				Messaging.send(sender, "Group '" + groupName + "' now contains: " + Items.groupItems(groupName));
+				return true;
+			}
 		}
 		return SHOW_USAGE;
 	}

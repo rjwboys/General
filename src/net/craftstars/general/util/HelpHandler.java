@@ -237,11 +237,12 @@ public class HelpHandler {
 	@SuppressWarnings("unused")
 	// because it only LOOKS unused; it's accessed reflectively
 	private static String general_item = "&c/general item &7[command] [key] [value]&f : Edits item aliases and names.\n"
-		+ "&fThere are four subcommands:\n"
+		+ "&fThere are five subcommands:\n"
 		+ "&calias &7[alias] [item]&f : Set the item that an alias refers to.\n"
 		+ "&cvariant &7[item]&c:&7[data] [name]&f : Set the name of a variant for an item.\n"
 		+ "&cname &7[item] [name]&7 : Set the display name of an item.\n"
 		+ "&chook &7[primary]&c:&7[secondary] [item]&f : Set a new pseudo-variant alias.\n";
+		+ "&cgroup &7[group-name] delete|[item]&f : Edit the item white/blacklists.\n";
 	private static String general_set;
 	private static String general_set_list;
 	private static String general_set_permissions;
