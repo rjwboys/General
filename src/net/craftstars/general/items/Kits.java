@@ -4,6 +4,7 @@ package net.craftstars.general.items;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -171,9 +172,15 @@ public class Kits {
 			Kit kit = kits.get(key);
 			yaml.put("delay", kit.delay);
 			yaml.put("cost", kit.getCost());
-			HashMap<String, Integer> items = new HashMap<String, Integer>();
-			for(ItemID item : kit)
-				items.put(Items.getPersistentName(item), kit.get(item));
+			ArrayList<Object> items = new ArrayList<Object>();
+			for(ItemID item : kit) {
+				String itemName = Items.getPersistentName(item);
+				if(kit.get(item) != 1) {
+					HashMap<String, Integer> entry = new HashMap<String, Integer>();
+					entry.put(itemName, kit.get(item));
+					items.add(entry);
+				} else items.add(itemName);
+			}
 			yaml.put("items", items);
 			kitsYml.setProperty(key, yaml);
 		}

@@ -1,13 +1,11 @@
 package net.craftstars.general.items;
 
 import net.craftstars.general.mobs.MobType;
-import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 public class CreatureBoxData extends ItemData {
-	
 	@Override
 	public boolean validate(ItemID id, Material check) {
 		if(id.getData() == null) return true;
@@ -23,7 +21,7 @@ public class CreatureBoxData extends ItemData {
 	
 	@Override
 	public String getName(int data) {
-		return Toolbox.formatItemName(MobType.byId(data).toString());
+		return MobType.byId(data).toString();
 	}
 	
 	@Override

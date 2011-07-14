@@ -1,7 +1,5 @@
 package net.craftstars.general.items;
 
-import net.craftstars.general.util.Toolbox;
-
 import org.bukkit.Material;
 import org.bukkit.material.Step;
 
@@ -15,7 +13,7 @@ final class StepData extends ItemData {
 	
 	@Override
 	public String getName(int data) {
-		return Toolbox.formatItemName(new Step(data).getMaterial().toString());
+		return new Step(data).getMaterial().toString();
 	}
 	
 	@Override

@@ -1,7 +1,5 @@
 package net.craftstars.general.items;
 
-import net.craftstars.general.util.Toolbox;
-
 import org.bukkit.Material;
 import org.bukkit.DyeColor;
 
@@ -15,7 +13,7 @@ final class ColourData extends ItemData {
 	
 	@Override
 	public String getName(int data) {
-		return Toolbox.formatItemName(DyeColor.getByData((byte) data).toString());
+		return DyeColor.getByData((byte) data).toString();
 	}
 	
 	@Override

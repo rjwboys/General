@@ -1,7 +1,5 @@
 package net.craftstars.general.items;
 
-import net.craftstars.general.util.Toolbox;
-
 import org.bukkit.CoalType;
 import org.bukkit.Material;
 
@@ -15,7 +13,7 @@ final class CoalData extends ItemData {
 	
 	@Override
 	public String getName(int data) {
-		return Toolbox.formatItemName(CoalType.getByData((byte) data).toString());
+		return CoalType.getByData((byte) data).toString();
 	}
 	
 	@Override

@@ -533,7 +533,8 @@ public class Items {
 	
 	public static String getPersistentName(ItemID id) {
 		Material material = Material.getMaterial(id.getId());
-		String itemName = Toolbox.formatItemName(material.toString()).replace(" ", "");
+		String itemName = material.toString();
+		if(id.getData() == null) return itemName;
 		ItemData data = ItemData.getData(material);
 		String dataName = data.getName(id.getData());
 		if(dataName.equals("0")) return itemName;
