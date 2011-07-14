@@ -242,6 +242,28 @@ public class HelpHandler {
 		+ "&cvariant &7[item]&c:&7[data] [name]&f : Set the name of a variant for an item.\n"
 		+ "&cname &7[item] [name]&7 : Set the display name of an item.\n"
 		+ "&chook &7[primary]&c:&7[secondary] [item]&f : Set a new pseudo-variant alias.\n";
+	private static String general_set;
+	private static String general_set_list;
+	private static String general_set_permissions;
+	private static String general_set_others_for_all;
+	private static String general_set_give_mass;
+	private static String general_set_show_health;
+	private static String general_set_show_coords;
+	private static String general_set_show_world;
+	private static String general_set_show_ip;
+	private static String general_set_show_motd;
+	private static String general_set_24_hour;
+	private static String general_set_show_ticks;
+	private static String general_set_economy;
+	private static String general_set_economy_take;
+	private static String general_set_economy_clear;
+	private static String general_set_economy_sell;
+	private static String general_set_economy_kits;
+	private static String general_set_kits_discount;
+	private static String general_set_chat_tag;
+	private static String general_set_auto_save;
+	private static String general_set_lightning_range;
+	private static String general_kit;
 	// TODO: A way to account for permissions?
 	
 }

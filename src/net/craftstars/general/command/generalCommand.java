@@ -305,8 +305,168 @@ public class generalCommand extends CommandBase {
 	}
 
 	private boolean setVar(CommandSender sender, String[] args) {
-		// TODO Auto-generated method stub
-		return SHOW_USAGE;
+		String path = null;
+		Object value = null;
+		switch(args.length) {
+		default:
+			return SHOW_USAGE;
+		case 1:
+			if(args[0].equalsIgnoreCase("list") && HelpHandler.hasEntry("general_set_list"))
+				HelpHandler.displayEntry(sender, "general_set_list");
+			return true;
+		case 2:
+			if(args[0].equalsIgnoreCase("help") && HelpHandler.hasEntry("general_set_" + args[1])) {
+				HelpHandler.displayEntry(sender, "general_set_" + args[1].replace('-', '_'));
+				return true;
+			} else if(args[0].equalsIgnoreCase("permissions")) {
+				path = "permissions.system";
+				if(!Toolbox.equalsOne(args[1], "Basic", "Permissions", "WorldEdit")) {
+					Messaging.send(sender, "&cInvalid permissions system.");
+					return true;
+				}
+				String nice = Character.toUpperCase(args[1].charAt(0)) + args[1].substring(1).toLowerCase();
+				value = nice;
+			} else if(args[0].equalsIgnoreCase("others-for-all")) {
+				path = "give.others-for-all";
+				if(!Toolbox.equalsOne(args[1], "true", "false")) {
+					Messaging.send(sender, "&cMust be a boolean.");
+					return true;
+				}
+				value = Boolean.valueOf(args[1]);
+			} else if(args[0].equalsIgnoreCase("give-mass")) {
+				path = "give.mass";
+				try {
+					value = Integer.valueOf(args[1]);
+				} catch(NumberFormatException e) {
+					Messaging.send(sender, "&cMust be an integer.");
+					return true;
+				}
+			} else if(args[0].equalsIgnoreCase("show-health")) {
+				path = "playerlist.show-health";
+				if(!Toolbox.equalsOne(args[1], "true", "false")) {
+					Messaging.send(sender, "&cMust be a boolean.");
+					return true;
+				}
+				value = Boolean.valueOf(args[1]);
+			} else if(args[0].equalsIgnoreCase("show-coords")) {
+				path = "playerlist.show-coords";
+				if(!Toolbox.equalsOne(args[1], "true", "false")) {
+					Messaging.send(sender, "&cMust be a boolean.");
+					return true;
+				}
+				value = Boolean.valueOf(args[1]);
+			} else if(args[0].equalsIgnoreCase("show-world")) {
+				path = "playerlist.show-world";
+				if(!Toolbox.equalsOne(args[1], "true", "false")) {
+					Messaging.send(sender, "&cMust be a boolean.");
+					return true;
+				}
+				value = Boolean.valueOf(args[1]);
+			} else if(args[0].equalsIgnoreCase("show-ip")) {
+				path = "playerlist.show-ip";
+				if(!Toolbox.equalsOne(args[1], "true", "false")) {
+					Messaging.send(sender, "&cMust be a boolean.");
+					return true;
+				}
+				value = Boolean.valueOf(args[1]);
+			} else if(args[0].equalsIgnoreCase("show-motd")) {
+				path = "show-motd";
+				if(!Toolbox.equalsOne(args[1], "true", "false")) {
+					Messaging.send(sender, "&cMust be a boolean.");
+					return true;
+				}
+				value = Boolean.valueOf(args[1]);
+			} else if(args[0].equalsIgnoreCase("24-hour")) {
+				path = "time.format-24-hour";
+				if(!Toolbox.equalsOne(args[1], "true", "false")) {
+					Messaging.send(sender, "&cMust be a boolean.");
+					return true;
+				}
+				value = Boolean.valueOf(args[1]);
+			} else if(args[0].equalsIgnoreCase("show-ticks")) {
+				path = "time.show-ticks";
+				if(!Toolbox.equalsOne(args[1], "true", "false")) {
+					Messaging.send(sender, "&cMust be a boolean.");
+					return true;
+				}
+				value = Boolean.valueOf(args[1]);
+			} else if(args[0].equalsIgnoreCase("economy")) {
+				path = "economy.system";
+				if(!Toolbox.equalsOne(args[1], "None", "iConomy", "iConomy4", "iConomy5", "BOSEconomy")) {
+					Messaging.send(sender, "&cInvalid economy system.");
+					return true;
+				}
+				String nice = Character.toUpperCase(args[1].charAt(0)) + args[1].substring(1).toLowerCase();
+				value = nice;
+			} else if(args[0].equalsIgnoreCase("economy-take")) {
+				path = "economy.give.take";
+				if(!Toolbox.equalsOne(args[1], "trash", "sell")) {
+					Messaging.send(sender, "&cInvalid economy-take method (must be trash or sell).");
+					return true;
+				}
+				value = args[1];
+			} else if(args[0].equalsIgnoreCase("economy-clear")) {
+				path = "economy.give.clear";
+				if(!Toolbox.equalsOne(args[1], "trash", "sell")) {
+					Messaging.send(sender, "&cInvalid economy-clear method (must be trash or sell).");
+					return true;
+				}
+				value = args[1];
+			} else if(args[0].equalsIgnoreCase("economy-kits")) {
+				path = "economy.give.kits";
+				if(!Toolbox.equalsOne(args[1], "individual", "cumulative", "discount")) {
+					Messaging.send(sender, "&cInvalid economy-kits method (must be individual, cumulative, or discount).");
+					return true;
+				}
+				value = args[1];
+			} else if(args[0].equalsIgnoreCase("economy-sell")) {
+				path = "economy.give.sell";
+				try {
+					value = Double.valueOf(args[1]);
+				} catch(NumberFormatException e) {
+					Messaging.send(sender, "&cMust be a number.");
+					return true;
+				}
+			} else if(args[0].equalsIgnoreCase("kits-discount")) {
+				path = "economy.give.discount";
+				try {
+					value = Double.valueOf(args[1]);
+				} catch(NumberFormatException e) {
+					Messaging.send(sender, "&cMust be a number.");
+					return true;
+				}
+			} else if(args[0].equalsIgnoreCase("chat-tag")) {
+				path = "tag-fmt";
+				value = args[1];
+			} else if(args[0].equalsIgnoreCase("log-commands")) {
+				path = "log-commands";
+				if(!Toolbox.equalsOne(args[1], "true", "false")) {
+					Messaging.send(sender, "&cMust be a boolean.");
+					return true;
+				}
+				value = Boolean.valueOf(args[1]);
+			} else if(args[0].equalsIgnoreCase("auto-save")) {
+				path = "auto-save";
+				if(!Toolbox.equalsOne(args[1], "true", "false")) {
+					Messaging.send(sender, "&cMust be a boolean.");
+					return true;
+				}
+				value = Boolean.valueOf(args[1]);
+			} else if(args[0].equalsIgnoreCase("lightning-range")) {
+				path = "lightning-range";
+				try {
+					value = Integer.valueOf(args[1]);
+				} catch(NumberFormatException e) {
+					Messaging.send(sender, "&cMust be an integer.");
+					return true;
+				}
+			} else Messaging.send(sender, "&cUnknown variable: " + args[0]);
+			if(path != null && value != null) {
+				plugin.config.setProperty(path, value);
+				Messaging.send(sender, "Variable " + args[0] + " set to " + value + ".");
+			}
+		}
+		return true;
 	}
 	
 	private boolean itemEdit(CommandSender sender, String[] args) {
