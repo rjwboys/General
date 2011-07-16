@@ -72,7 +72,7 @@ public class clearCommand extends CommandBase {
 				doClean(sender, sender, CleanType.QUICKBAR);
 			} else if(Toolbox.equalsOne(args[0], "armour", "armor")) {
 				doClean(sender, sender, CleanType.ARMOUR);
-			} else if(args[1].equalsIgnoreCase("all")) {
+			} else if(args[0].equalsIgnoreCase("all")) {
 				doClean(sender, sender, CleanType.FULL);
 			} else {
 				if(Toolbox.lacksPermission(sender, "general.clear.other"))
