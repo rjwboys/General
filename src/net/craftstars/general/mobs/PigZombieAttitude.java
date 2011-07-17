@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 
 public class PigZombieAttitude extends MobData {
 	private int anger = 0;
+	private final static String[] values = new String[] {"regular","angry"};
 	
 	@Override
 	public boolean hasPermission(Player byWhom) {
@@ -63,6 +64,11 @@ public class PigZombieAttitude extends MobData {
 	@Override
 	public void lacksPermission(Player fromWhom) {
 		if(anger > 0) Messaging.lacksPermission(fromWhom, "spawn angry zombie pigmen");
+	}
+
+	@Override
+	public String[] getValues() {
+		return values.clone();
 	}
 	
 }

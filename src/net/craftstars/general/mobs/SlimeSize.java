@@ -89,4 +89,13 @@ public class SlimeSize extends MobData {
 	public void lacksPermission(Player fromWhom) {
 		Messaging.lacksPermission(fromWhom, "spawn " + size.toString().toLowerCase() + " slimes");
 	}
+
+	@Override
+	public String[] getValues() {
+		int nSizes = NamedSize.values().length;
+		String[] values = new String[nSizes];
+		for(int i = 0; i < nSizes; i++)
+			values[i] = NamedSize.values()[i].toString().toLowerCase();
+		return values;
+	}
 }

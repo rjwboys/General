@@ -104,6 +104,8 @@ economy:
       free: 0
       riding:
         spider: 0 # cost for spider jockey
+        wolf:
+          angry: 0
     slime:
       tiny: 0
       small: 0

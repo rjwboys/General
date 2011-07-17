@@ -91,5 +91,19 @@ public class SheepState extends MobData {
 		if(sheared) Messaging.lacksPermission(fromWhom, "spawn sheared sheep");
 		else Messaging.lacksPermission(fromWhom, "spawn coloured sheep");
 	}
+
+	@Override
+	public String[] getValues() {
+		int nColours = DyeColor.values().length;
+		String[] values = new String[nColours + 1];
+		for(int i = 0; i < nColours; i++) {
+			DyeColor thisColour = DyeColor.getByData((byte) i);
+			if(thisColour == DyeColor.WHITE)
+				values[i] = "default";
+			else values[i] = thisColour.toString().toLowerCase().replace('_', '-');
+		}
+		values[nColours] = "sheared";
+		return values;
+	}
 	
 }

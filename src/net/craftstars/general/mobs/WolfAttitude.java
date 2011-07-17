@@ -79,7 +79,8 @@ public class WolfAttitude extends MobData {
 			attitude = Attitude.TAME;
 			player = Toolbox.matchPlayer(data);
 			if(player == null) {
-				Messaging.invalidPlayer(setter, data);
+				if(setter != null)
+					Messaging.invalidPlayer(setter, data);
 				invalidate();
 			}
 		} else if(attitude == Attitude.TAME && player == null) {
@@ -95,6 +96,15 @@ public class WolfAttitude extends MobData {
 	@Override
 	public void lacksPermission(Player fromWhom) {
 		Messaging.lacksPermission(fromWhom, attitude.getPhrase());
+	}
+
+	@Override
+	public String[] getValues() {
+		int nAttitudes = Attitude.values().length;
+		String[] values = new String[nAttitudes];
+		for(int i = 0; i < nAttitudes; i++)
+			values[i] = Attitude.values()[i].toString().toLowerCase();
+		return values;
 	}
 	
 }

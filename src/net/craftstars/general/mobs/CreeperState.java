@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 public class CreeperState extends MobData {
 	private boolean powered = false;
+	private final static String[] values = new String[] {"regular","powered"};
 	
 	@Override
 	public boolean hasPermission(Player byWhom) {
@@ -42,6 +43,11 @@ public class CreeperState extends MobData {
 	@Override
 	public void lacksPermission(Player fromWhom) {
 		if(powered) Messaging.lacksPermission(fromWhom, "spawn powered creepers");
+	}
+
+	@Override
+	public String[] getValues() {
+		return values.clone();
 	}
 	
 }

@@ -9,6 +9,7 @@ public abstract class MobData {
 	public abstract void parse(Player setter, String data);
 	public abstract String getCostNode(String baseNode);
 	public abstract void lacksPermission(Player fromWhom);
+	public abstract String[] getValues();
 	
 	protected boolean valid = true;
 	
@@ -30,7 +31,8 @@ public abstract class MobData {
 	protected boolean isValid() {
 		return valid;
 	}
-	
+
+	private final static String[] noneValues = new String[] {"regular"};
 	public static final MobData none = new MobData() {
 		@Override
 		public boolean hasPermission(Player byWhom) {
@@ -50,5 +52,10 @@ public abstract class MobData {
 
 		@Override
 		public void lacksPermission(Player fromWhom) {}
+
+		@Override
+		public String[] getValues() {
+			return noneValues.clone();
+		}
 	};
 }

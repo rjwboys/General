@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 public class PigState extends MobData {
 	private boolean saddled = false;
+	private final static String[] values = new String[] {"regular","saddled"};
 	
 	@Override
 	public boolean hasPermission(Player byWhom) {
@@ -43,5 +44,9 @@ public class PigState extends MobData {
 	public void lacksPermission(Player fromWhom) {
 		if(saddled) Messaging.lacksPermission(fromWhom, "spawn saddled pigs");
 	}
-	
+
+	@Override
+	public String[] getValues() {
+		return values.clone();
+	}
 }

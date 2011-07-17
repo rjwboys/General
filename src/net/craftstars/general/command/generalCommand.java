@@ -2,10 +2,12 @@
 package net.craftstars.general.command;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -17,6 +19,10 @@ import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.items.Kit;
 import net.craftstars.general.items.Kits;
+import net.craftstars.general.mobs.MobData;
+import net.craftstars.general.mobs.MobType;
+import net.craftstars.general.teleport.DestinationType;
+import net.craftstars.general.teleport.TargetType;
 import net.craftstars.general.util.HelpHandler;
 import net.craftstars.general.util.MessageOfTheDay;
 import net.craftstars.general.util.Messaging;
@@ -300,7 +306,250 @@ public class generalCommand extends CommandBase {
 	}
 
 	private boolean setEconomy(CommandSender sender, String[] args) {
-		// TODO Auto-generated method stub
+		args = Toolbox.combineSplit(args, 0).split("\\s*=\\s*");
+		if(args.length == 1 && HelpHandler.hasEntry("general_economy_" + args[0].replace(' ', '_'))) {
+			HelpHandler.displayEntry(sender, "general_economy_" + args[0].replace(' ', '_'));
+			return true;
+		} else if(args.length == 2) {
+			double value;
+			try {
+				value = Double.valueOf(args[1]);
+			} catch(NumberFormatException e) {
+				Messaging.send(sender, "&cMust be an integer.");
+				return true;
+			}
+			args = args[0].trim().split("\\s+");
+			if(args.length == 0) return SHOW_USAGE;
+			String path = "economy.";
+			if(Toolbox.equalsOne(args[0], "heal", "hurt")) path += args[0];
+			else if(args[0].equalsIgnoreCase("time")) {
+				if(args.length == 1) {
+					Messaging.send(sender, "&cWhich time?");
+					return true;
+				} else if(Toolbox.equalsOne(args[1], "day", "night", "dawn", "dusk", "noon", "midnight", "set"))
+					path += args[1];
+				else {
+					Messaging.send(sender, "&cInvalid time.");
+					return true;
+				}
+			} else if(args[0].equalsIgnoreCase("weather")) {
+				if(args.length == 1) {
+					Messaging.send(sender, "&cWhich weather?");
+					return true;
+				} else if(Toolbox.equalsOne(args[1], "storm", "thunder", "zap"))
+					path += args[1];
+				else {
+					Messaging.send(sender, "&cInvalid weather.");
+					return true;
+				}
+			} else if(args[0].equalsIgnoreCase("mobspawn")) {
+				if(args.length == 1) {
+					Messaging.send(sender, "&cWhich mob?");
+					return true;
+				} else {
+					path += "mobspawn.";
+					// Validate mob name
+					MobType mob = MobType.getMob(args[1]);
+					if(mob == null) {
+						Messaging.send(sender, "&cInvalid mob.");
+						return true;
+					}
+					path += mob.toString().toLowerCase().replace('_', '-');
+					// Validate mob data
+					String data = null, mountName = null, dataMount = null;
+					switch(args.length) {
+					case 2: // mobspawn <mob>
+						break;
+					case 3: // mobspawn <mob> free|<data>
+						if(!args[2].equalsIgnoreCase("free"))
+							data = args[2];
+						break;
+					case 4:
+						if(!args[2].equalsIgnoreCase("riding")) {
+							// mobspawn <mob> <data> free
+							if(!args[3].equalsIgnoreCase("free")) {
+								Messaging.send(sender, "Invalid mob specification.");
+								return true;
+							}
+							data = args[2];
+							break;
+						} // mobspawn <mob> riding <mob>
+						mountName = args[3];
+						break;
+					case 5:
+						if(args[2].equalsIgnoreCase("riding")) {
+							// mobspawn <mob> riding <mob> <data>
+							mountName = args[3];
+							dataMount = args[4];
+						} else if(args[3].equalsIgnoreCase("riding")) {
+							// mobspawn <mob> <data> riding <mob>
+							data = args[2];
+							mountName = args[4];
+						} else {
+							Messaging.send(sender, "Invalid mob specification.");
+							return true;
+						}
+						break;
+					case 6: // mobspawn <mob> <data> riding <mob> <data>
+						if(!args[3].equalsIgnoreCase("riding")) {
+							Messaging.send(sender, "Invalid mob specification.");
+							return true;
+						}
+						data = args[2];
+						mountName = args[4];
+						dataMount = args[5];
+						break;
+					default:
+						Messaging.send(sender, "Invalid mob specification.");
+						return true;
+					}
+					// Validate basic data, if present
+					MobData mobData = null, mountData = null;
+					if(data != null) {
+						mobData = MobData.parse(mob, null, data);
+						if(mobData == null) {
+							Messaging.send(sender, "Invalid mob data.");
+							return true;
+						}
+					}
+					// Validate mount, if present
+					MobType mount = null;
+					if(mountName != null) {
+						mount = MobType.getMob(mountName);
+						if(mount == null) {
+							Messaging.send(sender, "&cInvalid mob for mount.");
+							return true;
+						}
+						// Validate mount data, if present
+						if(dataMount != null) {
+							mountData = MobData.parse(mob, null, dataMount);
+							if(mountData == null) {
+								Messaging.send(sender, "Invalid mob data.");
+								return true;
+							}
+						}
+					}
+					// Determine the minimal required path
+					if(mobData != null) path += mobData.getCostNode(path);
+					if(mount != null) {
+						path += ".riding.";
+						path += mount.toString().toLowerCase().replace('_', '-');
+						if(mountData != null) path += mountData.getCostNode(path);
+					}
+					// Rewrite existing nodes to allow for the new path.
+					if(!Toolbox.nodeExists(plugin.config, path)) {
+						String checkPath = path;
+						do {
+							int lastDot = checkPath.lastIndexOf('.');
+							checkPath = checkPath.substring(0, lastDot);
+							if(checkPath.endsWith("mobspawn")) break;
+							if(checkPath.endsWith("riding")) continue;
+							if(!Toolbox.nodeExists(plugin.config, checkPath)) continue;
+							Object node = plugin.config.getProperty(checkPath);
+							if(node instanceof Number) {
+								Map<String, Object> map = new HashMap<String,Object>();
+								// Okay, we found a leaf, but where is it?
+								// There are four possibilities.
+								// 1. This is a riding node, and it's the mob name of the mount.
+								//  ->If our path specifies a datavalue, we need to rearrange.
+								if(checkPath.contains("riding")) {
+									if(checkPath.lastIndexOf(".") == checkPath.indexOf("riding") + "riding".length()) {
+										if(mount != null && path.replace(checkPath + ".", "").contains(".")) {
+											map.put(mount.getNewData().getCostNode("").replace(".", ""), node);
+											plugin.config.setProperty(checkPath, map);
+										}
+									}
+								} else if(path.contains("riding")) { // but checkPath doesn't contain "riding"
+									// 2. This is a riding node, and it's the mob data of the rider.
+									//  ->Put the value in a "free" subnode.
+									if(checkPath.replace("economy.mobspawn.", "").contains(".")) {
+										map.put("free", node);
+										plugin.config.setProperty(checkPath, map);
+									}
+									// 3. This may or may not be a riding node, and it's the mob name of the rider.
+									//  ->If our path specifies a datavalue, we need to rearrange.
+									else {
+										map.put(mob.getNewData().getCostNode("").replace(".", ""), node);
+										plugin.config.setProperty(checkPath, map);
+									}
+								}
+								break;
+							} else if(node instanceof Map && path.contains("riding") && !checkPath.contains("riding")) {
+								if(((Map<?, ?>)node).containsKey("riding") || ((Map<?, ?>)node).containsKey("free")) {
+									path = checkPath + ".free" + path.substring(lastDot);
+									break;
+								}
+							}
+						} while(checkPath.contains("."));
+					}
+				}
+			} else if(args[0].equalsIgnoreCase("give")) {
+				if(args.length == 1) {
+					Messaging.send(sender, "&cWhich item?");
+					return true;
+				} else {
+					ItemID item = Items.validate(args[1]);
+					if(!item.isValid()) {
+						Messaging.send(sender, "&cInvalid item.");
+						return true;
+					}
+					path += "item" + item.toString();
+				}
+			} else if(Toolbox.equalsOne(args[0], "teleport", "setspawn")) {
+				switch(args.length) {
+				case 2:
+					String target = null;
+					if(args[0].equalsIgnoreCase("teleport")) {
+						for(TargetType targetType : TargetType.values()) {
+							if(args[1].equalsIgnoreCase(targetType.toString())) {
+								target = args[1];
+								break;
+							}
+						}
+						if(target == null) {
+							Messaging.send(sender, "Invalid teleport target.");
+							return true;
+						}
+					} else if(args[0].equalsIgnoreCase("setspawn")) {
+						if(!Toolbox.equalsOne(args[1], "self", "world", "other")) {
+							Messaging.send(sender, "Invalid setspawn target.");
+							return true;
+						}
+						target = args[1];
+					}
+					if(target == null) {
+						Messaging.send(sender, "Invalid target.");
+						return true;
+					}
+					path += target;
+				case 3:
+					if(args[1].equalsIgnoreCase("to")) {
+						String dest = null;
+						for(DestinationType destType : DestinationType.values()) {
+							if(args[1].equalsIgnoreCase(destType.toString())) {
+								dest = args[1];
+								break;
+							}
+						}
+						if(dest == null) {
+							Messaging.send(sender, "Invalid destination.");
+							return true;
+						}
+						path += "to." + dest;
+					} else if(Toolbox.equalsOne(args[1], "into", "from")) {
+						World world = Toolbox.matchWorld(args[2]);
+						if(world == null) {
+							Messaging.send(sender, "Invalid world.");
+							return true;
+						}
+						path += args[1] + "." + world.getName();
+					}
+				}
+			}
+			plugin.config.setProperty(path, value);
+			Messaging.send(sender, "Set economy value '" + path + "' to " + value + "!");
+			return true;
+		}
 		return SHOW_USAGE;
 	}
 
