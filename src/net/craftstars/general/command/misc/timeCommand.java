@@ -66,6 +66,7 @@ public class timeCommand extends CommandBase {
 	private boolean setTime(CommandSender sender, String time) {
 		if(Toolbox.lacksPermission(sender, "general.time.set"))
 			return Messaging.lacksPermission(sender, "set the time");
+		if(Toolbox.checkCooldown(sender, world, "time", "general.time")) return true;
 		if(time.equalsIgnoreCase("day")) { // 6am
 			if(!Toolbox.canPay(sender, 1, "economy.time.day")) return true;
 			this.world.setTime(this.getStartTime());

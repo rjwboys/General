@@ -4,6 +4,7 @@ package net.craftstars.general.util;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -11,6 +12,7 @@ import net.craftstars.general.General;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.money.AccountStatus;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -291,5 +293,24 @@ public class Toolbox {
 		if(General.plugin.economy == null) return 0;
 		String node = "economy.give.item" + item.toString();
 		return General.plugin.config.getDouble(node, 0.0) * amount;
+	}
+
+	private static HashMap<String, HashSet<World>> inCooldown = new HashMap<String, HashSet<World>>();
+	public static boolean checkCooldown(CommandSender sender, final World world, final String command, String permissionBase) {
+		int cooldownTime = General.plugin.config.getInt("cooldown." + command, 0);
+		if(cooldownTime > 0) {
+			if(Toolbox.lacksPermission(sender, permissionBase + ".instant"))
+				return Messaging.lacksPermission(sender, "set the time so soon after the last time");
+			if(!inCooldown.containsKey(command)) inCooldown.put(command, new HashSet<World>());
+			inCooldown.get(command).add(world);
+			Runnable cooldown = new Runnable() {
+				@Override
+				public void run() {
+					inCooldown.get(command).remove(world);
+				}
+			};
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(General.plugin, cooldown, cooldownTime);
+		}
+		return false;
 	}
 }

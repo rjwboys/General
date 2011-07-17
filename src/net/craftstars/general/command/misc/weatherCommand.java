@@ -20,7 +20,7 @@ import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
 
 public class weatherCommand extends CommandBase {
-	static Random lightning = new Random();
+	private static Random lightning = new Random();
 	
 	public weatherCommand(General instance) {
 		super(instance);
@@ -90,7 +90,7 @@ public class weatherCommand extends CommandBase {
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		if(Toolbox.lacksPermission(sender, "general.weather"))
-			return Messaging.lacksPermission(sender, "control the weather");
+			return Messaging.lacksPermission(sender, "see or change the weather");
 		switch(args.length) {
 		case 0: // /weather -- toggles the weather
 			if(sender.getWorld().hasStorm())
@@ -236,7 +236,8 @@ public class weatherCommand extends CommandBase {
 	
 	private void doThunder(CommandSender sender, World world, int duration) {
 		if(Toolbox.lacksPermission(sender, "general.weather.thunder"))
-			Messaging.lacksPermission(sender, "toggle thunder");
+			Messaging.lacksPermission(sender, "control thunder");
+		if(Toolbox.checkCooldown(sender, world, "thunder", "general.weather.thunder")) return;
 		if(!Toolbox.canPay(sender, 1, "economy.weather.thunder")) return;
 		boolean state = duration != 0;
 		boolean hasThunder = world.isThundering();
@@ -252,6 +253,9 @@ public class weatherCommand extends CommandBase {
 	}
 	
 	private void doWeather(CommandSender sender, World world, long duration) {
+		if(Toolbox.lacksPermission(sender, "general.weather.set"))
+			Messaging.lacksPermission(sender, "control the weather");
+		if(Toolbox.checkCooldown(sender, world, "storm", "general.weather.set")) return;
 		if(!Toolbox.canPay(sender, 1, "economy.weather.storm")) return;
 		boolean state = duration != 0;
 		boolean hasStorm = world.hasStorm();
@@ -269,6 +273,7 @@ public class weatherCommand extends CommandBase {
 	private void doLightning(CommandSender sender, World world, Location centre) {
 		if(Toolbox.lacksPermission(sender, "general.weather.zap"))
 			Messaging.lacksPermission(sender, "summon lightning");
+		if(Toolbox.checkCooldown(sender, world, "lightning", "general.weather.zap")) return;
 		if(!Toolbox.canPay(sender, 1, "economy.weather.zap")) return;
 		else {
 			int x, y, z;
