@@ -3,6 +3,7 @@ package net.craftstars.general.command.info;
 
 import java.util.List;
 
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -21,10 +22,17 @@ public class playerlistCommand extends CommandBase {
 
 	@Override
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
+		if(args.length > 1) return SHOW_USAGE;
 		if(Toolbox.lacksPermission(sender, "general.playerlist", "general.basic"))
 			return Messaging.lacksPermission(sender, "view the player list");
-		List<String> players = Toolbox.getPlayerList(plugin);
-		Messaging.send(sender, "&eOnline Players (" + players.size() + "):");
+		World world = null;
+		if(args.length == 1) {
+			world = Toolbox.matchWorld(args[1]);
+			if(world == null) return Messaging.invalidWorld(sender, args[1]);
+		}
+		List<String> players = Toolbox.getPlayerList(plugin, world);
+		String worldName = world == null ? "" : " in world " + world.getName();
+		Messaging.send(sender, "&eOnline Players" + worldName + " (" + players.size() + "):");
 		doListing(sender, players);
 		return true;
 	}
@@ -38,8 +46,15 @@ public class playerlistCommand extends CommandBase {
 	@Override
 	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
-		List<String> players = Toolbox.getPlayerList(plugin);
-		Messaging.send(sender, "&eOnline Players (" + players.size() + "):");
+		if(args.length > 1) return SHOW_USAGE;
+		World world = null;
+		if(args.length == 1) {
+			world = Toolbox.matchWorld(args[1]);
+			if(world == null) return Messaging.invalidWorld(sender, args[1]);
+		}
+		List<String> players = Toolbox.getPlayerList(plugin, world);
+		String worldName = world == null ? "" : " in world " + world.getName();
+		Messaging.send(sender, "&eOnline Players" + worldName + " (" + players.size() + "):");
 		doListing(sender, players);
 		return true;
 	}

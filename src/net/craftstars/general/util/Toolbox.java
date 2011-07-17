@@ -196,12 +196,13 @@ public class Toolbox {
 		return message.toString();
 	}
 	
-	public static List<String> getPlayerList(General plugin) {
+	public static List<String> getPlayerList(General plugin, World world) {
 		Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
 		List<String> players = new ArrayList<String>();
 		
 		for(Player who : onlinePlayers) {
-			players.add(who.getName());
+			if(world == null || who.getWorld().equals(world))
+				players.add(who.getName());
 		}
 		
 		return players;
