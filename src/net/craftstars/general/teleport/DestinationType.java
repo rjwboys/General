@@ -1,6 +1,7 @@
 
 package net.craftstars.general.teleport;
 
+import java.util.Arrays;
 import java.util.List;
 
 import net.craftstars.general.General;
@@ -33,7 +34,8 @@ public enum DestinationType {
 	}
 	
 	private boolean isBasic() {
-		List<String> basics = General.plugin.config.getStringList("teleport-basics", null);
+		List<String> basics = General.plugin.config.getStringList("teleport.basics",
+			Arrays.asList("world", "player", "home", "spawn"));
 		return basics.contains(toString().toLowerCase().trim());
 	}
 

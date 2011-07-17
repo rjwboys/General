@@ -709,6 +709,14 @@ public class generalCommand extends CommandBase {
 					Messaging.send(sender, "&cMust be an integer.");
 					return true;
 				}
+			} else if(args[0].equalsIgnoreCase("teleport-warmup")) {
+				path = "teleport.warmup";
+				try {
+					value = Integer.valueOf(args[1]);
+				} catch(NumberFormatException e) {
+					Messaging.send(sender, "&cMust be an integer.");
+					return true;
+				}
 			} else Messaging.send(sender, "&cUnknown variable: " + args[0]);
 			if(path != null && value != null) {
 				plugin.config.setProperty(path, value);

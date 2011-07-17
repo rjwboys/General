@@ -1,6 +1,8 @@
 
 package net.craftstars.general.command.teleport;
 
+import java.util.HashSet;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -12,16 +14,17 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class goCommand extends CommandBase {
+	private static HashSet<Player> inWarmup = new HashSet<Player>();
 	public goCommand(General instance) {
 		super(instance);
 	}
 
 	@Override
-	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
+	public boolean fromPlayer(final Player sender, Command command, String commandLabel, String[] args) {
 		if(Toolbox.lacksPermission(sender, "general.teleport"))
 			return Messaging.lacksPermission(sender, "teleport");
-		Target target;
-		Destination dest;
+		final Target target;
+		final Destination dest;
 		switch(args.length) {
 		case 1: // /tele <destination>
 			target = Target.fromPlayer(sender);
@@ -40,11 +43,24 @@ public class goCommand extends CommandBase {
 			costs = Toolbox.arrayCopy(costs, 0, new String[costs.length+1], 1, costs.length);
 			costs[0] = target.getCostClass();
 			if(!Toolbox.canPay(sender, target.count(), costs)) return true;
-			target.teleport(dest);
-			if(target.getType() == TargetType.SELF)
-				Messaging.send(sender, "&fYou teleported to &9" + dest.getName() + "&f!");
-			else
-				Messaging.send(sender, "&fYou teleported &9" + target.getName() + "&f to &9" + dest.getName() + "&f!");
+			Runnable teleport = new Runnable() {
+				@Override
+				public void run() {
+					target.teleport(dest);
+					if(target.getType() == TargetType.SELF)
+						Messaging.send(sender, "&fYou teleported to &9" + dest.getName() + "&f!");
+					else
+						Messaging.send(sender, "&fYou teleported &9" + target.getName() + "&f to &9" +
+							dest.getName() + "&f!");
+					inWarmup.remove(sender);
+				}
+			};
+			int warmup = plugin.config.getInt("teleport.warm-up", 0);
+			if(warmup == 0 || sender.hasPermission("general.teleport.instant")) teleport.run();
+			else {
+				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, teleport, warmup);
+				inWarmup.add(sender);
+			}
 		}
 		return true;
 	}
