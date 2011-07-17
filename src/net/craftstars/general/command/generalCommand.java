@@ -717,6 +717,13 @@ public class generalCommand extends CommandBase {
 					Messaging.send(sender, "&cMust be an integer.");
 					return true;
 				}
+			} else if(args[0].equalsIgnoreCase("show-usage")) {
+				path = "show-usage-on-fail";
+				if(!Toolbox.equalsOne(args[1], "true", "false")) {
+					Messaging.send(sender, "&cMust be a boolean.");
+					return true;
+				}
+				value = Boolean.valueOf(args[1]);
 			} else Messaging.send(sender, "&cUnknown variable: " + args[0]);
 			if(path != null && value != null) {
 				plugin.config.setProperty(path, value);

@@ -10,7 +10,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public abstract class CommandBase {
-	public static final boolean SHOW_USAGE = false; // Change to true to not spew out usage notes on incorrect syntax
+	public static boolean SHOW_USAGE = false; // Change to true to not spew out usage notes on incorrect syntax
 	protected final General plugin;
 	
 	protected CommandBase(General instance) {

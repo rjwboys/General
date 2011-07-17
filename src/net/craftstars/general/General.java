@@ -122,6 +122,7 @@ public class General extends JavaPlugin {
 	public void loadAllConfigs() {
 		this.config = this.getConfiguration();
 		this.loadConfiguration();
+		CommandBase.SHOW_USAGE = config.getBoolean("show-usage-on-fail", true);
 		
 		Time.setup();
 		Items.setup();
