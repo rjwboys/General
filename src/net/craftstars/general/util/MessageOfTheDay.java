@@ -26,7 +26,7 @@ public class MessageOfTheDay {
 	}
 	
 	private static String getOnline() {
-		List<String> lines = formatPlayerList(Toolbox.getPlayerList(General.plugin));
+		List<String> lines = formatPlayerList(Toolbox.getPlayerList(General.plugin, null));
 		StringBuilder stuff = new StringBuilder();
 		for(String line : lines)
 			stuff.append(line + " ");

@@ -27,11 +27,11 @@ public class playerlistCommand extends CommandBase {
 			return Messaging.lacksPermission(sender, "view the player list");
 		World world = null;
 		if(args.length == 1) {
-			world = Toolbox.matchWorld(args[1]);
-			if(world == null) return Messaging.invalidWorld(sender, args[1]);
+			world = Toolbox.matchWorld(args[0]);
+			if(world == null) return Messaging.invalidWorld(sender, args[0]);
 		}
 		List<String> players = Toolbox.getPlayerList(plugin, world);
-		String worldName = world == null ? "" : " in world " + world.getName();
+		String worldName = world == null ? "" : " in '" + world.getName() + "'";
 		Messaging.send(sender, "&eOnline Players" + worldName + " (" + players.size() + "):");
 		doListing(sender, players);
 		return true;
@@ -49,8 +49,8 @@ public class playerlistCommand extends CommandBase {
 		if(args.length > 1) return SHOW_USAGE;
 		World world = null;
 		if(args.length == 1) {
-			world = Toolbox.matchWorld(args[1]);
-			if(world == null) return Messaging.invalidWorld(sender, args[1]);
+			world = Toolbox.matchWorld(args[0]);
+			if(world == null) return Messaging.invalidWorld(sender, args[0]);
 		}
 		List<String> players = Toolbox.getPlayerList(plugin, world);
 		String worldName = world == null ? "" : " in world " + world.getName();
