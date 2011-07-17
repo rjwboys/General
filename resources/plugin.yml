@@ -113,3 +113,181 @@ commands:
     description: Gives info on a world
     aliases: []
     usage: /<command> [<world>]
+permissions:
+  general.*:
+    description: Gives all General permissions.
+    # General defines no permissions that an op should not have.
+    default: op
+    children:
+      general.give.*: true
+      general.clear.*: true
+      general.take.*: true
+      general.kit.*: true
+      general.kit-now: true
+      general.teleport.*: true
+      general.mobspawn.*: true
+      general.away: true
+      general.worldinfo: true
+      general.setspawn.*: true
+      general.time.*: true
+      general.playerlist: true
+      general.who.*: true
+      general.getpos.*: true
+      general.heal.*: true
+      general.weather.*: true
+      general.admin.*: true
+      general.tell: true
+  general.basic:
+    description: Gives a set of basic, harmless General permissions.
+    default: not op
+    children:
+      general.time: true
+      general.playerlist: true
+      general.who: true
+      general.away: true
+      general.getpos: true
+      general.tell: true
+  general.give.*:
+    description: Gives full access to the /give command.
+    children:
+      general.give: true
+      general.give.infinite: true
+      general.give.mass: true
+      general.give.group.*: true # defined dynamically
+      general.give.item.*: true  # defined dynamically
+      general.give.groupless: true
+  general.give:
+    description: Gives basic access to the /give command.
+  general.give.infinite:
+    description: Gives access to /give for infinite stacks.
+  general.give.mass:
+    description: Gives access to /give for large quantities, and to /items.
+  general.give.any:
+    description: Gives permission to bypass the item whitelist/blacklist.
+    children:
+      general.give.groupless: true
+      general.give.group.*: true
+  general.give.items.*:
+    description: Gives access to all items, without exception.
+    children:
+      general.give.any: true
+  general.clear.*:
+    description: Gives full access to the /clear command
+    children:
+      general.clear: true
+      general.clear.other: true
+  general.clear:
+    description: Gives basic access to the /clear command
+  general.clear.other:
+    description: Lets you clear the inventory of others.
+  general.take.*:
+    description: Gives full access to the /take command
+    children:
+      general.take: true
+      general.take.other: true
+  general.take:
+    description: Gives basic access to the /take command
+  general.take.other:
+    description: Lets you take from the inventory of others.
+  general.mobspawn:
+    description: Gives basic access to the /mobspawn command, which is no access at all but required to use it.
+  general.mobspawn.*:
+    description: Gives full access to the /mobspawn command.
+    children:
+      general.mobspawn.all: true
+      general.mobspawn.variants: true
+  general.mobspawn.neutral.angry:
+    description: Allows you to spawn any neutral mob you have access to as already angry.
+    children:
+      general.mobspawn.wolf.angry: true
+      general.mobspawn.pig-zombie.angry: true 
+  general.mobspawn.creeper.*:
+    description: Lets you spawn any type of creeper.
+    children:
+      general.mobspawn.creeper: true
+      general.mobspawn.creeper.powered: true
+  general.mobspawn.pig.*:
+    description: Lets you spawn any type of pig.
+    children:
+      general.mobspawn.pig: true
+      general.mobspawn.pig.saddled: true
+  general.mobspawn.pig-zombie.*:
+    description: Lets you spawn any type of pig zombie.
+    children:
+      general.mobspawn.pig-zombie: true
+      general.mobspawn.pig-zombie.angry: true
+  general.mobspawn.wolf.*:
+    description: Lets you spawn any type of wolf.
+    children:
+      general.mobspawn.wolf: true
+      general.mobspawn.wolf.angry: true
+      general.mobspawn.wolf.tamed: true
+  general.mobspawn.sheep.*:
+    description: Lets you spawn any type of sheep.
+    children:
+      general.mobspawn.sheep.sheared: true
+      general.mobspawn.sheep.coloured.*: true # defined dynamically
+  general.mobspawn.sheep.sheared:
+    description: Lets you spawn sheep that are already sheared.
+  general.mobspawn.sheep.colored.*:
+    description: Lets you spawn any colour of sheep.
+    children:
+      general.mobspawn.sheep.coloured.*: true
+  general.mobspawn.sheep.coloured.natural:
+    description: Lets you spawn any naturally-occurring colour of sheep.
+    children:
+      general.mobspawn.sheep.coloured.silver: true
+      general.mobspawn.sheep.coloured.gray: true
+      general.mobspawn.sheep.coloured.black: true
+      general.mobspawn.sheep.coloured.brown: true
+      general.mobspawn.sheep.coloured.pink: true
+  general.mobspawn.sheep.colored.natural:
+    description: Lets you spawn any naturally-occurring colour of sheep.
+    children:
+      general.mobspawn.sheep.coloured.natural: true
+  general.teleport:
+    description: Gives basic access to the /teleport command, which is no access at all but required to use it.
+  general.teleport.*:
+    children:
+      general.teleport: true
+      general.teleport.any: true
+      general.teleport.to.*: true
+  general.teleport.mass:
+    description: Allows you to teleport several entities at a time.
+  general.setspawn.*:
+    children:
+      general.setspawn.self: true
+      general.setspawn.other: true
+      general.setspawn.world: true
+      general.setspawn.to.*: true
+  general.setspawn:
+    children:
+      general.setspawn.world: true
+  general.time.*:
+    children:
+      general.time: true
+      general.time.set: true
+  general.who.*:
+    children:
+      general.who: true
+      general.who.ip: true
+  general.getpos.*:
+    general.getpos: true
+    general.getpos.other: true
+  general.weather.*:
+    children:
+      general.weather: true
+      general.weather.thunder: true
+      general.weather.zap: true
+  general.heal.*:
+    children:
+      general.heal: true
+      general.hurt: true
+  general.admin.*:
+    children:
+      general.admin.reload: true
+      general.admin.item: true
+      general.admin.save: true
+  general.admin:
+    children:
+      general.admin.*: true

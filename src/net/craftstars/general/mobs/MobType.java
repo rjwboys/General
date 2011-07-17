@@ -166,4 +166,8 @@ public enum MobType {
 	public int getId() {
 		return id;
 	}
+	
+	public MobAlignment getAlignment() {
+		return alignment;
+	}
 }

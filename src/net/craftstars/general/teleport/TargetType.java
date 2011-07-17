@@ -29,4 +29,8 @@ public enum TargetType {
 	public String getPermission(String base) {
 		return base + "." + this.toString().toLowerCase();
 	}
+	
+	public String getName() {
+		return msg;
+	}
 }
