@@ -8,7 +8,7 @@ import java.util.Map;
 
 import net.craftstars.general.General;
 import net.craftstars.general.items.Kits;
-import net.craftstars.general.items.Kits.Kit;
+import net.craftstars.general.items.Kit;
 import net.craftstars.general.mobs.MobAlignment;
 import net.craftstars.general.mobs.MobData;
 import net.craftstars.general.mobs.MobType;
@@ -36,25 +36,22 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 		// general.give.group.*
 		permsMap = new HashMap<String,Boolean>();
 		for(String group : config.getKeys("give.groups")) {
-			perm = new Permission("general.give.group." + group);
-			perm.setDescription("Gives access to the following items: " + config.getStringList("give.groups." + group, null));
+			perm = new Permission("general.give.group." + group,
+				"Gives access to the following items: " + config.getStringList("give.groups." + group, null));
 			pm.addPermission(perm);
 			permsMap.put("general.give.group." + group, true);
 		}
-		perm = new Permission("general.give.group.*", permsMap);
-		perm.setDescription("Gives access to all item whitelist groups.");
+		perm = new Permission("general.give.group.*", "Gives access to all item whitelist groups.", permsMap);
 		pm.addPermission(perm);
 		/* ***** Permissions related to /kit ***** */
 		permsMap = new HashMap<String,Boolean>();
 		for(Kit kit : Kits.kits.values()) {
-			perm = new Permission("general.kit." + kit.getName());
-			perm.setDescription("Gives access to the '" + kit.getName() + "' kit.");
+			perm = new Permission("general.kit." + kit.getName(), "Gives access to the '" + kit.getName() + "' kit.");
 			pm.addPermission(perm);
 			permsMap.put("general.kit." + kit.getName(), true);
 		}
 		permsMap.put("general.kit", true);
-		perm = new Permission("general.kit.*", permsMap);
-		perm.setDescription("Gives access to all item whitelist groups.");
+		perm = new Permission("general.kit.*", "Gives access to all item whitelist groups.", permsMap);
 		/* ***** Permissions related to /mobspawn ***** */
 		// gemeral.mobspawn.friendly/hostile/neutral/<mob>/all
 		// TODO: Get rid of the double loop here, it's not needed; just maintain multiple maps!
@@ -65,18 +62,18 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 			permsMap = new HashMap<String,Boolean>();
 			permsMap.put("general.mobspawn", true);
 			for(MobType mob : MobType.values()) {
-				perm = new Permission("general.mobspawn." + mob.toString().toLowerCase().replace('_', '-'));
-				perm.setDescription("Gives permission to spawn " + mob.getPluralName() + ".");
+				perm = new Permission("general.mobspawn." + mob.toString().toLowerCase().replace('_', '-'),
+					"Gives permission to spawn " + mob.getPluralName() + ".");
 				pm.addPermission(perm);
 				if(mob.getAlignment() == attitude)
 					permsMap.put("general.mobspawn." + mob.toString().toLowerCase().replace('_', '-'), true);
 			}
-			perm = new Permission("general.mobspawn." + attitude.toString().toLowerCase(), permsMap);
-			perm.setDescription("Gives permission to spawn " + attitude.toString().toLowerCase() + " mobs.");
+			perm = new Permission("general.mobspawn." + attitude.toString().toLowerCase(),
+				"Gives permission to spawn " + attitude.toString().toLowerCase() + " mobs.", permsMap);
 			pm.addPermission(perm);
 		}
-		perm = new Permission("general.mobspawn.all", permsMap2);
-		perm.setDescription("Gives permission to spawn any type of mob, but only the basic variant of each.");
+		perm = new Permission("general.mobspawn.all",
+			"Gives permission to spawn any type of mob, but only the basic variant of each.", permsMap2);
 		pm.addPermission(perm);
 		// general.mobspawn.sheep.coloured.* and general.mobspawn.sheep.colored.<colour>
 		permsMap = new HashMap<String,Boolean>();
@@ -84,26 +81,24 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 		for(DyeColor colour : DyeColor.values()) {
 			if(colour == DyeColor.WHITE) continue;
 			String colourNode = colour.toString().toLowerCase().replace('_', '-');
-			perm = new Permission("general.mobspawn.sheep.coloured." + colourNode);
-			perm.setDescription("Gives permission to spawn " + colourNode + " sheep.");
+			perm = new Permission("general.mobspawn.sheep.coloured." + colourNode,
+				"Gives permission to spawn " + colourNode + " sheep.");
 			permsMap2 = new HashMap<String,Boolean>();
 			permsMap2.put("general.mobspawn.sheep.coloured." + colourNode, true);
-			perm = new Permission("general.mobspawn.sheep.colored." + colourNode, permsMap2);
-			perm.setDescription("Gives permission to spawn " + colourNode + " sheep.");
+			perm = new Permission("general.mobspawn.sheep.colored." + colourNode,
+				"Gives permission to spawn " + colourNode + " sheep.", permsMap2);
 			pm.addPermission(perm);
 			permsMap.put("general.mobspawn.sheep.coloured." + colourNode, true);
 		}
 		permsMap.put("general.mobspawn.sheep", true);
-		perm = new Permission("general.sheep.coloured.*", permsMap);
-		perm.setDescription("Lets you spawn any colour of sheep.");
+		perm = new Permission("general.sheep.coloured.*", "Lets you spawn any colour of sheep.", permsMap);
 		pm.addPermission(perm);
 		// general.mobspawn.slime.*
 		permsMap = new HashMap<String,Boolean>();
 		permsMap.put("general.mobspawn", true);
 		for(NamedSize size : NamedSize.values())
 			permsMap.put("general.mobspawn.slime." + size.toString().toLowerCase(), true);
-		perm = new Permission("general.mobspawn.slime.*", permsMap);
-		perm.setDescription("Lets you spawn any size of slime.");
+		perm = new Permission("general.mobspawn.slime.*", "Lets you spawn any size of slime.", permsMap);
 		pm.addPermission(perm);
 		// general.mobspawn.variants
 		permsMap = new HashMap<String,Boolean>();
@@ -118,8 +113,8 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 				permsMap.put(node, true);
 			}
 		}
-		perm = new Permission("general.mobspawn.variants", permsMap);
-		perm.setDescription("Gives access to all mob variants, but only for mobs you already have separate access to.");
+		perm = new Permission("general.mobspawn.variants",
+			"Gives access to all mob variants, but only for mobs you already have separate access to.", permsMap);
 		pm.addPermission(perm);
 		/* ***** Permissions related to /teleport and /setspawn ***** */
 		// This setup is to avoid looping twice through the possible targets;
@@ -138,14 +133,13 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 			permsMap2.put(base + ".to.*", true);
 			permsMap2.put(base + ".into.*", true);
 			permsMap2.put(base + ".from.*", true);
-			perm = new Permission(base + ".*", permsMap2);
-			perm.setDescription("Gives permission to teleport " + targ.getName() + " to anywhere at all.");
+			perm = new Permission(base + ".*",
+				"Gives permission to teleport " + targ.getName() + " to anywhere at all.", permsMap2);
 			// for general.teleport.<target>.to|into|from.*
 			destinationBases.add(base);
 		}
 		permsMap.put("general.teleport.mass", true);
-		perm = new Permission("general.teleport.any", permsMap);
-		perm.setDescription("Gives permission to teleport anything.");
+		perm = new Permission("general.teleport.any", "Gives permission to teleport anything.", permsMap);
 		pm.addPermission(perm);
 		// Destination-based permissions
 		for(String base : destinationBases) {
@@ -162,9 +156,9 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 			permsMap.put(base, true);
 			for(DestinationType dest : DestinationType.values())
 				permsMap.put(base + ".to." + dest.toString().toLowerCase(), true);
-			perm = new Permission(base + ".to.*", permsMap);
 			permDesc = basePermDesc + " to";
-			perm.setDescription("Gives permission to " + permDesc + " any type of destination.");
+			perm = new Permission(base + ".to.*",
+				"Gives permission to " + permDesc + " any type of destination.", permsMap);
 			pm.addPermission(perm);
 			// <base>.into.*, <base>.from.*
 			permsMap = new HashMap<String,Boolean>();
@@ -173,17 +167,15 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 				permsMap.put(base + ".into." + world.getName(), true);
 				permsMap2.put(base + ".from." + world.getName(), true);
 			}
-			perm = new Permission(base + ".into.*", permsMap);
 			if(base.contains("spawn"))
 				permDesc = "remotely " + basePermDesc + " of";
 			else permDesc = basePermDesc + " to";
-			perm.setDescription("Gives permission to " + permDesc + " any world.");
+			perm = new Permission(base + ".into.*", "Gives permission to " + permDesc + " any world.", permsMap);
 			pm.addPermission(perm);
-			perm = new Permission(base + ".from.*", permsMap2);
 			if(base.contains("spawn"))
 				permDesc = "remotely " + basePermDesc + " from";
-			else permDesc = basePermDesc + "out-of-world from";
-			perm.setDescription("Gives permission to " + permDesc + " any world.");
+			else permDesc = basePermDesc + "out of";
+			perm = new Permission(base + ".from.*", "Gives permission to " + permDesc + " any world.", permsMap2);
 			pm.addPermission(perm);
 			// <base>.basic
 			permsMap = new HashMap<String,Boolean>();
@@ -192,8 +184,7 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 				permsMap.put("general.teleport.self", true);
 			for(String dest : basicDestinations)
 				permsMap.put(base + ".to." + dest.toLowerCase(), true);
-			perm = new Permission(base + ".basic", permsMap);
-			perm.setDescription("Gives basic abilities to " + basePermDesc + ".");
+			perm = new Permission(base + ".basic", "Gives basic abilities to " + basePermDesc + ".", permsMap);
 			pm.addPermission(perm);
 		}
 	}
