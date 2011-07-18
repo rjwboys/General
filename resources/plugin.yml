@@ -4,7 +4,7 @@ authors:
   - Celtic Minstrel
   - Plutonium239
   - Nijikokun
-version: 3.5
+version: 3.5.1
 softdepend:
   - BOSEconomy
   - iConomy

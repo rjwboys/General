@@ -1,5 +1,6 @@
 package net.craftstars.general.security;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,7 @@ import org.bukkit.util.config.Configuration;
 
 public class BukkitPermissionsHandler implements PermissionsHandler {
 	
-	BukkitPermissionsHandler() {
+	public BukkitPermissionsHandler() {
 		// Here we set up the complicated container permissions
 		Configuration config = General.plugin.config;
 		PluginManager pm = Bukkit.getServer().getPluginManager();
@@ -61,11 +62,12 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 			permsMap = new HashMap<String,Boolean>();
 			permsMap.put("general.mobspawn", true);
 			for(MobType mob : MobType.values()) {
-				perm = new Permission("general.mobspawn." + mob.toString().toLowerCase().replace('_', '-'),
-					"Gives permission to spawn " + mob.getPluralName() + ".");
-				pm.addPermission(perm);
-				if(mob.getAlignment() == attitude)
+				if(mob.getAlignment() == attitude) {
+					perm = new Permission("general.mobspawn." + mob.toString().toLowerCase().replace('_', '-'),
+						"Gives permission to spawn " + mob.getPluralName() + ".");
+					pm.addPermission(perm);
 					permsMap.put("general.mobspawn." + mob.toString().toLowerCase().replace('_', '-'), true);
+				}
 			}
 			perm = new Permission("general.mobspawn." + attitude.toString().toLowerCase(),
 				"Gives permission to spawn " + attitude.toString().toLowerCase() + " mobs.", permsMap);
@@ -106,6 +108,7 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 			if(mob.getNewData() == MobData.none) continue;
 			String mobName = mob.toString().toLowerCase().replace('_', '-');
 			perm = pm.getPermission("general.mobspawn." + mobName + ".*");
+			if(perm == null) continue;
 			permsMap2 = perm.getChildren();
 			for(String node : permsMap2.keySet()) {
 				if(node.equals("general.mobspawn." + mobName)) continue;
@@ -118,7 +121,8 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 		/* ***** Permissions related to /teleport and /setspawn ***** */
 		// This setup is to avoid looping twice through the possible targets;
 		// it's for destinations just afterwards
-		List<String> destinationBases = Arrays.asList("general.teleport", "general.setspawn", "general.spawn.set");
+		List<String> destinationBases = new ArrayList<String>();
+		destinationBases.addAll(Arrays.asList("general.teleport", "general.setspawn", "general.spawn.set"));
 		// This is setup for the teleport.basic permissions
 		List<String> basicDestinations = General.plugin.config.getStringList("teleport-basics", null);
 		// general.teleport.any
@@ -147,8 +151,10 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 				basePermDesc = "set the spawn";
 			else {
 				basePermDesc = "teleport ";
-				if(!base.endsWith("teleport"))
-					basePermDesc += TargetType.valueOf(base.substring(base.lastIndexOf('.') + 1)).getName() + " ";
+				if(!base.endsWith("teleport")) {
+					String target = base.substring(base.lastIndexOf('.') + 1).toUpperCase();
+					basePermDesc += TargetType.valueOf(target).getName() + " ";
+				}
 			}
 			// <base>.to.*
 			permsMap = new HashMap<String,Boolean>();
