@@ -110,22 +110,22 @@ public class clearCommand extends CommandBase {
 		switch(howMuch) {
 		case FULL:
 			if(sell) for(ItemStack item : i.getContents())
-				revenue += Toolbox.sellItem(new ItemID(item), item.getAmount());
+				if(item != null) revenue += Toolbox.sellItem(new ItemID(item), item.getAmount());
 			i.clear();
 			// Case fallthrough intentional
 		case ARMOUR:
 			if(sell) for(ItemStack item : i.getArmorContents())
-				revenue += Toolbox.sellItem(new ItemID(item), item.getAmount());
+				if(item != null) revenue += Toolbox.sellItem(new ItemID(item), item.getAmount());
 			clearArmour(i);
 		break;
 		case QUICKBAR:
 			if(sell) for(int j = 0; j < 9; j++)
-				revenue += Toolbox.sellItem(new ItemID(i.getItem(j)), i.getItem(j).getAmount());
+				if(i.getItem(j) != null) revenue += Toolbox.sellItem(new ItemID(i.getItem(j)), i.getItem(j).getAmount());
 			clearQuickbar(i);
 		break;
 		case PACK:
 			if(sell) for(int j = 9; j < i.getSize(); j++)
-				revenue += Toolbox.sellItem(new ItemID(i.getItem(j)), i.getItem(j).getAmount());
+				if(i.getItem(j) != null) revenue += Toolbox.sellItem(new ItemID(i.getItem(j)), i.getItem(j).getAmount());
 			clearPack(i);
 		break;
 		}
