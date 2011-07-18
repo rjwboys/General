@@ -325,7 +325,7 @@ permissions:
     description: Allows you to tamper with the weather.
     children:
       general.weather: true
-      general.weather.set: true;
+      general.weather.set: true
       general.weather.thunder: true
       general.weather.zap: true
   general.weather:
