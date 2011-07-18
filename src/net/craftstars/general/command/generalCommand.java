@@ -718,6 +718,38 @@ public class generalCommand extends CommandBase {
 					Messaging.send(sender, "&cMust be an integer.");
 					return true;
 				}
+			} else if(args[0].equalsIgnoreCase("time-cooldown")) {
+				path = "cooldown.time";
+				try {
+					value = Integer.valueOf(args[1]);
+				} catch(NumberFormatException e) {
+					Messaging.send(sender, "&cMust be an integer.");
+					return true;
+				}
+			} else if(args[0].equalsIgnoreCase("storm-cooldown")) {
+				path = "cooldown.storm";
+				try {
+					value = Integer.valueOf(args[1]);
+				} catch(NumberFormatException e) {
+					Messaging.send(sender, "&cMust be an integer.");
+					return true;
+				}
+			} else if(args[0].equalsIgnoreCase("thunder-cooldown")) {
+				path = "cooldown.thunder";
+				try {
+					value = Integer.valueOf(args[1]);
+				} catch(NumberFormatException e) {
+					Messaging.send(sender, "&cMust be an integer.");
+					return true;
+				}
+			} else if(args[0].equalsIgnoreCase("lighting-cooldown")) {
+				path = "cooldown.lightning";
+				try {
+					value = Integer.valueOf(args[1]);
+				} catch(NumberFormatException e) {
+					Messaging.send(sender, "&cMust be an integer.");
+					return true;
+				}
 			} else if(args[0].equalsIgnoreCase("show-usage")) {
 				path = "show-usage-on-fail";
 				if(!Toolbox.equalsOne(args[1], "true", "false")) {

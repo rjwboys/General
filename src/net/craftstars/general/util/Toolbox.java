@@ -292,7 +292,8 @@ public class Toolbox {
 	public static double sellItem(ItemID item, int amount) {
 		if(General.plugin.economy == null) return 0;
 		String node = "economy.give.item" + item.toString();
-		return General.plugin.config.getDouble(node, 0.0) * amount;
+		double percent = General.plugin.config.getDouble("economy.give.sell", 100) / 100.0;
+		return General.plugin.config.getDouble(node, 0.0) * amount * percent;
 	}
 
 	private static HashMap<String, HashSet<World>> inCooldown = new HashMap<String, HashSet<World>>();
