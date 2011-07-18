@@ -148,7 +148,7 @@ permissions:
     description: Allows you to use things free of cost that normally require money.
   general.basic:
     description: Gives a set of basic, harmless General permissions.
-    default: !op
+    default: notop
     children:
       general.time: true
       general.playerlist: true
