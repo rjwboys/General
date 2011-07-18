@@ -440,11 +440,6 @@ public class Items {
 	}
 	
 	public static int maxStackSize(int id) {
-		// TODO: Get rid of hack
-		// --- begin hacky workaround for incorrect getMaxStackSize
-		if(id == 335 || id == 346 || id == 349 || id == 350 || id == 355 || id == 358 || id == 359) return 1;
-		if(id == 357) return 8;
-		// --- end hacky workaround for incorrect getMaxStackSize
 		return Material.getMaterial(id).getMaxStackSize();
 	}
 	

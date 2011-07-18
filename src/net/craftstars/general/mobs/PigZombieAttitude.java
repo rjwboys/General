@@ -1,12 +1,8 @@
 package net.craftstars.general.mobs;
 
-import java.lang.reflect.Field;
-
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
-import net.minecraft.server.EntityPigZombie;
 
-import org.bukkit.craftbukkit.entity.CraftPigZombie;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
@@ -27,19 +23,7 @@ public class PigZombieAttitude extends MobData {
 		if(anger == 0) return; // No need to set it to 0 when it already is, right?
 		if(!(mob instanceof PigZombie)) return;
 		PigZombie zom = (PigZombie) mob;
-		// Begin section of accessing internal Minecraft code
-		// TODO: Rewrite using only Bukkit API
-		CraftPigZombie cpz = (CraftPigZombie) zom;
-		EntityPigZombie epz = (EntityPigZombie) cpz.getHandle();
-		try {
-			Field angerLevel = EntityPigZombie.class.getDeclaredField("angerLevel");
-			angerLevel.setAccessible(true);
-			angerLevel.setInt(epz, anger);
-		} catch(SecurityException e) {}
-		catch(NoSuchFieldException e) {}
-		catch(IllegalArgumentException e) {}
-		catch(IllegalAccessException e) {}
-		// End section of accessing internal Minecraft code
+		zom.setAnger(anger);
 	}
 	
 	@Override
