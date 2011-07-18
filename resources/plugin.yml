@@ -137,6 +137,15 @@ permissions:
       general.weather.*: true
       general.admin.*: true
       general.tell: true
+  general.bypass:
+    description: Gives permissions that involve bypassing normal restrictions, such as delays or economy.
+    children:
+      general.no-money: true
+      general.kit-now: true
+      general.teleport.instant: true
+      general.weather.instant: true
+  general.no-money:
+    description: Allows you to use things free of cost that normally require money.
   general.basic:
     description: Gives a set of basic, harmless General permissions.
     default: !op
