@@ -254,6 +254,8 @@ permissions:
       general.teleport.to.*: true
   general.teleport.mass:
     description: Allows you to teleport several entities at a time.
+  general.teleport.instant:
+    description: Allows you to teleport instantly, without any warmup period.
   general.setspawn.*:
     children:
       general.setspawn.self: true
@@ -264,21 +266,51 @@ permissions:
     children:
       general.setspawn.world: true
   general.time.*:
+    description: Allows you to view and set the time.
     children:
       general.time: true
       general.time.set: true
+  general.time:
+    description: Allows you to view the time.
+  general.time.set:
+    description: Allows you to set the time.
+  general.time.instant:
+    description: Allows you to meddle with the time with no cooldown period.
   general.who.*:
     children:
       general.who: true
       general.who.ip: true
   general.getpos.*:
-    general.getpos: true
-    general.getpos.other: true
+    children:
+      general.getpos: true
+      general.getpos.other: true
   general.weather.*:
+    description: Allows you to tamper with the weather.
     children:
       general.weather: true
+      general.weather.set: true;
       general.weather.thunder: true
       general.weather.zap: true
+  general.weather:
+    description: Allows you to see a weather report.
+  general.weather.set:
+    description: Allows you to start and stop storms.
+  general.weather.thunder:
+    description: Allows you to start and stop thunder.
+  general.weather.zap:
+    description: Allows you to summon lightning.
+  general.weather.set.instant:
+    description: Bypass the cooldown period when starting or stopping storms.
+  general.weather.thunder.instant:
+    description: Bypass the cooldown period when starting or stopping thunder.
+  general.weather.zap.instant:
+    description: Bypass the cooldown period when summoning lightning.
+  general.weather.instant:
+    description: Allows you to tamper with the weather with no cooldown period.
+    children:
+      general.weather.thunder.instant: true
+      general.weather.set.instant: true
+      general.weather.zap.instant: true
   general.heal.*:
     children:
       general.heal: true
