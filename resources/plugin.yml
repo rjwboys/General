@@ -139,7 +139,7 @@ permissions:
       general.tell: true
   general.basic:
     description: Gives a set of basic, harmless General permissions.
-    default: not op
+    default: !op
     children:
       general.time: true
       general.playerlist: true
