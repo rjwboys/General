@@ -171,6 +171,8 @@ permissions:
     description: Gives access to all items, without exception.
     children:
       general.give.any: true
+  general.give.groupless:
+    description: Gives access to items not in a group.
   general.clear.*:
     description: Gives full access to the /clear command
     children:
@@ -185,10 +187,13 @@ permissions:
     children:
       general.take: true
       general.take.other: true
+      general.take.mass: true
   general.take:
-    description: Gives basic access to the /take command
+    description: Gives basic access to the /take command.
   general.take.other:
     description: Lets you take from the inventory of others.
+  general.take.mass:
+    description: Gives access to the /masstake command.
   general.mobspawn:
     description: Gives basic access to the /mobspawn command, which is no access at all but required to use it.
   general.mobspawn.*:
@@ -248,23 +253,34 @@ permissions:
   general.teleport:
     description: Gives basic access to the /teleport command, which is no access at all but required to use it.
   general.teleport.*:
+    description: Gives full access to the /teleport command.
     children:
       general.teleport: true
       general.teleport.any: true
       general.teleport.to.*: true
+      general.teleport.into.*: true
+      general.teleport.from.*: true
   general.teleport.mass:
     description: Allows you to teleport several entities at a time.
   general.teleport.instant:
     description: Allows you to teleport instantly, without any warmup period.
   general.setspawn.*:
+    description: Gives full access to the /setspawn command.
     children:
       general.setspawn.self: true
       general.setspawn.other: true
       general.setspawn.world: true
       general.setspawn.to.*: true
   general.setspawn:
+    description: Gives access to the /setspawn command for worlds.
     children:
       general.setspawn.world: true
+  general.setspawn.world:
+    description: Gives access to the /setspawn command for worlds.
+  general.setspawn.self:
+    description: Gives access to the /setspawn command for yourself, to set your bed location.
+  general.setspawn.other:
+    description: Gives access to the /setspawn command for players, to set their bed location.
   general.time.*:
     description: Allows you to view and set the time.
     children:
@@ -277,13 +293,23 @@ permissions:
   general.time.instant:
     description: Allows you to meddle with the time with no cooldown period.
   general.who.*:
+    description: Gives full access to the /who command.
     children:
       general.who: true
       general.who.ip: true
+  general.who:
+    description: Gives basic access to the /who command.
+  general.who.ip:
+    description: Allows you to view players' IP addresses in the /who command (if this feature is enabled).
   general.getpos.*:
+    description: Gives full access to the /getpos, /where, and /compass commands.
     children:
       general.getpos: true
       general.getpos.other: true
+  general.getpos:
+    description: Allows you to see your position with /getpos, /where, and /compass.
+  general.getpos.other:
+    description: Allows you to see anyone's position.
   general.weather.*:
     description: Allows you to tamper with the weather.
     children:
@@ -312,14 +338,43 @@ permissions:
       general.weather.set.instant: true
       general.weather.zap.instant: true
   general.heal.*:
+    description: Gives access to both /heal and /hurt.
     children:
       general.heal: true
       general.hurt: true
+  general.heal:
+    description: Gives access to /heal (and /hurt with negative amounts).
+  general.hurt:
+    description: Gives access to /hurt (and /heal with negative amounts).
   general.admin.*:
+    description: Gives access to all administrative commands.
+    default: op
     children:
       general.admin.reload: true
       general.admin.item: true
       general.admin.save: true
+      general.admin.restrict: true
+      general.admin.release: true
+      general.admin.kit: true
+      general.admin.economy: true
+      general.admin.set: true
   general.admin:
+    description: Gives access to all administrative commands.
     children:
       general.admin.*: true
+  general.admin.reload:
+    description: Allows you to reload the configuration from the files.
+  general.admin.item:
+    description: Allows you to edit item names and aliases, and whitelist/blacklist items.
+  general.admin.save:
+    description: Allows you to force General to save its configuration.
+  general.admin.restrict:
+    description: In ops-based mode, allows you to restrict permissions to ops.
+  general.admin.release:
+    description: In ops-based mode, allows you to release permissions to non-ops.
+  general.admin.kit:
+    description: Allows you to edit the kit definitions.
+  general.admin.economy:
+    description: Allows you to edit costs of various commands.
+  general.admin.set:
+    description: Allows you to set various configuration variables.

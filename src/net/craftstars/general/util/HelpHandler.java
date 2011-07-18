@@ -191,7 +191,7 @@ public class HelpHandler {
 				separator = ", ";
 			}
 		}
-		return output;
+		return " " + output;
 	}
 	
 	@SuppressWarnings("unused")
