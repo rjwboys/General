@@ -301,6 +301,7 @@ public class generalCommand extends CommandBase {
 			int lastComma = items.lastIndexOf(", ");
 			if(lastComma >= 0) items.delete(lastComma, items.length());
 			Messaging.send(sender, "Kit '" + kitName + "' contains: " + items.toString());
+			Messaging.send(sender, "Its delay is " + kit.delay + " and its recorded cost is " + kit.getCost() + ".");
 		}
 		return SHOW_USAGE;
 	}

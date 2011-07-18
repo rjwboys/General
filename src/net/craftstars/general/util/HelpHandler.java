@@ -22,7 +22,7 @@ public class HelpHandler {
 		Plugin test = General.plugin.getServer().getPluginManager().getPlugin("Help");
 		if(test != null) {
 			Help helpPlugin = ((Help) test);
-			helpPlugin.registerCommand("playerlist",
+			helpPlugin.registerCommand("playerlist ([world])",
 					"Lists online players." + fetchAliases("playerlist"),
 					General.plugin, "general.playerlist", "general.basic");
 			helpPlugin.registerCommand("who ([player])",
@@ -68,9 +68,6 @@ public class HelpHandler {
 			helpPlugin.registerCommand("teleport help",
 					"More detailed information on types of targets and destinations.",
 					General.plugin, "general.teleport");
-			helpPlugin.registerCommand("summon [player]",
-					"Teleports a player to your location." + fetchAliases("summon"),
-					General.plugin, "general.teleport.other");
 			helpPlugin.registerCommand("clear ([player]) (pack|quickbar|armo(u)r|all)",
 					"Clears [player]'s inventory." + fetchAliases("clear"),
 					General.plugin, "general.clear");
@@ -82,10 +79,7 @@ public class HelpHandler {
 					General.plugin, "general.heal");
 			helpPlugin.registerCommand("general reload",
 					"Reloads the configuration files.",
-					General.plugin, "OP", "general.admin");
-			helpPlugin.registerCommand("general die",
-					"Kills the plugin.",
-					General.plugin, "OP", "general.admin");
+					General.plugin, "OP", "general.admin.reload");
 			helpPlugin.registerCommand("general motd",
 					"Displays the message of the day.",
 					General.plugin);
@@ -112,7 +106,10 @@ public class HelpHandler {
 					General.plugin, "general.weather");
 			helpPlugin.registerCommand("general item help",
 					"Information on how to edit the item definitions.",
-					General.plugin, "general.admin");
+					General.plugin, "general.admin.item");
+			helpPlugin.registerCommand("general kit help",
+					"Information on how to edit the kit definitions.",
+					General.plugin, "general.admin.kit");
 			General.logger.info("[Help " + helpPlugin.getDescription().getVersion() + "] support enabled.");
 			gotHelp = true;
 		} else {
@@ -243,27 +240,119 @@ public class HelpHandler {
 		+ "&cname &7[item] [name]&7 : Set the display name of an item.\n"
 		+ "&chook &7[primary]&c:&7[secondary] [item]&f : Set a new pseudo-variant alias.\n"
 		+ "&cgroup &7[group-name] delete|[item]&f : Edit the item white/blacklists.\n";
-	private static String general_set;
-	private static String general_set_list;
-	private static String general_set_permissions;
-	private static String general_set_others_for_all;
-	private static String general_set_give_mass;
-	private static String general_set_show_health;
-	private static String general_set_show_coords;
-	private static String general_set_show_world;
-	private static String general_set_show_ip;
-	private static String general_set_show_motd;
-	private static String general_set_24_hour;
-	private static String general_set_show_ticks;
-	private static String general_set_economy;
-	private static String general_set_economy_take;
-	private static String general_set_economy_clear;
-	private static String general_set_economy_sell;
-	private static String general_set_economy_kits;
-	private static String general_set_kits_discount;
-	private static String general_set_chat_tag;
-	private static String general_set_auto_save;
-	private static String general_set_lightning_range;
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set = "&c/general set &7[var] [value]&f : Sets configuration variables";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_list = "&cThe following variables can be set. Type /general set help &7[var]&f"
+		+ "for more details.\n" 
+		+ "permissions  others-for-all  give-mass  show-health  show-coords  show-world  show-ip  show-motd\n"
+		+ "24-hour  show-ticks  economy  economy-take  economy-clear  economy-kits  economy-sell  kits-discount\n"
+		+ "chat-tag  log-commands  auto-save  lightning-range  teleport-warmup  time-cooldown  storm-cooldown\n"
+		+ "thunder-cooldown  lighting-cooldown  show-usage";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_permissions =
+		"The permissions system to use; changes take effect on server restart.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_others_for_all =
+		"If true, item groups are a blacklist. Otherwise they're a whitelist.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_give_mass =
+		"The maximum amount a player can /give at one time without needing extra permission.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_show_health =
+		"Whether to show a health bar in the /who command.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_show_coords =
+		"Whether to show the player's location and bed location in the /who command.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_show_world =
+		"Whether to show the player's world in the /who command.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_show_ip =
+		"Whether to consider showing the player's IP addres in the /who command.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_show_motd =
+		"Whether to show the Message of the Day to players when they join.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_24_hour =
+		"If true, time will be formatted in the 24-hour format.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_show_ticks =
+		"If true, time will include the ticks as well as the formatted time.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_economy =
+		"Set the economy system; changes take effect on server restart.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_economy_take =
+		"Sets the behaviour of economy with the /take command. Valid values are sell (items are sold and " + 
+		"the player gains money) or trash (the items just disappear).";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_economy_clear =
+		"Sets the behaviour of economy with the /clear command. Valid values are sell (items are sold and " + 
+		"the player gains money) or trash (the items just disappear).";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_economy_sell =
+		"The percentage of the /give price for an item that the player gets when selling it using /take or /clear. " +
+		"For example, set it to 60, and an item that costs 10 coins with /give will earn them 6 coins with /take.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_economy_kits =
+		"Sets the behaviour of economy with the /kit command. Valid values are cumulative (the cost of a kit " +
+		"is the sum of the costs of its components), discount (like above, but with a discount.), and individual " +
+		"(the cost of a kit is the value set in kits.yml).";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_kits_discount =
+		"If kits are set to use the discount method, this is the percentage of the cumulative cost that is used " +
+		"as the actual cost. It's important to understand that this is actually the inverse of the normal meaning " +
+		"of 'discount'; to get a 20% discount, for example, you must set it to 80.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_chat_tag =
+		"The format used to 'tag' people; at present, the only use for this is that if you tag someone who's " +
+		"away, you get to see their away message. It must contain the string 'name', since that will be replaced " +
+		"with the actual name of the player when checking if someone is tagged.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_auto_save =
+		"Whether to automatically save config.yml and kits.yml on server shutdown.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_lightning_range =
+		"The range withing /weather zap will cause a lightning strike. Lower values increase the chance of " +
+		"you (or the targeted player) being hit.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_teleport_warmup = "The warmup period for teleporting, in ticks.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_lightning_cooldown = "The cooldown period for lightning, in ticks.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_storm_cooldown = "The cooldown period for starting or stopping a storm, in ticks.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_thunder_cooldown =
+		"The cooldown period for starting or stopping thunder, in ticks.";
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_set_time_cooldown = "The cooldown period for changing the time, in ticks.";
 	private static String general_kit;
 	// TODO: A way to account for permissions?
 	

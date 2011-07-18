@@ -1,5 +1,5 @@
 # General Plugin for CraftBukkit #
-## Version 3.4.5 [Hindemith]
+## Version 3.5 [Schoenberg]
 ### README
 - - -
 
@@ -11,7 +11,7 @@ to the root directory of the repository:
 * Help.jar
 * iConomy.jar (for iConomy 5)
 * iConomy4.jar
-* Permission.jar
+* Permissions.jar
 * WorldEdit.jar
 
 Once you have done this, you can build with ant. For a full build, type
