@@ -173,6 +173,8 @@ permissions:
       general.give.any: true
   general.give.groupless:
     description: Gives access to items not in a group.
+  general.kit-now:
+    description: The ability to bypass cooldown times on kits.
   general.clear.*:
     description: Gives full access to the /clear command
     children:
@@ -346,6 +348,14 @@ permissions:
     description: Gives access to /heal (and /hurt with negative amounts).
   general.hurt:
     description: Gives access to /hurt (and /heal with negative amounts).
+  general.away:
+    description: Allows you to set an away message.
+  general.worldinfo:
+    description: Allows you to view info about worlds.
+  general.playerlist:
+    description: Allows you to view who's online.
+  general.tell:
+    description: Allows you to private message players.
   general.admin.*:
     description: Gives access to all administrative commands.
     default: op
