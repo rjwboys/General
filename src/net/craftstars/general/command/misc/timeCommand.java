@@ -8,6 +8,7 @@ import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -64,6 +65,10 @@ public class timeCommand extends CommandBase {
 	}
 	
 	private boolean setTime(CommandSender sender, String time) {
+		if(world.getEnvironment() != Environment.NORMAL) {
+			Messaging.send(sender, "&cTime has no meaning here.");
+			return true;
+		}
 		if(Toolbox.lacksPermission(sender, "general.time.set"))
 			return Messaging.lacksPermission(sender, "set the time");
 		if(Toolbox.checkCooldown(sender, world, "time", "general.time")) return true;
@@ -141,6 +146,10 @@ public class timeCommand extends CommandBase {
 	}
 	
 	private void showTime(CommandSender sender) {
+		if(world.getEnvironment() != Environment.NORMAL) {
+			Messaging.send(sender, "&cTime has no meaning here.");
+			return;
+		}
 		if(Toolbox.lacksPermission(sender, "general.time", "general.basic"))
 			Messaging.lacksPermission(sender, "see the time");
 		else {

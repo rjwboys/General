@@ -6,6 +6,7 @@ import java.util.Random;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
@@ -171,16 +172,21 @@ public class weatherCommand extends CommandBase {
 	}
 	
 	private void showWeatherInfo(CommandSender sender, World where) {
+		if(where.getEnvironment() == Environment.NETHER) {
+			Messaging.send(sender, "&cThe nether doesn't have weather!");
+			return;
+		}
 		if(where.hasStorm())
-			sender.sendMessage("&blue;World " + where.getName() + " has a storm active for " +
+			Messaging.send(sender, "&blue;World " + where.getName() + " has a storm active for " +
 				Time.extractDuration(Integer.toString(where.getWeatherDuration())) + ".");
 		else
-			sender.sendMessage("&blue;World " + where.getName() + " does not have a storm active.");
+			Messaging.send(sender, "&blue;World " + where.getName() + " does not have a storm active.");
+		if(where.getEnvironment() == Environment.SKYLANDS) return; // no thunder in sky
 		if(where.isThundering())
-			sender.sendMessage("&yellow;World " + where.getName() + " is thundering for " +
+			Messaging.send(sender, "&yellow;World " + where.getName() + " is thundering for " +
 				Time.extractDuration(Integer.toString(where.getThunderDuration())) + ".");
 		else
-			sender.sendMessage("&yellow;World " + where.getName() + " is not thundering.");
+			Messaging.send(sender, "&yellow;World " + where.getName() + " is not thundering.");
 	}
 	
 	private boolean isLightning(String cmd) {
@@ -223,7 +229,7 @@ public class weatherCommand extends CommandBase {
 			} catch(NumberFormatException e) {
 				// /weather [<world>] <world> -- weather report on a specified world
 				World world = Toolbox.matchWorld(key);
-				if(world != null) showWeatherInfo(sender, in);
+				if(world != null) showWeatherInfo(sender, world);
 				// /weather [<world>] <player> -- a lightning strike near a player
 				else {
 					Player player = Toolbox.matchPlayer(key);
@@ -235,6 +241,10 @@ public class weatherCommand extends CommandBase {
 	}
 	
 	private void doThunder(CommandSender sender, World world, int duration) {
+		if(world.getEnvironment() != Environment.NORMAL) {
+			Messaging.send(sender, "&cOnly normal worlds have thunder.");
+			return;
+		}
 		if(Toolbox.lacksPermission(sender, "general.weather.thunder"))
 			Messaging.lacksPermission(sender, "control thunder");
 		if(Toolbox.checkCooldown(sender, world, "thunder", "general.weather.thunder")) return;
@@ -253,6 +263,10 @@ public class weatherCommand extends CommandBase {
 	}
 	
 	private void doWeather(CommandSender sender, World world, long duration) {
+		if(world.getEnvironment() == Environment.NETHER) {
+			Messaging.send(sender, "&cThe nether doesn't have weather!");
+			return;
+		}
 		if(Toolbox.lacksPermission(sender, "general.weather.set"))
 			Messaging.lacksPermission(sender, "control the weather");
 		if(Toolbox.checkCooldown(sender, world, "storm", "general.weather.set")) return;
