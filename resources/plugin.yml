@@ -282,6 +282,8 @@ permissions:
       general.setspawn.other: true
       general.setspawn.world: true
       general.setspawn.to.*: true
+      general.setspawn.into.*: true
+      general.setspawn.from.*: true
   general.setspawn:
     description: Gives access to the /setspawn command for worlds.
     children:
