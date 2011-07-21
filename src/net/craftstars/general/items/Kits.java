@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -175,11 +176,9 @@ public class Kits {
 			ArrayList<Object> items = new ArrayList<Object>();
 			for(ItemID item : kit) {
 				String itemName = Items.getPersistentName(item);
-				if(kit.get(item) != 1) {
-					HashMap<String, Integer> entry = new HashMap<String, Integer>();
-					entry.put(itemName, kit.get(item));
-					items.add(entry);
-				} else items.add(itemName);
+				if(kit.get(item) != 1)
+					items.add(Collections.singletonMap(itemName, kit.get(item)));
+				else items.add(itemName);
 			}
 			yaml.put("items", items);
 			kitsYml.setProperty(key, yaml);
