@@ -61,6 +61,8 @@ public class clearCommand extends CommandBase {
 	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
 		if(Toolbox.lacksPermission(sender, "general.clear"))
 			return Messaging.lacksPermission(sender, "clear your inventory");
+		sell = General.plugin.economy != null;
+		sell = sell && General.plugin.config.getString("economy.give.sell", "sell").equalsIgnoreCase("sell");
 		if(args.length == 0) {
 			doClean(sender, sender, CleanType.FULL);
 		} else if(args.length == 1) {
@@ -105,7 +107,7 @@ public class clearCommand extends CommandBase {
 		if(fromWhom instanceof Player) {
 			if(((Player) fromWhom).getName().equalsIgnoreCase(who.getName())) selfClear = true;
 		}
-		sell = selfClear;
+		sell = sell && selfClear;
 		PlayerInventory i = who.getInventory();
 		switch(howMuch) {
 		case FULL:

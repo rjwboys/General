@@ -62,7 +62,7 @@ time:
   show-ticks: true
 
 # This section is for if you want economy enabled. Currently the only accepted option is system,
-# which should be either None or iConomy.
+# which should be either None, iConomy, or BOSEconomy.
 
 economy:
   system: None
