@@ -4,6 +4,7 @@ package net.craftstars.general.command;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.Map;
 
 import net.craftstars.general.General;
 import net.craftstars.general.util.HelpHandler;
@@ -16,9 +17,11 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public abstract class CommandBase implements CommandExecutor {
+	enum FailurePlace {INIT, HELP, PARSE, EXECUTE, NONE};
 	public static boolean SHOW_USAGE = false; // Change to true to not spew out usage notes on incorrect syntax
 	private static HashSet<String> frozenAccounts = new HashSet<String>();
 	protected final General plugin;
+	private String cmdToExecute;
 	
 	protected CommandBase(General instance) {
 		plugin = instance;
@@ -28,13 +31,27 @@ public abstract class CommandBase implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String cmdStr = commandLabel + " " + Toolbox.combineSplit(args, 0);
 		String senderName = getName(sender);
-		boolean commandResult;
+		boolean commandResult = SHOW_USAGE;
+		FailurePlace error = FailurePlace.NONE, at = FailurePlace.INIT;
 		if(plugin.config.getBoolean("log-commands", false))
 			General.logger.info(senderName + " used command: " + cmdStr);
 		try {
 			if(isHelpCommand(command, commandLabel, args)) {
+				at = FailurePlace.HELP;
 				String topic = getHelpTopic(command, commandLabel, args);
 				commandResult = HelpHandler.displayEntry(sender, topic);
+				if(!commandResult) error = at;
+			} else {
+				setCommand(command.getName());
+				at = FailurePlace.PARSE;
+				Map<String,Object> parsedArgs = parse(sender, command, commandLabel, args, sender instanceof Player);
+				if(parsedArgs != null) {
+					at = FailurePlace.EXECUTE;
+					commandResult = execute(sender, cmdToExecute, parsedArgs);
+					if(!commandResult) error = at;
+				} else error = at;
+			}
+			/*
 			} else if(sender instanceof Player) {
 				boolean result = this.fromPlayer((Player) sender, command, commandLabel, args);
 				unfreeze((Player) sender);
@@ -44,7 +61,9 @@ public abstract class CommandBase implements CommandExecutor {
 			} else {
 				return this.fromUnknown(sender, command, commandLabel, args);
 			}
+			*/
 		} catch(Exception e) {
+			error = at;
 			General.logger.error("There was an error executing command [" + command.getName() + "]! Please report this!");
 			General.logger.error("Full command string: [" + cmdStr + "]");
 			e.printStackTrace();
@@ -53,6 +72,8 @@ public abstract class CommandBase implements CommandExecutor {
 		return commandResult;
 	}
 	
+	public abstract Map<String, Object> parse(CommandSender sender, Command command, String commandLabel, String[] args, boolean b);
+
 	protected String getName(CommandSender sender) {
 		if(sender instanceof ConsoleCommandSender) return "CONSOLE";
 		Class<? extends CommandSender> clazz = sender.getClass();
@@ -93,13 +114,11 @@ public abstract class CommandBase implements CommandExecutor {
 		frozenAccounts.remove(sender.getName());
 	}
 	
-	public abstract boolean fromPlayer(Player sender, Command command, String commandLabel,
-			String[] args);
+	public abstract boolean execute(CommandSender sender, String command, Map<String, Object> parsedArgs);
 	
-	public abstract boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args);
-	
-	public abstract boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args);
+	protected void setCommand(String command) {
+		cmdToExecute = command;
+	}
 	
 	protected String[] prependArg(String[] args, String first) {
 		String[] newArgs = new String[args.length + 1];
