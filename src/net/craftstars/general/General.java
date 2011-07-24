@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.items.Items;
@@ -215,8 +216,6 @@ public class General extends JavaPlugin {
 	}
 	
 	private void loadConfiguration() {
-		this.config.load();
-		
 		try {
 			File dataFolder = this.getDataFolder();
 			if(!dataFolder.exists()) dataFolder.mkdirs();
@@ -226,17 +225,18 @@ public class General extends JavaPlugin {
 				General.logger.info("Configuration file does not exist. Attempting to create default one...");
 				InputStream defaultConfig = this.getClass().getResourceAsStream(File.separator + "config.yml");
 				FileWriter out = new FileWriter(configFile);
-				for(int i = 0; (i = defaultConfig.read()) > 0;)
-					out.write(i);
+				Scanner lines = new Scanner(defaultConfig);
+				while(lines.hasNextLine())
+					out.write(lines.nextLine());
 				out.flush();
 				out.close();
 				defaultConfig.close();
-				this.config.load();
 				General.logger.info("Default configuration created successfully! You can now "
 						+ "stop the server and edit plugins/General/config.yml.");
 			}
 		} catch(Exception ex) {
 			General.logger.warn("Could not read and/or write config.yml! Continuing with default values!", ex);
 		}
+		this.config.load();
 	}
 }
