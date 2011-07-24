@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.craftstars.general.General;
+import net.craftstars.general.command.CommandBase;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -16,7 +17,7 @@ import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.util.config.Configuration;
 
-public class AliasHandler {
+public class CommandHandler {
 	public static boolean setAliases = false;
 	private static SimpleCommandMap commandMap = null;
 	private static Method register = null;
@@ -35,12 +36,33 @@ public class AliasHandler {
 			@SuppressWarnings({"unchecked", "rawtypes"})
 			Map<String,Map> commands = (Map<String, Map>) plug.getCommands();
 			for(String key : commands.keySet()) {
-				Command generalCommand = General.plugin.getCommand(key);
+				PluginCommand generalCommand = General.plugin.getCommand(key);
 				//General.logger.debug("Registering aliases for command: " + key);
 				if(key.contains("."))
 					register(key.split("\\.")[1], generalCommand);
 				for(String alias : config.getStringList("aliases." + key, null))
 					register(alias, generalCommand);
+				try {
+					Class<? extends CommandBase> clazz = General.plugin.getClass().getClassLoader()
+							.loadClass("net.craftstars.general.command." + generalCommand.getName() + "Command")
+							.asSubclass(CommandBase.class);
+					CommandBase commandInstance = clazz.getConstructor(General.class).newInstance(General.plugin);
+					generalCommand.setExecutor(commandInstance);
+				} catch(ClassNotFoundException e) {
+					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
+				} catch(IllegalArgumentException e) {
+					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
+				} catch(SecurityException e) {
+					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
+				} catch(InstantiationException e) {
+					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
+				} catch(IllegalAccessException e) {
+					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
+				} catch(InvocationTargetException e) {
+					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
+				} catch(NoSuchMethodException e) {
+					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
+				}
 			}
 			Command posCommand = General.plugin.getCommand("info.getpos");
 			// Compass

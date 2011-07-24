@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.items.Items;
@@ -13,15 +12,13 @@ import net.craftstars.general.items.Kits;
 import net.craftstars.general.money.EconomyBase;
 import net.craftstars.general.security.BasicPermissionsHandler;
 import net.craftstars.general.security.PermissionsHandler;
-import net.craftstars.general.util.AliasHandler;
+import net.craftstars.general.util.CommandHandler;
 import net.craftstars.general.util.HelpHandler;
 import net.craftstars.general.util.MessageOfTheDay;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.PluginLogger;
 import net.craftstars.general.util.Time;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import static org.bukkit.event.Event.Type.*;
@@ -49,7 +46,6 @@ public class General extends JavaPlugin {
 	
 	private HashMap<String, String> playersAway = new HashMap<String, String>();
 	private HashMap<String,String> lastMessager = new HashMap<String,String>();
-	private HashSet<String> frozenAccounts = new HashSet<String>();
 	private String tagFormat;
 	
 	public boolean isAway(Player who) {
@@ -114,7 +110,7 @@ public class General extends JavaPlugin {
 		logger.setPluginVersion(this.getDescription().getVersion());
 		loadAllConfigs();
 		logger.info("[Codename: " + General.codename + "] Plugin successfully loaded!");
-		AliasHandler.setup();
+		CommandHandler.setup();
 		HelpHandler.setup();
 		registerEvents();
 	}
@@ -240,67 +236,5 @@ public class General extends JavaPlugin {
 		} catch(Exception ex) {
 			General.logger.warn("Could not read and/or write config.yml! Continuing with default values!", ex);
 		}
-	}
-	
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-		String cmdStr = commandLabel;
-		for(String x : args)
-			cmdStr += " " + x;
-		try {
-			boolean result;
-			if(isGeneralSubcommandHelp(command, args))
-				result = HelpHandler.displayEntry(sender, "general_" + args[0]);
-			else if(isMainCommandHelp(command, args))
-				result = HelpHandler.displayEntry(sender, command.getName());
-			else {
-				Class<? extends CommandBase> clazz =
-						this.getClass()
-								.getClassLoader()
-								.loadClass("net.craftstars.general.command." + command.getName() + "Command")
-								.asSubclass(CommandBase.class);
-				CommandBase commandInstance = clazz.getConstructor(General.class).newInstance(this);
-				result = commandInstance.runCommand(sender, command, commandLabel, args);
-			}
-			if(config.getBoolean("log-commands", false)) {
-				String name = "CONSOLE";
-				if(sender instanceof Player) name = ((Player) sender).getName();
-				logger.info(name + " used command: " + cmdStr);
-			}
-			return result;
-		} catch(Exception ex) {
-			logger.error("There was a big problem executing command [" + command.getName()
-					+ "]! Please report this error!");
-			String err = "Full command string: [" + cmdStr + "]";
-			logger.error(err);
-			ex.printStackTrace();
-			return false;
-		}
-	}
-
-	private boolean isMainCommandHelp(Command command, String[] args) {
-		return !command.getName().equals("general")
-			&& args.length > 0
-			&& args[0].equalsIgnoreCase("help")
-			&& HelpHandler.hasEntry(command.getName());
-	}
-
-	private boolean isGeneralSubcommandHelp(Command command, String[] args) {
-		return command.getName().equals("general")
-			&& args.length > 1
-			&& args[1].equalsIgnoreCase("help")
-			&& HelpHandler.hasEntry("general_" + args[0]);
-	}
-
-	public boolean isFrozen(Player sender) {
-		return frozenAccounts.contains(sender.getName());
-	}
-	
-	public void freeze(Player sender) {
-		frozenAccounts.add(sender.getName());
-	}
-	
-	public void unfreeze(Player sender) {
-		frozenAccounts.remove(sender.getName());
 	}
 }

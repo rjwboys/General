@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
-import net.craftstars.general.util.AliasHandler;
+import net.craftstars.general.util.CommandHandler;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -51,9 +51,9 @@ public class getposCommand extends CommandBase {
 	
 	private void showPos(CommandSender sender, Player whose, String subcmd) {
 		Alias which = Alias.MAIN;
-		if(Toolbox.equalsOne(subcmd, AliasHandler.compassAliases))
+		if(Toolbox.equalsOne(subcmd, CommandHandler.compassAliases))
 			which = Alias.COMPASS;
-		else if( (Toolbox.equalsOne(subcmd, AliasHandler.posAliases))) which = Alias.WHERE;
+		else if( (Toolbox.equalsOne(subcmd, CommandHandler.posAliases))) which = Alias.WHERE;
 		double degrees = getRotation(whose);
 		switch(which) {
 		case MAIN:
