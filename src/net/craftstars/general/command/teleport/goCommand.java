@@ -4,6 +4,7 @@ package net.craftstars.general.command.teleport;
 import java.util.HashSet;
 
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
@@ -71,8 +72,7 @@ public class goCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
 		Target target;
 		Destination dest;
 		switch(args.length) {
@@ -86,6 +86,26 @@ public class goCommand extends CommandBase {
 		if(dest == null || target == null) return true;
 		target.teleport(dest);
 		Messaging.send(sender, "&fYou teleported &9" + target.getName() + "&f to &9" + dest.getName() + "&f!");
+		return true;
+	}
+	
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(sender, "general.teleport") || sender.isOp()) {
+			Target target;	
+			Destination dest;
+			switch(args.length) {
+			case 2: // /tele <what> <destination>
+				target = Target.get(args[0], null);
+				dest = Destination.get(args[1], null);
+			break;
+			default:
+				return SHOW_USAGE;
+			}
+			if(dest == null || target == null) return true;
+			target.teleport(dest);
+			Messaging.send(sender, "&fYou teleported &9" + target.getName() + "&f to &9" + dest.getName() + "&f!");
+		}
 		return true;
 	}
 }

@@ -63,8 +63,7 @@ public class setspawnCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
 		Destination dest;
 		switch(args.length) {
 		case 1: // /setspawn <destination>
@@ -80,6 +79,29 @@ public class setspawnCommand extends CommandBase {
 		break;
 		default:
 			return SHOW_USAGE;
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(sender, "general.setspawn") || sender.isOp()) {
+			Destination dest;
+			switch(args.length) {
+			case 1: // /setspawn <destination>
+				dest = Destination.get(args[1], null);
+				if(dest == null) return true;
+				setSpawn(sender, dest, null);
+			break;
+			case 2: // /setspawn <player> <destination>
+				Player who = Toolbox.matchPlayer(args[0]);
+				if(who == null) return Messaging.invalidPlayer(sender, args[0]);
+				dest = Destination.get(args[1], null);
+				setHome(sender, dest, who);
+			break;
+			default:
+				return SHOW_USAGE;
+			}
 		}
 		return true;
 	}

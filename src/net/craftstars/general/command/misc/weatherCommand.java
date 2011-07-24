@@ -28,8 +28,7 @@ public class weatherCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
 		World world;
 		switch(args.length) {
 		case 1:
@@ -86,6 +85,69 @@ public class weatherCommand extends CommandBase {
 		default:
 			return SHOW_USAGE;
 		}
+	}
+	
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(sender, "general.weather") || sender.isOp()) {
+			World world;
+			switch(args.length) {
+			case 1:
+				world = Toolbox.matchWorld(args[0]);
+				if(world == null) return Messaging.invalidWorld(sender, args[0]);
+				showWeatherInfo(sender, world);
+				return true;
+			case 2:
+				if(isLightning(args[0])) {
+					Player player = Toolbox.matchPlayer(args[1]);
+					Location loc;
+					if(player == null) {
+						world = Toolbox.matchWorld(args[1]);
+						if(world == null) return Messaging.invalidPlayer(sender, args[1]);
+						loc = world.getSpawnLocation();
+					} else {
+						world = player.getWorld();
+						loc = player.getLocation();
+					}
+					doLightning(sender, world, loc);
+				} else {
+					world = Toolbox.matchWorld(args[0]);
+					if(world == null) return Messaging.invalidWorld(sender, args[0]);
+					doWeather(sender, args[1], world, world.getSpawnLocation());
+				}
+				return true;
+			case 3:
+				if(isThunder(args[1])) {
+					long duration;
+					// /weather thunder start -- starts thunder for a random duration
+					if(isStart(args[2])) duration = -1;
+					// /weather thunder stop -- stops thunder
+					else if(isStop(args[2])) duration = 0;
+					// /weather thunder <duration> -- starts thunder for a specified duration
+					else try {
+						duration = Time.extractDuration(args[2]);
+						if(duration < 0)
+							throw new NumberFormatException("Only positive durations accepted for weather.");
+						else if(duration > Integer.MAX_VALUE)
+							throw new NumberFormatException("Duration too large for thunder.");
+					} catch(NumberFormatException e) {
+						Messaging.send(sender, "&cInvalid duration: " + e.getMessage());
+						return true;
+					}
+					world = Toolbox.matchWorld(args[0]);
+					if(world == null) {
+						Player player = Toolbox.matchPlayer(args[0]);
+						if(player == null) return Messaging.invalidWorld(sender, args[0]);
+						world = player.getWorld();
+					}
+					doThunder(sender, world, (int) duration);
+					return true;
+				} // fallthrough intentional
+			default:
+				return SHOW_USAGE;
+			}
+		}
+		return true;
 	}
 	
 	@Override

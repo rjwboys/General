@@ -7,6 +7,7 @@ import java.util.Random;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -129,10 +130,18 @@ public class mobspawnCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
 		// TODO: Implement this
 		Messaging.send(sender, "&cSorry, this command can only be used by a player.");
+		return true;
+	}
+	
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(sender, "general.mobspawn") || sender.isOp()) {
+			// TODO: Implement this
+			Messaging.send(sender, "&cSorry, this command can only be used by a player.");
+		}
 		return true;
 	}
 	

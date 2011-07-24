@@ -7,6 +7,7 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,8 +17,7 @@ public class healCommand extends CommandBase {
 	}
 
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
 		double amount = 10;
 		Player who = null;
 		switch(args.length) {
@@ -41,6 +41,36 @@ public class healCommand extends CommandBase {
 		amount = doHeal(who, amount);
 		Messaging.send(sender, "&e" + who.getName() + "&f has been " + (amount < 0 ? "hurt" : "healed") + " by &e"
 				+ Math.abs(amount) + "&f hearts.");
+		return true;
+	}
+
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(sender, "general.heal") || sender.isOp()) {
+			double amount = 10;
+			Player who = null;
+			switch(args.length) {
+			case 1: // /heal <amount> OR /heal <player>
+				who = Toolbox.matchPlayer(args[0]);
+			break;
+			case 2: // /heal <player> <amount>
+				try {
+					amount = Double.valueOf(args[1]);
+					who = Toolbox.matchPlayer(args[0]);
+				} catch(NumberFormatException x) {
+					Messaging.send(sender, "&rose;Invalid number.");
+					return true;
+				}
+			break;
+			default:
+				return SHOW_USAGE;
+			}
+			if(who == null) return Messaging.invalidPlayer(sender, args[0]);
+			if(commandLabel.equalsIgnoreCase("hurt")) amount = -amount;
+			amount = doHeal(who, amount);
+			Messaging.send(sender, "&e" + who.getName() + "&f has been " + (amount < 0 ? "hurt" : "healed") + " by &e"
+					+ Math.abs(amount) + "&f hearts.");
+		}
 		return true;
 	}
 	

@@ -184,8 +184,7 @@ public class timeCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
 		if(args.length < 1 || args.length > 2)
 			return SHOW_USAGE;
 		else {
@@ -207,5 +206,33 @@ public class timeCommand extends CommandBase {
 			String time = args[1];
 			return setTime(sender, time);
 		}
+	}
+	
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(sender, "general.time") || sender.isOp()) {
+			if(args.length < 1 || args.length > 2)
+				return SHOW_USAGE;
+			else {
+				if(args[0].equalsIgnoreCase("add")) {
+					this.world = General.plugin.getServer().getWorlds().get(0);
+					if(args[1].charAt(0) == '-')
+						return setTime(sender, args[1]);
+					else return setTime(sender, '+' + args[1]);
+				} else if(args[0].equalsIgnoreCase("set")) {
+					this.world = General.plugin.getServer().getWorlds().get(0);
+					return setTime(sender, args[1]);
+				}
+				this.world = Toolbox.matchWorld(args[0]);
+				if(this.world == null) return Messaging.invalidWorld(sender, args[0]);
+				if(args.length == 1) {
+					showTime(sender);
+					return true;
+				}
+				String time = args[1];
+				return setTime(sender, time);
+			}
+		}
+		return true;
 	}
 }
