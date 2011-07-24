@@ -103,8 +103,7 @@ public class getposCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
 		if(args.length < 1 || args.length > 2) return SHOW_USAGE;
 		if(args.length == 1) {
 			Player who = Toolbox.matchPlayer(args[0]);
@@ -117,5 +116,24 @@ public class getposCommand extends CommandBase {
 			else Messaging.invalidPlayer(sender, args[1]);
 			return true;
 		} else return SHOW_USAGE;
+	}
+	
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(sender, "general.getpos") || sender.isOp()) {
+			if(args.length < 1 || args.length > 2) return SHOW_USAGE;
+			if(args.length == 1) {
+				Player who = Toolbox.matchPlayer(args[0]);
+				if(who != null) showPos(sender, who, commandLabel);
+				else Messaging.invalidPlayer(sender, args[0]);
+				return true;
+			} else if(args.length == 2) {
+				Player who = Toolbox.matchPlayer(args[1]);
+				if(who != null) showPos(sender, who, commandLabel.equalsIgnoreCase("getpos") ? args[0] : commandLabel);
+				else Messaging.invalidPlayer(sender, args[1]);
+				return true;
+			} else return SHOW_USAGE;
+		}
+		return true;
 	}
 }

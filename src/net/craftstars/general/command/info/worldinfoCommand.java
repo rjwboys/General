@@ -42,6 +42,18 @@ public class worldinfoCommand extends CommandBase {
 		return true;
 	}
 	
+	@Override
+	public boolean fromUnknown(CommandSender toWhom, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(toWhom, "general.worldinfo") || toWhom.isOp()) {
+			if(args.length != 1) return SHOW_USAGE;
+			World who = Toolbox.matchWorld(args[0]);
+			if(who == null) return true;
+			getInfo(who);
+			showInfo(toWhom);
+		}
+		return true;
+	}
+	
 	private void getInfo(World ofWhom) {
 		this.name = ofWhom.getName();
 		this.environ = Toolbox.formatItemName(ofWhom.getEnvironment().toString());

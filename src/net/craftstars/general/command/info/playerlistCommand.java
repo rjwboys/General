@@ -44,8 +44,7 @@ public class playerlistCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
 		if(args.length > 1) return SHOW_USAGE;
 		World world = null;
 		if(args.length == 1) {
@@ -56,6 +55,23 @@ public class playerlistCommand extends CommandBase {
 		String worldName = world == null ? "" : " in world " + world.getName();
 		Messaging.send(sender, "&eOnline Players" + worldName + " (" + players.size() + "):");
 		doListing(sender, players);
+		return true;
+	}
+	
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(sender, "general.playerlist") || sender.isOp()) {
+			if(args.length > 1) return SHOW_USAGE;
+			World world = null;
+			if(args.length == 1) {
+				world = Toolbox.matchWorld(args[0]);
+				if(world == null) return Messaging.invalidWorld(sender, args[0]);
+			}
+			List<String> players = Toolbox.getPlayerList(plugin, world);
+			String worldName = world == null ? "" : " in world " + world.getName();
+			Messaging.send(sender, "&eOnline Players" + worldName + " (" + players.size() + "):");
+			doListing(sender, players);
+		}
 		return true;
 	}
 }

@@ -36,12 +36,22 @@ public class whoCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender toWhom, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender toWhom, Command command, String commandLabel, String[] args) {
 		if(args.length != 1) return SHOW_USAGE;
 		Player who = Toolbox.matchPlayer(args[0]);
 		if(who == null) return true;
 		showInfo(who, toWhom);
+		return true;
+	}
+	
+	@Override
+	public boolean fromUnknown(CommandSender toWhom, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(toWhom, "general.who") || toWhom.isOp()) {
+			if(args.length != 1) return SHOW_USAGE;
+			Player who = Toolbox.matchPlayer(args[0]);
+			if(who == null) return true;
+			showInfo(who, toWhom);
+		}
 		return true;
 	}
 	
