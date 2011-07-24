@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import net.craftstars.general.General;
+import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.money.AccountStatus;
 
@@ -156,7 +157,7 @@ public class Toolbox {
 			else if(permission.startsWith("%"))
 				AccountStatus.price *= Double.parseDouble(permission.substring(1)) / 100.0;
 			else AccountStatus.price += General.plugin.config.getDouble(permission, 0) * quantity;
-		if(General.plugin.isFrozen(player)) return AccountStatus.FROZEN;
+		if(CommandBase.isFrozen(player)) return AccountStatus.FROZEN;
 		if(General.plugin.economy.getBalance(player) >= AccountStatus.price)
 			return AccountStatus.SUFFICIENT;
 		return AccountStatus.INSUFFICIENT;
@@ -189,13 +190,18 @@ public class Toolbox {
 		}
 	}
 	
-	public static String combineSplit(String[] args, int startAt) {
-		StringBuilder message = new StringBuilder();
-		for(int i = startAt; i < args.length; i++) {
+	public static String join(String[] args, String with, int startAt) {
+		if(args.length == 0) return "";
+		StringBuilder message = new StringBuilder(args[0]);
+		for(int i = startAt + 1; i < args.length; i++) {
+			message.append(with);
 			message.append(args[i]);
-			message.append(" ");
 		}
 		return message.toString();
+	}
+	
+	public static String join(String[] args, String with) {
+		return join(args, with, 0);
 	}
 	
 	public static List<String> getPlayerList(General plugin, World world) {

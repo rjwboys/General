@@ -2,6 +2,7 @@
 package net.craftstars.general.util;
 
 import java.util.Formatter;
+import java.util.HashMap;
 
 import net.craftstars.general.General;
 import net.craftstars.general.money.AccountStatus;
@@ -60,6 +61,25 @@ public class Messaging {
 			} else format = format.replace(arguments[i], subst);
 		}
 		return format;
+	}
+	
+	/**
+	 * Formats a string using a pattern similar to that used by java.text.MessageFormat, except
+	 * that field names are used in place of numeric indices.
+	 * 
+	 * @author Celtic Minstrel
+	 * @param format The format string
+	 * @param args A list of arguments in the order key, arg, key arg; if an odd number, the last argument
+	 * fills in for unknown arguments
+	 * @return The formatted string
+	 */
+	public static String format(String format, Object... args) {
+		HashMap<String, Object> keyArgs = new HashMap<String, Object>();
+		for(int i = 0; i < args.length; i += 2) {
+			if(i == args.length - 1) keyArgs.put(null, args[i]);
+			else keyArgs.put(args[i].toString(), args[i+1]);
+		}
+		return new MappedMessageFormat(format).format(keyArgs).toString();
 	}
 	
 	/**
