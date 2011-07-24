@@ -2,6 +2,8 @@
 package net.craftstars.general.command.teleport;
 
 import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
@@ -15,7 +17,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -25,85 +26,62 @@ public class setspawnCommand extends CommandBase {
 	}
 
 	@Override
-	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
+	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
 		Destination dest;
 		switch(args.length) {
 		case 0: // /setspawn
-			if(Toolbox.lacksPermission(sender, "general.setspawn.world", "general.spawn.set"))
-				return Messaging.lacksPermission(sender, "set the spawn location");
-			dest = Destination.locOf(sender);
-			setSpawn(sender, dest, sender.getWorld());
+			if(!isPlayer) return null;
+			params.put("dest", Destination.locOf((Player) sender));
+			params.put("world", ((Player) sender).getWorld());
 		break;
 		case 1: // /setspawn <destination>
-			if(Toolbox.lacksPermission(sender, "general.setspawn.world", "general.spawn.set"))
-				return Messaging.lacksPermission(sender, "set the spawn location");
-			dest = Destination.get(args[1], sender);
-			if(dest == null) return true;
-			setSpawn(sender, dest, sender.getWorld());
+			dest = Destination.get(args[1], isPlayer ? (Player) sender : null);
+			if(dest == null) return null;
+			setSpawn(sender, dest, isPlayer ? ((Player) sender).getWorld() : null);
 		break;
 		case 2: // /setspawn <player> <destination>
-			Player who;
-			if(Toolbox.equalsOne(args[0], "self", "$self", "me", sender.getName())) {
-				if(Toolbox.lacksPermission(sender, "general.setspawn.self", "general.spawn.home"))
-					return Messaging.lacksPermission(sender, "set your home location");
-				who = sender;
+			if(isPlayer && Toolbox.equalsOne(args[0], "self", "$self", "me", ((Player) sender).getName())) {
+				params.put("player", sender);
+				params.put("other", false);
 			} else {
+				params.put("player", Toolbox.matchPlayer(args[0]));
+				params.put("other", true);
+			}
+			Player who = (Player) params.get("player");
+			if(who == null) {
+				Messaging.invalidPlayer(sender, args[0]);
+				return null;
+			}
+			params.put("dest", Destination.get(args[1], isPlayer ? (Player) sender : null));
+			setCommand("sethome");
+		break;
+		default:
+			return null;
+		}
+		return params;
+	}
+
+	@Override
+	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
+		if(command.equals("setspawn")) {
+			if(Toolbox.lacksPermission(sender, "general.setspawn.world", "general.spawn.set"))
+				return Messaging.lacksPermission(sender, "set the spawn location");
+			Destination dest = (Destination) args.get("dest");
+			World world = (World) args.get("world");
+			setSpawn(sender, dest, world);
+		} else if(command.equals("sethome")) {
+			Destination dest = (Destination) args.get("dest");
+			Player who = (Player) args.get("player");
+			boolean other = (Boolean) args.get("other");
+			if(other) {
 				if(Toolbox.lacksPermission(sender, "general.setspawn.other", "general.spawn.home.other"))
 					return Messaging.lacksPermission(sender, "set someone else's home location");
-				who = Toolbox.matchPlayer(args[0]);
-			}
-			if(who == null) return Messaging.invalidPlayer(sender, args[0]);
-			dest = Destination.get(args[1], sender);
+			} else if(Toolbox.lacksPermission(sender, "general.setspawn.self", "general.spawn.home"))
+				return Messaging.lacksPermission(sender, "set your home location");
 			setHome(sender, dest, who);
-			return true;
-		default:
-			return SHOW_USAGE;
 		}
-		return true;
-	}
-	
-	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
-		Destination dest;
-		switch(args.length) {
-		case 1: // /setspawn <destination>
-			dest = Destination.get(args[1], null);
-			if(dest == null) return true;
-			setSpawn(sender, dest, null);
-		break;
-		case 2: // /setspawn <player> <destination>
-			Player who = Toolbox.matchPlayer(args[0]);
-			if(who == null) return Messaging.invalidPlayer(sender, args[0]);
-			dest = Destination.get(args[1], null);
-			setHome(sender, dest, who);
-		break;
-		default:
-			return SHOW_USAGE;
-		}
-		return true;
-	}
-	
-	@Override
-	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.hasPermission(sender, "general.setspawn") || sender.isOp()) {
-			Destination dest;
-			switch(args.length) {
-			case 1: // /setspawn <destination>
-				dest = Destination.get(args[1], null);
-				if(dest == null) return true;
-				setSpawn(sender, dest, null);
-			break;
-			case 2: // /setspawn <player> <destination>
-				Player who = Toolbox.matchPlayer(args[0]);
-				if(who == null) return Messaging.invalidPlayer(sender, args[0]);
-				dest = Destination.get(args[1], null);
-				setHome(sender, dest, who);
-			break;
-			default:
-				return SHOW_USAGE;
-			}
-		}
-		return true;
+		return SHOW_USAGE;
 	}
 	
 	private void setHome(CommandSender sender, Destination dest, Player who) {

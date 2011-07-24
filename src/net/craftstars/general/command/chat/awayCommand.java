@@ -1,6 +1,9 @@
 
 package net.craftstars.general.command.chat;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -15,40 +18,27 @@ public class awayCommand extends CommandBase {
 	public awayCommand(General instance) {
 		super(instance);
 	}
-
-	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
-		Messaging.send(sender, "It's not possible for the console to be marked as away.");
-		return true;
-	}
-
-	@Override
-	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel,
-			String[] args) {
-		Messaging.send(sender, "I don't know what you are, so I can't mark you as away.");
-		return true;
-	}
 	
 	@Override
-	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
+	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.away", "general.basic"))
 			return Messaging.lacksPermission(sender, "set your away status");
-		if(args.length == 0) {
-			if(General.plugin.isAway(sender)) {
-				General.plugin.unAway(sender);
-				Messaging.send(sender, "&7You have been marked as back.");
+		Player who = (Player) sender;
+		String reason = args.get("reason").toString();
+		if(reason.isEmpty()) {
+			if(General.plugin.isAway(who)) {
+				General.plugin.unAway(who);
+				Messaging.send(sender, Messaging.get("away.back", "{silver}You have been marked as back."));
 			} else {
-				Messaging.send(sender, "&7You are not away.");
+				Messaging.send(sender, Messaging.get("away.here", "{silver}You are not away."));
 			}
 		} else {
-			if(General.plugin.isAway(sender)) {
-				Messaging.send(sender, "&7Away reason changed.");
+			if(General.plugin.isAway(who)) {
+				Messaging.send(sender, Messaging.get("away.change", "{silver}Away reason changed."));
 			} else {
-				Messaging.send(sender, "&7You are now marked as away.");
+				Messaging.send(sender, Messaging.get("away.set", "{silver}You are now marked as away."));
 			}
-			String reason = Toolbox.combineSplit(args, 0);
-			General.plugin.goAway(sender, reason);
+			General.plugin.goAway(who, reason);
 		}
 		return true;
 	}
@@ -56,5 +46,17 @@ public class awayCommand extends CommandBase {
 	@Override
 	protected boolean isHelpCommand(Command command, String commandLabel, String[] args) {
 		return false; // No help topic for chat commands
+	}
+
+	@Override
+	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
+		if(isPlayer) {
+			HashMap<String, Object> params = new HashMap<String, Object>();
+			params.put("reason", Toolbox.join(args, " "));
+			return params;
+		} else if(sender instanceof ConsoleCommandSender)
+			Messaging.send(sender, Messaging.get("away.console", "{rose}It's not possible for the console to be marked as away."));
+		else Messaging.send(sender, Messaging.get("away.unknown", "{rose}I don't know what you are, so I can't mark you as away."));
+		return null;
 	}
 }

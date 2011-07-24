@@ -54,12 +54,12 @@ public class Target {
 		}
 	}
 	
-	public boolean hasPermission(Player who) {
-		boolean perm = type.hasPermission(who);
+	public boolean hasPermission(CommandSender sender) {
+		boolean perm = type.hasPermission(sender);
 		if(teleportees.size() > 1) {
-			boolean canMass = Toolbox.hasPermission(who, "general.teleport.mass");
+			boolean canMass = Toolbox.hasPermission(sender, "general.teleport.mass");
 			perm = perm && canMass;
-			if(!canMass) Messaging.lacksPermission(who, "teleport en masse");
+			if(!canMass) Messaging.lacksPermission(sender, "teleport en masse");
 		}
 		return perm;
 	}

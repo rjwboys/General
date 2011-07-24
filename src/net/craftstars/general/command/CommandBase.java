@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.craftstars.general.General;
 import net.craftstars.general.util.HelpHandler;
+import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
@@ -29,7 +30,7 @@ public abstract class CommandBase implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-		String cmdStr = commandLabel + " " + Toolbox.combineSplit(args, 0);
+		String cmdStr = commandLabel + " " + Toolbox.join(args);
 		String senderName = getName(sender);
 		boolean commandResult = SHOW_USAGE;
 		FailurePlace error = FailurePlace.NONE, at = FailurePlace.INIT;
@@ -64,15 +65,18 @@ public abstract class CommandBase implements CommandExecutor {
 			*/
 		} catch(Exception e) {
 			error = at;
-			General.logger.error("There was an error executing command [" + command.getName() + "]! Please report this!");
-			General.logger.error("Full command string: [" + cmdStr + "]");
+			General.logger.error(Messaging.format("There was an error with command [{command}] during {errorPlace}!" +
+					" Please report this!", "command", command.getName(), "errorPlace", error));
+			General.logger.error(Messaging.format("Full command string: [{command}]", "command", cmdStr));
 			e.printStackTrace();
 			commandResult = false;
 		}
 		return commandResult;
 	}
 	
-	public abstract Map<String, Object> parse(CommandSender sender, Command command, String commandLabel, String[] args, boolean b);
+	public abstract Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer);
+	
+	public abstract boolean execute(CommandSender sender, String command, Map<String, Object> args);
 
 	protected String getName(CommandSender sender) {
 		if(sender instanceof ConsoleCommandSender) return "CONSOLE";
@@ -113,8 +117,6 @@ public abstract class CommandBase implements CommandExecutor {
 	public static void unfreeze(Player sender) {
 		frozenAccounts.remove(sender.getName());
 	}
-	
-	public abstract boolean execute(CommandSender sender, String command, Map<String, Object> parsedArgs);
 	
 	protected void setCommand(String command) {
 		cmdToExecute = command;

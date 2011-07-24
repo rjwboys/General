@@ -1,8 +1,13 @@
 
 package net.craftstars.general.util;
 
+import java.io.File;
+import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Formatter;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import net.craftstars.general.General;
 import net.craftstars.general.money.AccountStatus;
@@ -12,15 +17,36 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.util.config.Configuration;
 
 public class Messaging {
+	private static HashMap<String, Object> colours = new HashMap<String, Object>();
+	private static Configuration config;
+	static final String[] defaultColours = {
+		"black", "navy", "green", "teal", "red", "purple", "gold", "silver",
+		"grey", "blue", "lime", "aqua", "rose", "pink", "yellow", "white", "gray"
+	};
+	
+	public static void load() {
+		File dataFolder = General.plugin.getDataFolder();
+		if(!dataFolder.exists()) dataFolder.mkdirs();
+		File configFile = new File(dataFolder, "messages.yml");
+		config = new Configuration(configFile);
+		List<String> names = config.getStringList("colours", Arrays.asList(defaultColours));
+		for(int i = 0; i < 16; i++)
+			colours.put(names.get(i), ChatColor.getByCode(i));
+		colours.put(names.get(16), ChatColor.GRAY);
+	}
+	
 	public static void send(CommandSender who, String string) {
 		String coloured = colourize(string);
 		coloured = substitute(coloured, new String[] {"&&","~!@#$%^&*()"}, new String[] {"~!@#$%^&*()","&"});
+		coloured = MessageFormat.format(coloured, colours);
 		for(String line : splitLines(coloured).split("[\\n\\r][\\n\\r]?"))
 			who.sendMessage(line);
 	}
-
+	
+	@Deprecated // in favour of format
 	public static String colourize(String string) {
 		String coloured = substitute(string,
 				new String[] {
@@ -41,16 +67,22 @@ public class Messaging {
 		send(new ConsoleCommandSender(mc), string);
 	}
 	
+	public static String get(String key, String defaultVal) {
+		return General.plugin.config.getString("messages." + key, defaultVal);
+	}
+	
 	/**
 	 * Substitutes values for variables in a string. If there are more values than arguments, the excess are ignored;
 	 * if there are more arguments than variables, the extras are assumed to be the empty string.
 	 * 
+	 * @deprecated in favour of format
 	 * @author Celtic Minstrel
 	 * @param format The format string
 	 * @param arguments A list of arguments and comma-separated lists of equivalent arguments
 	 * @param values A list of values to substitute for each respective argument
 	 * @return The resulting string
 	 */
+	@Deprecated
 	public static String substitute(String format, String[] arguments, Object[] values) {
 		for(int i = 0; i < arguments.length; i++) {
 			String subst = i < values.length ? values[i].toString() : "";
@@ -75,11 +107,16 @@ public class Messaging {
 	 */
 	public static String format(String format, Object... args) {
 		HashMap<String, Object> keyArgs = new HashMap<String, Object>();
+		keyArgs.putAll(colours);
 		for(int i = 0; i < args.length; i += 2) {
 			if(i == args.length - 1) keyArgs.put(null, args[i]);
 			else keyArgs.put(args[i].toString(), args[i+1]);
 		}
-		return new MappedMessageFormat(format).format(keyArgs).toString();
+		return format(format, keyArgs);
+	}
+	
+	public static String format(String format, Map<String,Object> args) {
+		return new MappedMessageFormat(format).format(args).toString();
 	}
 	
 	/**

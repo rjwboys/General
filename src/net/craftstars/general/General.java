@@ -126,6 +126,7 @@ public class General extends JavaPlugin {
 		Kits.loadKits();
 		setupEconomy();
 		tagFormat = config.getString("tag-fmt", "name:");
+		Messaging.load();
 	}
 
 	private void registerEvents() {
@@ -205,6 +206,7 @@ public class General extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		Items.save();
+		Messaging.save();
 		if(config.getBoolean("auto-save", false)) {
 			Kits.save();
 			config.save();

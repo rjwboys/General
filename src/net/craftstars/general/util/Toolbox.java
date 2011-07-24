@@ -204,6 +204,14 @@ public class Toolbox {
 		return join(args, with, 0);
 	}
 	
+	public static String join(String[] args, int startAt) {
+		return join(args, " ", startAt);
+	}
+	
+	public static String join(String[] args) {
+		return join(args, " ");
+	}
+	
 	public static List<String> getPlayerList(General plugin, World world) {
 		Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
 		List<String> players = new ArrayList<String>();

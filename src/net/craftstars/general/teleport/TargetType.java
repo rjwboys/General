@@ -4,12 +4,12 @@ package net.craftstars.general.teleport;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 public enum TargetType {
 	SELF("yourself") {
 		@Override
-		public boolean hasPermission(Player who) {
+		public boolean hasPermission(CommandSender who) {
 			if(Toolbox.hasPermission(who, "general.teleport.basic")) return true;
 			return super.hasPermission(who);
 		}
@@ -20,9 +20,9 @@ public enum TargetType {
 		msg = message;
 	}
 	
-	public boolean hasPermission(Player who) {
-		if(Toolbox.hasPermission(who, getPermission("general.teleport"))) return true;
-		Messaging.lacksPermission(who, "teleport " + msg);
+	public boolean hasPermission(CommandSender sender) {
+		if(Toolbox.hasPermission(sender, getPermission("general.teleport"))) return true;
+		Messaging.lacksPermission(sender, "teleport " + msg);
 		return false;
 	}
 	
