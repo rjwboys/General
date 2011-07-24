@@ -2,6 +2,7 @@
 package net.craftstars.general.command.inven;
 
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
@@ -17,9 +18,18 @@ public class kitCommand extends CommandBase {
 	}
 
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
 		// TODO: Implement for console
+		Messaging.send(sender, "Sorry, kits from the console are not available at the moment.");
+		return true;
+	}
+
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(sender, "general.kit") || sender.isOp()) {
+			// TODO: Implement for console
+			Messaging.send(sender, "Sorry, kits from the console are not available at the moment.");
+		}
 		return true;
 	}
 	

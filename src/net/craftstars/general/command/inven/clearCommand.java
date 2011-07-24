@@ -34,8 +34,7 @@ public class clearCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
 			Player who = Toolbox.matchPlayer(args[0]);
@@ -54,6 +53,31 @@ public class clearCommand extends CommandBase {
 				doClean(who, sender, CleanType.FULL);
 			}
 		} else return SHOW_USAGE;
+		return true;
+	}
+	
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(sender, "general.clear") || sender.isOp()) {
+			if(args.length == 1) {
+				if(args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
+				Player who = Toolbox.matchPlayer(args[0]);
+				if(who == null) return Messaging.invalidPlayer(sender, args[0]);
+				doClean(who, sender, CleanType.FULL);
+			} else if(args.length == 2) {
+				Player who = Toolbox.matchPlayer(args[0]);
+				if(who == null) return Messaging.invalidPlayer(sender, args[0]);
+				if(args[1].equalsIgnoreCase("pack")) {
+					doClean(who, sender, CleanType.PACK);
+				} else if(args[1].equalsIgnoreCase("quickbar")) {
+					doClean(who, sender, CleanType.QUICKBAR);
+				} else if(Toolbox.equalsOne(args[1], "armour", "armor")) {
+					doClean(who, sender, CleanType.ARMOUR);
+				} else if(args[1].equalsIgnoreCase("all")) {
+					doClean(who, sender, CleanType.FULL);
+				}
+			} else return SHOW_USAGE;
+		}
 		return true;
 	}
 	

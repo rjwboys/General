@@ -11,6 +11,7 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
@@ -27,8 +28,7 @@ public class masstakeCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
 		if(args.length < 2) return SHOW_USAGE;
 		
 		who = Toolbox.matchPlayer(args[args.length-1]);
@@ -44,8 +44,30 @@ public class masstakeCommand extends CommandBase {
 		}
 		
 		int amount = doTake();
-		Messaging.send(sender, "&2Took &f" + amount + "&2 of &fvarious items&2 from &f" + who.getName()
-				+ "&2!");
+		Messaging.send(sender, "&2Took &f" + amount + "&2 of &fvarious items&2 from &f" + who.getName() + "&2!");
+		return true;
+	}
+	
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(sender, "general.take.mass") || sender.isOp()) {
+			if(args.length < 2) return SHOW_USAGE;
+			
+			who = Toolbox.matchPlayer(args[args.length-1]);
+			if(who == null) return Messaging.invalidPlayer(sender, args[args.length-1]);
+			else args[args.length-1] = null;
+			for (String item : args) {
+				if(item!=null){
+					ItemID itemid = Items.validate(item);
+					if(itemid != null && itemid.isIdValid() && itemid.isDataValid()) {
+						this.items.add(itemid);
+					}
+				}
+			}
+			
+			int amount = doTake();
+			Messaging.send(sender, "&2Took &f" + amount + "&2 of &fvarious items&2 from &f" + who.getName() + "&2!");
+		}
 		return true;
 	}
 	

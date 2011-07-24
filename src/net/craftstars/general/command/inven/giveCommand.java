@@ -2,6 +2,7 @@
 package net.craftstars.general.command.inven;
 
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
@@ -132,8 +133,7 @@ public class giveCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
 		if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
 		
 		who = null;
@@ -184,6 +184,62 @@ public class giveCommand extends CommandBase {
 		Messaging.send(sender, "&2Gave &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" + item.getName()
 				+ "&2 to &f" + who.getName() + "&2!");
 		
+		return true;
+	}
+	
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(sender, "general.give") || sender.isOp()) {
+			if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
+			
+			who = null;
+			item = null;
+			amount = 1;
+			
+			switch(args.length) {
+			case 2: // give <item>[:<data>] <player>
+				who = Toolbox.matchPlayer(args[1]);
+				if(who == null) return Messaging.invalidPlayer(sender, args[1]);
+				item = Items.validate(args[0]);
+			break;
+			case 3: // give <item>[:<data>] <amount> <player> OR give <player> <item>[:<data>] <amount>
+				try {
+					amount = Integer.valueOf(args[2]);
+					who = Toolbox.matchPlayer(args[0]);
+					if(who == null) return Messaging.invalidPlayer(sender, args[0]);
+					item = Items.validate(args[1]);
+				} catch(NumberFormatException ex) {
+					who = Toolbox.matchPlayer(args[2]);
+					if(who == null) return Messaging.invalidPlayer(sender, args[2]);
+					item = Items.validate(args[0]);
+					try {
+						amount = Integer.valueOf(args[1]);
+					} catch(NumberFormatException x) {
+						Messaging.send(sender, "&rose;The amount must be an integer.");
+						return true;
+					}
+				}
+			break;
+			default:
+				return SHOW_USAGE;
+			}
+			
+			if(item == null || !item.isIdValid()) {
+				Messaging.send(sender, "&rose;Invalid item.");
+				return true;
+			}
+			
+			if(!item.isDataValid()) {
+				Messaging.send(sender,
+						"&f" + item.getVariant() + "&rose; is not a valid data type for &f" + item.getName()
+								+ "&rose;.");
+				return true;
+			}
+			
+			doGive(true);
+			Messaging.send(sender, "&2Gave &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" + item.getName()
+					+ "&2 to &f" + who.getName() + "&2!");
+		}
 		return true;
 	}
 }

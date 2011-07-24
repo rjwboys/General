@@ -11,6 +11,7 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -27,8 +28,7 @@ public class takeCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
 		if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
 		
 		who = null;
@@ -68,8 +68,54 @@ public class takeCommand extends CommandBase {
 		}
 		
 		amount = doTake();
-		Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + item.getName() + "&2 from &f" + who.getName()
-				+ "&2!");
+		Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + item.getName() + "&2 from &f" + who.getName() + "&2!");
+		return true;
+	}
+	
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(sender, "general.take") || sender.isOp()) {
+			if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
+			
+			who = null;
+			item = null;
+			amount = 0;
+			
+			switch(args.length) {
+			case 2: // take <item>[:<data>] <player>
+				who = Toolbox.matchPlayer(args[1]);
+				if(who == null) return Messaging.invalidPlayer(sender, args[1]);
+				item = Items.validate(args[0]);
+			break;
+			case 3: // take <item>[:<data>] <amount> <player>
+				who = Toolbox.matchPlayer(args[2]);
+				if(who == null) return Messaging.invalidPlayer(sender, args[2]);
+				item = Items.validate(args[0]);
+				try {
+					amount = Integer.valueOf(args[1]);
+				} catch(NumberFormatException x) {
+					Messaging.send(sender, "&rose;The amount must be an integer.");
+					return true;
+				}
+			break;
+			default:
+				return SHOW_USAGE;
+			}
+			
+			if(item == null || !item.isIdValid()) {
+				Messaging.send(sender, "&rose;Invalid item.");
+				return true;
+			}
+			
+			if(!item.isDataValid()) {
+				Messaging.send(sender, "&f" + item.getVariant() + "&rose; is not a valid data type for &f" +
+					item.getName() + "&rose;.");
+				return true;
+			}
+			
+			amount = doTake();
+			Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + item.getName() + "&2 from &f" + who.getName() + "&2!");
+		}
 		return true;
 	}
 	
