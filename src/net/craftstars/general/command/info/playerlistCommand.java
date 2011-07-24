@@ -1,13 +1,13 @@
 
 package net.craftstars.general.command.info;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
@@ -19,59 +19,37 @@ public class playerlistCommand extends CommandBase {
 	public playerlistCommand(General instance) {
 		super(instance);
 	}
-
-	@Override
-	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(args.length > 1) return SHOW_USAGE;
-		if(Toolbox.lacksPermission(sender, "general.playerlist", "general.basic"))
-			return Messaging.lacksPermission(sender, "view the player list");
-		World world = null;
-		if(args.length == 1) {
-			world = Toolbox.matchWorld(args[0]);
-			if(world == null) return Messaging.invalidWorld(sender, args[0]);
-		}
-		List<String> players = Toolbox.getPlayerList(plugin, world);
-		String worldName = world == null ? "" : " in '" + world.getName() + "'";
-		Messaging.send(sender, "&eOnline Players" + worldName + " (" + players.size() + "):");
-		doListing(sender, players);
-		return true;
-	}
 	
 	private void doListing(CommandSender fromWhom, List<String> players) {
 		List<String> playerList = MessageOfTheDay.formatPlayerList(players);
 		for(String line : playerList)
 			Messaging.send(fromWhom, line);
 	}
-	
+
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
-		if(args.length > 1) return SHOW_USAGE;
-		World world = null;
-		if(args.length == 1) {
-			world = Toolbox.matchWorld(args[0]);
-			if(world == null) return Messaging.invalidWorld(sender, args[0]);
-		}
+	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		if(args.length == 0) params.put("world", null);
+		else if(args.length == 1) {
+			World world = Toolbox.matchWorld(args[0]);
+			if(world == null) {
+				Messaging.invalidWorld(sender, args[0]);
+				return null;
+			}
+			params.put("world", world);
+		} else return null;
+		return params;
+	}
+
+	@Override
+	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
+		if(Toolbox.lacksPermission(sender, "general.playerlist", "general.basic"))
+			return Messaging.lacksPermission(sender, "view the player list");
+		World world = (World) args.get("world");
 		List<String> players = Toolbox.getPlayerList(plugin, world);
 		String worldName = world == null ? "" : " in world " + world.getName();
 		Messaging.send(sender, "&eOnline Players" + worldName + " (" + players.size() + "):");
 		doListing(sender, players);
-		return true;
-	}
-	
-	@Override
-	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.hasPermission(sender, "general.playerlist") || sender.isOp()) {
-			if(args.length > 1) return SHOW_USAGE;
-			World world = null;
-			if(args.length == 1) {
-				world = Toolbox.matchWorld(args[0]);
-				if(world == null) return Messaging.invalidWorld(sender, args[0]);
-			}
-			List<String> players = Toolbox.getPlayerList(plugin, world);
-			String worldName = world == null ? "" : " in world " + world.getName();
-			Messaging.send(sender, "&eOnline Players" + worldName + " (" + players.size() + "):");
-			doListing(sender, players);
-		}
 		return true;
 	}
 }

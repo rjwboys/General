@@ -42,7 +42,7 @@ commands:
     permission: general.getpos
     description: Displays detailed information about your position.
     aliases: []
-    usage: /<command>
+    usage: /<command> [<player>] [compass|dir|pos|rot]
   chat.tell:
     permission: general.tell
     description: Sends another player a private message.

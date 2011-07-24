@@ -1,9 +1,11 @@
 package net.craftstars.general.command.info;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
@@ -13,66 +15,46 @@ import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
 
 public class worldinfoCommand extends CommandBase {
-	String name, environ, pvp, location, seed, time;
-	
 	public worldinfoCommand(General instance) {
 		super(instance);
 	}
 	
+	private void showInfo(CommandSender toWhom, World ofWhom) {
+		Messaging.send(toWhom, "&f------------------------------------------------");
+		Messaging.send(toWhom, "&e World &f[" + ofWhom.getName() + "]&e Info");
+		Messaging.send(toWhom, "&f------------------------------------------------");
+		Messaging.send(toWhom, "&6 Name: &f" + ofWhom.getName());
+		Messaging.send(toWhom, "&6 Environment: &f" + Toolbox.formatItemName(ofWhom.getEnvironment().toString()));
+		Messaging.send(toWhom, "&6 PVP: &f" + (ofWhom.getPVP() ? "Enabled" : "Disabled"));
+		Messaging.send(toWhom, "&6 Spawn: &f" + Toolbox.formatLocation(ofWhom.getSpawnLocation()));
+		Messaging.send(toWhom, "&6 Seed: &f" + ofWhom.getSeed());
+		Messaging.send(toWhom, "&6 Time: &f" + Time.formatTime(ofWhom.getTime(), Time.currentFormat));
+		Messaging.send(toWhom, "&f------------------------------------------------");
+	}
+
 	@Override
-	public boolean fromPlayer(Player toWhom, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(toWhom, "general.worldinfo"))
-			return Messaging.lacksPermission(toWhom, "view info on worlds");
-		if(args.length == 1) {
+	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		if(args.length == 0) {
+			if(isPlayer) params.put("world", ((Player)sender).getWorld());
+			else params.put("world", plugin.getServer().getWorlds().get(0));
+		} else if(args.length == 1) {
 			World who = Toolbox.matchWorld(args[0]);
-			if(who == null) return true;
-			getInfo(who);
-		} else return SHOW_USAGE;
-		showInfo(toWhom);
-		return true;
+			if(who == null) {
+				Messaging.invalidWorld(sender, args[0]);
+				return null;
+			}
+			params.put("world", who);
+		} else return null;
+		return params;
 	}
-	
+
 	@Override
-	public boolean fromConsole(ConsoleCommandSender toWhom, Command command, String commandLabel, String[] args) {
-		if(args.length != 1) return SHOW_USAGE;
-		World who = Toolbox.matchWorld(args[0]);
-		if(who == null) return true;
-		getInfo(who);
-		showInfo(toWhom);
+	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
+		if(Toolbox.lacksPermission(sender, "general.worldinfo"))
+			return Messaging.lacksPermission(sender, "view info on worlds");
+		World world = (World) args.get("world");
+		showInfo(sender, world);
 		return true;
-	}
-	
-	@Override
-	public boolean fromUnknown(CommandSender toWhom, Command command, String commandLabel, String[] args) {
-		if(Toolbox.hasPermission(toWhom, "general.worldinfo") || toWhom.isOp()) {
-			if(args.length != 1) return SHOW_USAGE;
-			World who = Toolbox.matchWorld(args[0]);
-			if(who == null) return true;
-			getInfo(who);
-			showInfo(toWhom);
-		}
-		return true;
-	}
-	
-	private void getInfo(World ofWhom) {
-		this.name = ofWhom.getName();
-		this.environ = Toolbox.formatItemName(ofWhom.getEnvironment().toString());
-		this.pvp = ofWhom.getPVP() ? "Enabled" : "Disabled";
-		this.location = Toolbox.formatLocation(ofWhom.getSpawnLocation());
-		this.seed = Long.toString(ofWhom.getSeed());
-		this.time = Time.formatTime(ofWhom.getTime(), Time.currentFormat);
-	}
-	
-	private void showInfo(CommandSender toWhom) {
-		Messaging.send(toWhom, "&f------------------------------------------------");
-		Messaging.send(toWhom, "&e World &f[" + this.name + "]&e Info");
-		Messaging.send(toWhom, "&f------------------------------------------------");
-		Messaging.send(toWhom, "&6 Name: &f" + this.name);
-		Messaging.send(toWhom, "&6 Environment: &f" + this.environ);
-		Messaging.send(toWhom, "&6 PVP: &f" + this.pvp);
-		Messaging.send(toWhom, "&6 Spawn: &f" + this.location);
-		Messaging.send(toWhom, "&6 Seed: &f" + this.seed);
-		Messaging.send(toWhom, "&6 Time: &f" + this.time);
-		Messaging.send(toWhom, "&f------------------------------------------------");
 	}
 }

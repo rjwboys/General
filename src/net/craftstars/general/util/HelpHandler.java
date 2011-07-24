@@ -46,15 +46,9 @@ public class HelpHandler {
 			helpPlugin.registerCommand("items [item1] [item2] ... [itemN]",
 					"Give yourself several different items at once. You get one of each item." + fetchAliases("items"),
 					General.plugin, "general.give.mass");
-			helpPlugin.registerCommand("getpos ([player])",
+			helpPlugin.registerCommand("getpos ([player]) (compass|dir|pos|rot)",
 					"Get the current position of [player]." + fetchAliases("getpos", "compass", "where"),
 					General.plugin, "general.getpos", "general.basic");
-			helpPlugin.registerCommand("compass",
-					"Show your direction.",
-					General.plugin, "general.getpos");
-			helpPlugin.registerCommand("where ([player])",
-					"Show the location of [player]; less detailed form of /getpos. Aliases: pos, coords",
-					General.plugin, "general.getpos");
 			helpPlugin.registerCommand("tell [player] [message]",
 					"Whisper to a player." + fetchAliases("tell"),
 					General.plugin, "general.tell", "general.basic");

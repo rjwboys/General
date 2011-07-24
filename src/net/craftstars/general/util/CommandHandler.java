@@ -3,7 +3,6 @@ package net.craftstars.general.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Map;
 
 import net.craftstars.general.General;
@@ -63,25 +62,6 @@ public class CommandHandler {
 				} catch(NoSuchMethodException e) {
 					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
 				}
-			}
-			Command posCommand = General.plugin.getCommand("info.getpos");
-			// Compass
-			List<String> ls = config.getStringList("aliases.info.compass", null);
-			compassAliases = new String[ls.size() + 1];
-			compassAliases[0] = "compass";
-			register("compass", posCommand);
-			for(int i = 1; i <= ls.size(); i++) {
-				compassAliases[i] = ls.get(i-1);
-				register(compassAliases[i], posCommand);
-			}
-			// Where
-			ls = config.getStringList("aliases.info.where", null);
-			posAliases = new String[ls.size() + 1];
-			posAliases[0] = "where";
-			register("where", posCommand);
-			for(int i = 1; i <= ls.size(); i++) {
-				posAliases[i] = ls.get(i-1);
-				register(posAliases[i], posCommand);
 			}
 		} catch(NullPointerException e) {
 			return;

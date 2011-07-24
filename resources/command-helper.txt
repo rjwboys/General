@@ -12,8 +12,11 @@
 # Reply to a PM
 /reply $ = /tell @ $
 # Summoning
-/summon $player = /teleport $player here
-/tphere $player = /teleport $player here
-/teleporthere $player = /teleport $player here
+/summon $who = /teleport $who here
+/tphere $who = /teleport $who here
+/teleporthere $who = /teleport $who here
+# Variants of /getpos
+/compass [$who=player()] = /getpos $who dir
+/where [$who=player()] = /getpos $who brief
 # Miscellaneous
 /motd = /general motd

@@ -205,8 +205,6 @@ aliases:
     playerlist: [list, online]
     who: [whois, playerinfo]
     getpos: []
-    where: [coords, pos]
-    compass: []
     worldinfo: [about]
   misc:
     time: []
