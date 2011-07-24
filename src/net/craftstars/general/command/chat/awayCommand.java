@@ -2,6 +2,7 @@
 package net.craftstars.general.command.chat;
 
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
@@ -19,6 +20,13 @@ public class awayCommand extends CommandBase {
 	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
 			String[] args) {
 		Messaging.send(sender, "It's not possible for the console to be marked as away.");
+		return true;
+	}
+
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel,
+			String[] args) {
+		Messaging.send(sender, "I don't know what you are, so I can't mark you as away.");
 		return true;
 	}
 	
@@ -43,5 +51,10 @@ public class awayCommand extends CommandBase {
 			General.plugin.goAway(sender, reason);
 		}
 		return true;
+	}
+	
+	@Override
+	protected boolean isHelpCommand(Command command, String commandLabel, String[] args) {
+		return false; // No help topic for chat commands
 	}
 }

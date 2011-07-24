@@ -3,6 +3,7 @@ package net.craftstars.general.command.chat;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
@@ -31,12 +32,7 @@ public class tellCommand extends CommandBase {
 				Messaging.send(sender, "&c;You can't message yourself!");
 				return true;
 			}
-			Messaging.send(sender, "&gray;(whisper)   to <" + who.getName() + "> " + Toolbox.combineSplit(args, 1));
-			Messaging.send(who, "&gray;(whisper) from <" + sender.getName() + "> " + Toolbox.combineSplit(args, 1));
-			if(General.plugin.isAway(who)) {
-				Messaging.send(sender, "&7" + who.getDisplayName() + " is currently away.");
-				Messaging.send(sender, "&7Reason: " + General.plugin.whyAway(who));
-			}
+			sendMessage(sender, who, Toolbox.combineSplit(args, 1));
 			plugin.hasMessaged(who.getName(), sender.getName());
 		} else if(args[0].equals("@"))
 			Messaging.send(sender, "&cNo-one has messaged you yet.");
@@ -45,18 +41,44 @@ public class tellCommand extends CommandBase {
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
+	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
 		if(args.length < 2) return SHOW_USAGE;
 		Player who = Toolbox.matchPlayer(args[0]);
 		if(who != null) {
-			Messaging.send(sender, "&gray;(whisper)   to <" + who.getName() + "> " + Toolbox.combineSplit(args, 1));
-			Messaging.send(who, "(whisper) from [CONSOLE] " + Toolbox.combineSplit(args, 1));
-			if(General.plugin.isAway(who)) {
-				Messaging.send(sender, "&7" + who.getDisplayName() + " is currently away.");
-				Messaging.send(sender, "&7Reason: " + General.plugin.whyAway(who));
-			}
+			sendMessage(sender, who, Toolbox.combineSplit(args, 1));
 		} else Messaging.invalidPlayer(sender, args[0]);
 		return true;
+	}
+	
+	@Override
+	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
+		if(Toolbox.hasPermission(sender, "general.tell") || sender.isOp()) {
+			if(args.length < 2) return SHOW_USAGE;
+			Player who = Toolbox.matchPlayer(args[0]);
+			if(who != null) {
+				sendMessage(sender, who, Toolbox.combineSplit(args, 1));
+			} else Messaging.invalidPlayer(sender, args[0]);
+		}
+		return true;
+	}
+	
+	@Override
+	protected boolean isHelpCommand(Command command, String commandLabel, String[] args) {
+		return false; // No help topic for chat commands
+	}
+	
+	private void sendMessage(CommandSender from, Player to, String message) {
+		String toFmt = plugin.config.getString("messaging.whisper-to", "{gray}(whisper)   to <{name}> {message}");
+		String fromFmt;
+		if(from instanceof Player)
+			fromFmt = plugin.config.getString("messaging.whisper-from-player", "(whisper) from <{name}> {message}");
+		else fromFmt = plugin.config.getString("messaging.whisper-from-unknown", "(whisper) from [{name}] {message}");
+		// TODO: Actually use these formats (even if I have to write my own formatter!)
+		Messaging.send(from, "&gray;(whisper)   to <" + to.getName() + "> " + message);
+		Messaging.send(to, "(whisper) from [" + getName(from) + "] " + message);
+		if(General.plugin.isAway(to)) {
+			Messaging.send(from, "&7" + to.getDisplayName() + " is currently away.");
+			Messaging.send(from, "&7Reason: " + General.plugin.whyAway(to));
+		}
 	}
 }
