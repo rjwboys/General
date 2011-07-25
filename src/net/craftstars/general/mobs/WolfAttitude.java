@@ -3,6 +3,7 @@ package net.craftstars.general.mobs;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -11,23 +12,23 @@ public class WolfAttitude extends MobData {
 	enum Attitude {
 		WILD("spawn wild wolves", "wild", "calm", "passive", "friendly", "free") {
 			@Override
-			public boolean hasPermission(Player byWhom) {
+			public boolean hasPermission(CommandSender byWhom) {
 				return true;
 			}
 		},
 		ANGRY("spawn angry wolves", "angry", "mad", "hostile", "aggressive") {
 			@Override
-			public boolean hasPermission(Player byWhom) {
+			public boolean hasPermission(CommandSender byWhom) {
 				return Toolbox.hasPermission(byWhom, "general.mobspawn.wolf.angry","general.mobspawn.neutral.angry");
 			}
 		},
 		TAME("spawn tamed wolves", "tame", "pet", "tamed") {
 			@Override
-			public boolean hasPermission(Player byWhom) {
+			public boolean hasPermission(CommandSender byWhom) {
 				return Toolbox.hasPermission(byWhom, "general.mobspawn.wolf.tamed");
 			}
 		};
-		public abstract boolean hasPermission(Player byWhom);
+		public abstract boolean hasPermission(CommandSender byWhom);
 		private String phrase;
 		private String[] aliases;
 		Attitude(String p, String... names) {
@@ -50,7 +51,7 @@ public class WolfAttitude extends MobData {
 	private Player player;
 	
 	@Override
-	public boolean hasPermission(Player byWhom) {
+	public boolean hasPermission(CommandSender byWhom) {
 		if(Toolbox.hasPermission(byWhom, "general.mobspawn.variants")) return true;
 		return attitude.hasPermission(byWhom);
 	}
@@ -73,7 +74,7 @@ public class WolfAttitude extends MobData {
 	}
 
 	@Override
-	public void parse(Player setter, String data) {
+	public void parse(CommandSender setter, String data) {
 		attitude = Attitude.match(data);
 		if(attitude == null) {
 			attitude = Attitude.TAME;
@@ -83,8 +84,8 @@ public class WolfAttitude extends MobData {
 					Messaging.invalidPlayer(setter, data);
 				invalidate();
 			}
-		} else if(attitude == Attitude.TAME && player == null) {
-			player = setter;
+		} else if(attitude == Attitude.TAME && player == null && setter instanceof Player) {
+			player = (Player) setter;
 		}
 	}
 
@@ -94,7 +95,7 @@ public class WolfAttitude extends MobData {
 	}
 
 	@Override
-	public void lacksPermission(Player fromWhom) {
+	public void lacksPermission(CommandSender fromWhom) {
 		Messaging.lacksPermission(fromWhom, attitude.getPhrase());
 	}
 

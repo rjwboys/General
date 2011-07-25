@@ -1,20 +1,21 @@
 
 package net.craftstars.general.command.misc;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.mobs.MobData;
 import net.craftstars.general.mobs.MobType;
+import net.craftstars.general.teleport.Destination;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -23,140 +24,195 @@ public class mobspawnCommand extends CommandBase {
 		super(instance);
 	}
 	private Random offsetGenerator = new Random();
-	private String[] economyNodes;
 
 	@Override
-	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(sender, "general.mobspawn"))
-			return Messaging.lacksPermission(sender, "spawn mobs");
-		Location where = Toolbox.getTargetBlock(sender);
-		ArrayList<SpawnResult> mobs = new ArrayList<SpawnResult>();
+	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		String[] economyNodes;
+		SpawnResult spawn = null;
+		Destination dest = null;
+		int numMobs = 1;
+		// Valid forms
+		// (1 parameter)
+		// /mob <mob>
+		// (2 parameters)
+		// /mob <mob> <mount>
+		// /mob <mob> <number>
+		// /mob <mob> <destination>
+		// (3 parameters)
+		// /mob <mob> <mount> <number>
+		// /mob <mob> <mount> <destination>
+		// /mob <mob> <number> <destination>
+		// (4 parameters)
+		// /mob <mob> <mount> <number> <destination>
 		switch(args.length) {
-		case 1:
-			if(args[0].equalsIgnoreCase("SpiderJockey"))
-				mobs.add(doCompoundSpawn(sender, "Skeleton", "Spider", where));
-			else mobs.add(doSimpleSpawn(sender, args[0], where));
-			break;
-		case 2:
+		case 1: // /mob <mob>
+			spawn = parseSimpleMobName(sender, args[0]);
+		case 2: // /mob <mob> <number>
 			try {
-				int n = Integer.valueOf(args[1]);
-				if(n > 5 && Toolbox.lacksPermission(sender, "general.mobspawn.mass"))
-					return Messaging.lacksPermission(sender, "spawn mobs en masse");
-				if(args[0].equalsIgnoreCase("SpiderJockey"))
-					while(n-- > 0)
-						mobs.add(doCompoundSpawn(sender, "Skeleton", "Spider", where));
-				else while(n-- > 0)
-					mobs.add(doSimpleSpawn(sender, args[0], where));
+				numMobs = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				mobs.add(doCompoundSpawn(sender, args[0], args[1], where));
+				// /mob <mob> <destination>
+				dest = Destination.get(args[1], isPlayer ? (Player) sender : null);
+				// /mob <mob> <mount>
+				if(dest == null) spawn = parseCompoundMobName(sender, args[0], args[1]);
 			}
-			break;
+			if(spawn == null) spawn = parseSimpleMobName(sender, args[0]);
 		case 3:
 			try {
-				int n = Integer.valueOf(args[2]);
-				if(n > 5 && Toolbox.lacksPermission(sender, "general.mobspawn.mass"))
-					return Messaging.lacksPermission(sender, "spawn mobs en masse");
-				if(args[0].equals("-") || args[1].equals("-"))
-					while(n-- > 0)
-						mobs.add(doSimpleSpawn(sender, (args[0] + args[1]).replace("-", ""), where));
-				else while(n-- > 0)
-					mobs.add(doCompoundSpawn(sender, args[0], args[1], where));
+				numMobs = Integer.valueOf(args[1]);
+				dest = Destination.get(args[1], isPlayer ? (Player) sender : null);
+				spawn = parseSimpleMobName(sender, args[0]);
 			} catch(NumberFormatException e) {
-				return false;
-			}
-			break;
-		default:
-			return false;
-		}
-		// After the mobs are spawned, look at them to determine their cost, and
-		// despawn them if the player can't pay.
-		// TODO: Not an ideal way of doing this.
-		if(General.plugin.economy != null) {
-			while(mobs.contains(null)) mobs.remove(null);
-			if(!Toolbox.canPay(sender, mobs.size(), economyNodes)) {
-				for(SpawnResult mob : mobs) {
-					if(mob.mob.getPassenger() != null)
-						mob.mob.getPassenger().remove();
-					mob.mob.remove();
+				spawn = parseCompoundMobName(sender, args[0], args[1]);
+				try {
+					numMobs = Integer.valueOf(args[2]);
+				} catch(NumberFormatException x) {
+					dest = Destination.get(args[2], isPlayer ? (Player) sender : null);
 				}
 			}
+		case 4:
+			spawn = parseCompoundMobName(sender, args[0], args[1]);
+			dest = Destination.get(args[3], isPlayer ? (Player) sender : null);
+			try {
+				numMobs = Integer.valueOf(args[2]);
+			} catch(NumberFormatException e) {
+				Messaging.invalidNumber(sender, args[2]);
+				return null;
+			}
 		}
-		return true;
+		if(dest == null) {
+			if(isPlayer) dest = Destination.targetOf((Player)sender);
+			else {
+				Messaging.send(sender, "Can't determine where to spawn the mob; you're not a player and either didn't" +
+					" specify a destination, or tried to specify an invalid destination.");
+				return null;
+			}
+		}
+		if(spawn == null) return null;
+		if(numMobs < 1) {
+			Messaging.send(sender, "Cannot spawn less than one mob.");
+			return null;
+		}
+		economyNodes = spawn.getCostClass();
+		// And now the parsing is complete; set the params and go!
+		params.put("mob", spawn);
+		params.put("dest", dest);
+		params.put("num", numMobs);
+		params.put("economy", economyNodes);
+		return params;
+	}
+
+	private SpawnResult parseSimpleMobName(CommandSender sender, String mobName) {
+		SpawnResult spawn;
+		if(mobName.equalsIgnoreCase("SpiderJockey")) {
+			spawn = new SpawnResult(MobType.SKELETON);
+			spawn = new SpawnResult(MobType.SPIDER, spawn);
+		} else spawn = parseMobName(sender, mobName);
+		return spawn;
 	}
 	
-	private SpawnResult doSimpleSpawn(Player sender, String mobName, Location where) {
+	private SpawnResult parseCompoundMobName(CommandSender sender, String mobName, String mountName) {
+		SpawnResult rider = parseMobName(sender, mobName);
+		SpawnResult spawn = parseMobName(sender, mountName);
+		spawn.rider = rider;
+		return spawn;
+	}
+	
+	private SpawnResult parseMobName(CommandSender sender, String mobName) {
 		String[] split;
 		split = mobName.split("[.,:/\\|]", 2);
 		MobType mob = MobType.getMob(split[0]);
 		if(mob == null) {
-			Messaging.send(sender, "&cInvalid mob type: " + mobName);
+			Messaging.send(sender, "&cInvalid mob type: " + split[0]);
 			return null;
 		}
+		MobData data;
+		if(split.length == 2) {
+			data = MobData.parse(mob, sender, split[1]);
+			if(data == null) {
+				Messaging.send(sender, "&cInvalid " + mob.getName() + " type: " + split[1]);
+				return null;
+			}
+		} else {
+			data = mob.getNewData();
+		}
+		return new SpawnResult(mob, data);
+	}
+
+	@Override
+	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
+		if(Toolbox.lacksPermission(sender, "general.mobspawn"))
+			return Messaging.lacksPermission(sender, "spawn mobs");
+		String[] economyNodes = (String[]) args.get("economy");
+		SpawnResult spawn = (SpawnResult) args.get("mob");
+		Destination dest = (Destination) args.get("dest");
+		int numMobs = (Integer) args.get("num");
+		if(numMobs > 5 && Toolbox.lacksPermission(sender, "general.mobspawn.mass"))
+			return Messaging.lacksPermission(sender, "spawn mobs en masse");
+		boolean canPay = plugin.economy == null;
+		if(!canPay) canPay = Toolbox.canPay(sender, numMobs, economyNodes);
+		if(canPay) {
+			while(numMobs-- > 0) doSpawn(sender, spawn, dest.getLoc());
+		}
+		return true;
+	}
+	
+	private LivingEntity doSimpleSpawn(CommandSender sender, MobType mob, MobData data, Location where) {
 		double xOffset = offsetGenerator.nextDouble(), zOffset = offsetGenerator.nextDouble();
 		Location actual = where.add(xOffset, 0, zOffset);
 		while(actual.getBlock().getType() != Material.AIR)
 			actual = actual.add(0, 1, 0);
 		LivingEntity entity = mob.spawn(sender, actual);
-		MobData data;
-		if(split.length == 2) {
-			data = MobData.parse(mob, sender, split[1]);
-			if(data == null) Messaging.send(sender, "&cError setting the data.");
-			else mob.setData(entity, sender, data);
-			economyNodes = new String[] {mob.getCostClass(data)};
-		} else {
-			data = mob.getNewData();
-			economyNodes = new String[] {mob.getCostClass(null)};
-		}
-		return new SpawnResult(entity, mob, data);
+		mob.setData(entity, sender, data);
+		return entity;
 	}
 	
-	private SpawnResult doCompoundSpawn(Player sender, String riderName, String mountName, Location where) {
-		SpawnResult rider = doSimpleSpawn(sender, riderName, where);
-		String riderNode = economyNodes[0];
-		if(rider.mob == null) return null;
-		SpawnResult mount = doSimpleSpawn(sender, mountName, where);
-		String mountNode = economyNodes[0];
-		if(mount.mob == null) {
-			rider.mob.remove();
+	private LivingEntity doSpawn(CommandSender sender, SpawnResult mob, Location where) {
+		if(mob.rider == null) return doSimpleSpawn(sender, mob.type, mob.data, where);
+		LivingEntity rider = doSimpleSpawn(sender, mob.rider.type, mob.rider.data, where);
+		if(rider == null) return null;
+		LivingEntity mount = doSimpleSpawn(sender, mob.type, mob.data, where);
+		if(mount == null) {
+			rider.remove();
 			return null;
 		}
-		mount.mob.setPassenger(rider.mob);
-		String completeNode = mount.type.getMountedCostClass(riderNode, mount.data);
-		if(completeNode.equals(""))
-			economyNodes = new String[] {riderNode, mountNode};
-		else economyNodes = new String[] {completeNode}; 
-		mount.rider = rider;
+		mount.setPassenger(rider);
 		return mount;
 	}
 	
-	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
-		// TODO: Implement this
-		Messaging.send(sender, "&cSorry, this command can only be used by a player.");
-		return true;
-	}
-	
-	@Override
-	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.hasPermission(sender, "general.mobspawn") || sender.isOp()) {
-			// TODO: Implement this
-			Messaging.send(sender, "&cSorry, this command can only be used by a player.");
-		}
-		return true;
-	}
-	
 	private static class SpawnResult {
-		public LivingEntity mob;
+		//public LivingEntity mob;
 		public MobType type;
 		public MobData data;
-		@SuppressWarnings("unused")
 		SpawnResult rider;
 		
-		SpawnResult(LivingEntity e, MobType t, MobData d) {
-			mob = e;
+		SpawnResult(MobType t, MobData d) {
 			type = t;
 			data = d;
 			rider = null;
+		}
+		
+		SpawnResult(MobType t) {
+			type = t;
+			data = t.getNewData();
+			rider = null;
+		}
+		
+		SpawnResult(MobType t, SpawnResult ride) {
+			type = t;
+			data = t.getNewData();
+			rider = ride;
+		}
+		
+		String[] getCostClass() {
+			if(rider == null) return new String[] {type.getCostClass(data)};
+			String riderNode = rider.type.getCostClass(rider.data);
+			String mountNode = type.getCostClass(data);
+			String completeNode = rider.type.getMountedCostClass(riderNode, data);
+			if(completeNode.equals(""))
+				return new String[] {riderNode, mountNode};
+			else return new String[] {completeNode}; 
 		}
 	}
 }

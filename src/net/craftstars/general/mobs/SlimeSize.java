@@ -7,8 +7,8 @@ import net.craftstars.general.General;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 
 public class SlimeSize extends MobData {
@@ -51,7 +51,7 @@ public class SlimeSize extends MobData {
 	private int sz = 0;
 
 	@Override
-	public boolean hasPermission(Player byWhom) {
+	public boolean hasPermission(CommandSender byWhom) {
 		return Toolbox.hasPermission(byWhom, "general.mobspawn.variants", size.getPermission());
 	}
 
@@ -64,7 +64,7 @@ public class SlimeSize extends MobData {
 	}
 
 	@Override
-	public void parse(Player setter, String data) {
+	public void parse(CommandSender setter, String data) {
 		size = NamedSize.fromName(data);
 		if(size == null) {
 			try {
@@ -86,7 +86,7 @@ public class SlimeSize extends MobData {
 	}
 
 	@Override
-	public void lacksPermission(Player fromWhom) {
+	public void lacksPermission(CommandSender fromWhom) {
 		Messaging.lacksPermission(fromWhom, "spawn " + size.toString().toLowerCase() + " slimes");
 	}
 

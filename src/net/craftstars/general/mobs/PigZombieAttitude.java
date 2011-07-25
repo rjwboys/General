@@ -3,16 +3,16 @@ package net.craftstars.general.mobs;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.PigZombie;
-import org.bukkit.entity.Player;
 
 public class PigZombieAttitude extends MobData {
 	private int anger = 0;
 	private final static String[] values = new String[] {"regular","angry"};
 	
 	@Override
-	public boolean hasPermission(Player byWhom) {
+	public boolean hasPermission(CommandSender byWhom) {
 		if(anger > 0)
 			return Toolbox.hasPermission(byWhom, "general.mobspawn.variants", "general.mobspawn.pig-zombie.angry", "general.mobspawn.neutral.angry");
 		return true;
@@ -27,7 +27,7 @@ public class PigZombieAttitude extends MobData {
 	}
 	
 	@Override
-	public void parse(Player setter, String data) {
+	public void parse(CommandSender setter, String data) {
 		if(Toolbox.equalsOne(data, "calm", "passive")) anger = 0;
 		else if(Toolbox.equalsOne(data, "angry", "mad", "aggressive", "hostile")) anger = 400;
 		else {
@@ -46,7 +46,7 @@ public class PigZombieAttitude extends MobData {
 	}
 	
 	@Override
-	public void lacksPermission(Player fromWhom) {
+	public void lacksPermission(CommandSender fromWhom) {
 		if(anger > 0) Messaging.lacksPermission(fromWhom, "spawn angry zombie pigmen");
 	}
 

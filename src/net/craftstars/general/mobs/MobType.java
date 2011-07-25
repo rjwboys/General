@@ -8,9 +8,9 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 
 public enum MobType {
@@ -24,7 +24,7 @@ public enum MobType {
 	PIG_ZOMBIE(PigZombieAttitude.class, MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 7, "Zombie Pigman",
 		"Zombie Pigmen", "PigZombie"),
 	SHEEP(SheepState.class, MobAlignment.FRIENDLY, CreatureType.SHEEP, 3, "Sheep", "Sheep"),
-	SKELETON(null, MobAlignment.ENEMY, CreatureType.SKELETON, 8, "Skeleton", "Skeletons", "Skeleton"),
+	SKELETON(null, MobAlignment.ENEMY, CreatureType.SKELETON, 8, "Skeleton", "Skeletons", "Skelly"),
 	SLIME(SlimeSize.class, MobAlignment.ENEMY, CreatureType.SLIME, 11, "Slime", "Slimes", "GelatinousCube",
 		"Goo", "Gooey"),
 	SPIDER(null, MobAlignment.ENEMY, CreatureType.SPIDER, 9, "Spider", "Spiders", "Spider"),
@@ -50,30 +50,30 @@ public enum MobType {
 		this.id = cboxId;
 	}
 	
-	public LivingEntity spawn(Player byWhom, Location where) {
-		if(hasPermission(byWhom)) {
-			World world = byWhom.getWorld();
+	public LivingEntity spawn(CommandSender sender, Location where) {
+		if(hasPermission(sender)) {
+			World world = where.getWorld();
 			return world.spawnCreature(where, ctype);
 		}
-		Messaging.send(byWhom, "&cYou do not have permissions to spawn " + plural + ".");
+		Messaging.send(sender, "&cYou do not have permissions to spawn " + plural + ".");
 		return null;
 	}
 	
-	public void setData(LivingEntity mob, Player setter, MobData info) {
+	public void setData(LivingEntity mob, CommandSender sender, MobData info) {
 		if(info == null) return;
-		if(info.hasPermission(setter))
+		if(info.hasPermission(sender))
 			info.setForMob(mob);
-		else info.lacksPermission(setter);
+		else info.lacksPermission(sender);
 	}
 	
-	public boolean hasPermission(Player byWhom) {
-		if(Toolbox.hasPermission(byWhom, "general.mobspawn.all"))
+	public boolean hasPermission(CommandSender sender) {
+		if(Toolbox.hasPermission(sender, "general.mobspawn.all"))
 			return true;
-		else if(alignment.hasPermission(byWhom))
+		else if(alignment.hasPermission(sender))
 			return true;
 		else {
 			String x = this.toString().toLowerCase().replace("_", "-");
-			return Toolbox.hasPermission(byWhom, "general.mobspawn." + x);
+			return Toolbox.hasPermission(sender, "general.mobspawn." + x);
 		}
 	}
 	

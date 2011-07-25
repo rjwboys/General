@@ -11,8 +11,8 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.DyeColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.util.config.Configuration;
 
@@ -27,7 +27,7 @@ public class SheepState extends MobData {
 	);
 	
 	@Override
-	public boolean hasPermission(Player byWhom) {
+	public boolean hasPermission(CommandSender byWhom) {
 		if(Toolbox.hasPermission(byWhom, "general.mobspawn.variants")) return true;
 		if(sheared) return Toolbox.hasPermission(byWhom, "general.mobspawn.sheep.sheared");
 		else {
@@ -54,7 +54,7 @@ public class SheepState extends MobData {
 	}
 	
 	@Override
-	public void parse(Player setter, String data) {
+	public void parse(CommandSender setter, String data) {
 		if(Toolbox.equalsOne(data, "sheared", "nude", "naked", "bald", "bare", "shorn")) {
 			sheared = true;
 		} else if(Toolbox.equalsOne(data, "natural")) {
@@ -87,7 +87,7 @@ public class SheepState extends MobData {
 	}
 	
 	@Override
-	public void lacksPermission(Player fromWhom) {
+	public void lacksPermission(CommandSender fromWhom) {
 		if(sheared) Messaging.lacksPermission(fromWhom, "spawn sheared sheep");
 		else Messaging.lacksPermission(fromWhom, "spawn coloured sheep");
 	}

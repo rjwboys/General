@@ -1,19 +1,19 @@
 package net.craftstars.general.mobs;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 public abstract class MobData {
-	public abstract boolean hasPermission(Player byWhom);
+	public abstract boolean hasPermission(CommandSender sender);
 	public abstract void setForMob(LivingEntity mob);
-	public abstract void parse(Player setter, String data);
+	public abstract void parse(CommandSender setter, String data);
 	public abstract String getCostNode(String baseNode);
-	public abstract void lacksPermission(Player fromWhom);
+	public abstract void lacksPermission(CommandSender sender);
 	public abstract String[] getValues();
 	
 	protected boolean valid = true;
 	
-	public static MobData parse(MobType mob, Player setter, String data) {
+	public static MobData parse(MobType mob, CommandSender setter, String data) {
 		MobData instance = mob.getNewData();
 		try {
 			instance.parse(setter, data);
@@ -35,7 +35,7 @@ public abstract class MobData {
 	private final static String[] noneValues = new String[] {"regular"};
 	public static final MobData none = new MobData() {
 		@Override
-		public boolean hasPermission(Player byWhom) {
+		public boolean hasPermission(CommandSender byWhom) {
 			return true;
 		}
 
@@ -43,7 +43,7 @@ public abstract class MobData {
 		public void setForMob(LivingEntity mob) {}
 
 		@Override
-		public void parse(Player setter, String data) {}
+		public void parse(CommandSender setter, String data) {}
 
 		@Override
 		public String getCostNode(String node) {
@@ -51,7 +51,7 @@ public abstract class MobData {
 		}
 
 		@Override
-		public void lacksPermission(Player fromWhom) {}
+		public void lacksPermission(CommandSender sender) {}
 
 		@Override
 		public String[] getValues() {
