@@ -238,14 +238,9 @@ public class Toolbox {
 		Block block;
 		for(block = iter.next(); !isSolid(block) && iter.hasNext(); block = iter.next());
 		where = block.getLocation();
-		while(isSolid(block) || isSolid(block.getRelative(BlockFace.UP))) {
-			Block blockAbove = block.getRelative(BlockFace.UP);
-			if(blockAbove == null) where.setY(block.getY() + 1);
-			block = blockAbove;
-		}
-		if(block != null) where = block.getLocation();
-		// The following line is probably dead code
-		if(where == null) where = sender.getLocation();
+		while(isSolid(block) || isSolid(block.getRelative(BlockFace.UP)))
+			block = block.getRelative(BlockFace.UP);
+		where = block.getLocation();
 		return where;
 	}
 	
