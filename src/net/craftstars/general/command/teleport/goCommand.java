@@ -74,7 +74,7 @@ public class goCommand extends CommandBase {
 					}
 				};
 				int warmup = plugin.config.getInt("teleport.warm-up", 0);
-				if(warmup == 0 || sender.hasPermission("general.teleport.instant")) teleport.run();
+				if(warmup == 0 || Toolbox.hasPermission(sender, "general.teleport.instant")) teleport.run();
 				else {
 					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, teleport, warmup);
 					inWarmup.add(player);
