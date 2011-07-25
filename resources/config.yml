@@ -197,7 +197,7 @@ auto-save: false
 # Other options in this list are target, compass, coords
 teleport:
   basics: [world, player, home, spawn]
-  warmup: 0
+  warm-up: 0
 
 # Command aliases
 aliases:

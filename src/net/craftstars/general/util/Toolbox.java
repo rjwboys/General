@@ -320,9 +320,10 @@ public class Toolbox {
 	public static boolean checkCooldown(CommandSender sender, final World world, final String command, String permissionBase) {
 		int cooldownTime = General.plugin.config.getInt("cooldown." + command, 0);
 		if(cooldownTime > 0) {
-			if(Toolbox.lacksPermission(sender, permissionBase + ".instant"))
-				return Messaging.lacksPermission(sender, "set the time so soon after the last time");
+			if(Toolbox.hasPermission(sender, permissionBase + ".instant")) return true;
 			if(!inCooldown.containsKey(command)) inCooldown.put(command, new HashSet<World>());
+			if(inCooldown.get(command).contains(world))
+				return Messaging.lacksPermission(sender, "set the time so soon after the last time");
 			inCooldown.get(command).add(world);
 			Runnable cooldown = new Runnable() {
 				@Override
@@ -332,6 +333,6 @@ public class Toolbox {
 			};
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(General.plugin, cooldown, cooldownTime);
 		}
-		return false;
+		return true;
 	}
 }
