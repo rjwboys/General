@@ -35,6 +35,7 @@ public class mobspawnCommand extends CommandBase {
 		switch(args.length) {
 		case 1: // /mob <mob>
 			spawn = parseSimpleMobName(sender, args[0]);
+		break;
 		case 2: // /mob <mob> <number>
 			try {
 				numMobs = Integer.valueOf(args[1]);
@@ -45,6 +46,7 @@ public class mobspawnCommand extends CommandBase {
 				if(dest == null) spawn = parseCompoundMobName(sender, args[0], args[1]);
 			}
 			if(spawn == null) spawn = parseSimpleMobName(sender, args[0]);
+		break;
 		case 3: // /mob <mob> <number> <destination>
 			try {
 				numMobs = Integer.valueOf(args[1]);
@@ -60,6 +62,7 @@ public class mobspawnCommand extends CommandBase {
 					dest = Destination.get(args[2], isPlayer ? (Player) sender : null);
 				}
 			}
+		break;
 		case 4: // /mob <mob> <mount> <number> <destination>
 			spawn = parseCompoundMobName(sender, args[0], args[1]);
 			dest = Destination.get(args[3], isPlayer ? (Player) sender : null);
@@ -69,6 +72,9 @@ public class mobspawnCommand extends CommandBase {
 				Messaging.invalidNumber(sender, args[2]);
 				return null;
 			}
+		break;
+		default:
+			return null;
 		}
 		if(dest == null) {
 			if(isPlayer) dest = Destination.targetOf((Player)sender);

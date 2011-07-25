@@ -29,7 +29,7 @@ public abstract class CommandBase implements CommandExecutor {
 	}
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+	public synchronized boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String cmdStr = commandLabel + " " + Toolbox.join(args);
 		String senderName = getName(sender);
 		boolean commandResult = SHOW_USAGE;

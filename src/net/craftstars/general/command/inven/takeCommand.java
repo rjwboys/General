@@ -1,6 +1,7 @@
 
 package net.craftstars.general.command.inven;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import net.craftstars.general.command.CommandBase;
@@ -12,180 +13,95 @@ import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 public class takeCommand extends CommandBase {
-	private Player who;
-	private ItemID item;
-	private int amount;
-	private boolean sell;
-	
 	public takeCommand(General instance) {
 		super(instance);
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
-		if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
-		
-		who = null;
-		item = null;
-		amount = 0;
-		
-		switch(args.length) {
-		case 2: // take <item>[:<data>] <player>
-			who = Toolbox.matchPlayer(args[1]);
-			if(who == null) return Messaging.invalidPlayer(sender, args[1]);
-			item = Items.validate(args[0]);
-		break;
-		case 3: // take <item>[:<data>] <amount> <player>
-			who = Toolbox.matchPlayer(args[2]);
-			if(who == null) return Messaging.invalidPlayer(sender, args[2]);
-			item = Items.validate(args[0]);
-			try {
-				amount = Integer.valueOf(args[1]);
-			} catch(NumberFormatException x) {
-				Messaging.send(sender, "&rose;The amount must be an integer.");
-				return true;
-			}
-		break;
-		default:
-			return SHOW_USAGE;
-		}
-		
-		if(item == null || !item.isIdValid()) {
-			Messaging.send(sender, "&rose;Invalid item.");
-			return true;
-		}
-		
-		if(!item.isDataValid()) {
-			Messaging.send(sender, "&f" + item.getVariant() + "&rose; is not a valid data type for &f" +
-				item.getName() + "&rose;.");
-			return true;
-		}
-		
-		amount = doTake();
-		Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + item.getName() + "&2 from &f" + who.getName() + "&2!");
-		return true;
-	}
-	
-	@Override
-	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.hasPermission(sender, "general.take") || sender.isOp()) {
-			if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
-			
-			who = null;
-			item = null;
-			amount = 0;
-			
-			switch(args.length) {
-			case 2: // take <item>[:<data>] <player>
-				who = Toolbox.matchPlayer(args[1]);
-				if(who == null) return Messaging.invalidPlayer(sender, args[1]);
-				item = Items.validate(args[0]);
-			break;
-			case 3: // take <item>[:<data>] <amount> <player>
-				who = Toolbox.matchPlayer(args[2]);
-				if(who == null) return Messaging.invalidPlayer(sender, args[2]);
-				item = Items.validate(args[0]);
-				try {
-					amount = Integer.valueOf(args[1]);
-				} catch(NumberFormatException x) {
-					Messaging.send(sender, "&rose;The amount must be an integer.");
-					return true;
-				}
-			break;
-			default:
-				return SHOW_USAGE;
-			}
-			
-			if(item == null || !item.isIdValid()) {
-				Messaging.send(sender, "&rose;Invalid item.");
-				return true;
-			}
-			
-			if(!item.isDataValid()) {
-				Messaging.send(sender, "&f" + item.getVariant() + "&rose; is not a valid data type for &f" +
-					item.getName() + "&rose;.");
-				return true;
-			}
-			
-			amount = doTake();
-			Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + item.getName() + "&2 from &f" + who.getName() + "&2!");
-		}
-		return true;
-	}
-	
-	@Override
-	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(sender, "general.take"))
-			return Messaging.lacksPermission(sender, "remove items from your inventory");
-		if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
-		
-		who = sender;
-		item = null;
-		amount = 0;
-		
+	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		Player who = null;
+		ItemID item = null;
+		int amount = 0;
 		switch(args.length) {
 		case 1: // /take <item>[:<data>]
+			if(!isPlayer) return null;
+			who = (Player) sender;
 			item = Items.validate(args[0]);
 		break;
-		case 2: // /take <item>[:<data>] <amount> OR /give <item>[:<data>] <player>
+		case 2: // /take <item>[:<data>] <amount> OR /take <item>[:<data>] <player>
 			item = Items.validate(args[0]);
-			try {
-				who = sender;
+			who = Toolbox.matchPlayer(args[1]);
+			if(isPlayer) try {
 				amount = Integer.valueOf(args[1]);
+				who = (Player) sender;
 			} catch(NumberFormatException x) {
-				who = Toolbox.matchPlayer(args[1]);
-				if(who == null) {
-					Messaging.send(sender, "&rose;The amount must be an integer.");
-					Messaging.invalidPlayer(sender, args[1]);
-					return true;
-				}
+				Messaging.send(sender, "&rose;The amount must be an integer.");
+			}
+			if(who == null) {
+				Messaging.invalidPlayer(sender, args[1]);
+				return null;
 			}
 		break;
 		case 3: // /take <item>[:<data>] <amount> <player>
 			who = Toolbox.matchPlayer(args[2]);
-			if(who == null) return Messaging.invalidPlayer(sender, args[2]);
+			if(who == null) {
+				Messaging.invalidPlayer(sender, args[2]);
+				return null;
+			}
 			item = Items.validate(args[0]);
 			try {
 				amount = Integer.valueOf(args[1]);
 			} catch(NumberFormatException x) {
 				Messaging.send(sender, "&rose;The amount must be an integer.");
-				return true;
+				return null;
 			}
 		break;
 		default:
-			return SHOW_USAGE;
+			return null;
 		}
-		
-		if(!sender.equals(who) && Toolbox.lacksPermission(sender, "general.take.other"))
-			return Messaging.lacksPermission(sender, "take items from someone else's inventory");
 		
 		if(item == null || !item.isIdValid()) {
 			Messaging.send(sender, "&rose;Invalid item.");
-			return true;
+			return null;
 		}
 		
 		if(!item.isDataValid()) {
 			Messaging.send(sender, "&f" + item.getVariant() + "&rose; is not a valid data type for &f" + 
 				item.getName() + "&rose;.");
-			return true;
+			return null;
 		}
+		// Fill in params and go!
+		params.put("player", who);
+		params.put("item", item);
+		params.put("amount", amount);
+		return params;
+	}
 
-		sell = who.equals(sender);
-		amount = doTake();
-		if(!sender.getName().equalsIgnoreCase(who.getName()))
+	@Override
+	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
+		if(Toolbox.lacksPermission(sender, "general.take"))
+			return Messaging.lacksPermission(sender, "remove items from your inventory");
+		Player who = (Player) args.get("player");
+		ItemID item = (ItemID) args.get("item");
+		int amount = (Integer) args.get("amount");
+		boolean sell = who.equals(sender);
+		if(!sell && Toolbox.lacksPermission(sender, "general.take.other"))
+			return Messaging.lacksPermission(sender, "take items from someone else's inventory");
+		sell = sell && plugin.economy != null;
+		sell = sell && plugin.config.getString("economy.give.take", "sell").equalsIgnoreCase("sell");
+		amount = doTake(who, item, amount, sell);
+		if(!sender.equals(who))
 			Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + item.getName() + "&2 from &f" + who.getName());
 		return true;
 	}
 	
-	private int doTake() {
-		sell = sell && plugin.economy != null;
-		sell = sell && plugin.config.getString("economy.give.take", "sell").equalsIgnoreCase("sell");
+	private int doTake(Player who, ItemID item, int amount, boolean sell) {
 		int removed = 0;
 		PlayerInventory i = who.getInventory();
 		Map<Integer, ? extends ItemStack> items = i.all(item.getId());

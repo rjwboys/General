@@ -2,6 +2,8 @@
 package net.craftstars.general.command.inven;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
@@ -12,97 +14,63 @@ import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.ItemStack;
 
 public class masstakeCommand extends CommandBase {
-	private Player who;
-	private boolean sell;
-	private ArrayList<ItemID> items = new ArrayList<ItemID>();
-	private StringBuilder itemsText = new StringBuilder();
-	
 	public masstakeCommand(General instance) {
 		super(instance);
 	}
 	
 	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
-		if(args.length < 2) return SHOW_USAGE;
-		
-		who = Toolbox.matchPlayer(args[args.length-1]);
-		if(who == null) return Messaging.invalidPlayer(sender, args[args.length-1]);
+	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
+		if(args.length < (isPlayer ? 1 : 2)) return null;
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		Player who = Toolbox.matchPlayer(args[args.length-1]);
+		if(who == null) {
+			if(isPlayer) who = (Player) sender;
+			else {
+				Messaging.invalidPlayer(sender, args[args.length-1]);
+				return null;
+			}
+		}
 		else args[args.length-1] = null;
-		for (String item : args) {
-			if(item!=null){
+		ArrayList<ItemID> items = new ArrayList<ItemID>();
+		for(String item : args) {
+			if(item != null){
 				ItemID itemid = Items.validate(item);
 				if(itemid != null && itemid.isIdValid() && itemid.isDataValid()) {
-					this.items.add(itemid);
+					items.add(itemid);
 				}
 			}
 		}
-		
-		int amount = doTake();
-		Messaging.send(sender, "&2Took &f" + amount + "&2 of &fvarious items&2 from &f" + who.getName() + "&2!");
-		return true;
+		params.put("player", who);
+		params.put("items", items);
+		return params;
 	}
-	
+
 	@Override
-	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.hasPermission(sender, "general.take.mass") || sender.isOp()) {
-			if(args.length < 2) return SHOW_USAGE;
-			
-			who = Toolbox.matchPlayer(args[args.length-1]);
-			if(who == null) return Messaging.invalidPlayer(sender, args[args.length-1]);
-			else args[args.length-1] = null;
-			for (String item : args) {
-				if(item!=null){
-					ItemID itemid = Items.validate(item);
-					if(itemid != null && itemid.isIdValid() && itemid.isDataValid()) {
-						this.items.add(itemid);
-					}
-				}
-			}
-			
-			int amount = doTake();
-			Messaging.send(sender, "&2Took &f" + amount + "&2 of &fvarious items&2 from &f" + who.getName() + "&2!");
-		}
-		return true;
-	}
-	
-	@Override
-	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
+	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.take.mass"))
 			return Messaging.lacksPermission(sender, "massively remove items from your inventory");
-		if(args.length < 1) return SHOW_USAGE;
-		
-		who = Toolbox.matchPlayer(args[args.length-1]);
-		if(who == null) who = sender;
-		else args[args.length-1] = null;
-		for (String item : args) {
-			if(item!=null){
-				ItemID itemid = Items.validate(item);
-				if(itemid != null && itemid.isIdValid() && itemid.isDataValid()) {
-					this.items.add(itemid);
-				}
-			}
-		}
-		
-		if(!sender.equals(who) && (Toolbox.lacksPermission(sender, "general.take.other") || Toolbox.lacksPermission(sender, "general.take.mass")))
+		Player who = (Player) args.get("player");
+		if(!sender.equals(who) && Toolbox.lacksPermission(sender, "general.take.other"))
 			return Messaging.lacksPermission(sender, "massively take items from someone else's inventory");
-		
-		sell = who.equals(sender);
-		int amount = doTake();
-		if(!sender.getName().equalsIgnoreCase(who.getName()))
+		@SuppressWarnings("unchecked")
+		ArrayList<ItemID> items = (ArrayList<ItemID>) args.get("items");
+		boolean sell = who.equals(sender);
+		sell = sell && plugin.economy != null;
+		sell = sell && plugin.config.getString("economy.give.take", "sell").equalsIgnoreCase("sell");
+		StringBuilder itemsText = new StringBuilder();
+		int amount = doTake(who, items, sell, itemsText);
+		if(!sender.equals(who))
 			Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + itemsText.toString()
 				+ "&2 from &f" + who.getName());
 		return true;
 	}
 	
-	private int doTake() {
-		sell = sell && plugin.economy != null;
-		sell = sell && plugin.config.getString("economy.give.take", "sell").equalsIgnoreCase("sell");
+	private int doTake(Player who, ArrayList<ItemID> items, boolean sell, StringBuilder itemsText) {
 		int removed = 0;
 		double revenue = 0.0;
 		PlayerInventory i = who.getInventory();
