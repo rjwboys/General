@@ -20,6 +20,7 @@ public class worldinfoCommand extends CommandBase {
 	}
 	
 	private void showInfo(CommandSender toWhom, World ofWhom) {
+		// TODO: Use formatting framework for this
 		Messaging.send(toWhom, "&f------------------------------------------------");
 		Messaging.send(toWhom, "&e World &f[" + ofWhom.getName() + "]&e Info");
 		Messaging.send(toWhom, "&f------------------------------------------------");

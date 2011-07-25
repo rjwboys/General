@@ -192,6 +192,11 @@ public class Messaging {
 		return true;
 	}
 	
+	public static boolean invalidNumber(CommandSender from, String str) {
+		Messaging.send(from, "&rose;Invalid number " + str);
+		return true;
+	}
+	
 	public static boolean lacksPermission(CommandSender from, String message) {
 		Messaging.send(from, "&rose;You don't have permission to " + message + ".");
 		return true;

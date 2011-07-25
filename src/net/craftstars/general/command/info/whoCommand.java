@@ -59,6 +59,7 @@ public class whoCommand extends CommandBase {
 	}
 
 	private void showInfo(Player ofWhom, CommandSender toWhom, int mask) {
+		// TODO: Use formatting framework for this
 		boolean title = (mask & TITLE) > 0;
 		if(title) {
 			Messaging.send(toWhom, "&f------------------------------------------------");
@@ -95,6 +96,7 @@ public class whoCommand extends CommandBase {
 	}
 	
 	private void showInfo(@SuppressWarnings("unused") ConsoleCommandSender ofWhom, CommandSender toWhom, int mask) {
+		// TODO: Use formatting framework for this
 		boolean title = (mask & TITLE) > 0;
 		Server server = plugin.getServer();
 		if(title) {
@@ -123,6 +125,7 @@ public class whoCommand extends CommandBase {
 	}
 	
 	private void showInfo(CommandSender ofWhom, CommandSender toWhom, int mask) {
+		// TODO: Use formatting framework for this
 		boolean title = (mask & TITLE) > 0;
 		if(title) {
 			Messaging.send(toWhom, "&f------------------------------------------------");
