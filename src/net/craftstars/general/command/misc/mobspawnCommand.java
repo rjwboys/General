@@ -32,19 +32,6 @@ public class mobspawnCommand extends CommandBase {
 		SpawnResult spawn = null;
 		Destination dest = null;
 		int numMobs = 1;
-		// Valid forms
-		// (1 parameter)
-		// /mob <mob>
-		// (2 parameters)
-		// /mob <mob> <mount>
-		// /mob <mob> <number>
-		// /mob <mob> <destination>
-		// (3 parameters)
-		// /mob <mob> <mount> <number>
-		// /mob <mob> <mount> <destination>
-		// /mob <mob> <number> <destination>
-		// (4 parameters)
-		// /mob <mob> <mount> <number> <destination>
 		switch(args.length) {
 		case 1: // /mob <mob>
 			spawn = parseSimpleMobName(sender, args[0]);
@@ -58,20 +45,22 @@ public class mobspawnCommand extends CommandBase {
 				if(dest == null) spawn = parseCompoundMobName(sender, args[0], args[1]);
 			}
 			if(spawn == null) spawn = parseSimpleMobName(sender, args[0]);
-		case 3:
+		case 3: // /mob <mob> <number> <destination>
 			try {
 				numMobs = Integer.valueOf(args[1]);
 				dest = Destination.get(args[1], isPlayer ? (Player) sender : null);
 				spawn = parseSimpleMobName(sender, args[0]);
 			} catch(NumberFormatException e) {
+				// /mob <mob> <mount> <number>
 				spawn = parseCompoundMobName(sender, args[0], args[1]);
 				try {
 					numMobs = Integer.valueOf(args[2]);
 				} catch(NumberFormatException x) {
+					// /mob <mob> <mount> <destination>
 					dest = Destination.get(args[2], isPlayer ? (Player) sender : null);
 				}
 			}
-		case 4:
+		case 4: // /mob <mob> <mount> <number> <destination>
 			spawn = parseCompoundMobName(sender, args[0], args[1]);
 			dest = Destination.get(args[3], isPlayer ? (Player) sender : null);
 			try {
