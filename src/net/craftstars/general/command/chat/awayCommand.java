@@ -29,15 +29,15 @@ public class awayCommand extends CommandBase {
 		if(reason.isEmpty()) {
 			if(General.plugin.isAway(who)) {
 				General.plugin.unAway(who);
-				Messaging.send(sender, LanguageText.AWAY_BACK.value());
+				Messaging.send(sender, LanguageText.AWAY_BACK);
 			} else {
-				Messaging.send(sender, LanguageText.AWAY_HERE.value());
+				Messaging.send(sender, LanguageText.AWAY_HERE);
 			}
 		} else {
 			if(General.plugin.isAway(who)) {
-				Messaging.send(sender, LanguageText.AWAY_CHANGE.value());
+				Messaging.send(sender, LanguageText.AWAY_CHANGE);
 			} else {
-				Messaging.send(sender, LanguageText.AWAY_SET.value());
+				Messaging.send(sender, LanguageText.AWAY_SET);
 			}
 			General.plugin.goAway(who, reason);
 		}
@@ -56,8 +56,8 @@ public class awayCommand extends CommandBase {
 			params.put("reason", Toolbox.join(args, " "));
 			return params;
 		} else if(sender instanceof ConsoleCommandSender)
-			Messaging.send(sender, LanguageText.AWAY_CONSOLE.value());
-		else Messaging.send(sender, LanguageText.AWAY_UNKNOWN.value());
+			Messaging.send(sender, LanguageText.AWAY_CONSOLE);
+		else Messaging.send(sender, LanguageText.AWAY_UNKNOWN);
 		return null;
 	}
 }

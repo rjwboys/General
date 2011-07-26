@@ -184,45 +184,44 @@ public class Messaging {
 	
 	public static boolean invalidPlayer(CommandSender from, String name) {
 		String ifNone = LanguageText.MISC_BAD_PLAYER.value("name", name).toString();
-		Messaging.send(from, ifNone);
+		send(from, ifNone);
 		return true;
 	}
 	
 	public static boolean invalidWorld(CommandSender from, String name) {
 		String ifNone = LanguageText.MISC_BAD_WORLD.value("name", name).toString();
-		Messaging.send(from, ifNone);
+		send(from, ifNone);
 		return true;
 	}
 	
 	public static boolean invalidNumber(CommandSender from, String str) {
-		Messaging.send(from, LanguageText.MISC_BAD_NUMBER.value("num", str));
+		send(from, LanguageText.MISC_BAD_NUMBER.value("num", str));
 		return true;
 	}
 	
-	@Deprecated
 	public static boolean lacksPermission(CommandSender from, String node) {
 		LanguageText action = LanguageText.byNode(node.replace('.', '_').replace("general_", "permissions."));
-		return Messaging.lacksPermission(from, node, action);
+		return lacksPermission(from, node, action);
 	}
 	
 	public static boolean lacksPermission(CommandSender from, String node, LanguageText action, Object... args) {
-		Messaging.send(from, LanguageText.PERMISSION_LACK.value("action", action.value(args), "permission", node));
+		send(from, LanguageText.PERMISSION_LACK.value("action", action.value(args), "permission", node));
 		return true;
 	}
 
 	public static void showCost(Player sender) {
 		String cost = General.plugin.economy.formatCost(AccountStatus.price);
-		Messaging.send(sender, LanguageText.ECONOMY_SHOW_COST.value("cost", cost));
+		send(sender, LanguageText.ECONOMY_SHOW_COST.value("cost", cost));
 	}
 	
 	public static void showPayment(Player sender) {
 		if(AccountStatus.price > 0) {
 			String cost = General.plugin.economy.formatCost(AccountStatus.price);
-			Messaging.send(sender, LanguageText.ECONOMY_PAY.value("cost", cost));
+			send(sender, LanguageText.ECONOMY_PAY.value("cost", cost));
 		}
 	}
 
 	public static void earned(Player who, double revenue) {
-		Messaging.send(who, LanguageText.ECONOMY_EARN.value("income", revenue));
+		send(who, LanguageText.ECONOMY_EARN.value("income", revenue));
 	}
 }

@@ -89,7 +89,7 @@ public class timeCommand extends CommandBase {
 	
 	private boolean setTime(CommandSender sender, String timeStr, World world) {
 		if(world.getEnvironment() != Environment.NORMAL) {
-			Messaging.send(sender, LanguageText.TIME_NONE.value());
+			Messaging.send(sender, LanguageText.TIME_NONE);
 			return true;
 		}
 		if(Toolbox.lacksPermission(sender, "general.time.set"))
@@ -129,7 +129,7 @@ public class timeCommand extends CommandBase {
 				world.setTime(now + ticks);
 				Messaging.send(sender, LanguageText.TIME_ADVANCE.value("time", Time.formatDuration(ticks)));
 			} catch(NumberFormatException x) {
-				Messaging.send(sender, LanguageText.TIME_BAD_DURATION.value());
+				Messaging.send(sender, LanguageText.TIME_BAD_DURATION);
 			} catch(Exception ex) {
 				ex.printStackTrace();
 				return SHOW_USAGE;
@@ -143,7 +143,7 @@ public class timeCommand extends CommandBase {
 				world.setTime(now - ticks);
 				Messaging.send(sender, LanguageText.TIME_REWIND.value("time", Time.formatDuration(ticks)));
 			} catch(NumberFormatException x) {
-				Messaging.send(sender, LanguageText.TIME_BAD_DURATION.value());
+				Messaging.send(sender, LanguageText.TIME_BAD_DURATION);
 			} catch(Exception ex) {
 				ex.printStackTrace();
 				return SHOW_USAGE;
@@ -158,7 +158,7 @@ public class timeCommand extends CommandBase {
 				world.setTime(ticks);
 				Messaging.send(sender, LanguageText.TIME_SET.value("time", Time.formatTime(ticks, Time.currentFormat)));
 			} catch(NumberFormatException x) {
-				Messaging.send(sender, LanguageText.TIME_BAD_TIME.value());
+				Messaging.send(sender, LanguageText.TIME_BAD_TIME);
 			} catch(Exception ex) {
 				return SHOW_USAGE;
 			}
@@ -172,7 +172,7 @@ public class timeCommand extends CommandBase {
 	
 	private void showTime(CommandSender sender, World world) {
 		if(world.getEnvironment() != Environment.NORMAL) {
-			Messaging.send(sender, LanguageText.TIME_NONE.value());
+			Messaging.send(sender, LanguageText.TIME_NONE);
 			return;
 		}
 		if(Toolbox.lacksPermission(sender, "general.time", "general.basic"))

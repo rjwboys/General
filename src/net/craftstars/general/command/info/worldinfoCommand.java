@@ -21,7 +21,7 @@ public class worldinfoCommand extends CommandBase {
 	}
 	
 	private void showInfo(CommandSender toWhom, World ofWhom) {
-		String divider = LanguageText.INFO_DIVIDER.value();
+		LanguageText divider = LanguageText.INFO_DIVIDER;
 		Messaging.send(toWhom, divider);
 		Messaging.send(toWhom, LanguageText.INFO_TITLE_WORLD.value("name",ofWhom.getName()));
 		Messaging.send(toWhom, divider);

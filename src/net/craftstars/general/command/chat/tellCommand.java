@@ -46,7 +46,7 @@ public class tellCommand extends CommandBase {
 		if(isPlayer && args[0].equals("@")){
 			String name = plugin.lastMessaged(((Player) sender).getName());
 			if(name == null) {
-				Messaging.send(sender, LanguageText.NO_REPLY.value());
+				Messaging.send(sender, LanguageText.NO_REPLY);
 				return null;
 			}
 			recipient = Bukkit.getServer().getPlayer(name);
@@ -67,7 +67,7 @@ public class tellCommand extends CommandBase {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
 			if(who.getName().equals(player.getName())) {
-				Messaging.send(sender, LanguageText.WHISPER_SELF.value());
+				Messaging.send(sender, LanguageText.WHISPER_SELF);
 				return true;
 			}
 			plugin.hasMessaged(who.getName(), player.getName());

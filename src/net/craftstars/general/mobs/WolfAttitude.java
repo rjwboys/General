@@ -13,19 +13,19 @@ import org.bukkit.entity.Wolf;
 
 public class WolfAttitude extends MobData {
 	enum Attitude {
-		WILD() {
+		WILD {
 			@Override
 			public boolean hasPermission(CommandSender byWhom) {
 				return true;
 			}
 		},
-		ANGRY() {
+		ANGRY {
 			@Override
 			public boolean hasPermission(CommandSender byWhom) {
 				return Toolbox.hasPermission(byWhom, "general.mobspawn.wolf.angry","general.mobspawn.neutral.angry");
 			}
 		},
-		TAME() {
+		TAME {
 			@Override
 			public boolean hasPermission(CommandSender byWhom) {
 				return Toolbox.hasPermission(byWhom, "general.mobspawn.wolf.tamed");

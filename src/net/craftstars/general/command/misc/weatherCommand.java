@@ -137,7 +137,7 @@ public class weatherCommand extends CommandBase {
 		} else try {
 			long duration = Time.extractDuration(key);
 			if(duration < 0) {
-				Messaging.send(sender, LanguageText.WEATHER_NEGATIVE.value());
+				Messaging.send(sender, LanguageText.WEATHER_NEGATIVE);
 				return false;
 			}
 			setCommand("storm");
@@ -160,14 +160,14 @@ public class weatherCommand extends CommandBase {
 		else try {
 			duration = Time.extractDuration(key);
 			if(duration < 0) {
-				Messaging.send(sender, LanguageText.WEATHER_NEGATIVE.value());
+				Messaging.send(sender, LanguageText.WEATHER_NEGATIVE);
 				return false;
 			} else if(duration > Integer.MAX_VALUE) {
-				Messaging.send(sender, LanguageText.WEATHER_BAD_THUNDER.value());
+				Messaging.send(sender, LanguageText.WEATHER_BAD_THUNDER);
 				return false;
 			}
 		} catch(NumberFormatException e) {
-			Messaging.send(sender, LanguageText.TIME_BAD_DURATION.value());
+			Messaging.send(sender, LanguageText.TIME_BAD_DURATION);
 			return false;
 		}
 		setCommand("thunder");
@@ -225,7 +225,7 @@ public class weatherCommand extends CommandBase {
 	
 	private void showWeatherInfo(CommandSender sender, World where) {
 		if(where.getEnvironment() == Environment.NETHER) {
-			Messaging.send(sender, LanguageText.WEATHER_NETHER.value());
+			Messaging.send(sender, LanguageText.WEATHER_NETHER);
 			return;
 		}
 		String storm = Time.formatDuration(where.getWeatherDuration());
@@ -241,7 +241,7 @@ public class weatherCommand extends CommandBase {
 	
 	private void doThunder(CommandSender sender, World world, int duration) {
 		if(world.getEnvironment() != Environment.NORMAL) {
-			Messaging.send(sender, LanguageText.THUNDER_NETHER.value());
+			Messaging.send(sender, LanguageText.THUNDER_NETHER);
 			return;
 		}
 		if(Toolbox.lacksPermission(sender, "general.weather.thunder"))
@@ -253,9 +253,9 @@ public class weatherCommand extends CommandBase {
 		world.setThundering(state);
 		if(state && duration != -1) world.setThunderDuration(duration);
 		if(duration == 0)
-			Messaging.send(sender, LanguageText.THUNDER_STOP.value());
+			Messaging.send(sender, LanguageText.THUNDER_STOP);
 		else if(duration == -1)
-			Messaging.send(sender, LanguageText.THUNDER_START.value());
+			Messaging.send(sender, LanguageText.THUNDER_START);
 		else if(hasThunder)
 			Messaging.send(sender, LanguageText.THUNDER_CHANGE.value("time", duration));
 		else Messaging.send(sender, LanguageText.THUNDER_SET.value("time", duration));
@@ -263,7 +263,7 @@ public class weatherCommand extends CommandBase {
 	
 	private void doWeather(CommandSender sender, World world, long duration) {
 		if(world.getEnvironment() == Environment.NETHER) {
-			Messaging.send(sender, LanguageText.WEATHER_NETHER.value());
+			Messaging.send(sender, LanguageText.WEATHER_NETHER);
 			return;
 		}
 		if(Toolbox.lacksPermission(sender, "general.weather.set"))
@@ -275,9 +275,9 @@ public class weatherCommand extends CommandBase {
 		world.setStorm(state);
 		if(state && duration != -1) world.setWeatherDuration((int) duration);
 		if(duration == 0)
-			Messaging.send(sender, LanguageText.WEATHER_STOP.value());
+			Messaging.send(sender, LanguageText.WEATHER_STOP);
 		else if(duration == -1)
-			Messaging.send(sender, LanguageText.WEATHER_START.value());
+			Messaging.send(sender, LanguageText.WEATHER_START);
 		else if(hasStorm)
 			Messaging.send(sender, LanguageText.WEATHER_CHANGE.value("time", duration));
 		else Messaging.send(sender, LanguageText.WEATHER_SET.value("time", duration));
@@ -302,7 +302,7 @@ public class weatherCommand extends CommandBase {
 			y = block.getLocation().getBlockY();
 			z += lightning.nextInt(range * 2) - range;
 			world.strikeLightning(new Location(world, x, y, z));
-			Messaging.send(sender, LanguageText.WEATHER_LIGHTNING.value());
+			Messaging.send(sender, LanguageText.WEATHER_LIGHTNING);
 		}
 	}
 }

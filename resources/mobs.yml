@@ -50,23 +50,16 @@ data:
   mob0:
     saddle: [tame, saddle, saddled]
     free: [wild, unsaddled, free]
-  mob1:
-  mob2:
   mob3:
     bald: [sheared, nude, naked, bald, bare, shorn]
     natural: [natural]
     random: [artificial, random]
-  mob4:
   mob5:
     powered: [powered, power, zapped, zap, on, high]
     unpowered: [weak, off, low]
-  mob6:
   mob7:
     calm: [calm, passive]
     angry: [angry, mad, aggressive, hostile]
-  mob8:
-  mob9:
-  mob10:
   mob11: 
     colossal: [colossal]
     huge: [huge]
@@ -74,8 +67,6 @@ data:
     medium: [medium]
     small: [small]
     tiny: [tiny]
-  mob12:
-  mob13:
   mob14:
     wild: [wild, calm, passive, friendly, free]
     angry: [angry, mad, hostile, aggressive]

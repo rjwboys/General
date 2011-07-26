@@ -81,7 +81,7 @@ public class clearCommand extends CommandBase {
 	
 	private boolean parseOther(CommandSender sender, String name, CleanType option, HashMap<String,Object> params) {
 		if(option == null) {
-			Messaging.send(sender, LanguageText.CLEAR_INVALID.value());
+			Messaging.send(sender, LanguageText.CLEAR_INVALID);
 			return false;
 		} 
 		Player who = Toolbox.matchPlayer(name);

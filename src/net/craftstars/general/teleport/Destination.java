@@ -185,7 +185,7 @@ public class Destination {
 			}
 		}
 		// Well, nothing matches; give up.
-		Messaging.send(notify, LanguageText.DESTINATION_BAD.value());
+		Messaging.send(notify, LanguageText.DESTINATION_BAD);
 		return null;
 	}
 	

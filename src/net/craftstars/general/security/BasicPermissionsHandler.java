@@ -23,7 +23,7 @@ public class BasicPermissionsHandler implements PermissionsHandler {
 			}
 			return true;
 		} catch(NullPointerException ex) {
-			Messaging.send(who, LanguageText.PERMISSION_ERROR.value());
+			Messaging.send(who, LanguageText.PERMISSION_ERROR);
 			return false;
 		}
 	}

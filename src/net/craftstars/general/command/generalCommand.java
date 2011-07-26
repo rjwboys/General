@@ -171,6 +171,7 @@ public class generalCommand extends CommandBase {
 		plugin.config.save();
 		Items.save();
 		Kits.save();
+		Messaging.save();
 		Messaging.send(sender, LanguageText.GENERAL_SAVE);
 	}
 	
@@ -197,7 +198,7 @@ public class generalCommand extends CommandBase {
 			if(args.length >= 4) try {
 				amount = Integer.parseInt(args[3]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT.value());
+				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT);
 				return true;
 			}
 			kit.add(item, amount);
@@ -215,7 +216,7 @@ public class generalCommand extends CommandBase {
 			if(args.length >= 4) try {
 				amount = Integer.parseInt(args[3]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT.value());
+				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT);
 				return true;
 			}
 			kit.add(item, -amount);
@@ -246,7 +247,7 @@ public class generalCommand extends CommandBase {
 			kit.setSavedCost(cost);
 			String displayCost = Double.toString(cost);
 			if(plugin.economy != null) displayCost = plugin.economy.formatCost(cost);
-			Messaging.send(sender, LanguageText.KIT_COST.value("kit", kitName, "cost", cost));
+			Messaging.send(sender, LanguageText.KIT_COST.value("kit", kitName, "cost", displayCost));
 			return true;
 		} else if(args[1].equalsIgnoreCase("trash")) {
 			Kits.kits.remove(kitName);

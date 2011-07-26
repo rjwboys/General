@@ -80,13 +80,13 @@ public class mobspawnCommand extends CommandBase {
 		if(dest == null) {
 			if(isPlayer) dest = Destination.targetOf((Player)sender);
 			else {
-				Messaging.send(sender, LanguageText.MOB_NO_DEST.value());
+				Messaging.send(sender, LanguageText.MOB_NO_DEST);
 				return null;
 			}
 		}
 		if(spawn == null) return null;
 		if(numMobs < 1) {
-			Messaging.send(sender, LanguageText.MOB_TOO_FEW.value());
+			Messaging.send(sender, LanguageText.MOB_TOO_FEW);
 			return null;
 		}
 		economyNodes = spawn.getCostClass();

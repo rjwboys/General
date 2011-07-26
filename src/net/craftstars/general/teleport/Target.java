@@ -151,7 +151,7 @@ public class Target {
 				if(players.size() > 0) {
 					return new Target(players, TargetType.OTHER);
 				} else {
-					Messaging.send(notify, LanguageText.TARGET_NO_PLAYERS.value());
+					Messaging.send(notify, LanguageText.TARGET_NO_PLAYERS);
 				}
 			}
 			if(Toolbox.equalsOne(targ, "nearmob", "$nearmob")) {
@@ -163,7 +163,7 @@ public class Target {
 				if(victims.size() > 0) {
 					return new Target(victims, TargetType.MOB);
 				} else {
-					Messaging.send(notify, LanguageText.TARGET_NO_MOBS.value());
+					Messaging.send(notify, LanguageText.TARGET_NO_MOBS);
 				}
 			}
 			if(Toolbox.equalsOne(targ, "there", "$there")) {
@@ -186,7 +186,7 @@ public class Target {
 					else tt = TargetType.MOB;
 					return new Target(Arrays.asList(victim), tt);
 				} else {
-					Messaging.send(notify, LanguageText.TARGET_NO_TARGET.value());
+					Messaging.send(notify, LanguageText.TARGET_NO_TARGET);
 				}
 			}
 			if(Toolbox.equalsOne(targ, "self", "$self", "me")) return fromPlayer(teleporter);

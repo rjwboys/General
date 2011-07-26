@@ -120,7 +120,7 @@ public class HelpHandler {
 			File helpFile = new File(dataFolder, filename);
 			f = new Scanner(helpFile);
 		} catch(FileNotFoundException e) {
-			Messaging.send(sender, LanguageText.HELP_UNAVAILABLE.value());
+			Messaging.send(sender, LanguageText.HELP_UNAVAILABLE);
 			return;
 		}
 		Toolbox.showFile(sender, f, false);

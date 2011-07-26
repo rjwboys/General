@@ -60,7 +60,7 @@ public class whoCommand extends CommandBase {
 	}
 
 	private void showInfo(Player ofWhom, CommandSender toWhom, int mask) {
-		String divider = LanguageText.INFO_DIVIDER.value();
+		LanguageText divider = LanguageText.INFO_DIVIDER;
 		boolean title = (mask & TITLE) > 0;
 		if(title) {
 			Messaging.send(toWhom, divider);
@@ -101,12 +101,12 @@ public class whoCommand extends CommandBase {
 	}
 	
 	private void showInfo(@SuppressWarnings("unused") ConsoleCommandSender ofWhom, CommandSender toWhom, int mask) {
-		String divider = LanguageText.INFO_DIVIDER.value();
+		LanguageText divider = LanguageText.INFO_DIVIDER;
 		boolean title = (mask & TITLE) > 0;
 		Server server = plugin.getServer();
 		if(title) {
 			Messaging.send(toWhom, divider);
-			Messaging.send(toWhom, LanguageText.INFO_TITLE_CONSOLE.value());
+			Messaging.send(toWhom, LanguageText.INFO_TITLE_CONSOLE);
 			Messaging.send(toWhom, divider);
 		}
 		if((mask & UNAME) > 0)
@@ -130,11 +130,11 @@ public class whoCommand extends CommandBase {
 	}
 	
 	private void showInfo(CommandSender ofWhom, CommandSender toWhom, int mask) {
-		String divider = LanguageText.INFO_DIVIDER.value();
+		LanguageText divider = LanguageText.INFO_DIVIDER;
 		boolean title = (mask & TITLE) > 0;
 		if(title) {
 			Messaging.send(toWhom, divider);
-			Messaging.send(toWhom, LanguageText.INFO_TITLE_UNKNOWN.value());
+			Messaging.send(toWhom, LanguageText.INFO_TITLE_UNKNOWN);
 			Messaging.send(toWhom, divider);
 		}
 		if((mask &~ TITLE) > 0) Messaging.send(toWhom, LanguageText.INFO_NAME.value("name", getName(ofWhom)));

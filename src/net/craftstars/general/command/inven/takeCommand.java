@@ -42,7 +42,7 @@ public class takeCommand extends CommandBase {
 				amount = Integer.valueOf(args[1]);
 				who = (Player) sender;
 			} catch(NumberFormatException x) {
-				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT.value());
+				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT);
 			}
 			if(who == null) {
 				Messaging.invalidPlayer(sender, args[1]);
@@ -59,7 +59,7 @@ public class takeCommand extends CommandBase {
 			try {
 				amount = Integer.valueOf(args[1]);
 			} catch(NumberFormatException x) {
-				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT.value());
+				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT);
 				return null;
 			}
 		break;
@@ -68,7 +68,7 @@ public class takeCommand extends CommandBase {
 		}
 		
 		if(item == null || !item.isIdValid()) {
-			Messaging.send(sender, LanguageText.GIVE_BAD_ID.value());
+			Messaging.send(sender, LanguageText.GIVE_BAD_ID);
 			return null;
 		}
 		
