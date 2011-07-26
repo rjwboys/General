@@ -15,6 +15,7 @@ import net.craftstars.general.mobs.MobType;
 import net.craftstars.general.mobs.SlimeSize.NamedSize;
 import net.craftstars.general.teleport.DestinationType;
 import net.craftstars.general.teleport.TargetType;
+import net.craftstars.general.util.Option;
 
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
@@ -25,19 +26,18 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.util.config.Configuration;
 
 public class BukkitPermissionsHandler implements PermissionsHandler {
-	
 	public BukkitPermissionsHandler() {
 		// Here we set up the complicated container permissions
 		Configuration config = General.plugin.config;
 		PluginManager pm = Bukkit.getServer().getPluginManager();
 		Permission perm;
-		Map<String, Boolean> permsMap, permsMap2;
+		Map<String, Boolean> permsMap, permsMap2, permsMap3, permsMap4;
 		/* ***** Permissions related to /give ***** */
 		// general.give.group.*
 		permsMap = new HashMap<String,Boolean>();
 		for(String group : config.getKeys("give.groups")) {
 			perm = new Permission("general.give.group." + group,
-				"Gives access to the following items: " + config.getStringList("give.groups." + group, null));
+				"Gives access to the following items: " + Option.GROUP(group).get());
 			pm.addPermission(perm);
 			permsMap.put("general.give.group." + group, true);
 		}
@@ -55,26 +55,31 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 		/* ***** Permissions related to /mobspawn ***** */
 		// gemeral.mobspawn.friendly/hostile/neutral/<mob>/all
 		// TODO: Get rid of the double loop here, it's not needed; just maintain multiple maps!
-		permsMap2 = new HashMap<String,Boolean>();
+		permsMap = new HashMap<String,Boolean>();
+		permsMap.put("general.mobspawn", true);
+		permsMap2 = new HashMap<String,Boolean>(); // Friendly
 		permsMap2.put("general.mobspawn", true);
+		permsMap3 = new HashMap<String,Boolean>(); // Neutral
+		permsMap3.put("general.mobspawn", true);
+		permsMap4 = new HashMap<String,Boolean>(); // Enemy
+		permsMap4.put("general.mobspawn", true);
+		HashMap[] index = new HashMap[] {(HashMap) permsMap2, (HashMap) permsMap3, (HashMap) permsMap4};
+		for(MobType mob : MobType.values()) {
+			permsMap.put("general.mobspawn." + mob.getAlignment().toString().toLowerCase(), true);
+			perm = new Permission("general.mobspawn." + mob.toString().toLowerCase().replace('_', '-'),
+				"Gives permission to spawn " + mob.getPluralName() + ".");
+			pm.addPermission(perm);
+			HashMap<String,Boolean> addTo = index[mob.getAlignment().ordinal()];
+			addTo.put("general.mobspawn." + mob.toString().toLowerCase().replace('_', '-'), true);
+		}
 		for(MobAlignment attitude : MobAlignment.values()) {
-			permsMap2.put("general.mobspawn." + attitude.toString().toLowerCase(), true);
-			permsMap = new HashMap<String,Boolean>();
-			permsMap.put("general.mobspawn", true);
-			for(MobType mob : MobType.values()) {
-				if(mob.getAlignment() == attitude) {
-					perm = new Permission("general.mobspawn." + mob.toString().toLowerCase().replace('_', '-'),
-						"Gives permission to spawn " + mob.getPluralName() + ".");
-					pm.addPermission(perm);
-					permsMap.put("general.mobspawn." + mob.toString().toLowerCase().replace('_', '-'), true);
-				}
-			}
+			HashMap<String,Boolean> useMap = index[attitude.ordinal()];
 			perm = new Permission("general.mobspawn." + attitude.toString().toLowerCase(),
-				"Gives permission to spawn " + attitude.toString().toLowerCase() + " mobs.", permsMap);
+				"Gives permission to spawn " + attitude.toString().toLowerCase() + " mobs.", useMap);
 			pm.addPermission(perm);
 		}
 		perm = new Permission("general.mobspawn.all",
-			"Gives permission to spawn any type of mob, but only the basic variant of each.", permsMap2);
+			"Gives permission to spawn any type of mob, but only the basic variant of each.", permsMap);
 		pm.addPermission(perm);
 		// general.mobspawn.sheep.coloured.* and general.mobspawn.sheep.colored.<colour>
 		permsMap = new HashMap<String,Boolean>();
@@ -124,14 +129,18 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 		List<String> destinationBases = new ArrayList<String>();
 		destinationBases.addAll(Arrays.asList("general.teleport", "general.setspawn", "general.spawn.set"));
 		// This is setup for the teleport.basic permissions
-		List<String> basicDestinations = General.plugin.config.getStringList("teleport-basics", null);
+		List<String> basicDestinations = Option.TELEPORT_BASICS.get();
 		// general.teleport.any
 		permsMap = new HashMap<String,Boolean>();
 		permsMap.put("general.teleport", true);
+		permsMap3 = new HashMap<String,Boolean>();
+		permsMap3.put("general.teleport", true);
 		for(TargetType targ : TargetType.values()) {
 			String base = "general.teleport." + targ.toString().toLowerCase();
 			permsMap.put(base, true);
+			permsMap3.put(base + ".instant", true);
 			permsMap2 = new HashMap<String,Boolean>();
+			permsMap2.put("general.teleport", true);
 			permsMap2.put(base, true);
 			permsMap2.put(base + ".to.*", true);
 			permsMap2.put(base + ".into.*", true);
@@ -144,12 +153,17 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 		permsMap.put("general.teleport.mass", true);
 		perm = new Permission("general.teleport.any", "Gives permission to teleport anything.", permsMap);
 		pm.addPermission(perm);
+		perm = new Permission("general.teleport.any.instant",
+			"Gives permission to instantly teleport anything.", permsMap3);
+		pm.addPermission(perm);
 		// Destination-based permissions
 		for(String base : destinationBases) {
 			String permDesc, basePermDesc;
+			boolean isTeleport;
 			if(base.contains("spawn"))
 				basePermDesc = "set the spawn";
 			else {
+				isTeleport = true;
 				basePermDesc = "teleport ";
 				if(!base.endsWith("teleport")) {
 					String target = base.substring(base.lastIndexOf('.') + 1).toUpperCase();
@@ -159,12 +173,23 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 			// <base>.to.*
 			permsMap = new HashMap<String,Boolean>();
 			permsMap.put(base, true);
-			for(DestinationType dest : DestinationType.values())
+			if(isTeleport) {
+				permsMap2 = new HashMap<String,Boolean>();
+				permsMap2.put(base, true);
+			}
+			for(DestinationType dest : DestinationType.values()) {
 				permsMap.put(base + ".to." + dest.toString().toLowerCase(), true);
+				if(isTeleport) permsMap2.put(base + ".to." + dest.toString().toLowerCase() + ".instant", true);
+			}
 			permDesc = basePermDesc + " to";
 			perm = new Permission(base + ".to.*",
 				"Gives permission to " + permDesc + " any type of destination.", permsMap);
 			pm.addPermission(perm);
+			if(isTeleport) {
+				perm = new Permission(base + ".to.*.instant",
+					"Gives permission to instantly" + permDesc + " any type of destination.", permsMap2);
+				pm.addPermission(perm);
+			}
 			// <base>.into.*, <base>.from.*
 			permsMap = new HashMap<String,Boolean>();
 			permsMap2 = new HashMap<String,Boolean>();

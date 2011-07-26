@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 import net.minecraft.server.ChunkCoordinates;
 import net.minecraft.server.EntityPlayer;
@@ -21,7 +22,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.Configuration;
 
 public class Destination {
 	private Location calc;
@@ -108,19 +108,18 @@ public class Destination {
 			base + ".into." + calc.getWorld().getName(),
 			base + ".from." + sender.getWorld().getName()
 		};
-		Configuration config = General.plugin.config;
 		// World nodes override generic nodes if they exist, so check if they do
-		if(Toolbox.nodeExists(config, worldNodes[0]))
-			if(Toolbox.nodeExists(config, worldNodes[1]))
+		if(Option.nodeExists(worldNodes[0]))
+			if(Option.nodeExists(worldNodes[1]))
 				return worldNodes;
 			else return new String[] {worldNodes[0]};
-		else if(Toolbox.nodeExists(config, worldNodes[1]))
+		else if(Option.nodeExists(worldNodes[1]))
 			return new String[] {worldNodes[1]};
 		// Otherwise, prune the generic nodes of ones that don't exist and return them.
 		Iterator<String> iter = genericNodes.iterator();
 		while(iter.hasNext()) {
 			String node = iter.next();
-			if(!Toolbox.nodeExists(config, node))
+			if(!Option.nodeExists(node))
 				iter.remove();
 		}
 		return genericNodes.toArray(new String[0]);
@@ -242,5 +241,14 @@ public class Destination {
 	
 	public void setWorld(World world) {
 		calc.setWorld(world);
+	}
+
+	public boolean hasInstant(CommandSender sender, String base) {
+		boolean perm = true;
+		for(DestinationType type : t) {
+			boolean can = type.hasInstant(sender, base);
+			perm = perm && can;
+		}
+		return perm;
 	}
 }

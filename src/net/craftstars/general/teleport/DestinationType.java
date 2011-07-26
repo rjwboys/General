@@ -1,14 +1,14 @@
 
 package net.craftstars.general.teleport;
 
-import java.util.Arrays;
 import java.util.List;
 
-import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public enum DestinationType {
@@ -23,7 +23,7 @@ public enum DestinationType {
 		this.spec = special;
 	}
 	
-	public boolean hasPermission(Player who, String base) {
+	public boolean hasPermission(CommandSender who, String base) {
 		if(isBasic() && Toolbox.hasPermission(who, base + ".basic")) return true;
 		if(Toolbox.hasPermission(who, getPermission(base))) return true;
 		Messaging.lacksPermission(who, getPermission(base), Destination.getFormat(base, "to"),
@@ -32,8 +32,7 @@ public enum DestinationType {
 	}
 	
 	private boolean isBasic() {
-		List<String> basics = General.plugin.config.getStringList("teleport.basics",
-			Arrays.asList("world", "player", "home", "spawn"));
+		List<String> basics = Option.TELEPORT_BASICS.get();
 		return basics.contains(toString().toLowerCase().trim());
 	}
 
@@ -58,5 +57,9 @@ public enum DestinationType {
 			node += "_other";
 		node = "destination." + node;
 		return LanguageText.byNode(node).value();
+	}
+
+	public boolean hasInstant(CommandSender sender, String base) {
+		return Toolbox.hasPermission(sender, getPermission(base) + ".instant");
 	}
 }

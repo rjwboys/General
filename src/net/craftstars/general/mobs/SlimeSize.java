@@ -3,9 +3,9 @@ package net.craftstars.general.mobs;
 
 import java.util.HashMap;
 
-import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.CommandSender;
@@ -103,7 +103,7 @@ public class SlimeSize extends MobData {
 	@Override
 	public String getCostNode(String base) {
 		String node = base + "." + size.toString().toLowerCase();
-		if(Toolbox.nodeExists(General.plugin.config, node)) return node;
+		if(Option.nodeExists(node)) return node;
 		else return base + ".default";
 	}
 

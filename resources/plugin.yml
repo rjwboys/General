@@ -275,6 +275,9 @@ permissions:
     description: Allows you to teleport several entities at a time.
   general.teleport.instant:
     description: Allows you to teleport instantly, without any warmup period.
+    children:
+      general.teleport.any.instant: true
+      general.teleport.to.*.instant: true
   general.setspawn.*:
     description: Gives full access to the /setspawn command.
     children:

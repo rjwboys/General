@@ -9,7 +9,6 @@ import java.util.Scanner;
 
 import me.taylorkelly.help.Help;
 import net.craftstars.general.General;
-import net.craftstars.general.command.CommandBase;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -161,7 +160,7 @@ public class HelpHandler {
 		} catch(IllegalAccessException e) {
 			e.printStackTrace();
 		} catch(NoSuchFieldException e) {}
-		return CommandBase.SHOW_USAGE;
+		return false;
 	}
 	
 	private static String fetchAliases(String command, String... skip) {

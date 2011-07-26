@@ -157,7 +157,7 @@ public class Toolbox {
 				AccountStatus.price += Double.parseDouble(permission.substring(1));
 			else if(permission.startsWith("%"))
 				AccountStatus.price *= Double.parseDouble(permission.substring(1)) / 100.0;
-			else AccountStatus.price += General.plugin.config.getDouble(permission, 0) * quantity;
+			else AccountStatus.price += Option.ECONOMY_COST(permission).get() * quantity;
 		if(CommandBase.isFrozen(player)) return AccountStatus.FROZEN;
 		if(General.plugin.economy.getBalance(player) >= AccountStatus.price)
 			return AccountStatus.SUFFICIENT;
@@ -307,13 +307,13 @@ public class Toolbox {
 	public static double sellItem(ItemID item, int amount) {
 		if(General.plugin.economy == null) return 0;
 		String node = "economy.give.item" + item.toString();
-		double percent = General.plugin.config.getDouble("economy.give.sell", 100) / 100.0;
-		return General.plugin.config.getDouble(node, 0.0) * amount * percent;
+		double percent = Option.ECONOMY_SELL.get() / 100.0;
+		return Option.ECONOMY_COST(node).get() * amount * percent;
 	}
 
 	private static HashMap<String, HashSet<World>> inCooldown = new HashMap<String, HashSet<World>>();
 	public static boolean checkCooldown(CommandSender sender, final World world, final String command, String permissionBase) {
-		int cooldownTime = General.plugin.config.getInt("cooldown." + command, 0);
+		int cooldownTime = Option.COOLDOWN(command).get();
 		if(cooldownTime > 0) {
 			String instant = permissionBase + ".instant";
 			if(Toolbox.hasPermission(sender, instant)) return true;

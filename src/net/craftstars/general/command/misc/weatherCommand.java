@@ -19,6 +19,7 @@ import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
 
@@ -219,7 +220,7 @@ public class weatherCommand extends CommandBase {
 			World world = (World) args.get("world");
 			int duration = ((Long) args.get("duration")).intValue();
 			doThunder(sender, world, duration);
-		} else return SHOW_USAGE;
+		} else return false;
 		return true;
 	}
 	
@@ -297,7 +298,7 @@ public class weatherCommand extends CommandBase {
 			Block block = world.getBlockAt(x, y, z);
 			while(block.getType() == Material.AIR)
 				block = block.getRelative(BlockFace.DOWN);
-			int range = General.plugin.config.getInt("lightning-range", 20);
+			int range = Option.LIGHTNING_RANGE.get();
 			x += lightning.nextInt(range * 2) - range;
 			y = block.getLocation().getBlockY();
 			z += lightning.nextInt(range * 2) - range;

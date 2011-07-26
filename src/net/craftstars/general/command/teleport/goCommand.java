@@ -14,6 +14,7 @@ import net.craftstars.general.General;
 import net.craftstars.general.teleport.*;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class goCommand extends CommandBase {
@@ -25,6 +26,11 @@ public class goCommand extends CommandBase {
 	public boolean hasDestPermission(CommandSender sender, Target targ, Destination dest) {
 		if(dest.hasPermission(sender, "general.teleport")) return true;
 		return dest.hasPermission(sender, targ.getType().getPermission("general.teleport"));
+	}
+
+	public boolean hasDestInstant(CommandSender sender, Target targ, Destination dest) {
+		if(dest.hasInstant(sender, "general.teleport")) return true;
+		return dest.hasInstant(sender, targ.getType().getPermission("general.teleport"));
 	}
 
 	@Override
@@ -71,8 +77,8 @@ public class goCommand extends CommandBase {
 						inWarmup.remove(player);
 					}
 				};
-				int warmup = plugin.config.getInt("teleport.warm-up", 0);
-				if(warmup == 0 || Toolbox.hasPermission(sender, "general.teleport.instant")) teleport.run();
+				int warmup = Option.TELEPORT_WARMUP.get();
+				if(warmup == 0 || (target.hasInstant(sender) && hasDestInstant(player, target, dest))) teleport.run();
 				else {
 					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, teleport, warmup);
 					inWarmup.add(player);

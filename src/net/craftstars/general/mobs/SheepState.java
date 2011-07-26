@@ -4,18 +4,17 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Random;
 
-import net.craftstars.general.General;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.DyeColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Sheep;
-import org.bukkit.util.config.Configuration;
 
 public class SheepState extends MobData {
 	private boolean sheared = false;
@@ -73,13 +72,12 @@ public class SheepState extends MobData {
 	@Override
 	public String getCostNode(String base) {
 		if(sheared) return base + ".sheared";
-		Configuration config = General.plugin.config;
 		String node = base + "." + getColourName();
-		if(Toolbox.nodeExists(config, node)) return node;
+		if(Option.nodeExists(node)) return node;
 		node = base + ".natural";
-		if(natural.contains(clr) && Toolbox.nodeExists(config, node)) return node;
+		if(natural.contains(clr) && Option.nodeExists(node)) return node;
 		node = base + ".dyed";
-		if(!natural.contains(clr) && Toolbox.nodeExists(config, node)) return node;
+		if(!natural.contains(clr) && Option.nodeExists(node)) return node;
 		return base + ".default";
 	}
 

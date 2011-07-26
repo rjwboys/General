@@ -9,6 +9,7 @@ import net.craftstars.general.items.ItemID;
 import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
@@ -99,7 +100,7 @@ public class clearCommand extends CommandBase {
 		if(Toolbox.lacksPermission(sender, "general.clear"))
 			return Messaging.lacksPermission(sender, "general.clear");
 		boolean sell = General.plugin.economy != null;
-		sell = sell && General.plugin.config.getString("economy.give.sell", "sell").equalsIgnoreCase("sell");
+		sell = sell && Option.ECONOMY_CLEAR_SELL.get().equalsIgnoreCase("sell");
 		Player player = (Player) args.get("player");
 		CleanType option = (CleanType) args.get("option");
 		doClean(player, sender, option, sell);

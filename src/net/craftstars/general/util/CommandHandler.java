@@ -23,11 +23,10 @@ public class CommandHandler {
 	public static String[] compassAliases;
 	public static String[] posAliases;
 	
-	public static void setup() {
+	public static void setup(Configuration config) {
 		if(setAliases) return;
 		if(commandMap == null && !getCommandMap()) return;
 		if(register == null && !getRegisterMethod()) return;
-		Configuration config = General.plugin.config;
 		if(!config.getKeys(null).contains("aliases"))
 			General.logger.warn(LanguageText.LOG_COMMAND_NO_ALIASES.value());
 		PluginDescriptionFile plug = General.plugin.getDescription();
@@ -72,7 +71,6 @@ public class CommandHandler {
 	
 	public static boolean register(String label, Command command) {
 		try {
-			//General.logger.debug("Registering " + label + " as an alias for " + command.getName());
 			boolean success = (Boolean) register.invoke(commandMap, label, "General.dynalias", command, true);
 			if(!success) {
 				Command cmd = Bukkit.getServer().getPluginCommand(label);

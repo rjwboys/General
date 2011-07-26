@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.items.Kits;
 import net.craftstars.general.money.EconomyBase;
@@ -19,6 +18,7 @@ import net.craftstars.general.util.HelpHandler;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.MessageOfTheDay;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.PluginLogger;
 import net.craftstars.general.util.Time;
 
@@ -57,13 +57,13 @@ public class General extends JavaPlugin {
 	
 	public void goAway(Player who, String reason) {
 		playersAway.put(who.getName(), reason);
-		if(config.getBoolean("away-sleep", true))
+		if(Option.AWAY_SLEEP.get())
 			who.setSleepingIgnored(true);
 	}
 	
 	public void unAway(Player who) {
 		playersAway.remove(who.getName());
-		if(config.getBoolean("away-sleep", true))
+		if(Option.AWAY_SLEEP.get())
 			who.setSleepingIgnored(false);
 	}
 	
@@ -83,6 +83,7 @@ public class General extends JavaPlugin {
 	PlayerListener pl = new PlayerListener() {
 		@Override
 		public void onPlayerJoin(PlayerJoinEvent event) {
+			if(!Option.SHOW_MOTD.get()) return;
 			MessageOfTheDay.showMotD(event.getPlayer());
 		}
 		
@@ -114,7 +115,7 @@ public class General extends JavaPlugin {
 		logger.setPluginVersion(this.getDescription().getVersion());
 		loadAllConfigs();
 		logger.info("[Codename: " + General.codename + "] " + LanguageText.LOG_SUCCESS.value());
-		CommandHandler.setup();
+		CommandHandler.setup(config);
 		HelpHandler.setup();
 		registerEvents();
 	}
@@ -122,21 +123,18 @@ public class General extends JavaPlugin {
 	public void loadAllConfigs() {
 		this.config = this.getConfiguration();
 		this.loadConfiguration();
-		CommandBase.SHOW_USAGE = config.getBoolean("show-usage-on-fail", true);
 		
 		Time.setup();
 		Items.setup();
 		setupPermissions(true);
 		Kits.loadKits();
 		setupEconomy();
-		tagFormat = config.getString("tag-fmt", "name:");
 		Messaging.load();
 	}
 
 	private void registerEvents() {
 		PluginManager pm = getServer().getPluginManager();
-		if(config.getBoolean("show-motd", true))
-			pm.registerEvent(PLAYER_JOIN, pl, Priority.Monitor, this);
+		pm.registerEvent(PLAYER_JOIN, pl, Priority.Monitor, this);
 		pm.registerEvent(PLAYER_CHAT, pl, Priority.Monitor, this);
 		pm.registerEvent(PLAYER_LOGIN, pl, Priority.Monitor, this);
 	}
@@ -145,12 +143,7 @@ public class General extends JavaPlugin {
 		gotRequestedEconomy = true;
 		String econType = "None";
 		try {
-			try {
-				String s = config.getNode("economy").getString("system");
-				if(s != null) econType = s;
-			} catch(Exception ex) {
-				econType = "None";
-			}
+			econType = Option.ECONOMY_SYSTEM.get();
 			if(econType.equalsIgnoreCase("None")) {
 				logger.info(LanguageText.LOG_NO_ECONOMY.value());
 				return;
@@ -181,15 +174,8 @@ public class General extends JavaPlugin {
 		String permType = "unknown";
 		gotRequestedPermissions = true;
 		try {
-			try {
-				permType = config.getNode("permissions").getString("system");
-				permType.isEmpty(); // To trigger NPE if applicable. <_< Why? Avoiding duplication.
-			} catch(Exception ex) {
-				permType = "Basic";
-			}
-			Class<? extends PermissionsHandler> clazz =
-					this.getClass()
-							.getClassLoader()
+			permType = Option.PERMISSIONS_SYSTEM.get();
+			Class<? extends PermissionsHandler> clazz = this.getClass().getClassLoader()
 							.loadClass("net.craftstars.general.security." + permType + "PermissionsHandler")
 							.asSubclass(PermissionsHandler.class);
 			permissions = clazz.newInstance();
@@ -212,7 +198,7 @@ public class General extends JavaPlugin {
 	public void onDisable() {
 		Items.save();
 		Messaging.save();
-		if(config.getBoolean("auto-save", false)) {
+		if(Option.AUTO_SAVE.get()) {
 			Kits.save();
 			config.save();
 		}

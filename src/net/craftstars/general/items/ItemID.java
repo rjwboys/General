@@ -10,6 +10,7 @@ import java.util.List;
 import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Material;
@@ -213,13 +214,13 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		List<String> groups = config.getKeys("groups");
 		if(groups == null) return true;
 		for(String group : groups) {
-			List<Integer> items = config.getIntList("groups." + group, null);
+			List<Integer> items = Option.GROUP(group).get();
 			if(items.isEmpty()) continue;
 			if(items.contains(ID)) {
 				permissions.add("general.give.group." + group);
 			}
 		}
-		boolean othersForAll = config.getBoolean("others-for-all", true);
+		boolean othersForAll = Option.OTHERS4ALL.get();
 		if(permissions.size() <= 2 && !othersForAll)
 			permissions.add("general.give.groupless");
 		String[] permNodes = new String[permissions.size()];

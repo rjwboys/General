@@ -17,6 +17,7 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.teleport.Destination;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class whoCommand extends CommandBase {
@@ -34,14 +35,10 @@ public class whoCommand extends CommandBase {
 	public whoCommand(General instance) {
 		super(instance);
 		int mask = TITLE | UNAME | DNAME | STATUS;
-		if(General.plugin.config.getBoolean("playerlist.show-health", true))
-			mask |= HEALTH;
-		if(General.plugin.config.getBoolean("playerlist.show-coords", true))
-			mask |= LOC | HOME;
-		if(General.plugin.config.getBoolean("playerlist.show-world", false))
-			mask |= WORLD;
-		if(General.plugin.config.getBoolean("playerlist.show-ip", false))
-			mask |= IP;
+		if(Option.SHOW_HEALTH.get()) mask |= HEALTH;
+		if(Option.SHOW_COORDS.get()) mask |= LOC | HOME;
+		if(Option.SHOW_WORLD.get()) mask |= WORLD;
+		if(Option.SHOW_IP.get()) mask |= IP;
 		defaultMask = mask;
 	}
 	
@@ -167,7 +164,7 @@ public class whoCommand extends CommandBase {
 			if(Toolbox.equalsOne(args[0], "all", "ip", "address")) mask |= IP;
 			if(Toolbox.equalsOne(args[0], "all", "status", "away")) mask |= STATUS;
 			// If they're not allowed to override, mask out disabled values
-			if(!plugin.config.getBoolean("playerlist.allow-all", false)) mask &= defaultMask;
+			if(!Option.ALLOW_OVERRIDE.get()) mask &= defaultMask;
 			params.put("mask", mask);
 			params.put("who", sender);
 		} else {

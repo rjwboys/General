@@ -1,7 +1,6 @@
 
 package net.craftstars.general.command.teleport;
 
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,6 +70,7 @@ public class setspawnCommand extends CommandBase {
 			Destination dest = (Destination) args.get("dest");
 			World world = (World) args.get("world");
 			setSpawn(sender, dest, world);
+			return true;
 		} else if(command.equals("sethome")) {
 			Destination dest = (Destination) args.get("dest");
 			Player who = (Player) args.get("player");
@@ -81,8 +81,9 @@ public class setspawnCommand extends CommandBase {
 			} else if(Toolbox.lacksPermission(sender, "general.setspawn.self", "general.spawn.home"))
 				return Messaging.lacksPermission(sender, "general.setspawn.self");
 			setHome(sender, dest, who);
+			return true;
 		}
-		return SHOW_USAGE;
+		return false;
 	}
 	
 	private void setHome(CommandSender sender, Destination dest, Player who) {
@@ -137,7 +138,8 @@ public class setspawnCommand extends CommandBase {
 			}
 			if(!world.setSpawnLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()))
 				feedback = LanguageText.SETSPAWN_ERROR;
-			Messaging.send(sender, feedback.value("world", world.getName(), "player", who.getDisplayName(),
+			String player = who == null ? "null" : who.getDisplayName();
+			Messaging.send(sender, feedback.value("world", world.getName(), "player", player,
 				"x", loc.getBlockX(), "y", loc.getBlockY(), "z", loc.getBlockZ()));
 		}
 	}

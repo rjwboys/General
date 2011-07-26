@@ -83,7 +83,7 @@ public class timeCommand extends CommandBase {
 			setTime(sender, time, world);
 		} else if(command.equals("showtime"))
 			showTime(sender, world);
-		else return SHOW_USAGE;
+		else return false;
 		return true;
 	}
 	
@@ -132,7 +132,7 @@ public class timeCommand extends CommandBase {
 				Messaging.send(sender, LanguageText.TIME_BAD_DURATION);
 			} catch(Exception ex) {
 				ex.printStackTrace();
-				return SHOW_USAGE;
+				return false;
 			}
 			return true;
 		} else if(timeStr.startsWith("-")) {
@@ -146,7 +146,7 @@ public class timeCommand extends CommandBase {
 				Messaging.send(sender, LanguageText.TIME_BAD_DURATION);
 			} catch(Exception ex) {
 				ex.printStackTrace();
-				return SHOW_USAGE;
+				return false;
 			}
 			return true;
 		} else {
@@ -160,7 +160,7 @@ public class timeCommand extends CommandBase {
 			} catch(NumberFormatException x) {
 				Messaging.send(sender, LanguageText.TIME_BAD_TIME);
 			} catch(Exception ex) {
-				return SHOW_USAGE;
+				return false;
 			}
 			return true;
 		}

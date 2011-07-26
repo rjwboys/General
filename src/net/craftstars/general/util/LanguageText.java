@@ -3,8 +3,6 @@ package net.craftstars.general.util;
 import java.io.File;
 import java.util.HashMap;
 
-import net.craftstars.general.General;
-
 import org.bukkit.util.config.Configuration;
 
 /**
@@ -185,9 +183,11 @@ public enum LanguageText {
 	TARGET_SELF("target.self", "yourself"),
 	TARGET_SOMEONE("target.someone", "someone"),
 	TARGET_SEVERAL("target.several", "several people"),
-	TARGET_MOBS("target.mobs", "several mobs"),
+	TARGET_NEARBY("target.nearby", "several mobs"),
 	TARGET_ONE_MOB("target.one-mob", "a {mob}"),
 	TARGET_MOB("target.mob", "mob"),
+	TARGET_MOBS("target.mobs", "mobs"),
+	TARGET_OTHER("target.other", "others"),
 	TARGET_NO_PLAYERS("target.no-players", "{rose}No players nearby."),
 	TARGET_NO_MOBS("target.no-mobs", "{rose}No mobs nearby."),
 	TARGET_NO_TARGET("target.no-target", "{rose}No-one there."),
@@ -312,6 +312,7 @@ public enum LanguageText {
 	LACK_WEATHER_SET("permissions.weather_set","control the weather"),
 	LACK_WEATHER_ZAP("permissions.weather_zap","summon lightning"),
 	LACK_TELEPORT("permissions.teleport","teleport"),
+	LACK_TELEPORT_TARGET("permissions.teleport_target","teleport {target}"),
 	LACK_TELEPORT_TO("permissions.teleport_to","teleport to {destination}"),
 	LACK_TELEPORT_INTO("permissions.teleport_into","teleport into world '{destination}'"),
 	LACK_TELEPORT_FROM("permissions.teleport_from","teleport out of world '{destination}'"),

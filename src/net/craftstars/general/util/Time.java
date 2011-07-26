@@ -13,14 +13,12 @@ public class Time {
 	};
 	
 	public static TimeFormat currentFormat;
-	public static boolean showTicks;
 	
 	public static void setup() {
 		currentFormat = TimeFormat.TWELVE_HOUR;
 		try {
-			boolean in24hr = General.plugin.config.getBoolean("time.format-24-hour", false);
+			boolean in24hr = Option.TIME_FORMAT.get();
 			if(in24hr) currentFormat = TimeFormat.TWENTY_FOUR_HOUR;
-			showTicks = General.plugin.config.getBoolean("time.show-ticks", true);
 		} catch(Exception x) {
 			General.logger.warn(LanguageText.LOG_CONFIG_BAD_TIME.value());
 			x.printStackTrace();
@@ -55,7 +53,7 @@ public class Time {
 		}
 		formatString += ":%02d%s";
 		Formatter fmtr = new Formatter();
-		if(showTicks)
+		if(Option.SHOW_TICKS.get())
 			return fmtr.format(formatString + " (%d)", time, minutes, suffix, ticks).toString();
 		else return fmtr.format(formatString, time, minutes, suffix).toString();
 	}

@@ -12,6 +12,7 @@ import java.util.Map;
 import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -191,18 +192,18 @@ public enum MobType {
 	private String getCostClassHelper(MobData info, String baseNode) {
 		Configuration config = General.plugin.config;
 		// Case 1: There's no entry for it, thus it costs nothing.
-		if(!Toolbox.nodeExists(config, baseNode)) return "";
+		if(!Option.nodeExists(baseNode)) return "";
 		// Case 2: There's an entry for it, and it's a number. Then that's the cost.
 		if(config.getProperty(baseNode) instanceof Number) return baseNode;
 		// Case 3: This entry has sub-entries for when the mob is riding something.
-		if(Toolbox.nodeExists(config, baseNode + ".free")) return baseNode + ".free";
+		if(Option.nodeExists(baseNode + ".free")) return baseNode + ".free";
 		// Case 4: This entry has sub-entries for various data values.
 		baseNode = info.getCostNode(baseNode);
-		if(!Toolbox.nodeExists(config, baseNode)) return "";
+		if(!Option.nodeExists(baseNode)) return "";
 		// Case 5: There's an entry for it, and it's a number. Then that's the cost.
 		if(config.getProperty(baseNode) instanceof Number) return baseNode;
 		// Case 6: A combination of cases 3 and 4.
-		if(Toolbox.nodeExists(config, baseNode + ".free")) return baseNode + ".free";
+		if(Option.nodeExists(baseNode + ".free")) return baseNode + ".free";
 		// Case 7: There's no entry for it after all, thus it costs nothing.
 		return "";
 	}

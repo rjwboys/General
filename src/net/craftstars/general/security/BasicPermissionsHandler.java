@@ -5,17 +5,17 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import net.craftstars.general.General;
 import net.craftstars.general.security.PermissionsHandler;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 
 public class BasicPermissionsHandler implements PermissionsHandler {
 	
 	@Override
 	public boolean hasPermission(Player who, String what) {
 		try {
-			List<String> permsList = General.plugin.config.getStringList("permissions.ops-only", null);
+			List<String> permsList = Option.OPS_ONLY.get();
 			if(permsList.contains(what)) return who.isOp();
 			while(what.matches(".*\\..+$")) {
 				if(permsList.contains(what + ".*")) return who.isOp();

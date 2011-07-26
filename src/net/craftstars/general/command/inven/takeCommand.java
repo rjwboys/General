@@ -10,6 +10,7 @@ import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
@@ -94,7 +95,7 @@ public class takeCommand extends CommandBase {
 		if(!sell && Toolbox.lacksPermission(sender, "general.take.other"))
 			return Messaging.lacksPermission(sender, "general.take.other");
 		sell = sell && plugin.economy != null;
-		sell = sell && plugin.config.getString("economy.give.take", "sell").equalsIgnoreCase("sell");
+		sell = sell && Option.ECONOMY_TAKE_SELL.get().equalsIgnoreCase("sell");
 		amount = doTake(who, item, amount, sell);
 		if(!sender.equals(who))
 			Messaging.send(sender, LanguageText.TAKE_THEFT.value("item", item, "amount", amount, "player", who));

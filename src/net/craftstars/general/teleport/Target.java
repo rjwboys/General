@@ -9,6 +9,7 @@ import java.util.List;
 import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Location;
@@ -47,9 +48,9 @@ public class Target {
 				else title = LanguageText.TARGET_SOMEONE.value();
 			}
 		break;
-		case MOB:
+		case MOBS:
 			if(l.size() > 1)
-				title = LanguageText.TARGET_MOBS.value();
+				title = LanguageText.TARGET_NEARBY.value();
 			else {
 				String entity = Toolbox.formatItemName(Toolbox.getCreatureType(l.get(0)).toString());
 				if(entity.isEmpty()) entity = LanguageText.TARGET_MOB.value();
@@ -141,7 +142,7 @@ public class Target {
 		}
 		if(teleporter != null) {
 			// Is it a special keyword?
-			int range = General.plugin.config.getInt("summon-range", 30);
+			int range = Option.SUMMON_RANGE.get();
 			if(Toolbox.equalsOne(targ, "near", "$near")) {
 				List<Entity> near = teleporter.getNearbyEntities(range, range, range);
 				ArrayList<LivingEntity> players = new ArrayList<LivingEntity>();
@@ -161,7 +162,7 @@ public class Target {
 					if(what instanceof LivingEntity && ! (what instanceof Player)) victims.add((LivingEntity) what);
 				}
 				if(victims.size() > 0) {
-					return new Target(victims, TargetType.MOB);
+					return new Target(victims, TargetType.MOBS);
 				} else {
 					Messaging.send(notify, LanguageText.TARGET_NO_MOBS);
 				}
@@ -183,7 +184,7 @@ public class Target {
 					TargetType tt;
 					if(victim instanceof Player)
 						tt = TargetType.OTHER;
-					else tt = TargetType.MOB;
+					else tt = TargetType.MOBS;
 					return new Target(Arrays.asList(victim), tt);
 				} else {
 					Messaging.send(notify, LanguageText.TARGET_NO_TARGET);
@@ -216,7 +217,7 @@ public class Target {
 	}
 	
 	public void setTeleporter(Player who) {
-		if(type == TargetType.MOB) return;
+		if(type == TargetType.MOBS) return;
 		if(teleportees.size() != 1) return;
 		LivingEntity e = teleportees.get(0);
 		if(who.equals(e))
@@ -226,5 +227,9 @@ public class Target {
 	
 	public TargetType getType() {
 		return type;
+	}
+
+	public boolean hasInstant(CommandSender sender) {
+		return type.hasInstant(sender);
 	}
 }

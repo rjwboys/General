@@ -27,6 +27,7 @@ import net.craftstars.general.util.HelpHandler;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.MessageOfTheDay;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class generalCommand extends CommandBase {
@@ -85,7 +86,7 @@ public class generalCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String,Object> params) {
 		String[] args = (String[]) params.get("args");
-		if(args.length < 1) return SHOW_USAGE;
+		if(args.length < 1) return false;
 		if(args[0].equalsIgnoreCase("reload")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.reload"))
 				return Messaging.lacksPermission(sender, "general.admin.reload");
@@ -105,7 +106,7 @@ public class generalCommand extends CommandBase {
 		} else if(args[0].equalsIgnoreCase("item")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.item"))
 				return Messaging.lacksPermission(sender, "general.admin.item");
-			if(args.length < 3) return SHOW_USAGE;
+			if(args.length < 3) return false;
 			return itemEdit(sender, Arrays.copyOfRange(args, 2, args.length));
 		} else if(args[0].equalsIgnoreCase("save")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.save"))
@@ -126,40 +127,40 @@ public class generalCommand extends CommandBase {
 		} else if(args[0].equalsIgnoreCase("restrict")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.restrict"))
 				return Messaging.lacksPermission(sender, "general.admin.restrict");
-			if(args.length < 2) return SHOW_USAGE;
+			if(args.length < 2) return false;
 			return doPermissions(sender, args[1], true);
 		} else if(args[0].equalsIgnoreCase("release")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.release"))
 				return Messaging.lacksPermission(sender, "general.admin.release");
-			if(args.length < 2) return SHOW_USAGE;
+			if(args.length < 2) return false;
 			return doPermissions(sender, args[1], false);
 		} else if(args[0].equalsIgnoreCase("kit")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.kit"))
 				return Messaging.lacksPermission(sender, "administrate the General plugin");
-			if(args.length < 3) return SHOW_USAGE;
+			if(args.length < 3) return false;
 			return kitEdit(sender, Arrays.copyOfRange(args, 1, args.length));
 		} else if(args[0].equalsIgnoreCase("economy")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.economy"))
 				return Messaging.lacksPermission(sender, "general.admin.economy");
-			if(args.length < 3) return SHOW_USAGE;
+			if(args.length < 3) return false;
 			return setEconomy(sender, Arrays.copyOfRange(args, 1, args.length));
 		} else if(args[0].equalsIgnoreCase("set")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.set"))
 				return Messaging.lacksPermission(sender, "general.admin.set");
-			if(args.length < 3) return SHOW_USAGE;
+			if(args.length < 3) return false;
 			return setVar(sender, Arrays.copyOfRange(args, 1, args.length));
 		}
-		return SHOW_USAGE;
+		return false;
 	}
 
 	private boolean doPermissions(CommandSender sender, String node, boolean opsOnly) {
-		List<String> restricted = plugin.config.getStringList("permissions.ops-only", null);
+		List<String> restricted = Option.OPS_ONLY.get();
 		if(opsOnly) restricted.add(node);
 		else restricted.remove(node);
-		plugin.config.setProperty("permissions.ops-only", restricted);
+		Option.OPS_ONLY.set(restricted);
 		Messaging.send(sender, (opsOnly ? LanguageText.PERMISSIONS_RESTRICT : LanguageText.PERMISSIONS_RELEASE)
 			.value("node", node));
-		return SHOW_USAGE;
+		return false;
 	}
 
 	private void doReload(CommandSender sender) {
@@ -176,7 +177,7 @@ public class generalCommand extends CommandBase {
 	}
 	
 	private boolean kitEdit(CommandSender sender, String[] args) {
-		if(args.length < 2) return SHOW_USAGE;
+		if(args.length < 2) return false;
 		String kitName = args[0];
 		if(!Kits.kits.containsKey(kitName) && !args[1].equals("add")) {
 			Messaging.send(sender, LanguageText.KIT_INVALID.value("kit", kitName));
@@ -192,7 +193,7 @@ public class generalCommand extends CommandBase {
 				Kits.kits.put(kitName, kit);
 				if(args.length < 3) return true;
 			}
-			if(args.length < 3) return SHOW_USAGE;
+			if(args.length < 3) return false;
 			ItemID item = Items.validate(args[2]);
 			int amount = 1;
 			if(args.length >= 4) try {
@@ -206,7 +207,7 @@ public class generalCommand extends CommandBase {
 			return true;
 		} else if(args[1].equalsIgnoreCase("remove")) {
 			Kit kit = Kits.kits.get(kitName);
-			if(args.length < 3) return SHOW_USAGE;
+			if(args.length < 3) return false;
 			ItemID item = Items.validate(args[2]);
 			if(!kit.contains(item)) {
 				Messaging.send(sender, LanguageText.KIT_NOT_IN.value("kit", kitName, "item", item.getName()));
@@ -261,7 +262,7 @@ public class generalCommand extends CommandBase {
 			Messaging.send(sender, LanguageText.KIT_CONTAINS.value("kit", kitName, "items", items));
 			Messaging.send(sender, LanguageText.KIT_INFO.value("kit",kitName,"delay",kit.delay,"cost",kit.getCost()));
 		}
-		return SHOW_USAGE;
+		return false;
 	}
 
 	private boolean setEconomy(CommandSender sender, String[] args) {
@@ -276,7 +277,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 			args = args[0].trim().split("\\s+");
-			if(args.length == 0) return SHOW_USAGE;
+			if(args.length == 0) return false;
 			String path = "economy.";
 			if(Toolbox.equalsOne(args[0], "heal", "hurt")) path += args[0];
 			else if(args[0].equalsIgnoreCase("time")) {
@@ -507,16 +508,16 @@ public class generalCommand extends CommandBase {
 			Messaging.send(sender, "Set economy value '" + path + "' to " + value + "!");
 			return true;
 		}
-		return SHOW_USAGE;
+		return false;
 	}
 
 	private boolean setVar(CommandSender sender, String[] args) {
 		// TODO: Update this to use the messaging framework
-		String path = null;
+		Option node = null;
 		Object value = null;
-		if(args.length != 2) return SHOW_USAGE;
+		if(args.length != 2) return false;
 		if(args[0].equalsIgnoreCase("permissions")) {
-			path = "permissions.system";
+			node = Option.PERMISSIONS_SYSTEM;
 			if(!Toolbox.equalsOne(args[1], "Basic", "Permissions", "WorldEdit")) {
 				Messaging.send(sender, "&cInvalid permissions system.");
 				return true;
@@ -524,14 +525,14 @@ public class generalCommand extends CommandBase {
 			String nice = Character.toUpperCase(args[1].charAt(0)) + args[1].substring(1).toLowerCase();
 			value = nice;
 		} else if(args[0].equalsIgnoreCase("others-for-all")) {
-			path = "give.others-for-all";
+			node = Option.OTHERS4ALL;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, "&cMust be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("give-mass")) {
-			path = "give.mass";
+			node = Option.GIVE_MASS;
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -539,56 +540,56 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("show-health")) {
-			path = "playerlist.show-health";
+			node = Option.SHOW_HEALTH;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, "&cMust be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-coords")) {
-			path = "playerlist.show-coords";
+			node = Option.SHOW_COORDS;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, "&cMust be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-world")) {
-			path = "playerlist.show-world";
+			node = Option.SHOW_WORLD;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, "&cMust be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-ip")) {
-			path = "playerlist.show-ip";
+			node = Option.SHOW_IP;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, "&cMust be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-motd")) {
-			path = "show-motd";
+			node = Option.SHOW_MOTD;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, "&cMust be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("24-hour")) {
-			path = "time.format-24-hour";
+			node = Option.TIME_FORMAT;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, "&cMust be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-ticks")) {
-			path = "time.show-ticks";
+			node = Option.SHOW_TICKS;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, "&cMust be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("economy")) {
-			path = "economy.system";
+			node = Option.ECONOMY_SYSTEM;
 			if(!Toolbox.equalsOne(args[1], "None", "iConomy", "iConomy4", "iConomy5", "BOSEconomy")) {
 				Messaging.send(sender, "&cInvalid economy system.");
 				return true;
@@ -596,28 +597,28 @@ public class generalCommand extends CommandBase {
 			String nice = Character.toUpperCase(args[1].charAt(0)) + args[1].substring(1).toLowerCase();
 			value = nice;
 		} else if(args[0].equalsIgnoreCase("economy-take")) {
-			path = "economy.give.take";
+			node = Option.ECONOMY_TAKE_SELL;
 			if(!Toolbox.equalsOne(args[1], "trash", "sell")) {
 				Messaging.send(sender, "&cInvalid economy-take method (must be trash or sell).");
 				return true;
 			}
 			value = args[1];
 		} else if(args[0].equalsIgnoreCase("economy-clear")) {
-			path = "economy.give.clear";
+			node = Option.ECONOMY_CLEAR_SELL;
 			if(!Toolbox.equalsOne(args[1], "trash", "sell")) {
 				Messaging.send(sender, "&cInvalid economy-clear method (must be trash or sell).");
 				return true;
 			}
 			value = args[1];
 		} else if(args[0].equalsIgnoreCase("economy-kits")) {
-			path = "economy.give.kits";
+			node = Option.KIT_METHOD;
 			if(!Toolbox.equalsOne(args[1], "individual", "cumulative", "discount")) {
 				Messaging.send(sender, "&cInvalid economy-kits method (must be individual, cumulative, or discount).");
 				return true;
 			}
 			value = args[1];
 		} else if(args[0].equalsIgnoreCase("economy-sell")) {
-			path = "economy.give.sell";
+			node = Option.ECONOMY_SELL;
 			try {
 				value = Double.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -625,7 +626,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("kits-discount")) {
-			path = "economy.give.discount";
+			node = Option.KIT_DISCOUNT;
 			try {
 				value = Double.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -633,24 +634,24 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("chat-tag")) {
-			path = "tag-fmt";
+			node = Option.TAG_FORMAT;
 			value = args[1];
 		} else if(args[0].equalsIgnoreCase("log-commands")) {
-			path = "log-commands";
+			node = Option.LOG_COMMANDS;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, "&cMust be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("auto-save")) {
-			path = "auto-save";
+			node = Option.AUTO_SAVE;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, "&cMust be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("lightning-range")) {
-			path = "lightning-range";
+			node = Option.LIGHTNING_RANGE;
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -658,7 +659,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("teleport-warmup")) {
-			path = "teleport.warmup";
+			node = Option.TELEPORT_WARMUP;
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -666,7 +667,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("time-cooldown")) {
-			path = "cooldown.time";
+			node = Option.COOLDOWN("time");
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -674,7 +675,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("storm-cooldown")) {
-			path = "cooldown.storm";
+			node = Option.COOLDOWN("storm");
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -682,7 +683,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("thunder-cooldown")) {
-			path = "cooldown.thunder";
+			node = Option.COOLDOWN("thunder");
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -690,7 +691,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("lighting-cooldown")) {
-			path = "cooldown.lightning";
+			node = Option.COOLDOWN("lightning");
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -698,15 +699,15 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("show-usage")) {
-			path = "show-usage-on-fail";
+			node = Option.SHOW_USAGE;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, "&cMust be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else Messaging.send(sender, "&cUnknown variable: " + args[0]);
-		if(path != null && value != null) {
-			plugin.config.setProperty(path, value);
+		if(node != null && value != null) {
+			node.set(value);
 			Messaging.send(sender, "Variable " + args[0] + " set to " + value + ".");
 		}
 		return true;
@@ -715,7 +716,7 @@ public class generalCommand extends CommandBase {
 	private boolean itemEdit(CommandSender sender, String[] args) {
 		// TODO: Update this to use the messaging framework
 		if(args.length < 2 || args.length > 3) {
-			return SHOW_USAGE;
+			return false;
 		} else if(args[0].equalsIgnoreCase("alias")) {
 			switch(args.length) {
 			case 2:
@@ -834,7 +835,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		}
-		return SHOW_USAGE;
+		return false;
 	}
 
 	@Override // TODO: This is cheating

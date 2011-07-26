@@ -16,6 +16,7 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class getposCommand extends CommandBase {
@@ -63,7 +64,7 @@ public class getposCommand extends CommandBase {
 		} else if(Toolbox.equalsOne(command, "brief", "pos", "where", "short")) {
 			String msg = LanguageText.GETPOS_POS.value("player", player, "x", whose.getLocation().getX(),
 				"y", whose.getLocation().getY(), "z", whose.getLocation().getZ());
-			if(General.plugin.config.getBoolean("playerlist.show-world", false))
+			if(Option.SHOW_WORLD.get())
 				msg += LanguageText.GETPOS_WORLD.value("world", whose.getWorld().getName());
 			Messaging.send(sender, msg);
 		} else if(Toolbox.equalsOne(command, "rotation", "rot", "facing")) {
@@ -75,7 +76,7 @@ public class getposCommand extends CommandBase {
 		} else if(Toolbox.equalsOne(command, "long", "full")) {
 			String msg = LanguageText.GETPOS_POS.value("player", player, "x", whose.getLocation().getX(),
 				"y", whose.getLocation().getY(), "z", whose.getLocation().getZ());
-			if(General.plugin.config.getBoolean("playerlist.show-world", false))
+			if(Option.SHOW_WORLD.get())
 				msg += LanguageText.GETPOS_WORLD.value("world", whose.getWorld().getName());
 			msg += "\n" + LanguageText.GETPOS_ROTATION.value("player", player, 
 				"yaw", whose.getLocation().getYaw(), "pitch", whose.getLocation().getPitch());
@@ -83,7 +84,7 @@ public class getposCommand extends CommandBase {
 				"direction", this.getDirection(degrees));
 			msg += LanguageText.GETPOS_ANGLE.value("angle", round(degrees * 10) / 10.0);
 			Messaging.send(sender, msg);
-		} else return SHOW_USAGE;
+		} else return false;
 		return false;
 	}
 	

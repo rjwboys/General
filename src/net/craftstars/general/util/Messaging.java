@@ -4,7 +4,6 @@ package net.craftstars.general.util;
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.Arrays;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,7 @@ public class Messaging {
 	public static void load() {
 		File dataFolder = General.plugin.getDataFolder();
 		if(!dataFolder.exists()) dataFolder.mkdirs();
-		String lang = General.plugin.config.getString("language", "en");
+		String lang = Option.LANGUAGE.get();
 		config = LanguageText.setLanguage(lang, "messages_" + lang + ".yml");
 		List<String> names = config.getStringList("colours", Arrays.asList(defaultColours));
 		for(int i = 0; i < 16; i++)

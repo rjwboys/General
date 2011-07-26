@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class Kit implements Iterable<ItemID> {
@@ -58,10 +59,8 @@ public class Kit implements Iterable<ItemID> {
 	
 	private void calculateCost() {
 		// First, determine method of costing; then, calculate actual cost.
-		String method = General.plugin.config.getString("economy.give.kits");
-		if(method == null) {
-			cost = new String[0];
-		} else if(Toolbox.equalsOne(method, "cumulative", "discount")) {
+		String method = Option.KIT_METHOD.get();
+		if(Toolbox.equalsOne(method, "cumulative", "discount")) {
 			// Linked-list for constant-time add
 			LinkedList<String> econNodes = new LinkedList<String>();
 			for(ItemID item : items.keySet()) {
@@ -69,7 +68,7 @@ public class Kit implements Iterable<ItemID> {
 				while(quantity-- > 0) econNodes.add("general.economy.give.item" + item.toString());
 			}
 			if(method.equalsIgnoreCase("discount"))
-				econNodes.add("%" + General.plugin.config.getDouble("economy.give.discount", 80));
+				econNodes.add("%" + Option.KIT_DISCOUNT.get());
 			cost = econNodes.toArray(new String[0]);
 		} else {
 			if(!method.equalsIgnoreCase("individual"))

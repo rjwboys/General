@@ -9,7 +9,7 @@ import java.util.Map;
 import net.craftstars.general.General;
 import net.craftstars.general.util.HelpHandler;
 import net.craftstars.general.util.LanguageText;
-import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
@@ -20,7 +20,6 @@ import org.bukkit.entity.Player;
 
 public abstract class CommandBase implements CommandExecutor {
 	enum FailurePlace {INIT, HELP, PARSE, EXECUTE, NONE};
-	public static boolean SHOW_USAGE = false; // Change to true to not spew out usage notes on incorrect syntax
 	private static HashSet<String> frozenAccounts = new HashSet<String>();
 	protected final General plugin;
 	private String cmdToExecute;
@@ -33,9 +32,9 @@ public abstract class CommandBase implements CommandExecutor {
 	public synchronized boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String cmdStr = commandLabel + " " + Toolbox.join(args);
 		String senderName = getName(sender);
-		boolean commandResult = SHOW_USAGE;
+		boolean commandResult = Option.SHOW_USAGE.get();
 		FailurePlace error = FailurePlace.NONE, at = FailurePlace.INIT;
-		if(plugin.config.getBoolean("log-commands", false))
+		if(Option.LOG_COMMANDS.get())
 			General.logger.info(LanguageText.LOG_COMMAND_USED.value("sender", senderName, "command", cmdStr));
 		try {
 			if(isHelpCommand(command, commandLabel, args)) {
@@ -71,6 +70,7 @@ public abstract class CommandBase implements CommandExecutor {
 			e.printStackTrace();
 			commandResult = false;
 		}
+		commandResult = commandResult || Option.SHOW_USAGE.get();
 		return commandResult;
 	}
 	

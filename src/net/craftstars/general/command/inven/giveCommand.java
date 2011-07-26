@@ -14,6 +14,7 @@ import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class giveCommand extends CommandBase {
@@ -106,7 +107,7 @@ public class giveCommand extends CommandBase {
 		int amount = (Integer) args.get("amount");
 		if(amount < 0 && Toolbox.lacksPermission(sender, "general.give.infinite"))
 			return Messaging.lacksPermission(sender, "general.give.infinite");
-		int maxAmount = General.plugin.config.getInt("give.mass", 64);
+		int maxAmount = Option.GIVE_MASS.get();
 		if(amount > maxAmount && Toolbox.lacksPermission(sender, "general.give.mass"))
 			return Messaging.lacksPermission(sender, "general.give.mass");
 		ItemID item = (ItemID) args.get("item");

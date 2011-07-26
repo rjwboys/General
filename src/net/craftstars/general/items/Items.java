@@ -20,6 +20,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class Items {
@@ -530,24 +531,24 @@ public class Items {
 			ItemID thisItem = validate(item);
 			if(thisItem.isValid()) items.add(thisItem.getId());
 		}
-		General.plugin.config.setProperty("give.groups." + groupName, items);
+		Option.GROUP(groupName).set(items);
 	}
 
 	public static List<Integer> groupItems(String groupName) {
-		return General.plugin.config.getIntList("give.groups." + groupName, null);
+		return Option.GROUP(groupName).get();
 	}
 
 	public static void addGroupItem(String groupName, String item) {
 		List<Integer> group = groupItems(groupName);
 		ItemID thisItem = validate(item);
 		if(thisItem.isValid()) group.add(thisItem.getId());
-		General.plugin.config.setProperty("give.groups." + groupName, group);
+		Option.GROUP(groupName).set(group);
 	}
 
 	public static void removeGroupItem(String groupName, String item) {
 		List<Integer> group = groupItems(groupName);
 		ItemID thisItem = validate(item);
 		if(thisItem.isValid()) group.remove(thisItem.getId());
-		General.plugin.config.setProperty("give.groups." + groupName, group);
+		Option.GROUP(groupName).set(group);
 	}
 }
