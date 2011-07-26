@@ -331,6 +331,9 @@ public enum LanguageText {
 	LACK_ADMIN_KIT("permissions.admin_kit", "edit the kit definitions"),
 	LACK_ADMIN_ECONOMY("permissions.admin_economy", "edit the command costs"),
 	LACK_ADMIN_SET("permissions.admin_set", "edit configuration values"),
+	LACK_DEOP("permissions.deop", "deop players"),
+	LACK_OP("permissions.op", "op players"),
+	LACK_KICK("permissions.kick", "kick players"),
 	// Miscellaneous common messages
 	MISC_BAD_PLAYER("misc.bad-player", "{rose}There is no player named {white}{name}{rose}."),
 	MISC_BAD_WORLD("misc.bad-world", "{rose}There is no world named {white}{name}{rose}."),
@@ -339,6 +342,7 @@ public enum LanguageText {
 	ECONOMY_SHOW_COST("econ.show-cost", "{yellow}That would cost {white}{cost}{yellow}."),
 	ECONOMY_PAY("econ.pay", "{yellow}You pay {white}{cost}{yellow}."),
 	ECONOMY_EARN("econ.earn", "{yellow}You have earned {white}{income}{yellow}!"),
+	MISC_KICKED("misc.kicked", "Kicked by administrator"),
 	;
 	
 	private static Configuration config;
