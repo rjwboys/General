@@ -34,8 +34,7 @@ public class masstakeCommand extends CommandBase {
 				Messaging.invalidPlayer(sender, args[args.length-1]);
 				return null;
 			}
-		}
-		else args[args.length-1] = null;
+		} else args = dropLastArg(args);
 		ArrayList<ItemID> items = new ArrayList<ItemID>();
 		for(String item : args) {
 			if(item != null){

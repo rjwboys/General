@@ -1,11 +1,11 @@
 
 package net.craftstars.general.command.inven;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
@@ -19,28 +19,13 @@ public class itemsCommand extends CommandBase {
 	public itemsCommand(General instance) {
 		super(instance);
 	}
-
-	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
-		if(args.length < 2) return SHOW_USAGE;
-		Player toWhom = Toolbox.matchPlayer(args[0]);
-		if(toWhom == null) return Messaging.invalidPlayer(sender, args[0]);
-		doGive(toWhom, sender, Arrays.copyOfRange(args, 1, args.length));
-		return true;
-	}
-
-	@Override
-	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.hasPermission(sender, "general.give.mass") || sender.isOp()) {
-			if(args.length < 2) return SHOW_USAGE;
-			Player toWhom = Toolbox.matchPlayer(args[0]);
-			if(toWhom == null) return Messaging.invalidPlayer(sender, args[0]);
-			doGive(toWhom, sender, Arrays.copyOfRange(args, 1, args.length));
-		}
-		return true;
-	}
 	
-	private void doGive(Player toWhom, CommandSender sender, String[] items) {
+	@Override
+	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
+		if(Toolbox.lacksPermission(sender, "general.give.mass"))
+			return Messaging.lacksPermission(sender, "give many items at once");
+		Player toWhom = (Player) args.get("player");
+		String[] items = (String[]) args.get("items");
 		StringBuilder text = new StringBuilder("Giving &f");
 		for(String item : items) {
 			ItemID what = Items.validate(item);
@@ -60,14 +45,23 @@ public class itemsCommand extends CommandBase {
 			Messaging.send(toWhom, "&2Enjoy the gift! " + text + "&f!");
 			Messaging.send(sender, text + "&2 to &f" + toWhom.getName() + "&f!");
 		}
-	}
-	
-	@Override
-	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(sender, "general.give.mass"))
-			return Messaging.lacksPermission(sender, "give many items at once");
-		doGive(sender, sender, args);
 		return true;
 	}
-	
+
+	@Override
+	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
+		if(args.length < (isPlayer ? 1 : 2)) return null;
+		Player target = null;
+		if(args.length > 1) {
+			String name = args[args.length-1];
+			target = Toolbox.matchPlayer(name);
+			if(target != null) args = dropLastArg(args);
+		}
+		if(target == null && isPlayer) target = (Player) sender;
+		if(target == null) return null;
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("player", target);
+		params.put("items", args);
+		return params;
+	}
 }

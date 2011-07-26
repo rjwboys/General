@@ -144,4 +144,11 @@ public abstract class CommandBase implements CommandExecutor {
 			newArgs[i] = args[i];
 		return newArgs;
 	}
+	
+	protected String[] dropLastArg(String[] args) {
+		String[] newArgs = new String[args.length-1];
+		for(int i = 0; i < args.length - 1; i++)
+			newArgs[i] = args[i];
+		return newArgs;
+	}
 }

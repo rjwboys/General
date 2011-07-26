@@ -1,9 +1,11 @@
 
 package net.craftstars.general.command.inven;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
@@ -14,39 +16,36 @@ import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class giveCommand extends CommandBase {
-	private Player who;
-	private ItemID item;
-	private int amount;
-	
 	public giveCommand(General instance) {
 		super(instance);
 	}
 	
 	@Override
-	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.lacksPermission(sender, "general.give"))
-			return Messaging.lacksPermission(sender, "give items");
-		if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
-		
-		who = sender;
-		item = null;
-		amount = 1;
+	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		Player who = null;
+		ItemID item = null;
+		int amount = 1;
 		
 		switch(args.length) {
 		case 1: // /give <item>[:<data>]
+			if(!isPlayer) return null;
 			item = Items.validate(args[0]);
+			who = (Player) sender;
 		break;
 		case 2: // /give <item>[:<data>] <amount> OR /give <item>[:<data>] <player>
 			item = Items.validate(args[0]);
-			try {
-				who = sender;
+			if(isPlayer) try {
 				amount = Integer.valueOf(args[1]);
+				who = (Player) sender;
 			} catch(NumberFormatException x) {
+				Messaging.send(sender, "&rose;The amount must be an integer.");
+			}
+			if(who == null) {
 				who = Toolbox.matchPlayer(args[1]);
 				if(who == null) {
-					Messaging.send(sender, "&rose;The amount must be an integer.");
-					Messaging.send(sender, "&rose;There is no player named &f" + args[1] + "&rose;.");
-					return true;
+					Messaging.invalidPlayer(sender, args[1]);
+					return null;
 				}
 			}
 		break;
@@ -55,43 +54,62 @@ public class giveCommand extends CommandBase {
 			try {
 				amount = Integer.valueOf(args[2]);
 				who = Toolbox.matchPlayer(args[0]);
-				if(who == null) return Messaging.invalidPlayer(sender, args[0]);
+				if(who == null) {
+					Messaging.invalidPlayer(sender, args[0]);
+					return null;
+				}
 				item = Items.validate(args[1]);
 			} catch(NumberFormatException ex) {
 				who = Toolbox.matchPlayer(args[2]);
-				if(who == null) return Messaging.invalidPlayer(sender, args[2]);
+				if(who == null) {
+					Messaging.invalidPlayer(sender, args[2]);
+					return null;
+				}
 				item = Items.validate(args[0]);
 				try {
 					amount = Integer.valueOf(args[1]);
 				} catch(NumberFormatException x) {
 					Messaging.send(sender, "&rose;The amount must be an integer.");
-					return true;
+					return null;
 				}
 			}
 		break;
 		default:
-			return SHOW_USAGE;
+			return null;
 		}
-		
-		if(!who.equals(sender) && Toolbox.lacksPermission(sender, "general.give.other"))
-			return Messaging.lacksPermission(sender, "give items to others");
 		
 		if(item == null || !item.isIdValid()) {
 			Messaging.send(sender, "&rose;Invalid item.");
-			return true;
+			return null;
 		}
 		
 		if(!item.isDataValid()) {
 			Messaging.send(sender, "&f" + item.getVariant() + "&rose; is not a valid data type for &f" +
 				item.getName() + "&rose;.");
-			return true;
+			return null;
 		}
 		
+		// Fill params and go!
+		params.put("player", who);
+		params.put("item", item);
+		params.put("amount", amount);
+		return params;
+	}
+
+	@Override
+	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
+		if(Toolbox.lacksPermission(sender, "general.give"))
+			return Messaging.lacksPermission(sender, "give items");
+		Player who = (Player) args.get("player");
+		if(!who.equals(sender) && Toolbox.lacksPermission(sender, "general.give.other"))
+			return Messaging.lacksPermission(sender, "give items to others");
+		int amount = (Integer) args.get("amount");
 		int maxAmount = General.plugin.config.getInt("give.mass", 64);
 		if(amount < 0 && Toolbox.lacksPermission(sender, "general.give.infinite"))
 			return Messaging.lacksPermission(sender, "give infinite stacks of items");
 		if(amount > maxAmount && Toolbox.lacksPermission(sender, "general.give.mass"))
 			return Messaging.lacksPermission(sender, "give masses of items");
+		ItemID item = (ItemID) args.get("item");
 		// Make sure this player is allowed this particular item
 		if(!item.canGive(sender)) {
 			Messaging.send(sender, "&2You're not allowed to get &f" + item.getName() + "&2.");
@@ -100,17 +118,16 @@ public class giveCommand extends CommandBase {
 		// Make sure the player has enough money for this item
 		if(!Toolbox.canPay(sender, amount, "economy.give.item" + item.toString())) return true;
 		
-		boolean isGift = !who.getName().equals(sender.getName());
-		doGive(isGift);
+		boolean isGift = !who.equals(sender);
+		doGive(who, item, amount, isGift);
 		if(isGift) {
 			Messaging.send(sender, "&2Gave &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" + item.getName()
 					+ "&2 to &f" + who.getName() + "&2!");
 		}
-		
 		return true;
 	}
 	
-	private void doGive(boolean isGift) {
+	private void doGive(Player who, ItemID item, int amount, boolean isGift) {
 		if(amount == 0) { // give one stack
 			amount = Items.maxStackSize(item.getId());
 		}
@@ -130,116 +147,5 @@ public class giveCommand extends CommandBase {
 			Messaging.send(who, "&2Enjoy! Giving &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" +
 				item.getName() + "&2.");
 		}
-	}
-	
-	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel, String[] args) {
-		if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
-		
-		who = null;
-		item = null;
-		amount = 1;
-		
-		switch(args.length) {
-		case 2: // give <item>[:<data>] <player>
-			who = Toolbox.matchPlayer(args[1]);
-			if(who == null) return Messaging.invalidPlayer(sender, args[1]);
-			item = Items.validate(args[0]);
-		break;
-		case 3: // give <item>[:<data>] <amount> <player> OR give <player> <item>[:<data>] <amount>
-			try {
-				amount = Integer.valueOf(args[2]);
-				who = Toolbox.matchPlayer(args[0]);
-				if(who == null) return Messaging.invalidPlayer(sender, args[0]);
-				item = Items.validate(args[1]);
-			} catch(NumberFormatException ex) {
-				who = Toolbox.matchPlayer(args[2]);
-				if(who == null) return Messaging.invalidPlayer(sender, args[2]);
-				item = Items.validate(args[0]);
-				try {
-					amount = Integer.valueOf(args[1]);
-				} catch(NumberFormatException x) {
-					Messaging.send(sender, "&rose;The amount must be an integer.");
-					return true;
-				}
-			}
-		break;
-		default:
-			return SHOW_USAGE;
-		}
-		
-		if(item == null || !item.isIdValid()) {
-			Messaging.send(sender, "&rose;Invalid item.");
-			return true;
-		}
-		
-		if(!item.isDataValid()) {
-			Messaging.send(sender,
-					"&f" + item.getVariant() + "&rose; is not a valid data type for &f" + item.getName()
-							+ "&rose;.");
-			return true;
-		}
-		
-		doGive(true);
-		Messaging.send(sender, "&2Gave &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" + item.getName()
-				+ "&2 to &f" + who.getName() + "&2!");
-		
-		return true;
-	}
-	
-	@Override
-	public boolean fromUnknown(CommandSender sender, Command command, String commandLabel, String[] args) {
-		if(Toolbox.hasPermission(sender, "general.give") || sender.isOp()) {
-			if(args.length < 1 || args[0].equalsIgnoreCase("help")) return SHOW_USAGE;
-			
-			who = null;
-			item = null;
-			amount = 1;
-			
-			switch(args.length) {
-			case 2: // give <item>[:<data>] <player>
-				who = Toolbox.matchPlayer(args[1]);
-				if(who == null) return Messaging.invalidPlayer(sender, args[1]);
-				item = Items.validate(args[0]);
-			break;
-			case 3: // give <item>[:<data>] <amount> <player> OR give <player> <item>[:<data>] <amount>
-				try {
-					amount = Integer.valueOf(args[2]);
-					who = Toolbox.matchPlayer(args[0]);
-					if(who == null) return Messaging.invalidPlayer(sender, args[0]);
-					item = Items.validate(args[1]);
-				} catch(NumberFormatException ex) {
-					who = Toolbox.matchPlayer(args[2]);
-					if(who == null) return Messaging.invalidPlayer(sender, args[2]);
-					item = Items.validate(args[0]);
-					try {
-						amount = Integer.valueOf(args[1]);
-					} catch(NumberFormatException x) {
-						Messaging.send(sender, "&rose;The amount must be an integer.");
-						return true;
-					}
-				}
-			break;
-			default:
-				return SHOW_USAGE;
-			}
-			
-			if(item == null || !item.isIdValid()) {
-				Messaging.send(sender, "&rose;Invalid item.");
-				return true;
-			}
-			
-			if(!item.isDataValid()) {
-				Messaging.send(sender,
-						"&f" + item.getVariant() + "&rose; is not a valid data type for &f" + item.getName()
-								+ "&rose;.");
-				return true;
-			}
-			
-			doGive(true);
-			Messaging.send(sender, "&2Gave &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" + item.getName()
-					+ "&2 to &f" + who.getName() + "&2!");
-		}
-		return true;
 	}
 }

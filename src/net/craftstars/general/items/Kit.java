@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 import net.craftstars.general.General;
 import net.craftstars.general.util.Toolbox;
@@ -42,12 +42,12 @@ public class Kit implements Iterable<ItemID> {
 		return name;
 	}
 	
-	public boolean canGet(Player who) {
+	public boolean canGet(CommandSender who) {
 		if(Toolbox.hasPermission(who, "general.kit." + name.toLowerCase())) return true;
 		return false;
 	}
 	
-	public boolean canAfford(Player who) {
+	public boolean canAfford(CommandSender who) {
 		if(Toolbox.canPay(who, 1, cost)) return true;
 		return false;
 	}
