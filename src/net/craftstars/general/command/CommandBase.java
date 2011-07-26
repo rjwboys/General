@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.craftstars.general.General;
 import net.craftstars.general.util.HelpHandler;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -35,7 +36,7 @@ public abstract class CommandBase implements CommandExecutor {
 		boolean commandResult = SHOW_USAGE;
 		FailurePlace error = FailurePlace.NONE, at = FailurePlace.INIT;
 		if(plugin.config.getBoolean("log-commands", false))
-			General.logger.info(senderName + " used command: " + cmdStr);
+			General.logger.info(LanguageText.LOG_COMMAND_USED.value("sender", senderName, "command", cmdStr));
 		try {
 			if(isHelpCommand(command, commandLabel, args)) {
 				at = FailurePlace.HELP;
@@ -65,9 +66,8 @@ public abstract class CommandBase implements CommandExecutor {
 			*/
 		} catch(Exception e) {
 			error = at;
-			General.logger.error(Messaging.format("There was an error with command [{command}] during {errorPlace}!" +
-					" Please report this!", "command", command.getName(), "errorPlace", error));
-			General.logger.error(Messaging.format("Full command string: [{command}]", "command", cmdStr));
+			General.logger.error(LanguageText.LOG_COMMAND_ERROR.value("command", command.getName(), "errorPlace", error));
+			General.logger.error(LanguageText.LOG_COMMAND_ERROR_INFO.value("command", cmdStr));
 			e.printStackTrace();
 			commandResult = false;
 		}

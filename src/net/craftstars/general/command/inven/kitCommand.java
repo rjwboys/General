@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.items.*;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -31,7 +32,7 @@ public class kitCommand extends CommandBase {
 			if(!isPlayer) return null;
 			kit = Kits.kits.get(args[0]);
 			if(kit == null) {
-				Messaging.send(sender, "&cKit by the name of &e" + args[0] + "&c does not exist!");
+				Messaging.send(sender, LanguageText.KIT_INVALID.value("kit", args[0]));
 				return null;
 			}
 			params.put("player", sender);
@@ -39,7 +40,7 @@ public class kitCommand extends CommandBase {
 		case 2:
 			kit = Kits.kits.get(args[0]);
 			if(kit == null) {
-				Messaging.send(sender, "&cKit by the name of &e" + args[0] + "&c does not exist!");
+				Messaging.send(sender, LanguageText.KIT_INVALID.value("kit", args[0]));
 				return null;
 			}
 			Player who = Toolbox.matchPlayer(args[1]);
@@ -59,9 +60,9 @@ public class kitCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.kit"))
-			return Messaging.lacksPermission(sender, "get kits");
+			return Messaging.lacksPermission(sender, "general.kit");
 		if(command.equals("listkits")) {
-			String msg = "&cKits available: ";
+			String msg = LanguageText.KIT_LIST.value();
 			for(String thisKit : Kits.kits.keySet()) {
 				if(Kits.kits.get(thisKit).canGet(sender)) {
 					msg += thisKit + " ";
@@ -71,13 +72,8 @@ public class kitCommand extends CommandBase {
 		} else {
 			Player who = (Player) args.get("player");
 			Kit kit = (Kit) args.get("kit");
-			if(!kit.canGet(who)) {
-				Messaging.send(sender, "&rose;You do not have permission for that kit.");
-				return true;
-			}
-			
+			if(!kit.canGet(who)) return true;
 			if(!kit.canAfford(who)) return true;
-			
 			GotKit check = new GotKit(sender, kit);
 			
 			// Player did not request any kit previously
@@ -87,8 +83,7 @@ public class kitCommand extends CommandBase {
 				
 				// Time did not expire yet
 				if(left > 0) {
-					Messaging.send(sender, "&cYou may not get this kit so soon! Try again in &e" + left
-							+ "&c seconds.");
+					Messaging.send(sender, LanguageText.KIT_COOLDOWN.value("time", left));
 					return true;
 				}
 			}
@@ -113,6 +108,6 @@ public class kitCommand extends CommandBase {
 		for(ItemID x : kit) {
 			Items.giveItem(sender, x, kit.get(x));
 		}
-		Messaging.send(sender, "&2Here you go!");
+		Messaging.send(sender, LanguageText.KIT_GIVE.value("kit", kit.getName()));
 	}
 }

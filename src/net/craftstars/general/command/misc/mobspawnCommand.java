@@ -16,6 +16,7 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.mobs.MobData;
 import net.craftstars.general.mobs.MobType;
 import net.craftstars.general.teleport.Destination;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -79,14 +80,13 @@ public class mobspawnCommand extends CommandBase {
 		if(dest == null) {
 			if(isPlayer) dest = Destination.targetOf((Player)sender);
 			else {
-				Messaging.send(sender, "Can't determine where to spawn the mob; you're not a player and either didn't" +
-					" specify a destination, or tried to specify an invalid destination.");
+				Messaging.send(sender, LanguageText.MOB_NO_DEST.value());
 				return null;
 			}
 		}
 		if(spawn == null) return null;
 		if(numMobs < 1) {
-			Messaging.send(sender, "Cannot spawn less than one mob.");
+			Messaging.send(sender, LanguageText.MOB_TOO_FEW.value());
 			return null;
 		}
 		economyNodes = spawn.getCostClass();
@@ -119,14 +119,16 @@ public class mobspawnCommand extends CommandBase {
 		split = mobName.split("[.,:/\\|]", 2);
 		MobType mob = MobType.getMob(split[0]);
 		if(mob == null) {
-			Messaging.send(sender, "&cInvalid mob type: " + split[0]);
+			Messaging.send(sender, LanguageText.MOB_BAD_TYPE.value("mob", LanguageText.MOB_MOB.value(),
+				"type", split[0]));
 			return null;
 		}
 		MobData data;
 		if(split.length == 2) {
 			data = MobData.parse(mob, sender, split[1]);
 			if(data == null) {
-				Messaging.send(sender, "&cInvalid " + mob.getName() + " type: " + split[1]);
+				Messaging.send(sender, LanguageText.MOB_BAD_TYPE.value("mob", mob.getName(),
+					"type", split[1]));
 				return null;
 			}
 		} else {
@@ -138,13 +140,13 @@ public class mobspawnCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.mobspawn"))
-			return Messaging.lacksPermission(sender, "spawn mobs");
+			return Messaging.lacksPermission(sender, "general.mobspawn");
 		String[] economyNodes = (String[]) args.get("economy");
 		SpawnResult spawn = (SpawnResult) args.get("mob");
 		Destination dest = (Destination) args.get("dest");
 		int numMobs = (Integer) args.get("num");
 		if(numMobs > 5 && Toolbox.lacksPermission(sender, "general.mobspawn.mass"))
-			return Messaging.lacksPermission(sender, "spawn mobs en masse");
+			return Messaging.lacksPermission(sender, "general.mobspawn.mass");
 		boolean canPay = plugin.economy == null;
 		if(!canPay) canPay = Toolbox.canPay(sender, numMobs, economyNodes);
 		if(canPay) {

@@ -104,10 +104,10 @@ public class HelpHandler {
 			helpPlugin.registerCommand("general kit help",
 					"Information on how to edit the kit definitions.",
 					General.plugin, "general.admin.kit");
-			General.logger.info("[Help " + helpPlugin.getDescription().getVersion() + "] support enabled.");
+			General.logger.info(LanguageText.LOG_HELP_ENABLED.value("version", helpPlugin.getDescription().getVersion()));
 			gotHelp = true;
 		} else {
-			General.logger.warn("[Help] isn't detected. No /help support; instead use /general help");
+			General.logger.warn(LanguageText.LOG_HELP_MISSING.value());
 			gotHelp = false;
 		}
 	}
@@ -120,7 +120,7 @@ public class HelpHandler {
 			File helpFile = new File(dataFolder, filename);
 			f = new Scanner(helpFile);
 		} catch(FileNotFoundException e) {
-			Messaging.send(sender, "&rose;Help topic unavailable.");
+			Messaging.send(sender, LanguageText.HELP_UNAVAILABLE.value());
 			return;
 		}
 		Toolbox.showFile(sender, f, false);

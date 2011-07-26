@@ -4,6 +4,7 @@ package net.craftstars.general.mobs;
 import java.util.HashMap;
 
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -25,7 +26,8 @@ public class SlimeSize extends MobData {
 			return n;
 		}
 		
-		static {
+		static void setup() {
+			mapping.clear();
 			for(NamedSize x : values())
 				mapping.put(x.toString().toLowerCase(), x);
 		}
@@ -46,10 +48,30 @@ public class SlimeSize extends MobData {
 		public String getPermission() {
 			return "general.mobspawn.slime." + toString().toLowerCase();
 		}
+		
+		public String getName() {
+			String name = toString().toLowerCase();
+			try {
+				return MobType.SLIME.getDataList(name)[0];
+			} catch(IndexOutOfBoundsException e) {
+				return name;
+			}
+		}
+
+		public void addMappings(String[] dataList) {
+			for(String alias : dataList) mapping.put(alias, this);
+		}
 	}
 	private NamedSize size = NamedSize.MEDIUM;
 	private int sz = 0;
-
+	
+	public static void setup() {
+		NamedSize.setup();
+		for(NamedSize size : NamedSize.values()) {
+			size.addMappings(MobType.SLIME.getDataList(size.toString().toLowerCase()));
+		}
+	}
+	
 	@Override
 	public boolean hasPermission(CommandSender byWhom) {
 		return Toolbox.hasPermission(byWhom, "general.mobspawn.variants", size.getPermission());
@@ -87,7 +109,8 @@ public class SlimeSize extends MobData {
 
 	@Override
 	public void lacksPermission(CommandSender fromWhom) {
-		Messaging.lacksPermission(fromWhom, "spawn " + size.toString().toLowerCase() + " slimes");
+		Messaging.lacksPermission(fromWhom, size.getPermission(), LanguageText.LACK_MOBSPAWN_SLIME,
+			"size", size.getName());
 	}
 
 	@Override

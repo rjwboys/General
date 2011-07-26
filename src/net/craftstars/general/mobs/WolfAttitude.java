@@ -1,5 +1,8 @@
 package net.craftstars.general.mobs;
 
+import java.util.HashMap;
+
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -10,45 +13,59 @@ import org.bukkit.entity.Wolf;
 
 public class WolfAttitude extends MobData {
 	enum Attitude {
-		WILD("spawn wild wolves", "wild", "calm", "passive", "friendly", "free") {
+		WILD() {
 			@Override
 			public boolean hasPermission(CommandSender byWhom) {
 				return true;
 			}
 		},
-		ANGRY("spawn angry wolves", "angry", "mad", "hostile", "aggressive") {
+		ANGRY() {
 			@Override
 			public boolean hasPermission(CommandSender byWhom) {
 				return Toolbox.hasPermission(byWhom, "general.mobspawn.wolf.angry","general.mobspawn.neutral.angry");
 			}
 		},
-		TAME("spawn tamed wolves", "tame", "pet", "tamed") {
+		TAME() {
 			@Override
 			public boolean hasPermission(CommandSender byWhom) {
 				return Toolbox.hasPermission(byWhom, "general.mobspawn.wolf.tamed");
 			}
 		};
+		private static HashMap<String, Attitude> mapping = new HashMap<String, Attitude>();
 		public abstract boolean hasPermission(CommandSender byWhom);
-		private String phrase;
-		private String[] aliases;
-		Attitude(String p, String... names) {
-			phrase = p;
-			aliases = names;
+		
+		static void setup() {
+			mapping.clear();
+			for(Attitude x : values())
+				mapping.put(x.toString().toLowerCase(), x);
 		}
+		
 		public static Attitude match(String name) {
-			for(Attitude att : values()) {
-				if(Toolbox.equalsOne(name, att.aliases))
-					return att;
-			}
-			return null;
+			return mapping.get(name);
 		}
-		public String getPhrase() {
-			return phrase;
+		
+		public String getName() {
+			String name = toString().toLowerCase();
+			try {
+				return MobType.WOLF.getDataList(name)[0];
+			} catch(IndexOutOfBoundsException e) {
+				return name;
+			}
+		}
+		
+		public void addMappings(String[] dataList) {
+			for(String alias : dataList) mapping.put(alias, this);
 		}
 	}
-
 	private Attitude attitude = Attitude.WILD;
 	private Player player;
+	
+	public static void setup() {
+		Attitude.setup();
+		for(Attitude att : Attitude.values()) {
+			att.addMappings(MobType.WOLF.getDataList(att.toString().toLowerCase()));
+		}
+	}
 	
 	@Override
 	public boolean hasPermission(CommandSender byWhom) {
@@ -96,7 +113,8 @@ public class WolfAttitude extends MobData {
 
 	@Override
 	public void lacksPermission(CommandSender fromWhom) {
-		Messaging.lacksPermission(fromWhom, attitude.getPhrase());
+		String node = "general.mobspawn.wolf." + attitude.toString().toLowerCase();
+		Messaging.lacksPermission(fromWhom, node, LanguageText.LACK_MOBSPAWN_WOLF, "attitude", attitude.getName());
 	}
 
 	@Override

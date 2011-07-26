@@ -11,6 +11,7 @@ import com.nijiko.coelho.iConomy.system.Account;
 import com.nijiko.coelho.iConomy.system.Bank;
 
 import net.craftstars.general.money.EconomyBase;
+import net.craftstars.general.util.LanguageText;
 
 @Deprecated
 public class iConomy4EconomyHandler implements EconomyBase {
@@ -32,8 +33,7 @@ public class iConomy4EconomyHandler implements EconomyBase {
 			String majorRev = version.substring(0, version.indexOf('.'));
 			if(Integer.valueOf(majorRev) > 4) {
 				wasLoaded = false;
-				General.logger.warn("Was looking for iConomy 4 but found iConomy 5 instead. Please either update iConomy, " +
-						"or edit your config.yml to specify iConomy5.");
+				General.logger.warn(LanguageText.LOG_ICONOMY_5NOT4.value());
 			}
 		} else this.version = "0.0";
 	}

@@ -8,6 +8,7 @@ import java.util.Map;
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.teleport.Destination;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 import net.minecraft.server.ChunkCoordinates;
@@ -66,7 +67,7 @@ public class setspawnCommand extends CommandBase {
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(command.equals("setspawn")) {
 			if(Toolbox.lacksPermission(sender, "general.setspawn.world", "general.spawn.set"))
-				return Messaging.lacksPermission(sender, "set the spawn location");
+				return Messaging.lacksPermission(sender, "general.setspawn.world");
 			Destination dest = (Destination) args.get("dest");
 			World world = (World) args.get("world");
 			setSpawn(sender, dest, world);
@@ -76,9 +77,9 @@ public class setspawnCommand extends CommandBase {
 			boolean other = (Boolean) args.get("other");
 			if(other) {
 				if(Toolbox.lacksPermission(sender, "general.setspawn.other", "general.spawn.home.other"))
-					return Messaging.lacksPermission(sender, "set someone else's home location");
+					return Messaging.lacksPermission(sender, "general.setspawn.other");
 			} else if(Toolbox.lacksPermission(sender, "general.setspawn.self", "general.spawn.home"))
-				return Messaging.lacksPermission(sender, "set your home location");
+				return Messaging.lacksPermission(sender, "general.setspawn.self");
 			setHome(sender, dest, who);
 		}
 		return SHOW_USAGE;
@@ -100,11 +101,8 @@ public class setspawnCommand extends CommandBase {
 		EntityPlayer ep = cp.getHandle();
 		ChunkCoordinates coords = new ChunkCoordinates(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 		ep.a(coords);
-		// End accessing Minecraft internals
-		Formatter fmt = new Formatter();
-		String feedback = "&eHome position of player '&f%s&e' changed to &f(%d,%d,%d)";
-		feedback = fmt.format(feedback, who.getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).toString();
-		Messaging.send(sender, feedback);
+		Messaging.send(sender, LanguageText.SETHOME.value("player", who.getName(), "x", loc.getBlockX(),
+			"y", loc.getBlockY(), "z", loc.getBlockZ()));
 	}
 
 	private boolean cannotPay(Destination dest, Player setter, String targetCost) {
@@ -120,31 +118,27 @@ public class setspawnCommand extends CommandBase {
 			Player setter = (Player) sender;
 			if(cannotPay(dest, setter, "economy.setspawn.world")) return;
 		}
-		Formatter fmt = new Formatter();
-		General.logger.debug("Checking more permission...");
-		if(dest.hasPermission(sender, "set the spawn location", "general.spawn.set")) {
+		if(dest.hasPermission(sender, "general.setspawn")) {
 			Location loc = dest.getLoc();
 			World world = loc.getWorld();
-			String feedback;
+			LanguageText feedback;
 			if(from == null || !world.equals(from)) {
-				feedback = "&eSpawn position in world '&f%s&e' changed to &f(%d,%d,%d)";
+				feedback = LanguageText.SETSPAWN_WORLD;
 			} else {
-				feedback = "&eSpawn position changed to &f(%2$d,%3$d,%4$d)";
+				feedback = LanguageText.SETSPAWN;
 			}
 			Player who = dest.getPlayer();
 			if(who != null && loc.equals(who.getLocation())) {
 				if(who.equals(sender)) {
-					feedback = "&eSpawn position changed to where you are standing.";
+					feedback = LanguageText.SETSPAWN_HERE;
 				} else {
-					feedback = "&eSpawn position changed to where " + who.getDisplayName() + " is standing.";
+					feedback = LanguageText.SETSPAWN_PLAYER;
 				}
 			}
-			General.logger.debug("Finally setting...");
 			if(!world.setSpawnLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()))
-				feedback = "&rose;There was an error setting the spawn location. It has not been changed.";
-			feedback = fmt.format(feedback, world.getName(), loc.getBlockX(), loc.getBlockY(),
-				loc.getBlockZ()).toString();
-			Messaging.send(sender, feedback);
+				feedback = LanguageText.SETSPAWN_ERROR;
+			Messaging.send(sender, feedback.value("world", world.getName(), "player", who.getDisplayName(),
+				"x", loc.getBlockX(), "y", loc.getBlockY(), "z", loc.getBlockZ()));
 		}
 	}
 }

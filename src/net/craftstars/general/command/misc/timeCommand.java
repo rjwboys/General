@@ -6,6 +6,7 @@ import java.util.Map;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
@@ -88,37 +89,37 @@ public class timeCommand extends CommandBase {
 	
 	private boolean setTime(CommandSender sender, String timeStr, World world) {
 		if(world.getEnvironment() != Environment.NORMAL) {
-			Messaging.send(sender, Messaging.get("time.none", "{rose}Time has no meaning here."));
+			Messaging.send(sender, LanguageText.TIME_NONE.value());
 			return true;
 		}
 		if(Toolbox.lacksPermission(sender, "general.time.set"))
-			return Messaging.lacksPermission(sender, "set the time");
+			return Messaging.lacksPermission(sender, "general.time.set");
 		if(Toolbox.checkCooldown(sender, world, "time", "general.time")) return true;
-		String timeName;
+		LanguageText timeName;
 		int timeTicks;
 		if(timeStr.equalsIgnoreCase("day")) { // 6am
 			if(!Toolbox.canPay(sender, 1, "economy.time.day")) return true;
-			timeName = Messaging.get("time.name.day", "day");
+			timeName = LanguageText.TIME_DAY;
 			timeTicks = 0;
 		} else if(timeStr.equalsIgnoreCase("night")) { // 7:48pm
 			if(!Toolbox.canPay(sender, 1, "economy.time.night")) return true;
-			timeName = Messaging.get("time.name.night", "night");
+			timeName = LanguageText.TIME_NIGHT;
 			timeTicks = 13800;
 		} else if(Toolbox.equalsOne(timeStr, "dusk", "sunset", "evening")) { // 6pm
 			if(!Toolbox.canPay(sender, 1, "economy.time.dusk")) return true;
-			timeName = Messaging.get("time.name.dusk", "dusk");
+			timeName = LanguageText.TIME_DUSK;
 			timeTicks = 12000;
 		} else if(Toolbox.equalsOne(timeStr, "dawn", "sunrise", "morning")) { // 4:12am
 			if(!Toolbox.canPay(sender, 1, "economy.time.dawn")) return true;
-			timeName = Messaging.get("time.name.dawn", "dawn");
+			timeName = LanguageText.TIME_DAWN;
 			timeTicks = 22200;
 		} else if(Toolbox.equalsOne(timeStr, "midday", "noon")) { // 12am
 			if(!Toolbox.canPay(sender, 1, "economy.time.noon")) return true;
-			timeName = Messaging.get("time.name.noon", "night");
+			timeName = LanguageText.TIME_NOON;
 			timeTicks = 6000;
 		} else if(Toolbox.equalsOne(timeStr, "midnight")) { // 12pm
 			if(!Toolbox.canPay(sender, 1, "economy.time.midnight")) return true;
-			timeName = Messaging.get("time.name.midnight", "midnight");
+			timeName = LanguageText.TIME_WITCH;
 			timeTicks = 18000;
 		} else if(timeStr.startsWith("+")) {
 			if(!Toolbox.canPay(sender, 1, "economy.time.set")) return true;
@@ -126,9 +127,9 @@ public class timeCommand extends CommandBase {
 				long now = world.getTime();
 				long ticks = Time.extractDuration(timeStr.substring(1));
 				world.setTime(now + ticks);
-				Messaging.send(sender, "Time advanced by " + Time.formatDuration(ticks) + "!");
+				Messaging.send(sender, LanguageText.TIME_ADVANCE.value("time", Time.formatDuration(ticks)));
 			} catch(NumberFormatException x) {
-				Messaging.send(sender, "&rose;Invalid duration format.");
+				Messaging.send(sender, LanguageText.TIME_BAD_DURATION.value());
 			} catch(Exception ex) {
 				ex.printStackTrace();
 				return SHOW_USAGE;
@@ -140,9 +141,9 @@ public class timeCommand extends CommandBase {
 				long now = world.getTime();
 				long ticks = Time.extractDuration(timeStr.substring(1));
 				world.setTime(now - ticks);
-				Messaging.send(sender, "Time set back by " + Time.formatDuration(ticks) + "!");
+				Messaging.send(sender, LanguageText.TIME_REWIND.value("time", Time.formatDuration(ticks)));
 			} catch(NumberFormatException x) {
-				Messaging.send(sender, "&rose;Invalid duration format.");
+				Messaging.send(sender, LanguageText.TIME_BAD_DURATION.value());
 			} catch(Exception ex) {
 				ex.printStackTrace();
 				return SHOW_USAGE;
@@ -155,9 +156,9 @@ public class timeCommand extends CommandBase {
 				long ticks = Time.extractTime(timeStr);
 				if(ticks < 0) ticks += 24000;
 				world.setTime(ticks);
-				Messaging.send(sender, "Time set to " + Time.formatTime(ticks, Time.currentFormat) + "!");
+				Messaging.send(sender, LanguageText.TIME_SET.value("time", Time.formatTime(ticks, Time.currentFormat)));
 			} catch(NumberFormatException x) {
-				Messaging.send(sender, "&rose;Invalid time format.");
+				Messaging.send(sender, LanguageText.TIME_BAD_TIME.value());
 			} catch(Exception ex) {
 				return SHOW_USAGE;
 			}
@@ -165,24 +166,22 @@ public class timeCommand extends CommandBase {
 		}
 		String time = Time.formatTime(timeTicks, Time.currentFormat);
 		world.setTime(this.getStartTime(world) + timeTicks);
-		Messaging.send(sender, Messaging.format(Messaging.get("time.nameset", "Time set to {name}: {time}!"),
-			"name", timeName, "time", time));
+		Messaging.send(sender, LanguageText.TIME_SET_NAME.value("name", timeName.value(), "time", time));
 		return true;
 	}
 	
 	private void showTime(CommandSender sender, World world) {
 		if(world.getEnvironment() != Environment.NORMAL) {
-			Messaging.send(sender, Messaging.get("time.none", "{rose}Time has no meaning here."));
+			Messaging.send(sender, LanguageText.TIME_NONE.value());
 			return;
 		}
 		if(Toolbox.lacksPermission(sender, "general.time", "general.basic"))
-			Messaging.lacksPermission(sender, "see the time");
+			Messaging.lacksPermission(sender, "general.time");
 		else {
 			int time = (int) world.getTime();
 			String timeName = this.getFriendlyTime(time);
 			String timeFmt = Time.formatTime(time, Time.currentFormat);
-			Messaging.send(sender, Messaging.format(Messaging.get("time.current", "Current Time: {name} {time}"),
-				"name", timeName, "time", timeFmt));
+			Messaging.send(sender, LanguageText.TIME_CURRENT.value("name", timeName, "time", timeFmt));
 		}
 	}
 	
@@ -200,13 +199,13 @@ public class timeCommand extends CommandBase {
 	
 	public String getFriendlyTime(int time) {
 		if(time >= 12000 && time < 13800) {
-			return "Dusk";
+			return LanguageText.TIME_DUSK.value();
 		} else if(time >= 13800 && time < 22200) {
-			return "Night";
+			return LanguageText.TIME_NIGHT.value();
 		} else if(time >= 22200 && time < 24000) {
-			return "Dawn";
+			return LanguageText.TIME_DAWN.value();
 		} else {
-			return "Day";
+			return LanguageText.TIME_DAY.value();
 		}
 	}
 }

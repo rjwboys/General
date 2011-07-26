@@ -29,7 +29,7 @@ public class CommandHandler {
 		if(register == null && !getRegisterMethod()) return;
 		Configuration config = General.plugin.config;
 		if(!config.getKeys(null).contains("aliases"))
-			General.logger.warn("No aliases defined; did you forget to copy the aliases section from the example config.yml?");
+			General.logger.warn(LanguageText.LOG_COMMAND_NO_ALIASES.value());
 		PluginDescriptionFile plug = General.plugin.getDescription();
 		try {
 			@SuppressWarnings({"unchecked", "rawtypes"})
@@ -48,19 +48,19 @@ public class CommandHandler {
 					CommandBase commandInstance = clazz.getConstructor(General.class).newInstance(General.plugin);
 					generalCommand.setExecutor(commandInstance);
 				} catch(ClassNotFoundException e) {
-					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
+					General.logger.error(LanguageText.LOG_COMMAND_REG_ERROR.value("command", generalCommand.getName()),e);
 				} catch(IllegalArgumentException e) {
-					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
+					General.logger.error(LanguageText.LOG_COMMAND_REG_ERROR.value("command", generalCommand.getName()),e);
 				} catch(SecurityException e) {
-					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
+					General.logger.error(LanguageText.LOG_COMMAND_REG_ERROR.value("command", generalCommand.getName()),e);
 				} catch(InstantiationException e) {
-					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
+					General.logger.error(LanguageText.LOG_COMMAND_REG_ERROR.value("command", generalCommand.getName()),e);
 				} catch(IllegalAccessException e) {
-					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
+					General.logger.error(LanguageText.LOG_COMMAND_REG_ERROR.value("command", generalCommand.getName()),e);
 				} catch(InvocationTargetException e) {
-					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
+					General.logger.error(LanguageText.LOG_COMMAND_REG_ERROR.value("command", generalCommand.getName()),e);
 				} catch(NoSuchMethodException e) {
-					General.logger.error("Command [" + generalCommand.getName() + "] could not be registered.",e);
+					General.logger.error(LanguageText.LOG_COMMAND_REG_ERROR.value("command", generalCommand.getName()),e);
 				}
 			}
 		} catch(NullPointerException e) {
@@ -81,8 +81,7 @@ public class CommandHandler {
 					claimant = ((PluginCommand) cmd).getPlugin().getDescription().getName();
 				else
 					claimant = Bukkit.getServer().getName();
-				General.logger.info("Command alias " + label + 
-					" was not registered because [" + claimant + "] claimed it.");
+				General.logger.info(LanguageText.LOG_COMMAND_TAKEN.value("alias", label, "plugin", claimant));
 			}
 			return success;
 		} catch(IllegalArgumentException e) {

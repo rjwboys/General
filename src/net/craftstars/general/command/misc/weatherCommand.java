@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
@@ -136,8 +137,7 @@ public class weatherCommand extends CommandBase {
 		} else try {
 			long duration = Time.extractDuration(key);
 			if(duration < 0) {
-				Messaging.send(sender, Messaging.get("weather.negative",
-					"{rose}Only positive durations accepted for weather."));
+				Messaging.send(sender, LanguageText.WEATHER_NEGATIVE.value());
 				return false;
 			}
 			setCommand("storm");
@@ -160,16 +160,14 @@ public class weatherCommand extends CommandBase {
 		else try {
 			duration = Time.extractDuration(key);
 			if(duration < 0) {
-				Messaging.send(sender, Messaging.get("weather.negative",
-					"{rose}Only positive durations accepted for weather."));
+				Messaging.send(sender, LanguageText.WEATHER_NEGATIVE.value());
 				return false;
 			} else if(duration > Integer.MAX_VALUE) {
-				Messaging.send(sender, Messaging.get("weather.long",
-					"{rose}Duration too large for thunder."));
+				Messaging.send(sender, LanguageText.WEATHER_BAD_THUNDER.value());
 				return false;
 			}
 		} catch(NumberFormatException e) {
-			Messaging.send(sender, "{rose}Invalid duration: " + e.getMessage());
+			Messaging.send(sender, LanguageText.TIME_BAD_DURATION.value());
 			return false;
 		}
 		setCommand("thunder");
@@ -198,7 +196,7 @@ public class weatherCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.weather"))
-			return Messaging.lacksPermission(sender, "see or change the weather");
+			return Messaging.lacksPermission(sender, "general.weather");
 		if(command.equals("weatherreport")) {
 			World world = (World) args.get("world");
 			showWeatherInfo(sender, world);
@@ -227,31 +225,27 @@ public class weatherCommand extends CommandBase {
 	
 	private void showWeatherInfo(CommandSender sender, World where) {
 		if(where.getEnvironment() == Environment.NETHER) {
-			Messaging.send(sender, Messaging.get("weather.storm.nether", "{rose}The nether doesn't have weather!"));
+			Messaging.send(sender, LanguageText.WEATHER_NETHER.value());
 			return;
 		}
 		String storm = Time.formatDuration(where.getWeatherDuration());
-		if(where.hasStorm()) Messaging.send(sender, Messaging.format(Messaging.get("weather.storm.active",
-			"{blue}World '{white}{world}{blue}' has a storm active for {white}{duration}{blue}."),
-			"world", where.getName(), "duration", storm));
-		else Messaging.send(sender, Messaging.format(Messaging.get("weather.storm.inactive",
-			"{blue}World '{white}{world}{blue}' does not have a storm active."), "world", where.getName()));
+		if(where.hasStorm()) Messaging.send(sender,
+			LanguageText.WEATHER_ACTIVE.value("world", where.getName(),	"duration", storm));
+		else Messaging.send(sender, LanguageText.WEATHER_INACTIVE.value("world", where.getName()));
 		if(where.getEnvironment() == Environment.SKYLANDS) return; // no thunder in sky
 		String thunder = Time.formatDuration(where.getThunderDuration());
-		if(where.isThundering()) Messaging.send(sender, Messaging.format(Messaging.get("weather.thunder.active",
-			"{yellow}World '{white}{world}{yellow}' is thundering for {duration}."),
-			"world", where.getName(), "duration", thunder));
-		else Messaging.send(sender, Messaging.format(Messaging.get("weather.thunder.inactive",
-			"{yellow}World '{white}{world}{yellow}' is not thundering."), "world", where.getName()));
+		if(where.isThundering()) Messaging.send(sender,
+			LanguageText.THUNDER_ACTIVE.value("world", where.getName(), "duration", thunder));
+		else Messaging.send(sender, LanguageText.THUNDER_INACTIVE.value("world", where.getName()));
 	}
 	
 	private void doThunder(CommandSender sender, World world, int duration) {
 		if(world.getEnvironment() != Environment.NORMAL) {
-			Messaging.send(sender, Messaging.get("weather.thunder.nether", "{rose}Only normal worlds have thunder."));
+			Messaging.send(sender, LanguageText.THUNDER_NETHER.value());
 			return;
 		}
 		if(Toolbox.lacksPermission(sender, "general.weather.thunder"))
-			Messaging.lacksPermission(sender, "control thunder");
+			Messaging.lacksPermission(sender, "general.weather.thunder");
 		if(Toolbox.checkCooldown(sender, world, "thunder", "general.weather.thunder")) return;
 		if(!Toolbox.canPay(sender, 1, "economy.weather.thunder")) return;
 		boolean state = duration != 0;
@@ -259,21 +253,21 @@ public class weatherCommand extends CommandBase {
 		world.setThundering(state);
 		if(state && duration != -1) world.setThunderDuration(duration);
 		if(duration == 0)
-			Messaging.send(sender, "&yellow;Thunder stopped!");
+			Messaging.send(sender, LanguageText.THUNDER_STOP.value());
 		else if(duration == -1)
-			Messaging.send(sender, "&yellow;Thunder started!");
+			Messaging.send(sender, LanguageText.THUNDER_START.value());
 		else if(hasThunder)
-			Messaging.send(sender, "&yellow;Thunder will stop in " + duration + " ticks!");
-		else Messaging.send(sender, "&yellow;Thunder started for " + duration + " + ticks!");
+			Messaging.send(sender, LanguageText.THUNDER_CHANGE.value("time", duration));
+		else Messaging.send(sender, LanguageText.THUNDER_SET.value("time", duration));
 	}
 	
 	private void doWeather(CommandSender sender, World world, long duration) {
 		if(world.getEnvironment() == Environment.NETHER) {
-			Messaging.send(sender, Messaging.get("weather.storm.nether", "{rose}The nether doesn't have weather!"));
+			Messaging.send(sender, LanguageText.WEATHER_NETHER.value());
 			return;
 		}
 		if(Toolbox.lacksPermission(sender, "general.weather.set"))
-			Messaging.lacksPermission(sender, "control the weather");
+			Messaging.lacksPermission(sender, "general.weather.set");
 		if(Toolbox.checkCooldown(sender, world, "storm", "general.weather.set")) return;
 		if(!Toolbox.canPay(sender, 1, "economy.weather.storm")) return;
 		boolean state = duration != 0;
@@ -281,20 +275,18 @@ public class weatherCommand extends CommandBase {
 		world.setStorm(state);
 		if(state && duration != -1) world.setWeatherDuration((int) duration);
 		if(duration == 0)
-			Messaging.send(sender, Messaging.get("weather.storm.start", "{blue}Weather storm stopped!"));
+			Messaging.send(sender, LanguageText.WEATHER_STOP.value());
 		else if(duration == -1)
-			Messaging.send(sender, Messaging.get("weather.storm.stop", "{blue}Weather storm started!"));
+			Messaging.send(sender, LanguageText.WEATHER_START.value());
 		else if(hasStorm)
-			Messaging.send(sender, Messaging.format(Messaging.get("weather.storm.change",
-				"{blue}Weather storm will stop in {duration}!"), "duration", duration));
-		else Messaging.send(sender, Messaging.format(Messaging.get("weather.storm.set",
-				"{blue}Weather storm started for {duration}!"), "duration", duration));
+			Messaging.send(sender, LanguageText.WEATHER_CHANGE.value("time", duration));
+		else Messaging.send(sender, LanguageText.WEATHER_SET.value("time", duration));
 	}
 	
 	private void doLightning(CommandSender sender, Location centre) {
 		World world = centre.getWorld();
 		if(Toolbox.lacksPermission(sender, "general.weather.zap"))
-			Messaging.lacksPermission(sender, "summon lightning");
+			Messaging.lacksPermission(sender, "general.weather.zap");
 		if(Toolbox.checkCooldown(sender, world, "lightning", "general.weather.zap")) return;
 		if(!Toolbox.canPay(sender, 1, "economy.weather.zap")) return;
 		else {
@@ -310,7 +302,7 @@ public class weatherCommand extends CommandBase {
 			y = block.getLocation().getBlockY();
 			z += lightning.nextInt(range * 2) - range;
 			world.strikeLightning(new Location(world, x, y, z));
-			Messaging.send(sender, Messaging.get("weather.lightning", "{yellow}Lightning strike!"));
+			Messaging.send(sender, LanguageText.WEATHER_LIGHTNING.value());
 		}
 	}
 }

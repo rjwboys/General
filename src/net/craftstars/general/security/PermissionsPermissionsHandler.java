@@ -9,6 +9,7 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 
 import net.craftstars.general.General;
 import net.craftstars.general.security.PermissionsHandler;
+import net.craftstars.general.util.LanguageText;
 
 public class PermissionsPermissionsHandler implements PermissionsHandler {
 	private PermissionHandler permissions = null;
@@ -24,7 +25,7 @@ public class PermissionsPermissionsHandler implements PermissionsHandler {
 				this.permissions = ((Permissions) test).getHandler();
 				this.wasLoaded = true;
 			} catch(Error e) {
-				General.logger.error("Error loading Permissions. Please report to the Permissions dev.");
+				General.logger.error(LanguageText.LOG_PERMISSIONS_ERROR.value());
 				e.printStackTrace();
 			}
 			this.version = test.getDescription().getVersion();

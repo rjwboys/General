@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -225,7 +226,8 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		permNodes = permissions.toArray(permNodes);
 		boolean hasPermission = Toolbox.hasPermission(who, permNodes);
 		if(!hasPermission && othersForAll && permissions.size() <= 2) hasPermission = true;
-		if(!hasPermission) Messaging.lacksPermission(who, "give " + getName());
+		if(!hasPermission)
+			Messaging.lacksPermission(who, permNodes[permNodes.length], LanguageText.LACK_GIVE_ITEM, "item", getName());
 		return hasPermission;
 	}
 }

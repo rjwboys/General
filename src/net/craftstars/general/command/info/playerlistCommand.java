@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.MessageOfTheDay;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
@@ -44,11 +45,12 @@ public class playerlistCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.playerlist", "general.basic"))
-			return Messaging.lacksPermission(sender, "view the player list");
+			return Messaging.lacksPermission(sender, "general.playerlist");
 		World world = (World) args.get("world");
 		List<String> players = Toolbox.getPlayerList(plugin, world);
-		String worldName = world == null ? "" : " in world " + world.getName();
-		Messaging.send(sender, "&eOnline Players" + worldName + " (" + players.size() + "):");
+		LanguageText format = world == null ? LanguageText.ONLINE_ALL : LanguageText.ONLINE_WORLD;
+		String worldName = world == null ? "???" : world.getName();
+		Messaging.send(sender, format.value("count", players.size(), "world", worldName));
 		doListing(sender, players);
 		return true;
 	}

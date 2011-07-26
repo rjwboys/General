@@ -30,12 +30,20 @@ public class Messaging {
 	public static void load() {
 		File dataFolder = General.plugin.getDataFolder();
 		if(!dataFolder.exists()) dataFolder.mkdirs();
-		File configFile = new File(dataFolder, "messages.yml");
-		config = new Configuration(configFile);
+		String lang = General.plugin.config.getString("language", "en");
+		config = LanguageText.setLanguage(lang, "messages_" + lang + ".yml");
 		List<String> names = config.getStringList("colours", Arrays.asList(defaultColours));
 		for(int i = 0; i < 16; i++)
 			colours.put(names.get(i), ChatColor.getByCode(i));
 		colours.put(names.get(16), ChatColor.GRAY);
+	}
+	
+	public static void save() {
+		config.save();
+	}
+	
+	public static void send(CommandSender who, LanguageText simple) {
+		send(who, simple.value());
 	}
 	
 	public static void send(CommandSender who, String string) {
@@ -65,10 +73,6 @@ public class Messaging {
 		for(Player p : mc.getOnlinePlayers())
 			send(p, string);
 		send(new ConsoleCommandSender(mc), string);
-	}
-	
-	public static String get(String key, String defaultVal) {
-		return General.plugin.config.getString("messages." + key, defaultVal);
 	}
 	
 	/**
@@ -179,42 +183,46 @@ public class Messaging {
 	}
 	
 	public static boolean invalidPlayer(CommandSender from, String name) {
-		Formatter fmt = new Formatter();
-		String ifNone = fmt.format("&rose;There is no player named &f%s&rose;.", name).toString();
+		String ifNone = LanguageText.MISC_BAD_PLAYER.value("name", name).toString();
 		Messaging.send(from, ifNone);
 		return true;
 	}
 	
 	public static boolean invalidWorld(CommandSender from, String name) {
-		Formatter fmt = new Formatter();
-		String ifNone = fmt.format("&rose;There is no world named &f%s&rose;.", name).toString();
+		String ifNone = LanguageText.MISC_BAD_WORLD.value("name", name).toString();
 		Messaging.send(from, ifNone);
 		return true;
 	}
 	
 	public static boolean invalidNumber(CommandSender from, String str) {
-		Messaging.send(from, "&rose;Invalid number " + str);
+		Messaging.send(from, LanguageText.MISC_BAD_NUMBER.value("num", str));
 		return true;
 	}
 	
-	public static boolean lacksPermission(CommandSender from, String message) {
-		Messaging.send(from, "&rose;You don't have permission to " + message + ".");
-		return true;
+	@Deprecated
+	public static boolean lacksPermission(CommandSender from, String node) {
+		LanguageText action = LanguageText.byNode(node.replace('.', '_').replace("general_", "permissions."));
+		return Messaging.lacksPermission(from, node, action);
 	}
 	
+	public static boolean lacksPermission(CommandSender from, String node, LanguageText action, Object... args) {
+		Messaging.send(from, LanguageText.PERMISSION_LACK.value("action", action.value(args), "permission", node));
+		return true;
+	}
+
 	public static void showCost(Player sender) {
 		String cost = General.plugin.economy.formatCost(AccountStatus.price);
-		Messaging.send(sender, "&eThat would cost " + cost + ".");
+		Messaging.send(sender, LanguageText.ECONOMY_SHOW_COST.value("cost", cost));
 	}
 	
 	public static void showPayment(Player sender) {
 		if(AccountStatus.price > 0) {
 			String cost = General.plugin.economy.formatCost(AccountStatus.price);
-			Messaging.send(sender, "&eYou pay " + cost + ".");
+			Messaging.send(sender, LanguageText.ECONOMY_PAY.value("cost", cost));
 		}
 	}
 
 	public static void earned(Player who, double revenue) {
-		Messaging.send(who, "You have earned " + General.plugin.economy.formatCost(revenue) + "!");
+		Messaging.send(who, LanguageText.ECONOMY_EARN.value("income", revenue));
 	}
 }

@@ -22,7 +22,7 @@ public class Time {
 			if(in24hr) currentFormat = TimeFormat.TWENTY_FOUR_HOUR;
 			showTicks = General.plugin.config.getBoolean("time.show-ticks", true);
 		} catch(Exception x) {
-			General.logger.warn("Error loading time configuration settings:");
+			General.logger.warn(LanguageText.LOG_CONFIG_BAD_TIME.value());
 			x.printStackTrace();
 		}
 	}
@@ -112,6 +112,7 @@ public class Time {
 	}
 	
 	public static String formatDuration(long time) {
+		// TODO: Put this format in LanguageText
 		long minutes = time % 1000, hours = time / 1000;
 		minutes = Math.round(minutes * 0.06);
 		Formatter fmtr = new Formatter();

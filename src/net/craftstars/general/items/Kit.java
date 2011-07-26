@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import org.bukkit.command.CommandSender;
 
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
+import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class Kit implements Iterable<ItemID> {
@@ -43,7 +45,9 @@ public class Kit implements Iterable<ItemID> {
 	}
 	
 	public boolean canGet(CommandSender who) {
-		if(Toolbox.hasPermission(who, "general.kit." + name.toLowerCase())) return true;
+		String node = "general.kit." + name.toLowerCase();
+		if(Toolbox.hasPermission(who, node)) return true;
+		Messaging.lacksPermission(who, node, LanguageText.LACK_KIT_NAME, "kit", name);
 		return false;
 	}
 	
@@ -69,7 +73,7 @@ public class Kit implements Iterable<ItemID> {
 			cost = econNodes.toArray(new String[0]);
 		} else {
 			if(!method.equalsIgnoreCase("individual"))
-				General.logger.warn("Invalid method for kit costing; falling back to default of 'individual'");
+				General.logger.warn(LanguageText.LOG_KIT_BAD_METHOD.value());
 			cost = new String[] {"$" + savedCost};
 		}
 	}

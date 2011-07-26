@@ -1,9 +1,16 @@
 
 package net.craftstars.general.mobs;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 import org.bukkit.Location;
@@ -14,23 +21,21 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.config.Configuration;
 
 public enum MobType {
-	CHICKEN(null, MobAlignment.FRIENDLY, CreatureType.CHICKEN, 1, "Chicken", "Chickens", "Duck"),
-	COW(null, MobAlignment.FRIENDLY, CreatureType.COW, 2, "Cow", "Cows"),
-	CREEPER(CreeperState.class, MobAlignment.ENEMY, CreatureType.CREEPER, 5, "Creeper", "Creepers"),
-	GHAST(null, MobAlignment.ENEMY, CreatureType.GHAST, 6, "Ghast", "Ghasts", "NetherSquid"),
-	GIANT_ZOMBIE(null, MobAlignment.ENEMY, CreatureType.GIANT, 13, "Giant", "Giants", "GiantZombie", "ZombieGiant"),
-	HUMAN(null, MobAlignment.ENEMY, CreatureType.MONSTER, 12, "Human", "Humans", "Monster", "Bandit"),
-	PIG(PigState.class, MobAlignment.FRIENDLY, CreatureType.PIG, 0, "Pig", "Pigs"),
-	PIG_ZOMBIE(PigZombieAttitude.class, MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 7, "Zombie Pigman",
-		"Zombie Pigmen", "PigZombie"),
-	SHEEP(SheepState.class, MobAlignment.FRIENDLY, CreatureType.SHEEP, 3, "Sheep", "Sheep"),
-	SKELETON(null, MobAlignment.ENEMY, CreatureType.SKELETON, 8, "Skeleton", "Skeletons", "Skelly"),
-	SLIME(SlimeSize.class, MobAlignment.ENEMY, CreatureType.SLIME, 11, "Slime", "Slimes", "GelatinousCube",
-		"Goo", "Gooey"),
-	SPIDER(null, MobAlignment.ENEMY, CreatureType.SPIDER, 9, "Spider", "Spiders", "Spider"),
-	SQUID(null, MobAlignment.FRIENDLY, CreatureType.SQUID, 4, "Squid", "Squid", "Squid"),
-	WOLF(WolfAttitude.class, MobAlignment.NEUTRAL, CreatureType.WOLF, 14, "Wolf", "Wolves", "Dog", "Dogs"),
-	ZOMBIE(null, MobAlignment.ENEMY, CreatureType.ZOMBIE, 10, "Zombie", "Zombies");
+	CHICKEN(null, MobAlignment.FRIENDLY, CreatureType.CHICKEN, 1),
+	COW(null, MobAlignment.FRIENDLY, CreatureType.COW, 2),
+	CREEPER(CreeperState.class, MobAlignment.ENEMY, CreatureType.CREEPER, 5),
+	GHAST(null, MobAlignment.ENEMY, CreatureType.GHAST, 6),
+	GIANT_ZOMBIE(null, MobAlignment.ENEMY, CreatureType.GIANT, 13),
+	HUMAN(null, MobAlignment.ENEMY, CreatureType.MONSTER, 12),
+	PIG(PigState.class, MobAlignment.FRIENDLY, CreatureType.PIG, 0),
+	PIG_ZOMBIE(PigZombieAttitude.class, MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 7),
+	SHEEP(SheepState.class, MobAlignment.FRIENDLY, CreatureType.SHEEP, 3),
+	SKELETON(null, MobAlignment.ENEMY, CreatureType.SKELETON, 8),
+	SLIME(SlimeSize.class, MobAlignment.ENEMY, CreatureType.SLIME, 11),
+	SPIDER(null, MobAlignment.ENEMY, CreatureType.SPIDER, 9),
+	SQUID(null, MobAlignment.FRIENDLY, CreatureType.SQUID, 4),
+	WOLF(WolfAttitude.class, MobAlignment.NEUTRAL, CreatureType.WOLF, 14),
+	ZOMBIE(null, MobAlignment.ENEMY, CreatureType.ZOMBIE, 10);
 	private MobAlignment alignment;
 	private CreatureType ctype;
 	private String[] aliases;
@@ -39,14 +44,89 @@ public enum MobType {
 	private static HashMap<String, MobType> namesToEnumMapping = new HashMap<String, MobType>();
 	private static HashMap<Integer, MobType> idToEnumMapping = new HashMap<Integer, MobType>();
 	private Class<? extends MobData> data;
+	private static Configuration yml;
 	
-	private MobType(Class<? extends MobData> clz, MobAlignment align, CreatureType type, int cboxId, String title, String titles, String... names) {
+	public static void setup() {
+		try {
+			File dataFolder = General.plugin.getDataFolder();
+			if(!dataFolder.exists()) dataFolder.mkdirs();
+			File configFile = new File(dataFolder, "mobs.yml");
+			
+			if(!configFile.exists()) General.plugin.createDefaultConfig(configFile);
+			yml = new Configuration(configFile);
+			yml.load();
+		} catch(Exception ex) {
+			General.logger.warn(LanguageText.LOG_CONFIG_ERROR.value("file", "mobs.yml"), ex);
+		}
+		idToEnumMapping.clear();
+		namesToEnumMapping.clear();
+		for(MobType mob : values()) {
+			@SuppressWarnings("unchecked")
+			List<Object> names = (List<Object>) yml.getProperty("mobs.mob" + mob.id);
+			boolean gotBase = false;
+			ArrayList<String> aliases = new ArrayList<String>();
+			for(Object name : names) {
+				String singular, plural;
+				if(name instanceof String) singular = plural = (String) name;
+				else if(name instanceof Map) {
+					Map<?,?> map = (Map<?,?>) name;
+					if(map.size() != 1) {
+						warnMalformed(mob.id, name);
+						continue;
+					}
+					Object[] keys = map.keySet().toArray(), values = map.values().toArray();
+					if(keys[0] instanceof String) singular = (String) keys[0];
+					else {
+						warnMalformed(mob.id, name);
+						continue;
+					}
+					if(values[0] instanceof String) plural = (String) values[0];
+					else {
+						warnMalformed(mob.id, name);
+						continue;
+					}
+				} else {
+					warnMalformed(mob.id, name);
+					continue;
+				}
+				aliases.add(singular);
+				// This should work since they're both assigned from name casted to String
+				if(singular != plural) aliases.add(plural);
+				if(!gotBase) {
+					gotBase = true;
+					mob.singular = Toolbox.formatItemName(singular);
+					mob.plural = Toolbox.formatItemName(plural);
+				}
+				if(mob.data != null) {
+					Method setup;
+					try {
+						setup = mob.data.getMethod("setup");
+						setup.invoke(null);
+					} catch(SecurityException e) {}
+					catch(NoSuchMethodException e) {}
+					catch(IllegalArgumentException e) {}
+					catch(IllegalAccessException e) {}
+					catch(InvocationTargetException e) {}
+				}
+			}
+			mob.aliases = aliases.toArray(new String[0]);
+			for(String name : mob.aliases) {
+				namesToEnumMapping.put(name.toLowerCase(), mob);
+			}
+			idToEnumMapping.put(mob.id, mob);
+			namesToEnumMapping.put(mob.singular.toLowerCase(), mob);
+			namesToEnumMapping.put(mob.plural.toLowerCase(), mob);
+		}
+	}
+
+	private static void warnMalformed(int id, Object mob) {
+		General.logger.warn(LanguageText.LOG_MOB_BAD.value("mob", id, "name", mob.toString()));
+	}
+	
+	private MobType(Class<? extends MobData> clz, MobAlignment align, CreatureType type, int cboxId) {
 		this.data = clz;
 		this.alignment = align;
 		this.ctype = type;
-		this.aliases = names;
-		this.singular = title;
-		this.plural = titles;
 		this.id = cboxId;
 	}
 	
@@ -55,7 +135,8 @@ public enum MobType {
 			World world = where.getWorld();
 			return world.spawnCreature(where, ctype);
 		}
-		Messaging.send(sender, "&cYou do not have permissions to spawn " + plural + ".");
+		Messaging.lacksPermission(sender, getPermission(), LanguageText.LACK_MOBSPAWN_MOB,
+			"mob", singular, "mobs", plural);
 		return null;
 	}
 	
@@ -72,20 +153,12 @@ public enum MobType {
 		else if(alignment.hasPermission(sender))
 			return true;
 		else {
-			String x = this.toString().toLowerCase().replace("_", "-");
-			return Toolbox.hasPermission(sender, "general.mobspawn." + x);
+			return Toolbox.hasPermission(sender, getPermission());
 		}
 	}
-	
-	static {
-		for(MobType t : values()) {
-			for(String name : t.aliases) {
-				namesToEnumMapping.put(name.toLowerCase(), t);
-			}
-			idToEnumMapping.put(t.id, t);
-			namesToEnumMapping.put(t.singular.toLowerCase(), t);
-			namesToEnumMapping.put(t.plural.toLowerCase(), t);
-		}
+
+	public String getPermission() {
+		return "general.mobspawn." + this.toString().toLowerCase().replace("_", "-");
 	}
 	
 	public static MobType byName(String name) {
@@ -169,5 +242,11 @@ public enum MobType {
 	
 	public MobAlignment getAlignment() {
 		return alignment;
+	}
+	
+	public String[] getDataList(String key) {
+		String node = "data.mob" + id;
+		if(!key.isEmpty()) node += "." + key;
+		return yml.getStringList(node, null).toArray(new String[0]);
 	}
 }

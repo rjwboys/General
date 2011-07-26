@@ -9,6 +9,7 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -52,10 +53,10 @@ public class masstakeCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.take.mass"))
-			return Messaging.lacksPermission(sender, "massively remove items from your inventory");
+			return Messaging.lacksPermission(sender, "general.take.mass");
 		Player who = (Player) args.get("player");
 		if(!sender.equals(who) && Toolbox.lacksPermission(sender, "general.take.other"))
-			return Messaging.lacksPermission(sender, "massively take items from someone else's inventory");
+			return Messaging.lacksPermission(sender, "general.take.other");
 		@SuppressWarnings("unchecked")
 		ArrayList<ItemID> items = (ArrayList<ItemID>) args.get("items");
 		boolean sell = who.equals(sender);
@@ -64,8 +65,8 @@ public class masstakeCommand extends CommandBase {
 		StringBuilder itemsText = new StringBuilder();
 		int amount = doTake(who, items, sell, itemsText);
 		if(!sender.equals(who))
-			Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + itemsText.toString()
-				+ "&2 from &f" + who.getName());
+			Messaging.send(sender, LanguageText.MASSTAKE_THEFT.value("items", itemsText.toString(),
+				"player", who, "amount", amount));
 		return true;
 	}
 	
@@ -85,15 +86,10 @@ public class masstakeCommand extends CommandBase {
 					i.setItem(j, null);
 				}
 		}
-		for(ItemID item : items) {
-			itemsText.append(item.getName());
-			itemsText.append("&2, &f");
-		}
-		int lastComma = itemsText.lastIndexOf("&2, &f");
-		if(lastComma >= 0 && lastComma < itemsText.length())
-			itemsText.delete(lastComma, itemsText.length());
-		Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &f" + itemsText.toString()
-			+ "&2 was taken from you.");
+		ArrayList<String> display = new ArrayList<String>();
+		for(ItemID item : items) display.add(item.getName());
+		itemsText.append(Toolbox.join(display.toArray(new String[0]), LanguageText.ITEMS_JOINER.value()));
+		Messaging.send(who, LanguageText.MASSTAKE_TOOK.value("items", itemsText.toString(), "amount", removed));
 		if(sell) Messaging.earned(who, revenue);
 		return removed;
 	}

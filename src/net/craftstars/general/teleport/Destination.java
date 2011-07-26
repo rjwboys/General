@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 import net.minecraft.server.ChunkCoordinates;
@@ -65,26 +66,39 @@ public class Destination {
 		return keystone;
 	}
 	
-	public boolean hasPermission(CommandSender sender, String action, String base) {
+	public boolean hasPermission(CommandSender sender, String base) {
 		if(sender instanceof ConsoleCommandSender) return true;
 		if(!(sender instanceof Player)) return false;
 		Player player = (Player) sender;
 		boolean perm = true;
 		for(DestinationType type : t) {
-			boolean can = type.hasPermission(player, action, base);
+			boolean can = type.hasPermission(player, base);
 			perm = perm && can;
 			if(type.isSpecial() && !player.equals(keystone)) {
-				boolean canOther = type.hasOtherPermission(player, action, base);
+				boolean canOther = type.hasOtherPermission(player, base);
 				perm = perm && canOther;
 			}
 		}
 		if(!player.getWorld().equals(calc.getWorld())) {
-			perm = perm && Toolbox.hasPermission(player, base + ".into." + calc.getWorld().getName());
-			perm = perm && Toolbox.hasPermission(player, base + ".from." + player.getWorld().getName());
+			perm = perm && hasWorldPermission(player, calc.getWorld(), base, "into");
+			perm = perm && hasWorldPermission(player, player.getWorld(), base, "from");
 		}
 		return perm;
 	}
 	
+	public static boolean hasWorldPermission(CommandSender player, World world, String base, String preposition) {
+		String name = world.getName();
+		String node = base + "." + preposition + "." + name;
+		if(Toolbox.hasPermission(player, node)) return true;
+		Messaging.lacksPermission(player, node, getFormat(base, preposition), "destination", name);
+		return false;
+	}
+	
+	public static LanguageText getFormat(String base, String preposition) {
+		String node = base.replace('.', '_').replace("general_", "permissions.") + "_" + preposition;
+		return LanguageText.byNode(node);
+	}
+
 	public String[] getCostClasses(Player sender, String base) {
 		// First work out the possible nodes
 		LinkedList<String> genericNodes = new LinkedList<String>();
@@ -171,7 +185,7 @@ public class Destination {
 			}
 		}
 		// Well, nothing matches; give up.
-		Messaging.send(notify, "&cInvalid target.");
+		Messaging.send(notify, LanguageText.DESTINATION_BAD.value());
 		return null;
 	}
 	
@@ -200,7 +214,7 @@ public class Destination {
 	
 	public static Destination compassOf(Player player) {
 		if(player == null) return null;
-		String name = player.getDisplayName() + "'s compass";
+		String name = LanguageText.DESTINATION_THEIR_COMPASS.value("player", player.getDisplayName());
 		Destination d = new Destination(player.getCompassTarget(), name, DestinationType.COMPASS);
 		d.keystone = player;
 		return d;
@@ -215,7 +229,7 @@ public class Destination {
 		ChunkCoordinates coords = ep.getBed();
 		if(coords != null) {
 			Location loc = new Location(player.getWorld(), coords.x, coords.y, coords.z);
-			String name = player.getDisplayName() + "'s home";
+			String name = LanguageText.DESTINATION_THEIR_HOME.value("player", player.getDisplayName());
 			return new Destination(loc, player, name, DestinationType.HOME);
 		}
 		// End accessing Minecraft code

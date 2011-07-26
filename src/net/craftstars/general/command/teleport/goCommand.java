@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.teleport.*;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -22,8 +23,8 @@ public class goCommand extends CommandBase {
 	}
 
 	public boolean hasDestPermission(CommandSender sender, Target targ, Destination dest) {
-		if(dest.hasPermission(sender, "teleport", "general.teleport")) return true;
-		return dest.hasPermission(sender, "teleport", targ.getType().getPermission("general.teleport"));
+		if(dest.hasPermission(sender, "general.teleport")) return true;
+		return dest.hasPermission(sender, targ.getType().getPermission("general.teleport"));
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public class goCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.teleport"))
-			return Messaging.lacksPermission(sender, "teleport");
+			return Messaging.lacksPermission(sender, "general.teleport");
 		final Target target = (Target) args.get("target");
 		final Destination dest = (Destination) args.get("dest");
 		if(target.hasPermission(sender) && hasDestPermission(sender, target, dest)) {
@@ -62,14 +63,11 @@ public class goCommand extends CommandBase {
 					@Override
 					public void run() {
 						target.teleport(dest);
-						String format;
+						LanguageText format;
 						if(target.getType() == TargetType.SELF)
-							format = Messaging.get("teleport.self",
-								"{white}You teleported to {blue}{destination}{white}!");
-						else format = Messaging.get("teleport.other",
-								"{white}You teleported {blue}{target}{white} to {blue}{destination}{white}!");
-						Messaging.send(player, Messaging.format(format, "target", target.getName(),
-							"destination", dest.getName()));
+							format = LanguageText.TELEPORT_SELF;
+						else format = LanguageText.TELEPORT_OTHER;
+						Messaging.send(player, format.value("target", target.getName(), "destination", dest.getName()));
 						inWarmup.remove(player);
 					}
 				};
@@ -81,7 +79,8 @@ public class goCommand extends CommandBase {
 				}
 			} else {
 				target.teleport(dest);
-				Messaging.send(sender, "&fYou teleported &9" + target.getName() + "&f to &9" + dest.getName() + "&f!");
+				Messaging.send(sender, LanguageText.TELEPORT_OTHER.value("target", target.getName(),
+					"destination", dest.getName()));
 			}
 		}
 		return true;

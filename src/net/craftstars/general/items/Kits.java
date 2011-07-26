@@ -17,6 +17,7 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 
 public class Kits {
 	public static HashMap<String, Kit> kits = new HashMap<String, Kit>();
@@ -35,7 +36,7 @@ public class Kits {
 			ConfigurationNode kitNode = kitsYml.getNode(key);
 			List<?> itemsNode = kitNode.getList("items");
 			if(itemsNode == null) {
-				General.logger.warn("Kit '" + key + "' has no items and has been skipped.");
+				General.logger.warn(LanguageText.LOG_KIT_NO_ITEMS.value("kit", key));
 				continue;
 			}
 			int delay = kitNode.getInt("delay", 0);
@@ -72,7 +73,7 @@ public class Kits {
 				}
 				ItemID item = Items.validate(itemName);
 				if(!item.isValid()) {
-					General.logger.warn("Kit '" + key + "' has an invalid item '" + id + "' which has been skipped.");
+					General.logger.warn(LanguageText.LOG_KIT_BAD_ITEM.value("kit", key, "item", id));
 					continue;
 				}
 				kit.add(item, amount);
@@ -83,7 +84,7 @@ public class Kits {
 	}
 
 	private static void warnMalformed(String kit, Object id) {
-		General.logger.warn("Kit '" + kit + "' has a malformed entry: \"" + id.toString() + "\"");
+		General.logger.warn(LanguageText.LOG_KIT_BAD.value("kit", kit, "item", id.toString()));
 	}
 	
 	@Deprecated
@@ -160,7 +161,7 @@ public class Kits {
 			exceptionToShow.printStackTrace();
 		}
 		save();
-		General.logger.info("A general.kits file was found and converted to the new kits.yml format. You may now delete the general.kits file without information loss.");
+		General.logger.info(LanguageText.LOG_KIT_CONVERTED.value());
 		// Return success
 		return true;
 	}

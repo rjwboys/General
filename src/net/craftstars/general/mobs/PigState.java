@@ -27,9 +27,9 @@ public class PigState extends MobData {
 	
 	@Override
 	public void parse(CommandSender setter, String data) {
-		if(Toolbox.equalsOne(data, "tame", "saddle", "saddled"))
+		if(Toolbox.equalsOne(data, MobType.PIG.getDataList("saddle")))
 			saddled = true;
-		else if(Toolbox.equalsOne(data, "wild", "unsaddled", "free"))
+		else if(Toolbox.equalsOne(data, MobType.PIG.getDataList("free")))
 			saddled = false;
 		else invalidate();
 	}
@@ -42,7 +42,7 @@ public class PigState extends MobData {
 	
 	@Override
 	public void lacksPermission(CommandSender fromWhom) {
-		if(saddled) Messaging.lacksPermission(fromWhom, "spawn saddled pigs");
+		if(saddled) Messaging.lacksPermission(fromWhom, "general.mobspawn.pig.saddled");
 	}
 
 	@Override

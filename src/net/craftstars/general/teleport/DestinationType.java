@@ -5,31 +5,29 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.entity.Player;
 
 public enum DestinationType {
-	WORLD("other worlds"), PLAYER("other players"), COORDS("specific coordinates"), HOME("player homes", true),
-	SPAWN("spawn", true), TARGET("targeted block", true), COMPASS("compass target", true);
-	private String msg;
+	WORLD, PLAYER, COORDS, HOME(true), SPAWN(true), TARGET(true), COMPASS(true);
 	private boolean spec;
 	
-	private DestinationType(String message) {
-		this.msg = message;
+	private DestinationType() {
 		this.spec = false;
 	}
 	
-	private DestinationType(String message, boolean special) {
-		this.msg = message;
+	private DestinationType(boolean special) {
 		this.spec = special;
 	}
 	
-	public boolean hasPermission(Player who, String action, String base) {
+	public boolean hasPermission(Player who, String base) {
 		if(isBasic() && Toolbox.hasPermission(who, base + ".basic")) return true;
 		if(Toolbox.hasPermission(who, getPermission(base))) return true;
-		Messaging.lacksPermission(who, getAction(action, false));
+		Messaging.lacksPermission(who, getPermission(base), Destination.getFormat(base, "to"),
+			"destination", getName(true));
 		return false;
 	}
 	
@@ -39,9 +37,10 @@ public enum DestinationType {
 		return basics.contains(toString().toLowerCase().trim());
 	}
 
-	public boolean hasOtherPermission(Player who, String action, String base) {
+	public boolean hasOtherPermission(Player who, String base) {
 		if(Toolbox.hasPermission(who, getPermission(base + ".other"))) return true;
-		Messaging.lacksPermission(who, getAction(action, true));
+		Messaging.lacksPermission(who, getPermission(base + ".other"), Destination.getFormat(base, "to"),
+			"destination", getName(true));
 		return false;
 	}
 	
@@ -53,7 +52,11 @@ public enum DestinationType {
 		return base + ".to." + this.toString().toLowerCase();
 	}
 	
-	public String getAction(String base,boolean other) {
-		return base + " to " + (other ? "others' " : "") + this.msg;
+	public String getName(boolean special) {
+		String node = toString().toLowerCase();
+		if(spec && special)
+			node += "_other";
+		node = "destination." + node;
+		return LanguageText.byNode(node).value();
 	}
 }

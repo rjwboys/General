@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -22,21 +23,21 @@ public class awayCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.away", "general.basic"))
-			return Messaging.lacksPermission(sender, "set your away status");
+			return Messaging.lacksPermission(sender, "general.away");
 		Player who = (Player) sender;
 		String reason = args.get("reason").toString();
 		if(reason.isEmpty()) {
 			if(General.plugin.isAway(who)) {
 				General.plugin.unAway(who);
-				Messaging.send(sender, Messaging.get("away.back", "{silver}You have been marked as back."));
+				Messaging.send(sender, LanguageText.AWAY_BACK.value());
 			} else {
-				Messaging.send(sender, Messaging.get("away.here", "{silver}You are not away."));
+				Messaging.send(sender, LanguageText.AWAY_HERE.value());
 			}
 		} else {
 			if(General.plugin.isAway(who)) {
-				Messaging.send(sender, Messaging.get("away.change", "{silver}Away reason changed."));
+				Messaging.send(sender, LanguageText.AWAY_CHANGE.value());
 			} else {
-				Messaging.send(sender, Messaging.get("away.set", "{silver}You are now marked as away."));
+				Messaging.send(sender, LanguageText.AWAY_SET.value());
 			}
 			General.plugin.goAway(who, reason);
 		}
@@ -55,8 +56,8 @@ public class awayCommand extends CommandBase {
 			params.put("reason", Toolbox.join(args, " "));
 			return params;
 		} else if(sender instanceof ConsoleCommandSender)
-			Messaging.send(sender, Messaging.get("away.console", "{rose}It's not possible for the console to be marked as away."));
-		else Messaging.send(sender, Messaging.get("away.unknown", "{rose}I don't know what you are, so I can't mark you as away."));
+			Messaging.send(sender, LanguageText.AWAY_CONSOLE.value());
+		else Messaging.send(sender, LanguageText.AWAY_UNKNOWN.value());
 		return null;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -66,16 +67,14 @@ public class healCommand extends CommandBase {
 		double health = (Double) args.get("health");
 		if(command.equals("hurt")) {
 			if(Toolbox.lacksPermission(sender, "general.hurt"))
-				return Messaging.lacksPermission(sender, "hurt players");
+				return Messaging.lacksPermission(sender, "general.hurt");
 			health = -health;
 		} else if(Toolbox.lacksPermission(sender, "general.heal"))
-			return Messaging.lacksPermission(sender, "heal players");
+			return Messaging.lacksPermission(sender, "general.heal");
 		if(!Toolbox.canPay(sender, 1, "economy." + command)) return true;
 		health = doHeal(who, health);
-		if(!sender.equals(who)) Messaging.send(sender, Messaging.format(Messaging.get("heal.message",
-			"{yellow}{name}{white} has been {health,choice,-10#{hurt}|0#{healed}} by {yellow}{health,number,#0.0;#0.0}" +
-			"{white} hearts."), "name", who.getName(), "health", health,
-			"hurt", Messaging.get("heal.hurt", "hurt"), "healed", Messaging.get("heal.healed", "healed")));
+		if(!sender.equals(who)) Messaging.send(sender, LanguageText.HEAL_THEM.value("name", who.getName(),
+			"health", health, "hurt", LanguageText.HEAL_HURT.value(), "healed", LanguageText.HEAL_HEALED.value()));
 		return true;
 	}
 	
@@ -89,8 +88,8 @@ public class healCommand extends CommandBase {
 		amount = hp - who.getHealth();
 		amount /= 2.0;
 		who.setHealth(hp);
-		Messaging.send(who, "&fYou are " + (amount < 0 ? "hurt" : "healed") + " by &e" + Math.abs(amount)
-				+ "&f hearts.");
+		Messaging.send(who, LanguageText.HEAL_YOU.value("name", who.getName(), "health", amount,
+			"hurt", LanguageText.HEAL_HURT.value(), "healed", LanguageText.HEAL_HEALED.value()));
 		return amount;
 	}
 }

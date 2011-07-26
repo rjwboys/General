@@ -21,7 +21,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.config.Configuration;
 
@@ -109,6 +109,7 @@ public class Toolbox {
 	 * @return The expanded string.
 	 */
 	public static String formatItemName(String str) {
+		if(str == null) return "";
 		String newStr = "";
 		str = str.replace("_", " ");
 		
@@ -289,9 +290,8 @@ public class Toolbox {
 	}
 
 	public static String formatLocation(Location loc) {
-		Formatter fmt = new Formatter();
-		fmt.format("(%f, %f, %f) facing (%f, %f)", loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
-		return fmt.toString();
+		return LanguageText.MISC_LOCATION.value("x", loc.getX(), "y", loc.getY(), "z", loc.getZ(), 
+			"yaw", loc.getYaw(), "pitch", loc.getPitch());
 	}
 
 	public static boolean nodeExists(Configuration config, String node) {
@@ -315,10 +315,14 @@ public class Toolbox {
 	public static boolean checkCooldown(CommandSender sender, final World world, final String command, String permissionBase) {
 		int cooldownTime = General.plugin.config.getInt("cooldown." + command, 0);
 		if(cooldownTime > 0) {
-			if(Toolbox.hasPermission(sender, permissionBase + ".instant")) return true;
+			String instant = permissionBase + ".instant";
+			if(Toolbox.hasPermission(sender, instant)) return true;
 			if(!inCooldown.containsKey(command)) inCooldown.put(command, new HashSet<World>());
-			if(inCooldown.get(command).contains(world))
-				return Messaging.lacksPermission(sender, "set the time so soon after the last time");
+			if(inCooldown.get(command).contains(world)) {
+				String langNode = permissionBase.replace('.', '_').replace("general_", "permissions.");
+				return Messaging.lacksPermission(sender, instant, LanguageText.LACK_INSTANT,
+					"action", LanguageText.byNode(langNode).value());
+			}
 			inCooldown.get(command).add(world);
 			Runnable cooldown = new Runnable() {
 				@Override
@@ -329,5 +333,24 @@ public class Toolbox {
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(General.plugin, cooldown, cooldownTime);
 		}
 		return true;
+	}
+
+	public static CreatureType getCreatureType(LivingEntity entity) {
+		if(entity instanceof Pig) return CreatureType.PIG;
+		else if(entity instanceof Sheep) return CreatureType.SHEEP;
+		else if(entity instanceof Cow) return CreatureType.COW;
+		else if(entity instanceof Chicken) return CreatureType.CHICKEN;
+		else if(entity instanceof Creeper) return CreatureType.CREEPER;
+		else if(entity instanceof Wolf) return CreatureType.WOLF;
+		else if(entity instanceof Squid) return CreatureType.SQUID;
+		else if(entity instanceof Skeleton) return CreatureType.SKELETON;
+		else if(entity instanceof Slime) return CreatureType.SLIME;
+		else if(entity instanceof Spider) return CreatureType.SPIDER;
+		else if(entity instanceof Ghast) return CreatureType.GHAST;
+		else if(entity instanceof Giant) return CreatureType.GIANT;
+		else if(entity instanceof PigZombie) return CreatureType.PIG_ZOMBIE;
+		else if(entity instanceof Zombie) return CreatureType.ZOMBIE;
+		else if(entity instanceof Monster) return CreatureType.MONSTER;
+		return null;
 	}
 }

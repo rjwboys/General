@@ -28,8 +28,8 @@ public class PigZombieAttitude extends MobData {
 	
 	@Override
 	public void parse(CommandSender setter, String data) {
-		if(Toolbox.equalsOne(data, "calm", "passive")) anger = 0;
-		else if(Toolbox.equalsOne(data, "angry", "mad", "aggressive", "hostile")) anger = 400;
+		if(Toolbox.equalsOne(data, MobType.PIG_ZOMBIE.getDataList("calm"))) anger = 0;
+		else if(Toolbox.equalsOne(data, MobType.PIG_ZOMBIE.getDataList("angry"))) anger = 400;
 		else {
 			try {
 				anger = Integer.parseInt(data);
@@ -47,7 +47,7 @@ public class PigZombieAttitude extends MobData {
 	
 	@Override
 	public void lacksPermission(CommandSender fromWhom) {
-		if(anger > 0) Messaging.lacksPermission(fromWhom, "spawn angry zombie pigmen");
+		if(anger > 0) Messaging.lacksPermission(fromWhom, "general.mobspawn.pig-zombie.angry");
 	}
 
 	@Override

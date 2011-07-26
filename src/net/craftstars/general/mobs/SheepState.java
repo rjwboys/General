@@ -7,6 +7,7 @@ import java.util.Random;
 import net.craftstars.general.General;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -55,11 +56,11 @@ public class SheepState extends MobData {
 	
 	@Override
 	public void parse(CommandSender setter, String data) {
-		if(Toolbox.equalsOne(data, "sheared", "nude", "naked", "bald", "bare", "shorn")) {
+		if(Toolbox.equalsOne(data, MobType.SHEEP.getDataList("bald"))) {
 			sheared = true;
-		} else if(Toolbox.equalsOne(data, "natural")) {
+		} else if(Toolbox.equalsOne(data, MobType.SHEEP.getDataList("natural"))) {
 			clr = natural.toArray(new DyeColor[0])[generator.nextInt(natural.size())];
-		} else if(Toolbox.equalsOne(data, "artificial", "random")) {
+		} else if(Toolbox.equalsOne(data, MobType.SHEEP.getDataList("random"))) {
 			clr = DyeColor.getByData((byte) generator.nextInt(16));
 		} else {
 			sheared = false;
@@ -88,8 +89,11 @@ public class SheepState extends MobData {
 	
 	@Override
 	public void lacksPermission(CommandSender fromWhom) {
-		if(sheared) Messaging.lacksPermission(fromWhom, "spawn sheared sheep");
-		else Messaging.lacksPermission(fromWhom, "spawn coloured sheep");
+		if(sheared) Messaging.lacksPermission(fromWhom, "general.mobspawn.sheep.sheared");
+		else {
+			String node = "general.mobspawn.sheep.coloured." + getColourName();
+			Messaging.lacksPermission(fromWhom, node, LanguageText.LACK_MOBSPAWN_SHEEP_COLOURED);
+		}
 	}
 
 	@Override

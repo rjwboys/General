@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -25,18 +26,14 @@ public class tellCommand extends CommandBase {
 	}
 	
 	private void sendMessage(CommandSender from, Player to, String message) {
-		String toFmt = Messaging.get("whisper.to", "{gray}(whisper)   to <{name}> {message}");
-		String awayFmt = Messaging.get("away.is", "{silver}{name} is currently away.");
-		String awayReason = Messaging.get("away.reason", "{silver}Reason: {reason}");
-		String fromFmt;
-		if(from instanceof Player)
-			fromFmt = Messaging.get("whisper.from-player", "(whisper) from <{name}> {message}");
-		else fromFmt = Messaging.get("whisper.from-unknown", "(whisper) from [{name}] {message}");
-		Messaging.send(from, Messaging.format(toFmt, "name", to.getName(), "message", message));
-		Messaging.send(to, Messaging.format(fromFmt, "name", getName(from), "message", message));
+		LanguageText fromFmt, toFmt = LanguageText.WHISPER_TO;
+		if(from instanceof Player) fromFmt = LanguageText.WHISPER_FROM_PLAYER;
+		else fromFmt = LanguageText.WHISPER_FROM_UNKNOWN;
+		Messaging.send(from, toFmt.value("name", to.getName(), "message", message));
+		Messaging.send(to, fromFmt.value("name", getName(from), "message", message));
 		if(General.plugin.isAway(to)) {
-			Messaging.send(from, Messaging.format(awayFmt, "name", to.getDisplayName()));
-			Messaging.send(from, Messaging.format(awayReason, "reason", General.plugin.whyAway(to)));
+			Messaging.send(from, LanguageText.AWAY_IS.value("name", to.getDisplayName()));
+			Messaging.send(from, LanguageText.AWAY_REASON.value("reason", General.plugin.whyAway(to)));
 		}
 	}
 
@@ -49,7 +46,7 @@ public class tellCommand extends CommandBase {
 		if(isPlayer && args[0].equals("@")){
 			String name = plugin.lastMessaged(((Player) sender).getName());
 			if(name == null) {
-				Messaging.send(sender, Messaging.format(Messaging.get("no-reply", "{rose}No-one has messaged you yet.")));
+				Messaging.send(sender, LanguageText.NO_REPLY.value());
 				return null;
 			}
 			recipient = Bukkit.getServer().getPlayer(name);
@@ -65,12 +62,12 @@ public class tellCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.tell", "general.basic"))
-			return Messaging.lacksPermission(sender, "send private messages to players");
+			return Messaging.lacksPermission(sender, "general.tell");
 		Player who = (Player) args.get("recipient");
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
 			if(who.getName().equals(player.getName())) {
-				Messaging.send(sender, "&c;You can't message yourself!");
+				Messaging.send(sender, LanguageText.WHISPER_SELF.value());
 				return true;
 			}
 			plugin.hasMessaged(who.getName(), player.getName());

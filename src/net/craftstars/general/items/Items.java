@@ -3,8 +3,6 @@ package net.craftstars.general.items;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +19,7 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Toolbox;
 
 public class Items {
@@ -84,21 +83,11 @@ public class Items {
 			if(!dataFolder.exists()) dataFolder.mkdirs();
 			File configFile = new File(dataFolder, "items.yml");
 			
-			if(!configFile.exists()) {
-				General.logger.info("Configuration file does not exist. Attempting to create default one...");
-				InputStream defaultConfig =
-						General.plugin.getClass().getResourceAsStream(File.separator + "items.yml");
-				FileWriter out = new FileWriter(configFile);
-				for(int i = 0; (i = defaultConfig.read()) > 0;)
-					out.write(i);
-				out.flush();
-				out.close();
-				defaultConfig.close();
-			}
+			if(!configFile.exists()) General.plugin.createDefaultConfig(configFile);
 			config = new Configuration(configFile);
 			config.load();
 		} catch(Exception ex) {
-			General.logger.warn("Could not read and/or write items.yml! Continuing with default values!", ex);
+			General.logger.warn(LanguageText.LOG_CONFIG_ERROR.value("file", "items.yml"), ex);
 		}
 	}
 	
@@ -138,14 +127,14 @@ public class Items {
 					String x = config.getNode("hooks").getNode(key).getString(val);
 					ItemID thisItem = Items.validate(x);
 					if(thisItem == null) {
-						General.logger.warn("Invalid hook: " + x);
+						General.logger.warn(LanguageText.LOG_ITEM_BAD_HOOK.value("hook", x));
 					} else {
 						hooks.put(key + ":" + val, thisItem);
 					}
 				}
 			}
 		} catch(NullPointerException x) {
-			General.logger.warn("Hooks are missing.");
+			General.logger.warn(LanguageText.LOG_ITEM_NO_HOOKS.value());
 		}
 	}
 	
@@ -169,12 +158,12 @@ public class Items {
 				try {
 					data = Integer.valueOf(m.group(2));
 				} catch(NumberFormatException x) {
-					General.logger.warn("Invalid item alias assignment '" + m.group(1) + ":" + m.group(2) + "'.");
+					General.logger.warn(LanguageText.LOG_ITEM_BAD_ALIAS.value("alias", m.group(1) + ":" + m.group(2)));
 					continue;
 				}
 				val = new ItemID(num, data);
 			} else if(problem) {
-				General.logger.warn("Invalid item alias assignment '" + m.group(1) + "'.");
+				General.logger.warn(LanguageText.LOG_ITEM_BAD_ALIAS.value("alias", m.group(1)));
 				continue;
 			} else val = new ItemID(num, null);
 			aliases.put(alias, val);
@@ -184,10 +173,9 @@ public class Items {
 	private static void loadItemAliases() {
 		List<String> ymlAliases = config.getKeys("aliases");
 		if(ymlAliases == null) {
-			General.logger.warn("No aliases were defined in items.yml.");
+			General.logger.warn(LanguageText.LOG_ITEM_NO_ALIASES.value());
 			if(!aliases.isEmpty()) {
-				General.logger.info("Your items.db aliases will be inserted into the items.yml upon shutdown,");
-				General.logger.info("or you can force it earlier using /general save");
+				General.logger.info(LanguageText.LOG_ITEM_CONVERTED.value());
 			}
 			return;
 		}
@@ -195,7 +183,7 @@ public class Items {
 			ItemID val;
 			String code = config.getString("aliases." + alias, invalidItemAlias);
 			if(code.equals(invalidItemAlias)) {
-				General.logger.warn("Invalid item alias assignment  for '" + alias + "'.");
+				General.logger.warn(LanguageText.LOG_ITEM_BAD_KEY.value());
 				continue;
 			}
 			Matcher m = itemPat.matcher(code);
@@ -211,12 +199,12 @@ public class Items {
 				try {
 					data = Integer.valueOf(m.group(2));
 				} catch(NumberFormatException x) {
-					General.logger.warn("Invalid item alias assignment '" + m.group(1) + ":" + m.group(2) + "'.");
+					General.logger.warn(LanguageText.LOG_ITEM_BAD_ALIAS.value("alias", m.group(1) + ":" + m.group(2)));
 					continue;
 				}
 				val = new ItemID(num, data);
 			} else if(problem) {
-				General.logger.warn("Invalid item alias assignment '" + m.group(1) + "'.");
+				General.logger.warn(LanguageText.LOG_ITEM_BAD_ALIAS.value("alias", m.group(1)));
 				continue;
 			} else val = new ItemID(num, null);
 			aliases.put(alias, val);
@@ -230,11 +218,11 @@ public class Items {
 		try {
 			keys = config.getKeys("names");
 		} catch(NullPointerException x) {
-			General.logger.warn("Names of items are missing.");
+			General.logger.warn(LanguageText.LOG_ITEM_NO_NAMES.value());
 			return;
 		}
 		if(keys == null) {
-			General.logger.warn("The names section of items.yml is missing or invalid.");
+			General.logger.warn(LanguageText.LOG_ITEM_BAD_NAMES.value());
 		} else {
 			for(String id : keys) {
 				int num;
@@ -274,7 +262,7 @@ public class Items {
 			}
 		}
 		if(invalids > 0)
-			General.logger.warn("Invalid keys in the names section of items.yml (eg " + lastInvalid + ")");
+			General.logger.warn(LanguageText.LOG_ITEM_BAD_NAME.value("name", lastInvalid));
 	}
 	
 	/**

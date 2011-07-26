@@ -3,6 +3,7 @@ package net.craftstars.general;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -15,6 +16,7 @@ import net.craftstars.general.security.BasicPermissionsHandler;
 import net.craftstars.general.security.PermissionsHandler;
 import net.craftstars.general.util.CommandHandler;
 import net.craftstars.general.util.HelpHandler;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.MessageOfTheDay;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.PluginLogger;
@@ -89,7 +91,8 @@ public class General extends JavaPlugin {
 			String tag = event.getMessage().split("\\s+")[0];
 			for(String who : playersAway.keySet()) {
 				if(tag.equalsIgnoreCase(tagFormat.replace("name", who))) {
-					Messaging.send(event.getPlayer(), "&c" + who + " is away: " + playersAway.get(who));
+					Messaging.send(event.getPlayer(), LanguageText.AWAY_BRIEF.value("name", who,
+						"reason", playersAway.get(who)));
 					break;
 				}
 			}
@@ -104,13 +107,13 @@ public class General extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		if(plugin != null) {
-			General.logger.warn("Seems to have loaded twice for some reason; skipping initialization.");
+			General.logger.warn(LanguageText.LOG_TWICE.value());
 			return;
 		}
 		plugin = this;
 		logger.setPluginVersion(this.getDescription().getVersion());
 		loadAllConfigs();
-		logger.info("[Codename: " + General.codename + "] Plugin successfully loaded!");
+		logger.info("[Codename: " + General.codename + "] " + LanguageText.LOG_SUCCESS.value());
 		CommandHandler.setup();
 		HelpHandler.setup();
 		registerEvents();
@@ -149,7 +152,7 @@ public class General extends JavaPlugin {
 				econType = "None";
 			}
 			if(econType.equalsIgnoreCase("None")) {
-				logger.info("No economy system detected.");
+				logger.info(LanguageText.LOG_NO_ECONOMY.value());
 				return;
 			}
 			Class<? extends EconomyBase> clazz =
@@ -159,17 +162,18 @@ public class General extends JavaPlugin {
 							.asSubclass(EconomyBase.class);
 			economy = clazz.newInstance();
 			if(!economy.wasLoaded()) {
-				logger.info("[" + econType + "] not detected; economy support disabled.");
+				logger.info(LanguageText.LOG_BAD_ECONOMY.value("econ", econType));
 				gotRequestedEconomy = false;
 			}
 		} catch(Exception ex) {
-			logger.error("There was a big problem loading economy system [" + econType + "]! Please report this error!");
+			logger.error(LanguageText.LOG_ECONOMY_ERROR.value("econ", econType));
 			ex.printStackTrace();
 			gotRequestedEconomy = false;
 		}
 		if(economy != null)
-			logger.info("Using [" + economy.getName() + " " + economy.getVersion() + "] for economy.");
-		else logger.info("Requested economy failed to load; no economy will be used.");
+			logger.info(LanguageText.LOG_ECONOMY_SUCCESS.value("econ", economy.getName(),
+				"version", economy.getVersion()));
+		else logger.info(LanguageText.LOG_ECONOMY_FAIL.value());
 	}
 	
 	private void setupPermissions(boolean firstTime) {
@@ -190,18 +194,18 @@ public class General extends JavaPlugin {
 							.asSubclass(PermissionsHandler.class);
 			permissions = clazz.newInstance();
 			if(firstTime && (permissions == null || !permissions.wasLoaded())) {
-				logger.info("[" + permType + "] not detected; falling back to [Basic] permissions.");
+				logger.info(LanguageText.LOG_PERMISSIONS_MISSING.value("system", permType));
 				permissions = new BasicPermissionsHandler();
 				gotRequestedPermissions = false;
 			}
 		} catch(Exception ex) {
-			logger.error("There was a big problem loading permissions system [" + permType
-					+ "]! Please report this error!");
+			logger.error(LanguageText.LOG_PERMISSIONS_FAIL.value("system", permType));
 			ex.printStackTrace();
-			if(!firstTime) General.logger.error("Note: Using permissions [" + permissions.getName() + "]");
+			if(!firstTime) General.logger.error(LanguageText.LOG_PERMISSIONS_NOTE.value("system", permissions.getName()));
 			gotRequestedPermissions = false;
 		}
-		logger.info(" Using [" + permissions.getName() + " " + permissions.getVersion() + "] for permissions.");
+		logger.info(LanguageText.LOG_PERMISSIONS_RESULT.value("system", permissions.getName(),
+			"version", permissions.getVersion()));
 	}
 	
 	@Override
@@ -212,7 +216,7 @@ public class General extends JavaPlugin {
 			Kits.save();
 			config.save();
 		}
-		General.logger.info("Plugin disabled!");
+		General.logger.info(LanguageText.LOG_DISABLED.value());
 	}
 	
 	private void loadConfiguration() {
@@ -222,21 +226,24 @@ public class General extends JavaPlugin {
 			File configFile = new File(dataFolder, "config.yml");
 			
 			if(!configFile.exists()) {
-				General.logger.info("Configuration file does not exist. Attempting to create default one...");
-				InputStream defaultConfig = this.getClass().getResourceAsStream(File.separator + "config.yml");
-				FileWriter out = new FileWriter(configFile);
-				Scanner lines = new Scanner(defaultConfig);
-				while(lines.hasNextLine())
-					out.write(lines.nextLine());
-				out.flush();
-				out.close();
-				defaultConfig.close();
-				General.logger.info("Default configuration created successfully! You can now "
-						+ "stop the server and edit plugins/General/config.yml.");
+				createDefaultConfig(configFile);
+				General.logger.info(LanguageText.LOG_CONFIG_SUCCESS.value());
 			}
 		} catch(Exception ex) {
-			General.logger.warn("Could not read and/or write config.yml! Continuing with default values!", ex);
+			General.logger.warn(LanguageText.LOG_CONFIG_ERROR.value("file", "config.yml"), ex);
 		}
 		this.config.load();
+	}
+
+	public void createDefaultConfig(File configFile) throws IOException {
+		General.logger.info(LanguageText.LOG_CONFIG_DEFAULT.value("file", configFile.getName()));
+		InputStream defaultConfig = this.getClass().getResourceAsStream(File.separator + configFile.getName());
+		FileWriter out = new FileWriter(configFile);
+		Scanner lines = new Scanner(defaultConfig);
+		while(lines.hasNextLine())
+			out.write(lines.nextLine());
+		out.flush();
+		out.close();
+		defaultConfig.close();
 	}
 }

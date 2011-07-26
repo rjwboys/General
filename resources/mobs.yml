@@ -1,0 +1,82 @@
+
+mobs:
+  mob0:
+   - Pig: Pigs
+   - Swine
+  mob1:
+   - Chicken: Chickens
+   - Duck: Ducks
+  mob2:
+   - Cow: Cows
+  mob3:
+   - Sheep
+  mob4:
+   - Squid
+  mob5:
+   - Creeper: Creepers
+  mob6:
+   - Ghast: Ghasts
+   - NetherSquid
+  mob7:
+   - ZombiePigman: ZombiePigmen
+   - PigZombie: PigZombies
+  mob8:
+   - Skeleton: Skeletons
+   - Skelly: Skellies
+  mob8;9:
+   - SpiderJockey: SpiderJockeys
+  mob9:
+   - Spider: Spiders
+  mob10:
+   - Zombie: Zombies
+  mob11:
+   - Slime: Slimes
+   - GelatinousCube: GelatinousCubes
+   - Goo: Goos
+   - Gooey: Gooeys
+  mob12:
+   - Human: Humans
+   - Monster: Monsters
+   - Bandit: Bandits
+  mob13:
+   - Giant: Giants
+   - GiantZombie: GiantZombies
+   - ZombieGiant: ZombieGiants
+  mob14:
+   - Wolf: Wolves
+   - Dog: Dogs
+
+data:
+  mob0:
+    saddle: [tame, saddle, saddled]
+    free: [wild, unsaddled, free]
+  mob1:
+  mob2:
+  mob3:
+    bald: [sheared, nude, naked, bald, bare, shorn]
+    natural: [natural]
+    random: [artificial, random]
+  mob4:
+  mob5:
+    powered: [powered, power, zapped, zap, on, high]
+    unpowered: [weak, off, low]
+  mob6:
+  mob7:
+    calm: [calm, passive]
+    angry: [angry, mad, aggressive, hostile]
+  mob8:
+  mob9:
+  mob10:
+  mob11: 
+    colossal: [colossal]
+    huge: [huge]
+    large: [large]
+    medium: [medium]
+    small: [small]
+    tiny: [tiny]
+  mob12:
+  mob13:
+  mob14:
+    wild: [wild, calm, passive, friendly, free]
+    angry: [angry, mad, hostile, aggressive]
+    tame: [tame, pet, tamed]

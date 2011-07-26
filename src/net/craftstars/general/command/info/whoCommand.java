@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.teleport.Destination;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -44,96 +45,100 @@ public class whoCommand extends CommandBase {
 		defaultMask = mask;
 	}
 	
-	private String getHealthBar(Player ofWhom) {
-		String healthBar = "[";
-		double health = ofWhom.getHealth() / 2.0;
-		String colour = health < 3 ? "&c" : (health < 7 ? "&e" : "&2");
-		healthBar += colour;
-		healthBar += Toolbox.repeat('|', (int) health);
-		healthBar += "&7";
-		healthBar += Toolbox.repeat('|', 10 - (int) health);
-		healthBar += "&f] ";
-		healthBar += colour;
-		healthBar += health;
-		return healthBar;
+	private String getHealthBar(double health) {
+//		String healthBar = "[";
+//		String colour = health < 3 ? "&c" : (health < 7 ? "&e" : "&2");
+//		healthBar += colour;
+//		healthBar += Toolbox.repeat('|', (int) health);
+//		healthBar += "&7";
+//		healthBar += Toolbox.repeat('|', 10 - (int) health);
+//		healthBar += "&f] ";
+//		return healthBar;
+		String full = Toolbox.repeat('|', (int) health);
+		String empty = Toolbox.repeat('|', 10 - (int) health);
+		return LanguageText.INFO_HEALTHBAR.value("value", health, "health", full, "filler", empty);
 	}
 
 	private void showInfo(Player ofWhom, CommandSender toWhom, int mask) {
-		// TODO: Use formatting framework for this
+		String divider = LanguageText.INFO_DIVIDER.value();
 		boolean title = (mask & TITLE) > 0;
 		if(title) {
-			Messaging.send(toWhom, "&f------------------------------------------------");
-			Messaging.send(toWhom, "&e Player &f[" + ofWhom.getName() + "]&e Info");
-			Messaging.send(toWhom, "&f------------------------------------------------");
+			Messaging.send(toWhom, divider);
+			Messaging.send(toWhom, LanguageText.INFO_TITLE_PLAYER.value("name", ofWhom.getName()));
+			Messaging.send(toWhom, divider);
 		}
 		if((mask & UNAME) > 0)
-			Messaging.send(toWhom, "&6 Username: &f" + ofWhom.getName());
+			Messaging.send(toWhom, LanguageText.INFO_USERNAME.value("name", ofWhom.getName()));
 		if((mask & DNAME) > 0)
-			Messaging.send(toWhom, "&6 DisplayName: &f" + ofWhom.getDisplayName());
-		if((mask & HEALTH) > 0)
-			Messaging.send(toWhom, "&6 -&e Health: &f" + getHealthBar(ofWhom));
+			Messaging.send(toWhom, LanguageText.INFO_DISPLAYNAME.value("name", ofWhom.getDisplayName()));
+		if((mask & HEALTH) > 0) {
+			double health = ofWhom.getHealth() / 2.0;
+			String bar = getHealthBar(health);
+			Messaging.send(toWhom, LanguageText.INFO_HEALTH.value("bar", bar, "value", health));
+		}
 		if((mask & LOC) > 0) {
 			Location loc = ofWhom.getLocation();
-			Messaging.send(toWhom, "&6 -&e Location: &f" + Toolbox.formatLocation(loc));
+			Messaging.send(toWhom, LanguageText.INFO_LOCATION.value("location", Toolbox.formatLocation(loc)));
 		}
 		if((mask & HOME) > 0) {
 			Location home = Destination.homeOf(ofWhom).getLoc();
-			Messaging.send(toWhom, "&6 -&e Spawn: &f" + Toolbox.formatLocation(home));
+			Messaging.send(toWhom, LanguageText.INFO_SPAWN.value("location", Toolbox.formatLocation(home)));
 		}
 		if((mask & WORLD) > 0)
-			Messaging.send(toWhom, "&6 -&e World: &f" + ofWhom.getWorld().getName());
+			Messaging.send(toWhom, LanguageText.INFO_WORLD.value("world", ofWhom.getWorld().getName()));
 		if((mask & IP) > 0 && canSeeIp(ofWhom, toWhom)) {
 			String ip = ofWhom.getAddress().getAddress().getHostAddress();
-			Messaging.send(toWhom, "&6 -&e IP: &f" + ip);
+			Messaging.send(toWhom, LanguageText.INFO_IP.value("ip", ip));
 		}
 		if((mask & STATUS) > 0) {
-			String status = "Around";
+			String status;
 			if(General.plugin.isAway(ofWhom))
-				status = "Away (" + General.plugin.whyAway(ofWhom) + ")";
-			Messaging.send(toWhom, "&6 -&e Status: &f" + status + ".");
+				status = LanguageText.INFO_STATUS_AWAY.value("away", General.plugin.whyAway(ofWhom));
+			else status = LanguageText.INFO_STATUS_AROUND.value();
+			Messaging.send(toWhom, LanguageText.INFO_STATUS.value("status", status));
 		}
-		if(title) Messaging.send(toWhom, "&f------------------------------------------------");
+		if(title) Messaging.send(toWhom, divider);
 	}
 	
 	private void showInfo(@SuppressWarnings("unused") ConsoleCommandSender ofWhom, CommandSender toWhom, int mask) {
-		// TODO: Use formatting framework for this
+		String divider = LanguageText.INFO_DIVIDER.value();
 		boolean title = (mask & TITLE) > 0;
 		Server server = plugin.getServer();
 		if(title) {
-			Messaging.send(toWhom, "&f------------------------------------------------");
-			Messaging.send(toWhom, "&e The Minecraft Console Info");
-			Messaging.send(toWhom, "&f------------------------------------------------");
+			Messaging.send(toWhom, divider);
+			Messaging.send(toWhom, LanguageText.INFO_TITLE_CONSOLE.value());
+			Messaging.send(toWhom, divider);
 		}
 		if((mask & UNAME) > 0)
-			Messaging.send(toWhom, "&6 Username: &fCONSOLE");
+			Messaging.send(toWhom, LanguageText.INFO_USERNAME.value("name", "CONSOLE"));
 		if((mask & DNAME) > 0)
-			Messaging.send(toWhom, "&6 DisplayName: &fServer");
+			Messaging.send(toWhom, LanguageText.INFO_DISPLAYNAME.value("name", "Server"));
 		int healthloc = HEALTH | LOC | HOME;
 		if((mask & healthloc) > 0)
-			Messaging.send(toWhom, "&6 -&e Version: " + server.getVersion());
+			Messaging.send(toWhom, LanguageText.INFO_VERSION.value("version", server.getVersion()));
 		if((mask & WORLD) > 0)
-			Messaging.send(toWhom, "&6 -&e Primary World: &f" + server.getWorlds().get(0).getName());
+			Messaging.send(toWhom, LanguageText.INFO_PRIMARY.value("world", server.getWorlds().get(0).getName()));
 		if((mask & IP) > 0) {
 			String ip = server.getIp();
 			int port = server.getPort();
-			if(ip.isEmpty()) ip = "<unknown>";
-			Messaging.send(toWhom, "&6 -&e IP: &f" + ip + ":" + port);
+			if(ip.isEmpty()) ip = "<???>";
+			Messaging.send(toWhom, LanguageText.INFO_IP.value("ip", ip + ":" + port));
 		}
 		if((mask & STATUS) > 0)
-			Messaging.send(toWhom, "&6 -&e Status: Up and running.");
-		if(title) Messaging.send(toWhom, "&f------------------------------------------------");
+			Messaging.send(toWhom, LanguageText.INFO_STATUS.value("status", LanguageText.INFO_STATUS_SERVER.value()));
+		if(title) Messaging.send(toWhom, divider);
 	}
 	
 	private void showInfo(CommandSender ofWhom, CommandSender toWhom, int mask) {
-		// TODO: Use formatting framework for this
+		String divider = LanguageText.INFO_DIVIDER.value();
 		boolean title = (mask & TITLE) > 0;
 		if(title) {
-			Messaging.send(toWhom, "&f------------------------------------------------");
-			Messaging.send(toWhom, "&e Unknown Command Sender");
-			Messaging.send(toWhom, "&f------------------------------------------------");
+			Messaging.send(toWhom, divider);
+			Messaging.send(toWhom, LanguageText.INFO_TITLE_UNKNOWN.value());
+			Messaging.send(toWhom, divider);
 		}
-		if((mask &~ TITLE) > 0) Messaging.send(toWhom, "&6 Name: " + getName(ofWhom));
-		if(title) Messaging.send(toWhom, "&f------------------------------------------------");
+		if((mask &~ TITLE) > 0) Messaging.send(toWhom, LanguageText.INFO_NAME.value("name", getName(ofWhom)));
+		if(title) Messaging.send(toWhom, divider);
 	}
 	
 	public boolean canSeeIp(Player ofWhom, CommandSender who) {
@@ -181,7 +186,7 @@ public class whoCommand extends CommandBase {
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		CommandSender who = (CommandSender) args.get("who");
 		if(!who.equals(sender) && Toolbox.lacksPermission(sender, "general.who", "general.basic"))
-			return Messaging.lacksPermission(sender, "view info on users other than yourself");
+			return Messaging.lacksPermission(sender, "general.who");
 		int mask = (Integer) args.get("mask");
 		if(who instanceof Player) showInfo((Player) who, sender, mask);
 		else if(who instanceof ConsoleCommandSender)

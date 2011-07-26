@@ -1,6 +1,7 @@
 
 package net.craftstars.general.command.inven;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -23,27 +25,25 @@ public class itemsCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.give.mass"))
-			return Messaging.lacksPermission(sender, "give many items at once");
+			return Messaging.lacksPermission(sender, "general.give.mass");
 		Player toWhom = (Player) args.get("player");
 		String[] items = (String[]) args.get("items");
-		StringBuilder text = new StringBuilder("Giving &f");
+		//StringBuilder text = new StringBuilder("Giving &f");
+		ArrayList<String> display = new ArrayList<String>();
 		for(String item : items) {
 			ItemID what = Items.validate(item);
 			if(what == null || !what.isValid()) continue;
 			if(!what.canGive(sender)) continue;
 			if(!Toolbox.canPay(sender, 1, "economy.give.item" + item.toString())) continue;
-			text.append(what.getName());
-			text.append("&2, &f");
+			display.add(what.getName());
 			Items.giveItem(toWhom, what, 1);
 		}
-		int lastComma = text.lastIndexOf("&2, &f");
-		if(lastComma >= 0 && lastComma < text.length())
-			text.delete(lastComma, text.length());
+		String text = Toolbox.join(display.toArray(new String[0]), "&2, &f");
 		if(toWhom == sender) {
-			Messaging.send(sender, "&2Enjoy! " + text + "&f!");
+			Messaging.send(sender, LanguageText.ITEMS_ENJOY.value("items", text));
 		} else {
-			Messaging.send(toWhom, "&2Enjoy the gift! " + text + "&f!");
-			Messaging.send(sender, text + "&2 to &f" + toWhom.getName() + "&f!");
+			Messaging.send(toWhom, LanguageText.ITEMS_GIFTED.value("items", text));
+			Messaging.send(sender, LanguageText.ITEMS_GIFT.value("items", text, "player", toWhom.getName()));
 		}
 		return true;
 	}

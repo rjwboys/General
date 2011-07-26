@@ -7,6 +7,7 @@ import java.util.Map;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -26,7 +27,7 @@ public class clearCommand extends CommandBase {
 		}
 		
 		public String getName() {
-			return name;
+			return LanguageText.byNode("clear." + name).value();
 		}
 		
 		public static CleanType fromName(String name) {
@@ -80,7 +81,7 @@ public class clearCommand extends CommandBase {
 	
 	private boolean parseOther(CommandSender sender, String name, CleanType option, HashMap<String,Object> params) {
 		if(option == null) {
-			Messaging.send(sender, "Invalid option.");
+			Messaging.send(sender, LanguageText.CLEAR_INVALID.value());
 			return false;
 		} 
 		Player who = Toolbox.matchPlayer(name);
@@ -96,7 +97,7 @@ public class clearCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.clear"))
-			return Messaging.lacksPermission(sender, "clear your inventory");
+			return Messaging.lacksPermission(sender, "general.clear");
 		boolean sell = General.plugin.economy != null;
 		sell = sell && General.plugin.config.getString("economy.give.sell", "sell").equalsIgnoreCase("sell");
 		Player player = (Player) args.get("player");
@@ -112,7 +113,7 @@ public class clearCommand extends CommandBase {
 			if(((Player) fromWhom).getName().equalsIgnoreCase(who.getName())) selfClear = true;
 		}
 		if(!selfClear && Toolbox.lacksPermission(fromWhom, "general.clear.other"))
-			return Messaging.lacksPermission(fromWhom, "clear someone else's inventory");
+			return Messaging.lacksPermission(fromWhom, "general.clear.other");
 		sell = sell && selfClear;
 		PlayerInventory i = who.getInventory();
 		switch(howMuch) {
@@ -139,11 +140,12 @@ public class clearCommand extends CommandBase {
 			clearPack(i);
 		break;
 		}
+		String inven = howMuch.getName();
 		if(selfClear) {
-			Messaging.send(who, "&2You have cleared your " + howMuch.getName() + ".");
+			Messaging.send(who, LanguageText.CLEAR_SELF.value("inventory", inven));
 		} else {
-			Messaging.send(who, "&2Your " + howMuch.getName() + " has been cleared.");
-			Messaging.send(fromWhom, "&f" + who.getName() + "&2's " + howMuch.getName() + " has been cleared.");
+			Messaging.send(who, LanguageText.CLEAR_YOURS.value("inventory", inven));
+			Messaging.send(fromWhom, LanguageText.CLEAR_THEIRS.value("inventory", inven, "player", who.getName()));
 		}
 		if(sell) Messaging.earned(who, revenue);
 		return true;

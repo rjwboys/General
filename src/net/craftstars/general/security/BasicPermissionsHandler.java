@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
 import net.craftstars.general.security.PermissionsHandler;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 
 public class BasicPermissionsHandler implements PermissionsHandler {
@@ -22,7 +23,7 @@ public class BasicPermissionsHandler implements PermissionsHandler {
 			}
 			return true;
 		} catch(NullPointerException ex) {
-			Messaging.send(who, "&cError checking permissions.");
+			Messaging.send(who, LanguageText.PERMISSION_ERROR.value());
 			return false;
 		}
 	}

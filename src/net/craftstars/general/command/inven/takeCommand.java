@@ -8,6 +8,7 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -41,7 +42,7 @@ public class takeCommand extends CommandBase {
 				amount = Integer.valueOf(args[1]);
 				who = (Player) sender;
 			} catch(NumberFormatException x) {
-				Messaging.send(sender, "&rose;The amount must be an integer.");
+				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT.value());
 			}
 			if(who == null) {
 				Messaging.invalidPlayer(sender, args[1]);
@@ -58,7 +59,7 @@ public class takeCommand extends CommandBase {
 			try {
 				amount = Integer.valueOf(args[1]);
 			} catch(NumberFormatException x) {
-				Messaging.send(sender, "&rose;The amount must be an integer.");
+				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT.value());
 				return null;
 			}
 		break;
@@ -67,13 +68,12 @@ public class takeCommand extends CommandBase {
 		}
 		
 		if(item == null || !item.isIdValid()) {
-			Messaging.send(sender, "&rose;Invalid item.");
+			Messaging.send(sender, LanguageText.GIVE_BAD_ID.value());
 			return null;
 		}
 		
 		if(!item.isDataValid()) {
-			Messaging.send(sender, "&f" + item.getVariant() + "&rose; is not a valid data type for &f" + 
-				item.getName() + "&rose;.");
+			Messaging.send(sender, LanguageText.GIVE_BAD_DATA.value("data", item.getVariant(), "item", item.getName()));
 			return null;
 		}
 		// Fill in params and go!
@@ -86,18 +86,18 @@ public class takeCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.take"))
-			return Messaging.lacksPermission(sender, "remove items from your inventory");
+			return Messaging.lacksPermission(sender, "general.take");
 		Player who = (Player) args.get("player");
 		ItemID item = (ItemID) args.get("item");
 		int amount = (Integer) args.get("amount");
 		boolean sell = who.equals(sender);
 		if(!sell && Toolbox.lacksPermission(sender, "general.take.other"))
-			return Messaging.lacksPermission(sender, "take items from someone else's inventory");
+			return Messaging.lacksPermission(sender, "general.take.other");
 		sell = sell && plugin.economy != null;
 		sell = sell && plugin.config.getString("economy.give.take", "sell").equalsIgnoreCase("sell");
 		amount = doTake(who, item, amount, sell);
 		if(!sender.equals(who))
-			Messaging.send(sender, "&2Took &f" + amount + "&2 of &f" + item.getName() + "&2 from &f" + who.getName());
+			Messaging.send(sender, LanguageText.TAKE_THEFT.value("item", item, "amount", amount, "player", who));
 		return true;
 	}
 	
@@ -122,8 +122,7 @@ public class takeCommand extends CommandBase {
 				i.setItem(x, null);
 			} else if(amount <= 0) i.setItem(x, null);
 		}
-		Messaging.send(who, "&f" + (removed == 0 ? "All" : removed) + "&2 of &f" + item.getName()
-			+ "&2 was taken from you.");
+		Messaging.send(who, LanguageText.TAKE_TOOK.value("item", item, "amount", removed <= amount ? removed : 0));
 		if(sell) {
 			double revenue = Toolbox.sellItem(item, removed);
 			Messaging.earned(who, revenue);

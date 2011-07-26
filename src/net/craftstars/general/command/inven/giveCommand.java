@@ -12,6 +12,7 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -39,7 +40,7 @@ public class giveCommand extends CommandBase {
 				amount = Integer.valueOf(args[1]);
 				who = (Player) sender;
 			} catch(NumberFormatException x) {
-				Messaging.send(sender, "&rose;The amount must be an integer.");
+				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT.value());
 			}
 			if(who == null) {
 				who = Toolbox.matchPlayer(args[1]);
@@ -69,7 +70,7 @@ public class giveCommand extends CommandBase {
 				try {
 					amount = Integer.valueOf(args[1]);
 				} catch(NumberFormatException x) {
-					Messaging.send(sender, "&rose;The amount must be an integer.");
+					Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT.value());
 					return null;
 				}
 			}
@@ -79,13 +80,12 @@ public class giveCommand extends CommandBase {
 		}
 		
 		if(item == null || !item.isIdValid()) {
-			Messaging.send(sender, "&rose;Invalid item.");
+			Messaging.send(sender, LanguageText.GIVE_BAD_ID.value());
 			return null;
 		}
 		
 		if(!item.isDataValid()) {
-			Messaging.send(sender, "&f" + item.getVariant() + "&rose; is not a valid data type for &f" +
-				item.getName() + "&rose;.");
+			Messaging.send(sender, LanguageText.GIVE_BAD_DATA.value("data", item.getVariant(), "item", item.getName()));
 			return null;
 		}
 		
@@ -99,30 +99,26 @@ public class giveCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.give"))
-			return Messaging.lacksPermission(sender, "give items");
+			return Messaging.lacksPermission(sender, "general.give");
 		Player who = (Player) args.get("player");
 		if(!who.equals(sender) && Toolbox.lacksPermission(sender, "general.give.other"))
-			return Messaging.lacksPermission(sender, "give items to others");
+			return Messaging.lacksPermission(sender, "general.give.other");
 		int amount = (Integer) args.get("amount");
-		int maxAmount = General.plugin.config.getInt("give.mass", 64);
 		if(amount < 0 && Toolbox.lacksPermission(sender, "general.give.infinite"))
-			return Messaging.lacksPermission(sender, "give infinite stacks of items");
+			return Messaging.lacksPermission(sender, "general.give.infinite");
+		int maxAmount = General.plugin.config.getInt("give.mass", 64);
 		if(amount > maxAmount && Toolbox.lacksPermission(sender, "general.give.mass"))
-			return Messaging.lacksPermission(sender, "give masses of items");
+			return Messaging.lacksPermission(sender, "general.give.mass");
 		ItemID item = (ItemID) args.get("item");
 		// Make sure this player is allowed this particular item
-		if(!item.canGive(sender)) {
-			Messaging.send(sender, "&2You're not allowed to get &f" + item.getName() + "&2.");
-			return true;
-		}
+		if(!item.canGive(sender)) return true;
 		// Make sure the player has enough money for this item
 		if(!Toolbox.canPay(sender, amount, "economy.give.item" + item.toString())) return true;
 		
 		boolean isGift = !who.equals(sender);
 		doGive(who, item, amount, isGift);
 		if(isGift) {
-			Messaging.send(sender, "&2Gave &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" + item.getName()
-					+ "&2 to &f" + who.getName() + "&2!");
+			Messaging.send(sender, LanguageText.GIVE_GIFT.value("amount", amount, "item", item, "player", who));
 		}
 		return true;
 	}
@@ -140,12 +136,7 @@ public class giveCommand extends CommandBase {
 			who.getInventory().addItem(item.getStack(amount));
 		}
 		
-		if(isGift) {
-			Messaging.send(who, "&2Enjoy the gift! &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" +
-				item.getName() + "&2!");
-		} else {
-			Messaging.send(who, "&2Enjoy! Giving &f" + (amount < 0 ? "infinite" : amount) + "&2 of &f" +
-				item.getName() + "&2.");
-		}
+		LanguageText format = isGift ? LanguageText.GIVE_GIFTED : LanguageText.GIVE_ENJOY;
+		Messaging.send(who, format.value("item", item, "amount", amount));
 	}
 }

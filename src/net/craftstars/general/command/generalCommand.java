@@ -1,6 +1,7 @@
 
 package net.craftstars.general.command;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import net.craftstars.general.mobs.MobType;
 import net.craftstars.general.teleport.DestinationType;
 import net.craftstars.general.teleport.TargetType;
 import net.craftstars.general.util.HelpHandler;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.MessageOfTheDay;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
@@ -86,7 +88,7 @@ public class generalCommand extends CommandBase {
 		if(args.length < 1) return SHOW_USAGE;
 		if(args[0].equalsIgnoreCase("reload")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.reload"))
-				return Messaging.lacksPermission(sender, "administrate the General plugin");
+				return Messaging.lacksPermission(sender, "general.admin.reload");
 			doReload(sender);
 			return true;
 		} else if(args[0].equalsIgnoreCase("help")) {
@@ -102,21 +104,18 @@ public class generalCommand extends CommandBase {
 			return true;
 		} else if(args[0].equalsIgnoreCase("item")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.item"))
-				return Messaging.lacksPermission(sender, "administrate the General plugin");
-			if(args.length < 3) {
-				Messaging.send(sender, "&cNot enough arguments.");
-				return SHOW_USAGE;
-			}
+				return Messaging.lacksPermission(sender, "general.admin.item");
+			if(args.length < 3) return SHOW_USAGE;
 			return itemEdit(sender, Arrays.copyOfRange(args, 2, args.length));
 		} else if(args[0].equalsIgnoreCase("save")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.save"))
-				return Messaging.lacksPermission(sender, "administrate the General plugin");
+				return Messaging.lacksPermission(sender, "general.admin.save");
 			doSave(sender);
 			return true;
 		} else if(args[0].equalsIgnoreCase("cost")) {
 			Player who = sender instanceof Player ? (Player) sender : Toolbox.matchPlayer(args[0]);
 			if(who == null) {
-				Messaging.send(sender, "Please specify the player you would like to run the command as.");
+				Messaging.send(sender, LanguageText.ECONOMY_NO_PLAYER);
 				return true;
 			}
 			String check = Toolbox.join(args, 1);
@@ -126,43 +125,28 @@ public class generalCommand extends CommandBase {
 			return true;
 		} else if(args[0].equalsIgnoreCase("restrict")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.restrict"))
-				return Messaging.lacksPermission(sender, "administrate the General plugin");
-			if(args.length < 2) {
-				Messaging.send(sender, "&cNot enough arguments.");
-				return SHOW_USAGE;
-			}
+				return Messaging.lacksPermission(sender, "general.admin.restrict");
+			if(args.length < 2) return SHOW_USAGE;
 			return doPermissions(sender, args[1], true);
 		} else if(args[0].equalsIgnoreCase("release")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.release"))
-				return Messaging.lacksPermission(sender, "administrate the General plugin");
-			if(args.length < 2) {
-				Messaging.send(sender, "&cNot enough arguments.");
-				return SHOW_USAGE;
-			}
+				return Messaging.lacksPermission(sender, "general.admin.release");
+			if(args.length < 2) return SHOW_USAGE;
 			return doPermissions(sender, args[1], false);
 		} else if(args[0].equalsIgnoreCase("kit")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.kit"))
 				return Messaging.lacksPermission(sender, "administrate the General plugin");
-			if(args.length < 3) {
-				Messaging.send(sender, "&cNot enough arguments.");
-				return SHOW_USAGE;
-			}
+			if(args.length < 3) return SHOW_USAGE;
 			return kitEdit(sender, Arrays.copyOfRange(args, 1, args.length));
 		} else if(args[0].equalsIgnoreCase("economy")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.economy"))
-				return Messaging.lacksPermission(sender, "administrate the General plugin");
-			if(args.length < 3) {
-				Messaging.send(sender, "&cNot enough arguments.");
-				return SHOW_USAGE;
-			}
+				return Messaging.lacksPermission(sender, "general.admin.economy");
+			if(args.length < 3) return SHOW_USAGE;
 			return setEconomy(sender, Arrays.copyOfRange(args, 1, args.length));
 		} else if(args[0].equalsIgnoreCase("set")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.set"))
-				return Messaging.lacksPermission(sender, "administrate the General plugin");
-			if(args.length < 3) {
-				Messaging.send(sender, "&cNot enough arguments.");
-				return SHOW_USAGE;
-			}
+				return Messaging.lacksPermission(sender, "general.admin.set");
+			if(args.length < 3) return SHOW_USAGE;
 			return setVar(sender, Arrays.copyOfRange(args, 1, args.length));
 		}
 		return SHOW_USAGE;
@@ -173,28 +157,28 @@ public class generalCommand extends CommandBase {
 		if(opsOnly) restricted.add(node);
 		else restricted.remove(node);
 		plugin.config.setProperty("permissions.ops-only", restricted);
-		Messaging.send(sender, "Permission '" + node + "' has been " + (opsOnly ? "added to" : "removed from") + 
-			" the list of permissions restricted to ops.");
+		Messaging.send(sender, (opsOnly ? LanguageText.PERMISSIONS_RESTRICT : LanguageText.PERMISSIONS_RELEASE)
+			.value("node", node));
 		return SHOW_USAGE;
 	}
 
 	private void doReload(CommandSender sender) {
 		plugin.loadAllConfigs();
-		Messaging.send(sender, "&5General config reloaded.");
+		Messaging.send(sender, LanguageText.GENERAL_RELOAD);
 	}
 	
 	private void doSave(CommandSender sender) {
 		plugin.config.save();
 		Items.save();
 		Kits.save();
-		Messaging.send(sender, "&5General config saved.");
+		Messaging.send(sender, LanguageText.GENERAL_SAVE);
 	}
 	
 	private boolean kitEdit(CommandSender sender, String[] args) {
 		if(args.length < 2) return SHOW_USAGE;
 		String kitName = args[0];
 		if(!Kits.kits.containsKey(kitName) && !args[1].equals("add")) {
-			Messaging.send(sender, "There is no kit by the name of '" + kitName + "'.");
+			Messaging.send(sender, LanguageText.KIT_INVALID.value("kit", kitName));
 			return true;
 		}
 		if(args[1].equalsIgnoreCase("add")) {
@@ -202,7 +186,7 @@ public class generalCommand extends CommandBase {
 			if(Kits.kits.containsKey(kitName))
 				kit = Kits.kits.get(kitName);
 			else {
-				Messaging.send(sender, "New kit '" + kitName + "' created.");
+				Messaging.send(sender, LanguageText.KIT_NEW.value("kit", kitName));
 				kit = new Kit(kitName, 0, 0);
 				Kits.kits.put(kitName, kit);
 				if(args.length < 3) return true;
@@ -213,30 +197,30 @@ public class generalCommand extends CommandBase {
 			if(args.length >= 4) try {
 				amount = Integer.parseInt(args[3]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "&cInvalid amount.");
+				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT.value());
 				return true;
 			}
 			kit.add(item, amount);
-			Messaging.send(sender, amount + " of " + item.getName() + " added to kit '" + kitName + "'.");
+			Messaging.send(sender, LanguageText.KIT_NEW.value("amount", amount, "item", item.getName(), "kit", kitName));
 			return true;
 		} else if(args[1].equalsIgnoreCase("remove")) {
 			Kit kit = Kits.kits.get(kitName);
 			if(args.length < 3) return SHOW_USAGE;
 			ItemID item = Items.validate(args[2]);
 			if(!kit.contains(item)) {
-				Messaging.send(sender, "The kit '" + kitName + "' does not include " + item.getName());
+				Messaging.send(sender, LanguageText.KIT_NOT_IN.value("kit", kitName, "item", item.getName()));
 				return true;
 			}
 			int amount = Integer.MAX_VALUE;
 			if(args.length >= 4) try {
 				amount = Integer.parseInt(args[3]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "&cInvalid amount.");
+				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT.value());
 				return true;
 			}
 			kit.add(item, -amount);
-			Messaging.send(sender, (kit.contains(item) ? amount : "All") + " of " + item.getName() +
-				" removed from kit '" + kitName + "'.");
+			if(!kit.contains(item)) amount = 0;
+			Messaging.send(sender, LanguageText.KIT_REMOVE.value("kit",kitName,"item",item.getName(),"amount",amount));
 			return true;
 		} else if(args[1].equalsIgnoreCase("delay")) {
 			Kit kit = Kits.kits.get(kitName);
@@ -244,11 +228,11 @@ public class generalCommand extends CommandBase {
 			try {
 				delay = Integer.parseInt(args[2]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "&cInvalid delay.");
+				Messaging.send(sender, LanguageText.KIT_BAD_DELAY);
 				return true;
 			}
 			kit.delay = delay;
-			Messaging.send(sender, "Delay of kit '" + kitName + "' set to " + delay + " milliseconds.");
+			Messaging.send(sender, LanguageText.KIT_DELAY.value("kit", kitName, "delay", delay));
 			return true;
 		} else if(args[1].equalsIgnoreCase("cost")) {
 			Kit kit = Kits.kits.get(kitName);
@@ -256,43 +240,38 @@ public class generalCommand extends CommandBase {
 			try {
 				cost = Double.parseDouble(args[2]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "&cInvalid cost.");
+				Messaging.send(sender, LanguageText.KIT_BAD_COST);
 				return true;
 			}
 			kit.setSavedCost(cost);
 			String displayCost = Double.toString(cost);
 			if(plugin.economy != null) displayCost = plugin.economy.formatCost(cost);
-			Messaging.send(sender, "Cost of kit '" + kitName + "' set to " + displayCost);
+			Messaging.send(sender, LanguageText.KIT_COST.value("kit", kitName, "cost", cost));
 			return true;
 		} else if(args[1].equalsIgnoreCase("trash")) {
 			Kits.kits.remove(kitName);
-			Messaging.send(sender, "Kit '" + kitName + "' has been deleted.");
+			Messaging.send(sender, LanguageText.KIT_TRASH.value("kit", kitName));
 			return true;
 		} else if(args[1].equalsIgnoreCase("list")) {
 			Kit kit = Kits.kits.get(kitName);
-			StringBuilder items = new StringBuilder();
-			for(ItemID item : kit) {
-				items.append(kit.get(item));
-				items.append(" of ");
-				items.append(item.getName());
-				items.append(", ");
-			}
-			int lastComma = items.lastIndexOf(", ");
-			if(lastComma >= 0) items.delete(lastComma, items.length());
-			Messaging.send(sender, "Kit '" + kitName + "' contains: " + items.toString());
-			Messaging.send(sender, "Its delay is " + kit.delay + " and its recorded cost is " + kit.getCost() + ".");
+			ArrayList<String> names = new ArrayList<String>();
+			for(ItemID item : kit) names.add(kit.get(item) + "x " + item.getName());
+			String items = Toolbox.join(names.toArray(new String[0]), LanguageText.ITEMS_JOINER.value());
+			Messaging.send(sender, LanguageText.KIT_CONTAINS.value("kit", kitName, "items", items));
+			Messaging.send(sender, LanguageText.KIT_INFO.value("kit",kitName,"delay",kit.delay,"cost",kit.getCost()));
 		}
 		return SHOW_USAGE;
 	}
 
 	private boolean setEconomy(CommandSender sender, String[] args) {
+		// TODO: Update this to use the messaging framework
 		args = Toolbox.join(args, 0).split("\\s*=\\s*");
 		if(args.length == 2) {
 			double value;
 			try {
 				value = Double.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "&cMust be an integer.");
+				Messaging.invalidNumber(sender, args[1]);
 				return true;
 			}
 			args = args[0].trim().split("\\s+");
@@ -531,6 +510,7 @@ public class generalCommand extends CommandBase {
 	}
 
 	private boolean setVar(CommandSender sender, String[] args) {
+		// TODO: Update this to use the messaging framework
 		String path = null;
 		Object value = null;
 		if(args.length != 2) return SHOW_USAGE;
@@ -732,6 +712,7 @@ public class generalCommand extends CommandBase {
 	}
 	
 	private boolean itemEdit(CommandSender sender, String[] args) {
+		// TODO: Update this to use the messaging framework
 		if(args.length < 2 || args.length > 3) {
 			return SHOW_USAGE;
 		} else if(args[0].equalsIgnoreCase("alias")) {

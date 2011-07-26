@@ -1,6 +1,7 @@
 package net.craftstars.general.money;
 
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -25,8 +26,7 @@ public class iConomy5EconomyHandler implements EconomyBase {
 			String majorRev = version.substring(0, version.indexOf('.'));
 			if(Integer.valueOf(majorRev) < 5) {
 				wasLoaded = false;
-				General.logger.warn("Was looking for iConomy 5 but found iConomy 4 instead. Please either update iConomy, " +
-						"or edit your config.yml to specify iConomy4.");
+				General.logger.warn(LanguageText.LOG_ICONOMY_4NOT5.value());
 			}
 		} else this.version = "0.0";
 	}

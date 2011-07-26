@@ -27,9 +27,9 @@ public class CreeperState extends MobData {
 	
 	@Override
 	public void parse(CommandSender setter, String data) {
-		if(Toolbox.equalsOne(data, "powered", "power", "zapped", "zap", "on", "high"))
+		if(Toolbox.equalsOne(data, MobType.CREEPER.getDataList("powered")))
 			powered = true;
-		else if(Toolbox.equalsOne(data, "weak", "off", "low"))
+		else if(Toolbox.equalsOne(data, MobType.CREEPER.getDataList("unpowered")))
 			powered = false;
 		else invalidate();
 	}
@@ -42,7 +42,7 @@ public class CreeperState extends MobData {
 	
 	@Override
 	public void lacksPermission(CommandSender fromWhom) {
-		if(powered) Messaging.lacksPermission(fromWhom, "spawn powered creepers");
+		if(powered) Messaging.lacksPermission(fromWhom, "general.mobspawn.creeper.powered");
 	}
 
 	@Override

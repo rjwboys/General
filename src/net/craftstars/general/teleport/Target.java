@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.craftstars.general.General;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -18,6 +19,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -31,24 +33,27 @@ public class Target {
 		type = t;
 		switch(t) {
 		case SELF:
-			title = "yourself";
+			title = LanguageText.TARGET_SELF.value();
 		break;
 		case OTHER:
 			if(l.size() > 1)
-				title = "several people";
+				title = LanguageText.TARGET_SEVERAL.value();
 			else {
 				LivingEntity entity = l.get(0);
 				if(entity instanceof Player)
 					title = ((Player) entity).getDisplayName();
-				else title = "someone";
+				else if(entity instanceof HumanEntity)
+					title = ((HumanEntity) entity).getName();
+				else title = LanguageText.TARGET_SOMEONE.value();
 			}
 		break;
 		case MOB:
 			if(l.size() > 1)
-				title = "several mobs";
+				title = LanguageText.TARGET_MOBS.value();
 			else {
-				LivingEntity entity = l.get(0);
-				title = "a " + entity.getClass().getSimpleName().replace("Craft", "").toLowerCase();
+				String entity = Toolbox.formatItemName(Toolbox.getCreatureType(l.get(0)).toString());
+				if(entity.isEmpty()) entity = LanguageText.TARGET_MOB.value();
+				title = LanguageText.TARGET_ONE_MOB.value("mob", entity);
 			}
 		break;
 		}
@@ -59,7 +64,7 @@ public class Target {
 		if(teleportees.size() > 1) {
 			boolean canMass = Toolbox.hasPermission(sender, "general.teleport.mass");
 			perm = perm && canMass;
-			if(!canMass) Messaging.lacksPermission(sender, "teleport en masse");
+			if(!canMass) Messaging.lacksPermission(sender, "general.teleport.mass");
 		}
 		return perm;
 	}
@@ -87,7 +92,7 @@ public class Target {
 			if(victim instanceof Player) {
 				Player who = (Player) victim;
 				if(type != TargetType.SELF)
-					Messaging.send(who, "&fYou have been teleported to &9" + to.getName() + "&f!");
+					Messaging.send(who, LanguageText.TELEPORT_WHOA.value("destination", to.getName()));
 			}
 		}
 	}
@@ -146,7 +151,7 @@ public class Target {
 				if(players.size() > 0) {
 					return new Target(players, TargetType.OTHER);
 				} else {
-					Messaging.send(notify, "&cNo players nearby.");
+					Messaging.send(notify, LanguageText.TARGET_NO_PLAYERS.value());
 				}
 			}
 			if(Toolbox.equalsOne(targ, "nearmob", "$nearmob")) {
@@ -158,7 +163,7 @@ public class Target {
 				if(victims.size() > 0) {
 					return new Target(victims, TargetType.MOB);
 				} else {
-					Messaging.send(notify, "&cNo mobs nearby.");
+					Messaging.send(notify, LanguageText.TARGET_NO_MOBS.value());
 				}
 			}
 			if(Toolbox.equalsOne(targ, "there", "$there")) {
@@ -181,7 +186,7 @@ public class Target {
 					else tt = TargetType.MOB;
 					return new Target(Arrays.asList(victim), tt);
 				} else {
-					Messaging.send(notify, "&cNo-one there.");
+					Messaging.send(notify, LanguageText.TARGET_NO_TARGET.value());
 				}
 			}
 			if(Toolbox.equalsOne(targ, "self", "$self", "me")) return fromPlayer(teleporter);
