@@ -89,7 +89,7 @@ public class MessageOfTheDay {
 	private static String getTime(CommandSender sender) {
 		if(sender instanceof Player) {
 			long t = ((Player) sender).getWorld().getTime();
-			return Time.formatTime(t, Time.currentFormat);
+			return Time.formatTime(t);
 		}
 		return LanguageText.MOTD_UNKNOWN.value();
 	}

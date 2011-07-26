@@ -5,24 +5,16 @@ import java.util.Formatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.craftstars.general.General;
-
 public class Time {
 	public enum TimeFormat {
 		TWENTY_FOUR_HOUR, TWELVE_HOUR
 	};
 	
-	public static TimeFormat currentFormat;
-	
-	public static void setup() {
-		currentFormat = TimeFormat.TWELVE_HOUR;
-		try {
-			boolean in24hr = Option.TIME_FORMAT.get();
-			if(in24hr) currentFormat = TimeFormat.TWENTY_FOUR_HOUR;
-		} catch(Exception x) {
-			General.logger.warn(LanguageText.LOG_CONFIG_BAD_TIME.value());
-			x.printStackTrace();
-		}
+	public static String formatTime(long time) {
+		TimeFormat currentFormat = TimeFormat.TWELVE_HOUR;
+		boolean in24hr = Option.TIME_FORMAT.get();
+		if(in24hr) currentFormat = TimeFormat.TWENTY_FOUR_HOUR;
+		return formatTime(time, currentFormat);
 	}
 	
 	public static String formatTime(long time, TimeFormat fmt) {

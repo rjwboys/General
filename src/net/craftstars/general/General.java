@@ -20,7 +20,6 @@ import net.craftstars.general.util.MessageOfTheDay;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.PluginLogger;
-import net.craftstars.general.util.Time;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -124,7 +123,6 @@ public class General extends JavaPlugin {
 		this.config = this.getConfiguration();
 		this.loadConfiguration();
 		
-		Time.setup();
 		Items.setup();
 		setupPermissions(true);
 		Kits.loadKits();

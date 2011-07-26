@@ -223,7 +223,6 @@ public enum LanguageText {
 	LOG_CONFIG_ERROR("log.config.error", "Could not read and/or write {file}! Continuing with default values!"),
 	LOG_CONFIG_SUCCESS("log.config.success", "Default configuration created successfully! You can now "
 		+ "stop the server and edit plugins/General/config.yml."),
-	LOG_CONFIG_BAD_TIME("log.config.bad-time", "Error loading time configuration settings:"),
 	LOG_ITEM_NO_HOOKS("log.item.no-hooks", "Hooks are missing."),
 	LOG_ITEM_BAD_HOOK("log.item.bad-hook", "Invalid hook: {hook}"),
 	LOG_ITEM_BAD_ALIAS("log.item.bad-alias", "Invalid item alias assignment '{alias}'."),

@@ -121,4 +121,9 @@ public class SlimeSize extends MobData {
 			values[i] = NamedSize.values()[i].toString().toLowerCase();
 		return values;
 	}
+	
+	@Override
+	public String getBasic() {
+		return "random";
+	}
 }

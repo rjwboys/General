@@ -31,6 +31,10 @@ public abstract class MobData {
 	protected boolean isValid() {
 		return valid;
 	}
+	
+	public String getBasic() {
+		return getValues()[0];
+	}
 
 	private final static String[] noneValues = new String[] {"regular"};
 	public static final MobData none = new MobData() {

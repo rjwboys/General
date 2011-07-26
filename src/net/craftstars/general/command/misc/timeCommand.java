@@ -156,7 +156,7 @@ public class timeCommand extends CommandBase {
 				long ticks = Time.extractTime(timeStr);
 				if(ticks < 0) ticks += 24000;
 				world.setTime(ticks);
-				Messaging.send(sender, LanguageText.TIME_SET.value("time", Time.formatTime(ticks, Time.currentFormat)));
+				Messaging.send(sender, LanguageText.TIME_SET.value("time", Time.formatTime(ticks)));
 			} catch(NumberFormatException x) {
 				Messaging.send(sender, LanguageText.TIME_BAD_TIME);
 			} catch(Exception ex) {
@@ -164,7 +164,7 @@ public class timeCommand extends CommandBase {
 			}
 			return true;
 		}
-		String time = Time.formatTime(timeTicks, Time.currentFormat);
+		String time = Time.formatTime(timeTicks);
 		world.setTime(this.getStartTime(world) + timeTicks);
 		Messaging.send(sender, LanguageText.TIME_SET_NAME.value("name", timeName.value(), "time", time));
 		return true;
@@ -180,7 +180,7 @@ public class timeCommand extends CommandBase {
 		else {
 			int time = (int) world.getTime();
 			String timeName = this.getFriendlyTime(time);
-			String timeFmt = Time.formatTime(time, Time.currentFormat);
+			String timeFmt = Time.formatTime(time);
 			Messaging.send(sender, LanguageText.TIME_CURRENT.value("name", timeName, "time", timeFmt));
 		}
 	}

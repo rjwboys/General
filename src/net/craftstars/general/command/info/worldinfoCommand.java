@@ -33,7 +33,7 @@ public class worldinfoCommand extends CommandBase {
 		String spawn = Toolbox.formatLocation(ofWhom.getSpawnLocation());
 		Messaging.send(toWhom, LanguageText.INFO_SPAWN.value("location",spawn));
 		Messaging.send(toWhom, LanguageText.INFO_SEED.value("seed", ofWhom.getSeed()));
-		String time = Time.formatTime(ofWhom.getTime(), Time.currentFormat);
+		String time = Time.formatTime(ofWhom.getTime());
 		Messaging.send(toWhom, LanguageText.INFO_TIME.value("time", time));
 		Messaging.send(toWhom, divider);
 	}
