@@ -2,15 +2,14 @@
 package net.craftstars.general.command;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
@@ -32,83 +31,58 @@ public class generalCommand extends CommandBase {
 	public generalCommand(General instance) {
 		super(instance);
 	}
-
-	@Override
-	public boolean fromConsole(ConsoleCommandSender sender, Command command, String commandLabel,
-			String[] args) {
-		if(commandLabel.equalsIgnoreCase("help")) {
-			args = prependArg(args, "help");
-			commandLabel = "general";
-		} else if(commandLabel.equalsIgnoreCase("motd")) {
-			args = prependArg(args, "motd");
-			commandLabel = "general";
-		}
-		if(args.length < 1) return SHOW_USAGE;
-		if(args[0].equalsIgnoreCase("reload")) {
-			doReload(sender);
-			return true;
-		} else if(args[0].equalsIgnoreCase("help")) {
-			if(args.length == 1) {
-				HelpHandler.showHelp(sender, "console.help");
-				return true;
-			} else if(args.length == 2) {
-				HelpHandler.showHelp(sender, args[1] + ".help");
-				return true;
-			}
-		} else if(args[0].equalsIgnoreCase("motd")) {
-			MessageOfTheDay.showMotD(sender);
-			return true;
-		} else if(args[0].equalsIgnoreCase("item")) {
-			if(args.length < 3) {
-				Messaging.send(sender, "&cNot enough arguments.");
-				return SHOW_USAGE;
-			}
-			return itemEdit(sender, Arrays.copyOfRange(args, 1, args.length));
-		} else if(args[0].equalsIgnoreCase("cost")) {
-			sender.sendMessage("Currently you need to be a player to check the cost of a command.");
-		} else if(args[0].equalsIgnoreCase("restrict")) {
-			if(args.length < 2) {
-				Messaging.send(sender, "&cNot enough arguments.");
-				return SHOW_USAGE;
-			}
-			return doPermissions(sender, args[1], true);
-		} else if(args[0].equalsIgnoreCase("release")) {
-			if(args.length < 2) {
-				Messaging.send(sender, "&cNot enough arguments.");
-				return SHOW_USAGE;
-			}
-			return doPermissions(sender, args[1], false);
-		} else if(args[0].equalsIgnoreCase("kit")) {
-			if(args.length < 3) {
-				Messaging.send(sender, "&cNot enough arguments.");
-				return SHOW_USAGE;
-			}
-			return kitEdit(sender, Arrays.copyOfRange(args, 1, args.length));
-		} else if(args[0].equalsIgnoreCase("economy")) {
-			if(args.length < 3) {
-				Messaging.send(sender, "&cNot enough arguments.");
-				return SHOW_USAGE;
-			}
-			return setEconomy(sender, Arrays.copyOfRange(args, 1, args.length));
-		} else if(args[0].equalsIgnoreCase("set")) {
-			if(args.length < 3) {
-				Messaging.send(sender, "&cNot enough arguments.");
-				return SHOW_USAGE;
-			}
-			return setVar(sender, Arrays.copyOfRange(args, 1, args.length));
-		}
-		return SHOW_USAGE;
+	
+	private boolean isHelp(String help) {
+		return help.equalsIgnoreCase("help");
 	}
 	
 	@Override
-	public boolean fromPlayer(Player sender, Command command, String commandLabel, String[] args) {
-		if(commandLabel.equalsIgnoreCase("help")) {
-			args = prependArg(args, "help");
-			commandLabel = "general";
-		} else if(commandLabel.equalsIgnoreCase("motd")) {
-			args = prependArg(args, "motd");
-			commandLabel = "general";
+	protected boolean isHelpCommand(Command command, String commandLabel, String[] args) {
+		if(isHelp(args[0])) return true;
+		if(args[0] == "economy") {
+			String[] ecoArgs = Toolbox.join(args, 0).split("\\s*=\\s*");
+			return ecoArgs.length == 1;
 		}
+		switch(args.length) {
+		case 0:
+			return true;
+		case 1:
+			return isHelp(args[0]);
+		case 2:
+			return isHelp(args[1]) || (args[0]+args[1]).equalsIgnoreCase("setlist");
+		case 3:
+			if(Toolbox.equalsOne(args[0], "kit", "set", "item"))
+				return isHelp(args[1]);
+			return isHelp(args[2]);
+		}
+		return false;
+	}
+	
+	@Override
+	protected String getHelpTopic(Command command, String commandLabel, String[] args) {
+		if(isHelp(args[0])) return Toolbox.join(args, "_", 1);
+		if(args[0] == "economy") {
+			String[] ecoArgs = Toolbox.join(args, 0).split("\\s*=\\s*");
+			return "general_economy_" + ecoArgs[0].replace(' ', '_');
+		}
+		switch(args.length) {
+		case 0:
+			return "about";
+		case 1:
+			return "toc";
+		case 2:
+			if((args[0]+args[1]).equalsIgnoreCase("setlist")) return "general_set_list";
+			return command.getName() + "_" + args[0];
+		case 3:
+			if(isHelp(args[2])) return command.getName() + "_" + args[0] + "_" + args[1];
+			else if(Toolbox.equalsOne(args[0], "kit", "set", "item")) return Toolbox.join(args, "_");
+		}
+		return null;
+	}
+	
+	@Override
+	public boolean execute(CommandSender sender, String command, Map<String,Object> params) {
+		String[] args = (String[]) params.get("args");
 		if(args.length < 1) return SHOW_USAGE;
 		if(args[0].equalsIgnoreCase("reload")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.reload"))
@@ -140,10 +114,15 @@ public class generalCommand extends CommandBase {
 			doSave(sender);
 			return true;
 		} else if(args[0].equalsIgnoreCase("cost")) {
-			String check = Toolbox.combineSplit(args, 1);
+			Player who = sender instanceof Player ? (Player) sender : Toolbox.matchPlayer(args[0]);
+			if(who == null) {
+				Messaging.send(sender, "Please specify the player you would like to run the command as.");
+				return true;
+			}
+			String check = Toolbox.join(args, 1);
 			if(check.charAt(0) == '/') check = check.substring(1);
-			General.plugin.freeze(sender);
-			Bukkit.getServer().dispatchCommand(sender, check);
+			freeze(who);
+			plugin.getServer().dispatchCommand(who, check);
 			return true;
 		} else if(args[0].equalsIgnoreCase("restrict")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.restrict"))
@@ -307,11 +286,8 @@ public class generalCommand extends CommandBase {
 	}
 
 	private boolean setEconomy(CommandSender sender, String[] args) {
-		args = Toolbox.combineSplit(args, 0).split("\\s*=\\s*");
-		if(args.length == 1 && HelpHandler.hasEntry("general_economy_" + args[0].replace(' ', '_'))) {
-			HelpHandler.displayEntry(sender, "general_economy_" + args[0].replace(' ', '_'));
-			return true;
-		} else if(args.length == 2) {
+		args = Toolbox.join(args, 0).split("\\s*=\\s*");
+		if(args.length == 2) {
 			double value;
 			try {
 				value = Double.valueOf(args[1]);
@@ -557,211 +533,200 @@ public class generalCommand extends CommandBase {
 	private boolean setVar(CommandSender sender, String[] args) {
 		String path = null;
 		Object value = null;
-		switch(args.length) {
-		default:
-			return SHOW_USAGE;
-		case 1:
-			if(args[0].equalsIgnoreCase("list") && HelpHandler.hasEntry("general_set_list"))
-				HelpHandler.displayEntry(sender, "general_set_list");
-			return true;
-		case 2:
-			if(args[0].equalsIgnoreCase("help") && HelpHandler.hasEntry("general_set_" + args[1])) {
-				HelpHandler.displayEntry(sender, "general_set_" + args[1].replace('-', '_'));
+		if(args.length != 2) return SHOW_USAGE;
+		if(args[0].equalsIgnoreCase("permissions")) {
+			path = "permissions.system";
+			if(!Toolbox.equalsOne(args[1], "Basic", "Permissions", "WorldEdit")) {
+				Messaging.send(sender, "&cInvalid permissions system.");
 				return true;
-			} else if(args[0].equalsIgnoreCase("permissions")) {
-				path = "permissions.system";
-				if(!Toolbox.equalsOne(args[1], "Basic", "Permissions", "WorldEdit")) {
-					Messaging.send(sender, "&cInvalid permissions system.");
-					return true;
-				}
-				String nice = Character.toUpperCase(args[1].charAt(0)) + args[1].substring(1).toLowerCase();
-				value = nice;
-			} else if(args[0].equalsIgnoreCase("others-for-all")) {
-				path = "give.others-for-all";
-				if(!Toolbox.equalsOne(args[1], "true", "false")) {
-					Messaging.send(sender, "&cMust be a boolean.");
-					return true;
-				}
-				value = Boolean.valueOf(args[1]);
-			} else if(args[0].equalsIgnoreCase("give-mass")) {
-				path = "give.mass";
-				try {
-					value = Integer.valueOf(args[1]);
-				} catch(NumberFormatException e) {
-					Messaging.send(sender, "&cMust be an integer.");
-					return true;
-				}
-			} else if(args[0].equalsIgnoreCase("show-health")) {
-				path = "playerlist.show-health";
-				if(!Toolbox.equalsOne(args[1], "true", "false")) {
-					Messaging.send(sender, "&cMust be a boolean.");
-					return true;
-				}
-				value = Boolean.valueOf(args[1]);
-			} else if(args[0].equalsIgnoreCase("show-coords")) {
-				path = "playerlist.show-coords";
-				if(!Toolbox.equalsOne(args[1], "true", "false")) {
-					Messaging.send(sender, "&cMust be a boolean.");
-					return true;
-				}
-				value = Boolean.valueOf(args[1]);
-			} else if(args[0].equalsIgnoreCase("show-world")) {
-				path = "playerlist.show-world";
-				if(!Toolbox.equalsOne(args[1], "true", "false")) {
-					Messaging.send(sender, "&cMust be a boolean.");
-					return true;
-				}
-				value = Boolean.valueOf(args[1]);
-			} else if(args[0].equalsIgnoreCase("show-ip")) {
-				path = "playerlist.show-ip";
-				if(!Toolbox.equalsOne(args[1], "true", "false")) {
-					Messaging.send(sender, "&cMust be a boolean.");
-					return true;
-				}
-				value = Boolean.valueOf(args[1]);
-			} else if(args[0].equalsIgnoreCase("show-motd")) {
-				path = "show-motd";
-				if(!Toolbox.equalsOne(args[1], "true", "false")) {
-					Messaging.send(sender, "&cMust be a boolean.");
-					return true;
-				}
-				value = Boolean.valueOf(args[1]);
-			} else if(args[0].equalsIgnoreCase("24-hour")) {
-				path = "time.format-24-hour";
-				if(!Toolbox.equalsOne(args[1], "true", "false")) {
-					Messaging.send(sender, "&cMust be a boolean.");
-					return true;
-				}
-				value = Boolean.valueOf(args[1]);
-			} else if(args[0].equalsIgnoreCase("show-ticks")) {
-				path = "time.show-ticks";
-				if(!Toolbox.equalsOne(args[1], "true", "false")) {
-					Messaging.send(sender, "&cMust be a boolean.");
-					return true;
-				}
-				value = Boolean.valueOf(args[1]);
-			} else if(args[0].equalsIgnoreCase("economy")) {
-				path = "economy.system";
-				if(!Toolbox.equalsOne(args[1], "None", "iConomy", "iConomy4", "iConomy5", "BOSEconomy")) {
-					Messaging.send(sender, "&cInvalid economy system.");
-					return true;
-				}
-				String nice = Character.toUpperCase(args[1].charAt(0)) + args[1].substring(1).toLowerCase();
-				value = nice;
-			} else if(args[0].equalsIgnoreCase("economy-take")) {
-				path = "economy.give.take";
-				if(!Toolbox.equalsOne(args[1], "trash", "sell")) {
-					Messaging.send(sender, "&cInvalid economy-take method (must be trash or sell).");
-					return true;
-				}
-				value = args[1];
-			} else if(args[0].equalsIgnoreCase("economy-clear")) {
-				path = "economy.give.clear";
-				if(!Toolbox.equalsOne(args[1], "trash", "sell")) {
-					Messaging.send(sender, "&cInvalid economy-clear method (must be trash or sell).");
-					return true;
-				}
-				value = args[1];
-			} else if(args[0].equalsIgnoreCase("economy-kits")) {
-				path = "economy.give.kits";
-				if(!Toolbox.equalsOne(args[1], "individual", "cumulative", "discount")) {
-					Messaging.send(sender, "&cInvalid economy-kits method (must be individual, cumulative, or discount).");
-					return true;
-				}
-				value = args[1];
-			} else if(args[0].equalsIgnoreCase("economy-sell")) {
-				path = "economy.give.sell";
-				try {
-					value = Double.valueOf(args[1]);
-				} catch(NumberFormatException e) {
-					Messaging.send(sender, "&cMust be a number.");
-					return true;
-				}
-			} else if(args[0].equalsIgnoreCase("kits-discount")) {
-				path = "economy.give.discount";
-				try {
-					value = Double.valueOf(args[1]);
-				} catch(NumberFormatException e) {
-					Messaging.send(sender, "&cMust be a number.");
-					return true;
-				}
-			} else if(args[0].equalsIgnoreCase("chat-tag")) {
-				path = "tag-fmt";
-				value = args[1];
-			} else if(args[0].equalsIgnoreCase("log-commands")) {
-				path = "log-commands";
-				if(!Toolbox.equalsOne(args[1], "true", "false")) {
-					Messaging.send(sender, "&cMust be a boolean.");
-					return true;
-				}
-				value = Boolean.valueOf(args[1]);
-			} else if(args[0].equalsIgnoreCase("auto-save")) {
-				path = "auto-save";
-				if(!Toolbox.equalsOne(args[1], "true", "false")) {
-					Messaging.send(sender, "&cMust be a boolean.");
-					return true;
-				}
-				value = Boolean.valueOf(args[1]);
-			} else if(args[0].equalsIgnoreCase("lightning-range")) {
-				path = "lightning-range";
-				try {
-					value = Integer.valueOf(args[1]);
-				} catch(NumberFormatException e) {
-					Messaging.send(sender, "&cMust be an integer.");
-					return true;
-				}
-			} else if(args[0].equalsIgnoreCase("teleport-warmup")) {
-				path = "teleport.warmup";
-				try {
-					value = Integer.valueOf(args[1]);
-				} catch(NumberFormatException e) {
-					Messaging.send(sender, "&cMust be an integer.");
-					return true;
-				}
-			} else if(args[0].equalsIgnoreCase("time-cooldown")) {
-				path = "cooldown.time";
-				try {
-					value = Integer.valueOf(args[1]);
-				} catch(NumberFormatException e) {
-					Messaging.send(sender, "&cMust be an integer.");
-					return true;
-				}
-			} else if(args[0].equalsIgnoreCase("storm-cooldown")) {
-				path = "cooldown.storm";
-				try {
-					value = Integer.valueOf(args[1]);
-				} catch(NumberFormatException e) {
-					Messaging.send(sender, "&cMust be an integer.");
-					return true;
-				}
-			} else if(args[0].equalsIgnoreCase("thunder-cooldown")) {
-				path = "cooldown.thunder";
-				try {
-					value = Integer.valueOf(args[1]);
-				} catch(NumberFormatException e) {
-					Messaging.send(sender, "&cMust be an integer.");
-					return true;
-				}
-			} else if(args[0].equalsIgnoreCase("lighting-cooldown")) {
-				path = "cooldown.lightning";
-				try {
-					value = Integer.valueOf(args[1]);
-				} catch(NumberFormatException e) {
-					Messaging.send(sender, "&cMust be an integer.");
-					return true;
-				}
-			} else if(args[0].equalsIgnoreCase("show-usage")) {
-				path = "show-usage-on-fail";
-				if(!Toolbox.equalsOne(args[1], "true", "false")) {
-					Messaging.send(sender, "&cMust be a boolean.");
-					return true;
-				}
-				value = Boolean.valueOf(args[1]);
-			} else Messaging.send(sender, "&cUnknown variable: " + args[0]);
-			if(path != null && value != null) {
-				plugin.config.setProperty(path, value);
-				Messaging.send(sender, "Variable " + args[0] + " set to " + value + ".");
 			}
+			String nice = Character.toUpperCase(args[1].charAt(0)) + args[1].substring(1).toLowerCase();
+			value = nice;
+		} else if(args[0].equalsIgnoreCase("others-for-all")) {
+			path = "give.others-for-all";
+			if(!Toolbox.equalsOne(args[1], "true", "false")) {
+				Messaging.send(sender, "&cMust be a boolean.");
+				return true;
+			}
+			value = Boolean.valueOf(args[1]);
+		} else if(args[0].equalsIgnoreCase("give-mass")) {
+			path = "give.mass";
+			try {
+				value = Integer.valueOf(args[1]);
+			} catch(NumberFormatException e) {
+				Messaging.send(sender, "&cMust be an integer.");
+				return true;
+			}
+		} else if(args[0].equalsIgnoreCase("show-health")) {
+			path = "playerlist.show-health";
+			if(!Toolbox.equalsOne(args[1], "true", "false")) {
+				Messaging.send(sender, "&cMust be a boolean.");
+				return true;
+			}
+			value = Boolean.valueOf(args[1]);
+		} else if(args[0].equalsIgnoreCase("show-coords")) {
+			path = "playerlist.show-coords";
+			if(!Toolbox.equalsOne(args[1], "true", "false")) {
+				Messaging.send(sender, "&cMust be a boolean.");
+				return true;
+			}
+			value = Boolean.valueOf(args[1]);
+		} else if(args[0].equalsIgnoreCase("show-world")) {
+			path = "playerlist.show-world";
+			if(!Toolbox.equalsOne(args[1], "true", "false")) {
+				Messaging.send(sender, "&cMust be a boolean.");
+				return true;
+			}
+			value = Boolean.valueOf(args[1]);
+		} else if(args[0].equalsIgnoreCase("show-ip")) {
+			path = "playerlist.show-ip";
+			if(!Toolbox.equalsOne(args[1], "true", "false")) {
+				Messaging.send(sender, "&cMust be a boolean.");
+				return true;
+			}
+			value = Boolean.valueOf(args[1]);
+		} else if(args[0].equalsIgnoreCase("show-motd")) {
+			path = "show-motd";
+			if(!Toolbox.equalsOne(args[1], "true", "false")) {
+				Messaging.send(sender, "&cMust be a boolean.");
+				return true;
+			}
+			value = Boolean.valueOf(args[1]);
+		} else if(args[0].equalsIgnoreCase("24-hour")) {
+			path = "time.format-24-hour";
+			if(!Toolbox.equalsOne(args[1], "true", "false")) {
+				Messaging.send(sender, "&cMust be a boolean.");
+				return true;
+			}
+			value = Boolean.valueOf(args[1]);
+		} else if(args[0].equalsIgnoreCase("show-ticks")) {
+			path = "time.show-ticks";
+			if(!Toolbox.equalsOne(args[1], "true", "false")) {
+				Messaging.send(sender, "&cMust be a boolean.");
+				return true;
+			}
+			value = Boolean.valueOf(args[1]);
+		} else if(args[0].equalsIgnoreCase("economy")) {
+			path = "economy.system";
+			if(!Toolbox.equalsOne(args[1], "None", "iConomy", "iConomy4", "iConomy5", "BOSEconomy")) {
+				Messaging.send(sender, "&cInvalid economy system.");
+				return true;
+			}
+			String nice = Character.toUpperCase(args[1].charAt(0)) + args[1].substring(1).toLowerCase();
+			value = nice;
+		} else if(args[0].equalsIgnoreCase("economy-take")) {
+			path = "economy.give.take";
+			if(!Toolbox.equalsOne(args[1], "trash", "sell")) {
+				Messaging.send(sender, "&cInvalid economy-take method (must be trash or sell).");
+				return true;
+			}
+			value = args[1];
+		} else if(args[0].equalsIgnoreCase("economy-clear")) {
+			path = "economy.give.clear";
+			if(!Toolbox.equalsOne(args[1], "trash", "sell")) {
+				Messaging.send(sender, "&cInvalid economy-clear method (must be trash or sell).");
+				return true;
+			}
+			value = args[1];
+		} else if(args[0].equalsIgnoreCase("economy-kits")) {
+			path = "economy.give.kits";
+			if(!Toolbox.equalsOne(args[1], "individual", "cumulative", "discount")) {
+				Messaging.send(sender, "&cInvalid economy-kits method (must be individual, cumulative, or discount).");
+				return true;
+			}
+			value = args[1];
+		} else if(args[0].equalsIgnoreCase("economy-sell")) {
+			path = "economy.give.sell";
+			try {
+				value = Double.valueOf(args[1]);
+			} catch(NumberFormatException e) {
+				Messaging.send(sender, "&cMust be a number.");
+				return true;
+			}
+		} else if(args[0].equalsIgnoreCase("kits-discount")) {
+			path = "economy.give.discount";
+			try {
+				value = Double.valueOf(args[1]);
+			} catch(NumberFormatException e) {
+				Messaging.send(sender, "&cMust be a number.");
+				return true;
+			}
+		} else if(args[0].equalsIgnoreCase("chat-tag")) {
+			path = "tag-fmt";
+			value = args[1];
+		} else if(args[0].equalsIgnoreCase("log-commands")) {
+			path = "log-commands";
+			if(!Toolbox.equalsOne(args[1], "true", "false")) {
+				Messaging.send(sender, "&cMust be a boolean.");
+				return true;
+			}
+			value = Boolean.valueOf(args[1]);
+		} else if(args[0].equalsIgnoreCase("auto-save")) {
+			path = "auto-save";
+			if(!Toolbox.equalsOne(args[1], "true", "false")) {
+				Messaging.send(sender, "&cMust be a boolean.");
+				return true;
+			}
+			value = Boolean.valueOf(args[1]);
+		} else if(args[0].equalsIgnoreCase("lightning-range")) {
+			path = "lightning-range";
+			try {
+				value = Integer.valueOf(args[1]);
+			} catch(NumberFormatException e) {
+				Messaging.send(sender, "&cMust be an integer.");
+				return true;
+			}
+		} else if(args[0].equalsIgnoreCase("teleport-warmup")) {
+			path = "teleport.warmup";
+			try {
+				value = Integer.valueOf(args[1]);
+			} catch(NumberFormatException e) {
+				Messaging.send(sender, "&cMust be an integer.");
+				return true;
+			}
+		} else if(args[0].equalsIgnoreCase("time-cooldown")) {
+			path = "cooldown.time";
+			try {
+				value = Integer.valueOf(args[1]);
+			} catch(NumberFormatException e) {
+				Messaging.send(sender, "&cMust be an integer.");
+				return true;
+			}
+		} else if(args[0].equalsIgnoreCase("storm-cooldown")) {
+			path = "cooldown.storm";
+			try {
+				value = Integer.valueOf(args[1]);
+			} catch(NumberFormatException e) {
+				Messaging.send(sender, "&cMust be an integer.");
+				return true;
+			}
+		} else if(args[0].equalsIgnoreCase("thunder-cooldown")) {
+			path = "cooldown.thunder";
+			try {
+				value = Integer.valueOf(args[1]);
+			} catch(NumberFormatException e) {
+				Messaging.send(sender, "&cMust be an integer.");
+				return true;
+			}
+		} else if(args[0].equalsIgnoreCase("lighting-cooldown")) {
+			path = "cooldown.lightning";
+			try {
+				value = Integer.valueOf(args[1]);
+			} catch(NumberFormatException e) {
+				Messaging.send(sender, "&cMust be an integer.");
+				return true;
+			}
+		} else if(args[0].equalsIgnoreCase("show-usage")) {
+			path = "show-usage-on-fail";
+			if(!Toolbox.equalsOne(args[1], "true", "false")) {
+				Messaging.send(sender, "&cMust be a boolean.");
+				return true;
+			}
+			value = Boolean.valueOf(args[1]);
+		} else Messaging.send(sender, "&cUnknown variable: " + args[0]);
+		if(path != null && value != null) {
+			plugin.config.setProperty(path, value);
+			Messaging.send(sender, "Variable " + args[0] + " set to " + value + ".");
 		}
 		return true;
 	}
@@ -888,6 +853,11 @@ public class generalCommand extends CommandBase {
 			}
 		}
 		return SHOW_USAGE;
+	}
+
+	@Override // TODO: This is cheating
+	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
+		return Collections.singletonMap("args", (Object) args);
 	}
 	
 }
