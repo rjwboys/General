@@ -155,6 +155,7 @@ public enum LanguageText {
 	TELEPORT_SELF("teleport.self", "{white}You teleported to {blue}{destination}{white}!"),
 	TELEPORT_OTHER("teleport.other", "{white}You teleported {blue}{target}{white} to {blue}{destination}{white}!"),
 	TELEPORT_WHOA("teleport.whoa", "{white}You have been teleported to {blue}{destination}{white}!"),
+	TELEPORT_WARMUP("teleport.warmup", "{yellow}Warming up. Teleport will commence in {time} ticks."),
 	// Messages related to /setspawn
 	SETHOME("setspawn.home", "{yellow}Home position of player '{white}{player}{yellow}' changed to {white}({x},{y},{z})"),
 	SETSPAWN("setspawn.no-world", "{yellow}Spawn position changed to {white}({x],{y},{z})"),

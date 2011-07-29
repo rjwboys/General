@@ -80,6 +80,7 @@ public class goCommand extends CommandBase {
 				int warmup = Option.TELEPORT_WARMUP.get();
 				if(warmup == 0 || (target.hasInstant(sender) && hasDestInstant(player, target, dest))) teleport.run();
 				else {
+					Messaging.send(sender, LanguageText.TELEPORT_WARMUP.value("time", warmup));
 					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, teleport, warmup);
 					inWarmup.add(player);
 				}
