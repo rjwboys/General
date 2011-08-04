@@ -4,7 +4,9 @@ package net.craftstars.general.command;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.craftstars.general.General;
 import net.craftstars.general.util.HelpHandler;
@@ -12,13 +14,24 @@ import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.bukkit.plugin.Plugin;
 
-public abstract class CommandBase implements CommandExecutor {
+import com.ensifera.animosity.craftirc.BasePoint;
+import com.ensifera.animosity.craftirc.CommandEndPoint;
+import com.ensifera.animosity.craftirc.CraftIRC;
+import com.ensifera.animosity.craftirc.RelayedCommand;
+import com.ensifera.animosity.craftirc.RelayedMessage;
+
+public abstract class CommandBase extends BasePoint implements CommandExecutor, CommandEndPoint {
 	enum FailurePlace {INIT, HELP, PARSE, EXECUTE, NONE};
 	private static HashSet<String> frozenAccounts = new HashSet<String>();
 	protected final General plugin;
@@ -52,17 +65,6 @@ public abstract class CommandBase implements CommandExecutor {
 					if(!commandResult) error = at;
 				} else error = at;
 			}
-			/*
-			} else if(sender instanceof Player) {
-				boolean result = this.fromPlayer((Player) sender, command, commandLabel, args);
-				unfreeze((Player) sender);
-				return result;
-			} else if(sender instanceof ConsoleCommandSender) {
-				return this.fromConsole((ConsoleCommandSender) sender, command, commandLabel, args);
-			} else {
-				return this.fromUnknown(sender, command, commandLabel, args);
-			}
-			*/
 		} catch(Exception e) {
 			error = at;
 			General.logger.error(LanguageText.LOG_COMMAND_ERROR.value("command", command.getName(), "errorPlace", error));
@@ -150,5 +152,148 @@ public abstract class CommandBase implements CommandExecutor {
 		for(int i = 0; i < args.length - 1; i++)
 			newArgs[i] = args[i];
 		return newArgs;
+	}
+
+	@Override
+	public Type getType() {
+		return Type.MINECRAFT;
+	}
+
+	@Override
+	public void commandIn(RelayedCommand cmd) {
+		String commandLabel = cmd.getField("command");
+		String cmdStr = commandLabel + " " + cmd.getField("args");
+		String senderName = cmd.getField("sender");
+		String[] args = cmd.getField("args").split(" ");
+		Command command = plugin.getCommand(commandLabel);
+		FailurePlace error = FailurePlace.NONE, at = FailurePlace.INIT;
+		if(Option.LOG_COMMANDS.get())
+			General.logger.info(LanguageText.LOG_COMMAND_USED.value("sender", senderName, "command", cmdStr));
+		try {
+			IRCReturnSender sender = new IRCReturnSender(cmd);
+			if(isHelpCommand(command, commandLabel, args)) {
+				at = FailurePlace.HELP;
+				String topic = getHelpTopic(command, commandLabel, args);
+				boolean commandResult = HelpHandler.displayEntry(sender, topic);
+				if(!commandResult) error = at;
+			} else {
+				setCommand(commandLabel);
+				at = FailurePlace.PARSE;
+				Map<String,Object> parsedArgs = parse(sender, command, commandLabel, args, false);
+				if(parsedArgs != null) {
+					at = FailurePlace.EXECUTE;
+					boolean commandResult = execute(sender, cmdToExecute, parsedArgs);
+					if(!commandResult) error = at;
+				} else error = at;
+			}
+		} catch(Exception e) {
+			error = at;
+			General.logger.error(LanguageText.LOG_COMMAND_ERROR.value("command", command.getName(), "errorPlace", error));
+			General.logger.error(LanguageText.LOG_COMMAND_ERROR_INFO.value("command", cmdStr));
+			e.printStackTrace();
+		}
+	}
+	
+	private class IRCReturnSender implements CommandSender {
+		private char prefix;
+		private String channel;
+		private String command;
+		
+		public IRCReturnSender(RelayedCommand from) {
+			prefix = from.getField("ircPrefix").charAt(0);
+			channel = from.getField("srcChannel");
+			command = from.getField("command");
+		}
+
+		@Override
+		public boolean isPermissionSet(String name) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean isPermissionSet(Permission perm) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean hasPermission(String name) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean hasPermission(Permission perm) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public PermissionAttachment addAttachment(Plugin plugin) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void removeAttachment(PermissionAttachment attachment) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void recalculatePermissions() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean isOp() {
+			return prefix == '@';
+		}
+
+		@Override
+		public void setOp(boolean value) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void sendMessage(String message) {
+			CraftIRC irc = (CraftIRC) plugin.getServer().getPluginManager().getPlugin("CraftIRC");
+			RelayedMessage msg = irc.newMsgToTag(CommandBase.this, channel, "generalReply");
+			msg.setField("command", command);
+			msg.setField("message", message);
+			msg.post();
+		}
+
+		@Override
+		public Server getServer() {
+			return plugin.getServer();
+		}
 	}
 }
