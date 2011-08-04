@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -42,7 +43,14 @@ public class opCommand extends CommandBase {
 			return Messaging.lacksPermission(sender, "general.op");
 		@SuppressWarnings("unchecked")
 		ArrayList<Player> players = (ArrayList<Player>) args.get("players");
-		for(Player who : players) who.setOp(true);
+		String[] names = new String[players.size()];
+		int i = 0;
+		for(Player who : players) {
+			who.setOp(true);
+			names[i++] = who.getDisplayName();
+			if(!who.equals(sender)) Messaging.send(who, LanguageText.MISC_OPPED);
+		}
+		Messaging.send(sender, LanguageText.MISC_OPPING.value("ops", Toolbox.join(names, ", ")));
 		return true;
 	}
 	
