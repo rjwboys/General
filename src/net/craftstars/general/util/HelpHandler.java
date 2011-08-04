@@ -335,7 +335,16 @@ public class HelpHandler {
 	@SuppressWarnings("unused")
 	// because it only LOOKS unused; it's accessed reflectively
 	private static String general_set_time_cooldown = "The cooldown period for changing the time, in ticks.";
-	private static String general_kit;
+	@SuppressWarnings("unused")
+	// because it only LOOKS unused; it's accessed reflectively
+	private static String general_kit = "&c/general kit &7[kit] [command] [key] [value]&f : Edits kit definitions.\n"
+		+ "&fThere are five subcommands:\n"
+		+ "&cadd (&7[item]&f (&7[amount]&f)) : Add an item to a kit; creates it if it doesn't exist.\n"
+		+ "&cremove (&7[item]&f (&7[amount]&f)) : Removes an item from a kit.\n"
+		+ "&cdelay &7[delay]&7 : Set the cooldown delay of a kit.\n"
+		+ "&ccost &7[price]&f : Set the price of a kit (if economy is configured to use per-kit prices).\n"
+		+ "&ctrash : Delete a kit.\n"
+		+ "&clist : List the contents of a kit.\n";
 	// TODO: A way to account for permissions?
 	
 }
