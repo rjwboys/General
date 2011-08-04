@@ -80,23 +80,26 @@ public class Destination {
 			}
 		}
 		if(!player.getWorld().equals(calc.getWorld())) {
-			perm = perm && hasWorldPermission(player, calc.getWorld(), base, "into");
-			perm = perm && hasWorldPermission(player, player.getWorld(), base, "from");
+			perm = perm && hasWorldPermission(player, calc.getWorld(), base);
+			perm = perm && canLeaveWorld(player, player.getWorld(), base);
 		}
 		return perm;
 	}
 	
-	public static boolean hasWorldPermission(CommandSender player, World world, String base, String preposition) {
+	public static boolean hasWorldPermission(CommandSender player, World world, String base) {
 		String name = world.getName();
-		String node = base + "." + preposition + "." + name;
+		String node = base + ".into." + name;
 		if(Toolbox.hasPermission(player, node)) return true;
-		Messaging.lacksPermission(player, node, getFormat(base, preposition), "destination", name);
+		Messaging.lacksPermission(player, node, LanguageText.LACK_TELEPORT_INTO, "destination", name);
 		return false;
 	}
 	
-	public static LanguageText getFormat(String base, String preposition) {
-		String node = base.replace('.', '_').replace("general_", "permissions.") + "_" + preposition;
-		return LanguageText.byNode(node);
+	public static boolean canLeaveWorld(CommandSender player, World world, String base) {
+		String name = world.getName();
+		String node = base + ".from";
+		if(Toolbox.hasPermission(player, node)) return true;
+		Messaging.lacksPermission(player, node, LanguageText.LACK_TELEPORT_FROM, "destination", name);
+		return false;
 	}
 
 	public String[] getCostClasses(Player sender, String base) {

@@ -21,13 +21,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
+import org.bukkit.event.world.WorldListener;
+import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
-public class BukkitPermissionsHandler implements PermissionsHandler {
+public class BukkitPermissionsHandler extends WorldListener implements PermissionsHandler {
 	public BukkitPermissionsHandler() {
 		// Here we set up the complicated container permissions
 		for(PermissionSet set : PermissionSet.values()) set.build();
+		Bukkit.getServer().getPluginManager().registerEvent(Type.WORLD_LOAD, this, Priority.Monitor, General.plugin);
+		Bukkit.getServer().getPluginManager().registerEvent(Type.WORLD_UNLOAD, this, Priority.Monitor, General.plugin);
 	}
 	
 	@Override
@@ -54,6 +61,32 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 	@Override
 	public String getName() {
 		return "Bukkit";
+	}
+	
+	@Override
+	public void onWorldLoad(WorldLoadEvent event) {
+		List<String> destinationBases = new ArrayList<String>();
+		destinationBases.addAll(Arrays.asList("general.teleport", "general.setspawn", "general.spawn.set"));
+		destinationBases.addAll(PermissionSet.teleportBases);
+		for(String base : destinationBases) {
+			Permission perm = Bukkit.getServer().getPluginManager().getPermission(base + ".into.*");
+			Map<String, Boolean> worlds = perm.getChildren();
+			worlds.put(event.getWorld().getName(), true);
+			perm.recalculatePermissibles();
+		}
+	}
+	
+	@Override
+	public void onWorldUnload(WorldUnloadEvent event) {
+		List<String> destinationBases = new ArrayList<String>();
+		destinationBases.addAll(Arrays.asList("general.teleport", "general.setspawn", "general.spawn.set"));
+		destinationBases.addAll(PermissionSet.teleportBases);
+		for(String base : destinationBases) {
+			Permission perm = Bukkit.getServer().getPluginManager().getPermission(base + ".into.*");
+			Map<String, Boolean> worlds = perm.getChildren();
+			worlds.remove(event.getWorld().getName());
+			perm.recalculatePermissibles();
+		}
 	}
 
 	@SuppressWarnings("unused")
@@ -172,9 +205,10 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 					allDests.put(base, true);
 					allDests.put(base + ".to.*", true);
 					allDests.put(base + ".into.*", true);
-					allDests.put(base + ".from.*", true);
+					allDests.put(base + ".from", true);
 					register(base + ".*", "Gives permission to teleport " + targ.getName() + " to anywhere at all.",
 						allDests);
+					register(base + ".from", "Gives permission to teleport to from the current world to another one.");
 					// for general.teleport.<target>.to|into|from.*
 					teleportBases.add(base);
 				}
@@ -221,19 +255,11 @@ public class BukkitPermissionsHandler implements PermissionsHandler {
 						"Gives permission to instantly" + permDesc + " any type of destination.", instants);
 					// <base>.into.*, <base>.from.*
 					HashMap<String, Boolean> into = new HashMap<String,Boolean>();
-					HashMap<String, Boolean> from = new HashMap<String,Boolean>();
-					for(World world : Bukkit.getServer().getWorlds()) {
-						into.put(base + ".into." + world.getName(), true);
-						from.put(base + ".from." + world.getName(), true);
-					}
+					for(World world : Bukkit.getServer().getWorlds()) into.put(base + ".into." + world.getName(), true);
 					if(base.contains("spawn"))
 						permDesc = "remotely " + basePermDesc + " of";
 					else permDesc = basePermDesc + " to";
 					register(base + ".into.*", "Gives permission to " + permDesc + " any world.", into);
-					if(base.contains("spawn"))
-						permDesc = "remotely " + basePermDesc + " from";
-					else permDesc = basePermDesc + "out of";
-					register(base + ".from.*", "Gives permission to " + permDesc + " any world.", from);
 					// <base>.basic
 					HashMap<String, Boolean> basics = new HashMap<String,Boolean>();
 					basics.put("general.teleport", true);
