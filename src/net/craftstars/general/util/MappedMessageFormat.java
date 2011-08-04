@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("serial")
 public class MappedMessageFormat extends Format {
 	private MessageFormat format;
 	private LinkedHashSet<String> keys;
@@ -38,6 +39,7 @@ public class MappedMessageFormat extends Format {
 		return pattern;
 	}
 	
+	@SuppressWarnings("unused")
 	private String indexedToNamed(String pattern) {
 		String[] keyArray = keys.toArray(new String[0]);
 		for(int i = 0; i < keyArray.length; i++)
