@@ -345,6 +345,10 @@ public enum LanguageText {
 	ECONOMY_EARN("econ.earn", "{yellow}You have earned {white}{income}{yellow}!"),
 	MISC_KICKED("misc.kicked", "Kicked by administrator"),
 	MISC_KICKING("misc.kicking", "Kicking player {player}: {reason}"),
+	MISC_OPPING("misc.opping", "Promoted players to operator: {ops}"),
+	MISC_DEOPPING("misc.deopping", "Demoted players from operator: {ops}"),
+	MISC_OPPED("misc.opped", "You are now op!"),
+	MISC_DEOPPED("misc.deopped", "You are no longer op."),
 	;
 	
 	private static Configuration config;

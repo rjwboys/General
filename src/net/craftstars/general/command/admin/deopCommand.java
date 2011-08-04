@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
+import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -42,7 +43,14 @@ public class deopCommand extends CommandBase {
 			return Messaging.lacksPermission(sender, "general.deop");
 		@SuppressWarnings("unchecked")
 		ArrayList<Player> players = (ArrayList<Player>) args.get("players");
-		for(Player who : players) who.setOp(false);
+		String[] names = new String[players.size()];
+		int i = 0;
+		for(Player who : players) {
+			who.setOp(false);
+			names[i++] = who.getDisplayName();
+			if(!who.equals(sender)) Messaging.send(who, LanguageText.MISC_DEOPPED);
+		}
+		Messaging.send(sender, LanguageText.MISC_DEOPPING.value("ops", Toolbox.join(names, ", ")));
 		return true;
 	}
 	
