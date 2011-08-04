@@ -97,8 +97,8 @@ public class takeCommand extends CommandBase {
 		sell = sell && plugin.economy != null;
 		sell = sell && Option.ECONOMY_TAKE_SELL.get().equalsIgnoreCase("sell");
 		amount = doTake(who, item, amount, sell);
-		if(!sender.equals(who))
-			Messaging.send(sender, LanguageText.TAKE_THEFT.value("item", item, "amount", amount, "player", who));
+		if(!sender.equals(who)) Messaging.send(sender, LanguageText.TAKE_THEFT.value("item", item.getName(),
+			"amount", amount, "player", who.getName()));
 		return true;
 	}
 	
@@ -123,7 +123,8 @@ public class takeCommand extends CommandBase {
 				i.setItem(x, null);
 			} else if(amount <= 0) i.setItem(x, null);
 		}
-		Messaging.send(who, LanguageText.TAKE_TOOK.value("item", item, "amount", removed <= amount ? removed : 0));
+		Messaging.send(who, LanguageText.TAKE_TOOK.value("item", item.getName(),
+			"amount", removed <= amount ? removed : 0));
 		if(sell) {
 			double revenue = Toolbox.sellItem(item, removed);
 			Messaging.earned(who, revenue);

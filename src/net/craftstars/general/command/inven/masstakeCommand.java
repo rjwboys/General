@@ -67,7 +67,7 @@ public class masstakeCommand extends CommandBase {
 		int amount = doTake(who, items, sell, itemsText);
 		if(!sender.equals(who))
 			Messaging.send(sender, LanguageText.MASSTAKE_THEFT.value("items", itemsText.toString(),
-				"player", who, "amount", amount));
+				"player", who.getName(), "amount", amount));
 		return true;
 	}
 	

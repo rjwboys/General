@@ -68,6 +68,10 @@ public abstract class Option {
 		return Toolbox.nodeExists(config, node);
 	}
 	
+	public static void setConfiguration(Configuration c) {
+		config = c;
+	}
+	
 	public static class OptionBoolean extends Option {
 		@SuppressWarnings("hiding") OptionBoolean(String node, boolean def) {
 			super(node, def);

@@ -42,8 +42,8 @@ public class CommandHandler {
 					register(alias, generalCommand);
 				try {
 					Class<? extends CommandBase> clazz = General.plugin.getClass().getClassLoader()
-							.loadClass("net.craftstars.general.command." + generalCommand.getName() + "Command")
-							.asSubclass(CommandBase.class);
+						.loadClass("net.craftstars.general.command." + generalCommand.getName() + "Command")
+						.asSubclass(CommandBase.class);
 					CommandBase commandInstance = clazz.getConstructor(General.class).newInstance(General.plugin);
 					generalCommand.setExecutor(commandInstance);
 				} catch(ClassNotFoundException e) {

@@ -94,7 +94,7 @@ public class timeCommand extends CommandBase {
 		}
 		if(Toolbox.lacksPermission(sender, "general.time.set"))
 			return Messaging.lacksPermission(sender, "general.time.set");
-		if(Toolbox.checkCooldown(sender, world, "time", "general.time")) return true;
+		if(Toolbox.inCooldown(sender, world, "time", "general.time")) return true;
 		LanguageText timeName;
 		int timeTicks;
 		if(timeStr.equalsIgnoreCase("day")) { // 6am

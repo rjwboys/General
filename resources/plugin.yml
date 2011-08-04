@@ -4,7 +4,7 @@ authors:
   - Celtic Minstrel
   - Plutonium239
   - Nijikokun
-version: 3.5.1
+version: 3.6
 softdepend:
   - BOSEconomy
   - iConomy
@@ -13,106 +13,99 @@ softdepend:
   - Help
   - BookWorm
 commands:
-  info.playerlist:
-    description: Displays all players that are online.
-    permission: general.playerlist
-    aliases: []
-    usage: |
-           /<command>
-  info.who:
-    permission: general.who
-    description: Displays information about a player.
-    aliases: [whoami]
-    usage: |
-           /<command> [player]
-  misc.time:
-    permission: general.time
-    description: Displays or modifies current world time.
-    aliases: []
-    usage: |
-           /<command> [<world>] [=|+|-]<time|duration>
-           /<command> add|set <time|duration>
-  inven.give:
-    permission: general.give
-    description: Users to give yourself or another player an item.
-    aliases: []
-    usage: |
-           /<command> item[:data] [amount] [player]
-  info.getpos:
-    permission: general.getpos
-    description: Displays detailed information about your position.
-    aliases: []
-    usage: /<command> [<player>] [compass|dir|pos|rot]
-  chat.tell:
-    permission: general.tell
-    description: Sends another player a private message.
-    aliases: []
-    usage: /<command> <player> <message>
-  teleport.setspawn:
-    permission: general.spawn.set
-    description: Sets to the spawn location of your current world (or the specified one).
-    aliases: []
-    usage: /<command> [<dest>]
-  teleport.go:
-    permission: general.teleport
-    description: Teleports a/multiple/all player(s) to another players location.
-    aliases: []
-    usage: /<command> [<who>] <dest>
-  inven.clear:
-    permission: general.clear
-    description: Clears your inventory.
-    aliases: []
-    usage: /<command> [player] [pack|armo[u]r|quickbar|all]
-  inven.take:
-    permission: general.take
-    description: Removes something from your inventory.
-    aliases: []
-    usage: /<command> item[:data] [amount] [player]
-  inven.masstake:
-    permission: general.take.mass
-    description: Removes multiple things from your inventory.
-    aliases: []
-    usage: /<command> item1 item2 ... itemn [player]
-  misc.heal:
-    permission: general.heal
-    description: Restores your health. (Can also reduce it if you give a negative amount.)
-    aliases: [hurt]
-    usage: /heal [player] [amount]
-  misc.mobspawn:
-    permission: general.mobspawn
-    description: Spawns a mob.
-    aliases: []
-    usage: /mobspawn <mob-name>[;<mount>] [<how-many>]
-  inven.kit:
-    permission: general.kit
-    description: Gives you a kit.
-    aliases: []
-    usage: /kit [kit-name]
   general:
     permission: general.admin
     description: Administrates the plugin.
     aliases: [help, motd]
     usage: /general reload|die|motd|help
+  chat.tell:
+    permission: general.tell
+    description: Sends another player a private message.
+    usage: /<command> <player> <message>
   chat.away:
     permission: general.away
     description: Sets your away message
-    aliases: []
     usage: /<command> [message]
-  inven.items:
-    permission: general.give.mass
-    description: Gives several items all at once
-    aliases: []
-    usage: /<command> <item1> <item2> ...etc
-  misc.weather:
-    permission: general.weather
-    description: Affects the weather
-    aliases: []
-    usage: /<command> [<world>] <weather>
+  info.playerlist:
+    description: Displays all players that are online.
+    permission: general.playerlist
+    usage: /<command> [world]
+  info.who:
+    permission: general.who
+    description: Displays information about a player.
+    aliases: [whoami]
+    usage: /<command> [player]
+  info.getpos:
+    permission: general.getpos
+    description: Displays detailed information about your position.
+    usage: /<command> [<player>] [compass|dir|pos|rot]
   info.worldinfo:
     permission: general.worldinfo
     description: Gives info on a world
-    aliases: []
     usage: /<command> [<world>]
+  inven.give:
+    permission: general.give
+    description: Users to give yourself or another player an item.
+    usage: /<command> item[:data] [amount] [player]
+  inven.items:
+    permission: general.give.mass
+    description: Gives several items all at once
+    usage: /<command> <item1> <item2> ...etc
+  inven.kit:
+    permission: general.kit
+    description: Gives you a kit.
+    usage: /kit [kit-name]
+  inven.clear:
+    permission: general.clear
+    description: Clears your inventory.
+    usage: /<command> [player] [pack|armo[u]r|quickbar|all]
+  inven.take:
+    permission: general.take
+    description: Removes something from your inventory.
+    usage: /<command> item[:data] [amount] [player]
+  inven.masstake:
+    permission: general.take.mass
+    description: Removes multiple things from your inventory.
+    usage: /<command> item1 item2 ... itemn [player]
+  teleport.setspawn:
+    permission: general.spawn.set
+    description: Sets to the spawn location of your current world (or the specified one).
+    usage: /<command> [<dest>]
+  teleport.go:
+    permission: general.teleport
+    description: Teleports a/multiple/all player(s) to another players location.
+    usage: /<command> [<who>] <dest>
+  misc.time:
+    permission: general.time
+    description: Displays or modifies current world time.
+    usage: |
+           /<command> [<world>] [=|+|-]<time|duration>
+           /<command> add|set <time|duration>
+  misc.weather:
+    permission: general.weather
+    description: Affects the weather
+    usage: /<command> [<world>] <weather>
+  misc.heal:
+    permission: general.heal
+    description: Restores your health. (Can also reduce it if you give a negative amount.)
+    aliases: [hurt]
+    usage: /<command> [player] [amount]
+  misc.mobspawn:
+    permission: general.mobspawn
+    description: Spawns a mob.
+    usage: /<command> <mob-name>[;<mount>] [<how-many>]
+  admin.op:
+    permission: general.op
+    description: Promotes a player to operator
+    usage: /<command> [player1 player2 ... playerN]
+  admin.deop:
+    permission: general.deop
+    description: Demotes a player from operator
+    usage: /<command< [player1 player2 ... playerN]
+  admin.kick:
+    permission: general.kick
+    description: Kicks a player off the server
+    usage: /<command> player [reason]
 permissions:
   general.*:
     description: Gives all General permissions.

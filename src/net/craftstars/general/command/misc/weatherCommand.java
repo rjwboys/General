@@ -247,7 +247,7 @@ public class weatherCommand extends CommandBase {
 		}
 		if(Toolbox.lacksPermission(sender, "general.weather.thunder"))
 			Messaging.lacksPermission(sender, "general.weather.thunder");
-		if(Toolbox.checkCooldown(sender, world, "thunder", "general.weather.thunder")) return;
+		if(Toolbox.inCooldown(sender, world, "thunder", "general.weather.thunder")) return;
 		if(!Toolbox.canPay(sender, 1, "economy.weather.thunder")) return;
 		boolean state = duration != 0;
 		boolean hasThunder = world.isThundering();
@@ -269,7 +269,7 @@ public class weatherCommand extends CommandBase {
 		}
 		if(Toolbox.lacksPermission(sender, "general.weather.set"))
 			Messaging.lacksPermission(sender, "general.weather.set");
-		if(Toolbox.checkCooldown(sender, world, "storm", "general.weather.set")) return;
+		if(Toolbox.inCooldown(sender, world, "storm", "general.weather.set")) return;
 		if(!Toolbox.canPay(sender, 1, "economy.weather.storm")) return;
 		boolean state = duration != 0;
 		boolean hasStorm = world.hasStorm();
@@ -288,7 +288,7 @@ public class weatherCommand extends CommandBase {
 		World world = centre.getWorld();
 		if(Toolbox.lacksPermission(sender, "general.weather.zap"))
 			Messaging.lacksPermission(sender, "general.weather.zap");
-		if(Toolbox.checkCooldown(sender, world, "lightning", "general.weather.zap")) return;
+		if(Toolbox.inCooldown(sender, world, "lightning", "general.weather.zap")) return;
 		if(!Toolbox.canPay(sender, 1, "economy.weather.zap")) return;
 		else {
 			int x, y, z;

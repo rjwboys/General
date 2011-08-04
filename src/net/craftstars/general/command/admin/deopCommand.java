@@ -15,7 +15,7 @@ import net.craftstars.general.util.Toolbox;
 
 public class deopCommand extends CommandBase {
 	
-	protected deopCommand(General instance) {
+	public deopCommand(General instance) {
 		super(instance);
 	}
 

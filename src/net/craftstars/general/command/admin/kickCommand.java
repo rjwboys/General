@@ -39,7 +39,9 @@ public class kickCommand extends CommandBase {
 			return Messaging.lacksPermission(sender, "general.kick");
 		Player villain = (Player) args.get("villain");
 		String reason = args.get("reason").toString();
-		villain.kickPlayer(reason.isEmpty() ? LanguageText.MISC_KICKED.value() : reason);
+		reason = reason.isEmpty() ? LanguageText.MISC_KICKED.value() : reason;
+		Messaging.send(sender, LanguageText.MISC_KICKING.value("player", villain.getName(), "reason", reason));
+		villain.kickPlayer(reason);
 		return true;
 	}
 	

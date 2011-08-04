@@ -344,6 +344,7 @@ public enum LanguageText {
 	ECONOMY_PAY("econ.pay", "{yellow}You pay {white}{cost}{yellow}."),
 	ECONOMY_EARN("econ.earn", "{yellow}You have earned {white}{income}{yellow}!"),
 	MISC_KICKED("misc.kicked", "Kicked by administrator"),
+	MISC_KICKING("misc.kicking", "Kicking player {player}: {reason}"),
 	;
 	
 	private static Configuration config;
@@ -378,6 +379,6 @@ public enum LanguageText {
 	}
 	
 	public static LanguageText byNode(String n) {
-		return byNode.get(n);
+		return byNode.get(n.toUpperCase());
 	}
 }

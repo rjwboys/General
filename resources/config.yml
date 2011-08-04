@@ -225,3 +225,7 @@ aliases:
     setspawn: []
     go: [teleport, tele, tp]
     summon: [tphere, teleporthere, s]
+  admin:
+    op: []
+    deop: []
+    kick: []
