@@ -106,28 +106,33 @@ public class General extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		boolean alreadyLoaded = false;
 		if(plugin != null) {
 			General.logger.warn(LanguageText.LOG_TWICE.value());
-			return;
+			alreadyLoaded = true;
 		}
 		plugin = this;
 		logger.setPluginVersion(this.getDescription().getVersion());
 		loadAllConfigs();
 		logger.info("[Codename: " + General.codename + "] " + LanguageText.LOG_SUCCESS.value());
+		if(alreadyLoaded) return;
 		CommandHandler.setup(config);
 		HelpHandler.setup();
 		registerEvents();
 	}
 
 	public void loadAllConfigs() {
+		// The load order here is very delicate, as LanguageText is used nearly everywhere
+		// and Messaging.load uses Option.
 		this.config = this.getConfiguration();
 		this.loadConfiguration();
+		Option.setConfiguration(config);
+		Messaging.load();
 		
 		Items.setup();
 		setupPermissions(true);
 		Kits.loadKits();
 		setupEconomy();
-		Messaging.load();
 	}
 
 	private void registerEvents() {

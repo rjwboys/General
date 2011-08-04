@@ -28,7 +28,7 @@ public enum TargetType {
 	}
 	
 	public String getName() {
-		return LanguageText.byNode(toString().toLowerCase()).value();
+		return LanguageText.byNode("target." + toString().toLowerCase()).value();
 	}
 
 	public boolean hasInstant(CommandSender sender) {

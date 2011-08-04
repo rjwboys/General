@@ -20,90 +20,79 @@ public class HelpHandler {
 	public static void setup() {
 		Plugin test = General.plugin.getServer().getPluginManager().getPlugin("Help");
 		if(test != null) {
-			Help helpPlugin = ((Help) test);
-			helpPlugin.registerCommand("playerlist ([world])",
-					"Lists online players." + fetchAliases("playerlist"),
-					General.plugin, "general.playerlist", "general.basic");
-			helpPlugin.registerCommand("who ([player])",
-					"Displays information about a player." + fetchAliases("who", "whoami"),
-					General.plugin, "general.who", "general.basic");
-			helpPlugin.registerCommand("whoami",
-					"Displays information about you.",
-					General.plugin);
-			helpPlugin.registerCommand("time ([world])",
-					"Displays the current time in [world]." + fetchAliases("time"),
-					General.plugin, "general.time", "general.basic");
-			helpPlugin.registerCommand("time help",
-					"Shows syntax for setting the time.", 
-					General.plugin, "general.time.set");
-			helpPlugin.registerCommand("give [item](:[variant]) ([amount]) ([player])",
-					"Gives [player] [amount] of [item]." + fetchAliases("give"),
-					General.plugin, "general.give");
-			helpPlugin.registerCommand("give help",
-					"More detailed info on the give command.",
-					General.plugin, "general.give");
-			helpPlugin.registerCommand("items [item1] [item2] ... [itemN]",
-					"Give yourself several different items at once. You get one of each item." + fetchAliases("items"),
-					General.plugin, "general.give.mass");
-			helpPlugin.registerCommand("getpos ([player]) (compass|dir|pos|rot)",
-					"Get the current position of [player]." + fetchAliases("getpos", "compass", "where"),
-					General.plugin, "general.getpos", "general.basic");
-			helpPlugin.registerCommand("tell [player] [message]",
-					"Whisper to a player." + fetchAliases("tell"),
-					General.plugin, "general.tell", "general.basic");
-			helpPlugin.registerCommand("setspawn ([player|world]) ([destination])",
-					"Sets the spawn location of the world or player to the specified destination." + fetchAliases("setspawn"),
-					General.plugin,
-					"general.spawn.set");
-			helpPlugin.registerCommand("teleport ([target]) [destination]",
-					"Teleport the target(s) to the specified destination." + fetchAliases("teleport"),
-					General.plugin, "general.teleport");
-			helpPlugin.registerCommand("teleport help",
-					"More detailed information on types of targets and destinations.",
-					General.plugin, "general.teleport");
-			helpPlugin.registerCommand("clear ([player]) (pack|quickbar|armo(u)r|all)",
-					"Clears [player]'s inventory." + fetchAliases("clear"),
-					General.plugin, "general.clear");
-			helpPlugin.registerCommand("take [item](:[variant]) ([amount]) ([player])",
-					"Deletes something from [player]'s inventory." + fetchAliases("take"),
-					General.plugin, "general.take");
-			helpPlugin.registerCommand("heal ([player]) ([amount])",
-					"Heals [player] by [amount] hearts (0-10). If [amount] is omitted, full heal." + fetchAliases("heal"),
-					General.plugin, "general.heal");
-			helpPlugin.registerCommand("general reload",
-					"Reloads the configuration files.",
-					General.plugin, "OP", "general.admin.reload");
-			helpPlugin.registerCommand("general motd",
-					"Displays the message of the day.",
-					General.plugin);
-			helpPlugin.registerCommand("mobspawn [mob](;[mount])",
-					"Spawns a [mob] riding a [mount]. " + fetchAliases("mobspawn"),
-					General.plugin, "general.mobspawn");
-			helpPlugin.registerCommand("mobspawn help",
-					"More detailed help on spawning mobs.",
-					General.plugin, "general.mobspawn");
-			helpPlugin.registerCommand("help General",
-					"Help for the General plugin.",
-					General.plugin, true);
-			helpPlugin.registerCommand("away [reason]",
-					"Sets your away status." + fetchAliases("away"), 
-					General.plugin, "general.away", "general.basic");
-			helpPlugin.registerCommand("kit [kit]",
-					"Gives you the [kit], or shows a list of available kits." + fetchAliases("kit"),
-					General.plugin, "general.kit");
-			helpPlugin.registerCommand("worldinfo [world]",
-					"Shows info on a given world, such as the spawn location or the seed." + fetchAliases("worldinfo"),
-					General.plugin, "general.worldinfo");
-			helpPlugin.registerCommand("weather ([world|player]) on|off|start|stop|thunder|zap|[duration]",
-					"Alter the weather" + fetchAliases("weather"),
-					General.plugin, "general.weather");
-			helpPlugin.registerCommand("general item help",
-					"Information on how to edit the item definitions.",
-					General.plugin, "general.admin.item");
-			helpPlugin.registerCommand("general kit help",
-					"Information on how to edit the kit definitions.",
-					General.plugin, "general.admin.kit");
-			General.logger.info(LanguageText.LOG_HELP_ENABLED.value("version", helpPlugin.getDescription().getVersion()));
+			Help help = ((Help) test);
+			help.registerCommand("playerlist ([world])",
+				"Lists online players." + fetchAliases("playerlist"),
+				General.plugin, "general.playerlist", "general.basic");
+			help.registerCommand("who ([player])",
+				"Displays information about a player." + fetchAliases("who", "whoami"),
+				General.plugin, "general.who", "general.basic");
+			help.registerCommand("whoami",
+				"Displays information about you.", General.plugin);
+			help.registerCommand("time ([world])",
+				"Displays the current time in [world]." + fetchAliases("time"),
+				General.plugin, "general.time", "general.basic");
+			help.registerCommand("time help",
+				"Shows syntax for setting the time.", General.plugin, "general.time.set");
+			help.registerCommand("give [item](:[variant]) ([amount]) ([player])",
+				"Gives [player] [amount] of [item]." + fetchAliases("give"), General.plugin, "general.give");
+			help.registerCommand("give help",
+				"More detailed info on the give command.", General.plugin, "general.give");
+			help.registerCommand("items [item1] [item2] ... [itemN]",
+				"Give yourself several different items at once. You get one of each item." + fetchAliases("items"),
+				General.plugin, "general.give.mass");
+			help.registerCommand("getpos ([player]) (compass|dir|pos|rot)",
+				"Get the current position of [player]." + fetchAliases("getpos", "compass", "where"),
+				General.plugin, "general.getpos", "general.basic");
+			help.registerCommand("tell [player] [message]",
+				"Whisper to a player." + fetchAliases("tell"), General.plugin, "general.tell", "general.basic");
+			help.registerCommand("setspawn ([player|world]) ([destination])",
+				"Sets the spawn location of the world or player to the specified destination." + fetchAliases("setspawn"),
+				General.plugin, "general.spawn.set");
+			help.registerCommand("teleport ([target]) [destination]",
+				"Teleport the target(s) to the specified destination." + fetchAliases("teleport"),
+				General.plugin, "general.teleport");
+			help.registerCommand("teleport help",
+				"More detailed information on types of targets and destinations.", General.plugin, "general.teleport");
+			help.registerCommand("clear ([player]) (pack|quickbar|armo(u)r|all)",
+				"Clears [player]'s inventory." + fetchAliases("clear"), General.plugin, "general.clear");
+			help.registerCommand("take [item](:[variant]) ([amount]) ([player])",
+				"Deletes something from [player]'s inventory." + fetchAliases("take"),
+				General.plugin, "general.take");
+			help.registerCommand("heal ([player]) ([amount])",
+				"Heals [player] by [amount] hearts (0-10). If [amount] is omitted, full heal." + fetchAliases("heal"),
+				General.plugin, "general.heal");
+			help.registerCommand("general reload",
+				"Reloads the configuration files.", General.plugin, "OP", "general.admin.reload");
+			help.registerCommand("general motd",
+				"Displays the message of the day.", General.plugin);
+			help.registerCommand("mobspawn [mob](;[mount])",
+				"Spawns a [mob] riding a [mount]. " + fetchAliases("mobspawn"), General.plugin, "general.mobspawn");
+			help.registerCommand("mobspawn help",
+				"More detailed help on spawning mobs.", General.plugin, "general.mobspawn");
+			help.registerCommand("help General",
+				"Help for the General plugin.", General.plugin, true);
+			help.registerCommand("away [reason]",
+				"Sets your away status." + fetchAliases("away"), General.plugin, "general.away", "general.basic");
+			help.registerCommand("kit [kit]",
+				"Gives you the [kit], or shows a list of available kits." + fetchAliases("kit"),
+				General.plugin, "general.kit");
+			help.registerCommand("worldinfo [world]",
+				"Shows info on a given world, such as the spawn location or the seed." + fetchAliases("worldinfo"),
+				General.plugin, "general.worldinfo");
+			help.registerCommand("weather ([world|player]) on|off|start|stop|thunder|zap|[duration]",
+				"Alter the weather" + fetchAliases("weather"), General.plugin, "general.weather");
+			help.registerCommand("general item help",
+				"Information on how to edit the item definitions.", General.plugin, "general.admin.item");
+			help.registerCommand("general kit help",
+				"Information on how to edit the kit definitions.", General.plugin, "general.admin.kit");
+			help.registerCommand("op [player1] ... [playerN]",
+				"Promotes players to operator", General.plugin, "general.op");
+			help.registerCommand("deop [player1] ... [playerN]",
+				"Demotes players from operator", General.plugin, "general.op");
+			help.registerCommand("kick [player] ([reason])",
+				"Kicks a player off the server", General.plugin, "general.kick");
+			General.logger.info(LanguageText.LOG_HELP_ENABLED.value("version", help.getDescription().getVersion()));
 			gotHelp = true;
 		} else {
 			General.logger.warn(LanguageText.LOG_HELP_MISSING.value());

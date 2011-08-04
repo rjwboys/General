@@ -4,7 +4,6 @@ import java.text.FieldPosition;
 import java.text.Format;
 import java.text.MessageFormat;
 import java.text.ParsePosition;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -29,8 +28,8 @@ public class MappedMessageFormat extends Format {
 	}
 	
 	private String namedToIndexed(String pattern) {
-		keys.clear();
-		Pattern regex = Pattern.compile("{([a-zA-Z][a-zA-Z0-9-]*)[,}]");
+		keys = new LinkedHashSet<String>();
+		Pattern regex = Pattern.compile("\\{([a-zA-Z][a-zA-Z0-9-]*)[,\\}]");
 		Matcher mat = regex.matcher(pattern);
 		while(mat.find()) keys.add(mat.group(1));
 		String[] keyArray = keys.toArray(new String[0]);

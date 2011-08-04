@@ -119,7 +119,8 @@ public class giveCommand extends CommandBase {
 		boolean isGift = !who.equals(sender);
 		doGive(who, item, amount, isGift);
 		if(isGift) {
-			Messaging.send(sender, LanguageText.GIVE_GIFT.value("amount", amount, "item", item, "player", who));
+			Messaging.send(sender, LanguageText.GIVE_GIFT.value("amount", amount, "item", item.getName(),
+				"player", who.getName()));
 		}
 		return true;
 	}
@@ -138,6 +139,6 @@ public class giveCommand extends CommandBase {
 		}
 		
 		LanguageText format = isGift ? LanguageText.GIVE_GIFTED : LanguageText.GIVE_ENJOY;
-		Messaging.send(who, format.value("item", item, "amount", amount));
+		Messaging.send(who, format.value("item", item.getName(), "amount", amount));
 	}
 }

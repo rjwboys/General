@@ -193,7 +193,7 @@ public class Toolbox {
 	
 	public static String join(String[] args, String with, int startAt) {
 		if(args.length == 0) return "";
-		StringBuilder message = new StringBuilder(args[0]);
+		StringBuilder message = new StringBuilder(args[startAt]);
 		for(int i = startAt + 1; i < args.length; i++) {
 			message.append(with);
 			message.append(args[i]);
@@ -312,11 +312,11 @@ public class Toolbox {
 	}
 
 	private static HashMap<String, HashSet<World>> inCooldown = new HashMap<String, HashSet<World>>();
-	public static boolean checkCooldown(CommandSender sender, final World world, final String command, String permissionBase) {
+	public static boolean inCooldown(CommandSender sender, final World world, final String command, String permissionBase) {
 		int cooldownTime = Option.COOLDOWN(command).get();
 		if(cooldownTime > 0) {
 			String instant = permissionBase + ".instant";
-			if(Toolbox.hasPermission(sender, instant)) return true;
+			if(Toolbox.hasPermission(sender, instant)) return false;
 			if(!inCooldown.containsKey(command)) inCooldown.put(command, new HashSet<World>());
 			if(inCooldown.get(command).contains(world)) {
 				String langNode = permissionBase.replace('.', '_').replace("general_", "permissions.");
@@ -332,7 +332,7 @@ public class Toolbox {
 			};
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(General.plugin, cooldown, cooldownTime);
 		}
-		return true;
+		return false;
 	}
 
 	public static CreatureType getCreatureType(LivingEntity entity) {

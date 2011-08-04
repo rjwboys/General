@@ -15,9 +15,8 @@ import net.craftstars.general.util.Toolbox;
 
 public class opCommand extends CommandBase {
 	
-	protected opCommand(General instance) {
+	public opCommand(General instance) {
 		super(instance);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
