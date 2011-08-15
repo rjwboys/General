@@ -16,6 +16,7 @@
   <property name="iconomy.jar" value="iConomy.jar"/>
   <property name="boseconomy.jar" value="BOSEconomy.jar"/>
   <property name="bookworm.jar" value="BookWorm.jar"/>
+  <property name="craftirc.jar" value="CraftIRC.jar"/>
   
   <target name="init">
     <mkdir dir="${lib}"/>
@@ -49,6 +50,7 @@
         <pathelement location="${lib}/${iconomy4.jar}"/>
         <pathelement location="${lib}/${boseconomy.jar}"/>
         <pathelement location="${lib}/${bookworm.jar}"/>
+        <pathelement location="${lib}/${craftirc.jar}"/>
       </classpath>
     </javac>
   </target>

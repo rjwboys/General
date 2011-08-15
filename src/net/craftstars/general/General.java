@@ -193,6 +193,7 @@ public class General extends JavaPlugin {
 			if(!firstTime) General.logger.error(LanguageText.LOG_PERMISSIONS_NOTE.value("system", permissions.getName()));
 			gotRequestedPermissions = false;
 		}
+		if(permissions == null) permissions = new BasicPermissionsHandler();
 		logger.info(LanguageText.LOG_PERMISSIONS_RESULT.value("system", permissions.getName(),
 			"version", permissions.getVersion()));
 	}
