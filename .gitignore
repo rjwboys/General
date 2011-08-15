@@ -6,9 +6,6 @@
 # netbeans
 /nbproject
 
-# we use maven!
-/build.xml
-
 # maven
 /target
 
