@@ -1,4 +1,4 @@
-package net.craftstars.general.money;
+package net.craftstars.general.util;
 
 public enum AccountStatus {
 	FROZEN(false),

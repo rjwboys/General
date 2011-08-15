@@ -247,7 +247,7 @@ public class generalCommand extends CommandBase {
 			}
 			kit.setSavedCost(cost);
 			String displayCost = Double.toString(cost);
-			if(plugin.economy != null) displayCost = plugin.economy.formatCost(cost);
+			if(plugin.economy != null) displayCost = plugin.economy.getFormattedMoneyAmount(cost);
 			Messaging.send(sender, LanguageText.KIT_COST.value("kit", kitName, "cost", displayCost));
 			return true;
 		} else if(args[1].equalsIgnoreCase("trash")) {
@@ -588,14 +588,6 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
-		} else if(args[0].equalsIgnoreCase("economy")) {
-			node = Option.ECONOMY_SYSTEM;
-			if(!Toolbox.equalsOne(args[1], "None", "iConomy", "iConomy4", "iConomy5", "BOSEconomy")) {
-				Messaging.send(sender, "&cInvalid economy system.");
-				return true;
-			}
-			String nice = Character.toUpperCase(args[1].charAt(0)) + args[1].substring(1).toLowerCase();
-			value = nice;
 		} else if(args[0].equalsIgnoreCase("economy-take")) {
 			node = Option.ECONOMY_TAKE_SELL;
 			if(!Toolbox.equalsOne(args[1], "trash", "sell")) {

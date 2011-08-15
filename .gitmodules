@@ -1,0 +1,3 @@
+[submodule "dep/allpay"]
+	path = dep/allpay
+	url = https://github.com/FernFerret/AllPay.git

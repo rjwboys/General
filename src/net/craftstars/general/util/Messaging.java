@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.craftstars.general.General;
-import net.craftstars.general.money.AccountStatus;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -209,13 +208,13 @@ public class Messaging {
 	}
 
 	public static void showCost(Player sender) {
-		String cost = General.plugin.economy.formatCost(AccountStatus.price);
+		String cost = General.plugin.economy.getFormattedMoneyAmount(AccountStatus.price);
 		send(sender, LanguageText.ECONOMY_SHOW_COST.value("cost", cost));
 	}
 	
 	public static void showPayment(Player sender) {
 		if(AccountStatus.price > 0) {
-			String cost = General.plugin.economy.formatCost(AccountStatus.price);
+			String cost = General.plugin.economy.getFormattedMoneyAmount(AccountStatus.price);
 			send(sender, LanguageText.ECONOMY_PAY.value("cost", cost));
 		}
 	}

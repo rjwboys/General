@@ -10,7 +10,6 @@ public abstract class Option {
 	public static OptionBoolean SHOW_USAGE = new OptionBoolean("show-usage-on-fail", true);
 	public static OptionString TAG_FORMAT = new OptionString("tag-fmt", "name:");
 	public static OptionBoolean SHOW_MOTD = new OptionBoolean("show-motd", true);
-	public static OptionString ECONOMY_SYSTEM = new OptionString("economy.system", "None");
 	public static OptionString PERMISSIONS_SYSTEM = new OptionString("permissions.system", "Basic");
 	public static OptionBoolean AUTO_SAVE = new OptionBoolean("auto-save", false);
 	public static OptionBoolean LOG_COMMANDS = new OptionBoolean("log-commands", false);

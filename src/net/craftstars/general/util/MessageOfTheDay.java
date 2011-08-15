@@ -68,7 +68,9 @@ public class MessageOfTheDay {
 	
 	private static String getCurrency() {
 		if(General.plugin.economy == null) return "none";
-		return General.plugin.economy.getCurrency();
+		String zero = General.plugin.economy.getFormattedMoneyAmount(0);
+		String currency = Toolbox.join(zero.split(" "), 1);
+		return currency;
 	}
 	
 	private static String getAddress(CommandSender sender) {
@@ -78,7 +80,7 @@ public class MessageOfTheDay {
 	
 	private static String getBalance(CommandSender sender) {
 		if(General.plugin.economy == null || ! (sender instanceof Player)) return "0";
-		return General.plugin.economy.getBalanceForDisplay((Player) sender);
+		return General.plugin.economy.getBalance((Player) sender);
 	}
 	
 	private static double getHealth(CommandSender sender) {

@@ -266,12 +266,6 @@ public enum LanguageText {
 	LOG_TWICE("log.twice", "Seems to have loaded twice for some reason; skipping initialization. " +
 		"Use /general reload if you actually want to reload General."),
 	LOG_SUCCESS("log.success", "Plugin successfully loaded!"),
-	LOG_NO_ECONOMY("log.econ.none", "No economy system detected."),
-	LOG_BAD_ECONOMY("log.econ.missing", "[{econ}] not detected; economy support disabled."),
-	LOG_ECONOMY_ERROR("log.econ.error", "There was a big problem loading economy system [{econ}]! " +
-		"Please report this error!"),
-	LOG_ECONOMY_SUCCESS("log.econ.success", "Using [{econ} {version}] for economy."),
-	LOG_ECONOMY_FAIL("log.econ.fail", "Requested economy failed to load; no economy will be used."),
 	LOG_DISABLED("log.disabled", "Plugin disabled!"),
 	// Messages relating to missing permissions
 	PERMISSION_LACK("permissions.lacking", "{rose}You don't have permission to {action}. ({permission})"),

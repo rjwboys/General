@@ -10,7 +10,6 @@ import java.util.Scanner;
 
 import net.craftstars.general.items.Items;
 import net.craftstars.general.items.Kits;
-import net.craftstars.general.money.EconomyBase;
 import net.craftstars.general.security.BasicPermissionsHandler;
 import net.craftstars.general.security.PermissionsHandler;
 import net.craftstars.general.util.CommandHandler;
@@ -32,6 +31,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
+import com.fernferret.allpay.AllPay;
+import com.fernferret.allpay.GenericBank;
+
 public class General extends JavaPlugin {
 	public static General plugin = null;
 	
@@ -42,9 +44,9 @@ public class General extends JavaPlugin {
 	
 	public Configuration config;
 	public PermissionsHandler permissions;
-	public EconomyBase economy;
+	public GenericBank economy;
 	@SuppressWarnings("unused")
-	private boolean gotRequestedPermissions, gotRequestedEconomy;
+	private boolean gotRequestedPermissions;
 	
 	private HashMap<String, String> playersAway = new HashMap<String, String>();
 	private HashMap<String,String> lastMessager = new HashMap<String,String>();
@@ -143,33 +145,8 @@ public class General extends JavaPlugin {
 	}
 	
 	private void setupEconomy() {
-		gotRequestedEconomy = true;
-		String econType = "None";
-		try {
-			econType = Option.ECONOMY_SYSTEM.get();
-			if(econType.equalsIgnoreCase("None")) {
-				logger.info(LanguageText.LOG_NO_ECONOMY.value());
-				return;
-			}
-			Class<? extends EconomyBase> clazz =
-					this.getClass()
-							.getClassLoader()
-							.loadClass("net.craftstars.general.money." + econType + "EconomyHandler")
-							.asSubclass(EconomyBase.class);
-			economy = clazz.newInstance();
-			if(!economy.wasLoaded()) {
-				logger.info(LanguageText.LOG_BAD_ECONOMY.value("econ", econType));
-				gotRequestedEconomy = false;
-			}
-		} catch(Exception ex) {
-			logger.error(LanguageText.LOG_ECONOMY_ERROR.value("econ", econType));
-			ex.printStackTrace();
-			gotRequestedEconomy = false;
-		}
-		if(economy != null)
-			logger.info(LanguageText.LOG_ECONOMY_SUCCESS.value("econ", economy.getName(),
-				"version", economy.getVersion()));
-		else logger.info(LanguageText.LOG_ECONOMY_FAIL.value());
+		AllPay allpay = new AllPay(this, "General [" + codename + "] ");
+		economy = allpay.getEconPlugin();
 	}
 	
 	private void setupPermissions(boolean firstTime) {

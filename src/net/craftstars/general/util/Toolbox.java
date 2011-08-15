@@ -10,7 +10,6 @@ import java.util.Scanner;
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.items.ItemID;
-import net.craftstars.general.money.AccountStatus;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -158,7 +157,7 @@ public class Toolbox {
 				AccountStatus.price *= Double.parseDouble(permission.substring(1)) / 100.0;
 			else AccountStatus.price += Option.ECONOMY_COST(permission).get() * quantity;
 		if(CommandBase.isFrozen(player)) return AccountStatus.FROZEN;
-		if(General.plugin.economy.getBalance(player) >= AccountStatus.price)
+		if(General.plugin.economy.hasMoney(player, AccountStatus.price))
 			return AccountStatus.SUFFICIENT;
 		return AccountStatus.INSUFFICIENT;
 	}
@@ -184,7 +183,7 @@ public class Toolbox {
 				return false;
 			case SUFFICIENT:
 				Messaging.showPayment(player);
-				General.plugin.economy.takePayment(player, AccountStatus.price);
+				General.plugin.economy.payMoney(player, AccountStatus.price);
 			}
 			return true;
 		}
