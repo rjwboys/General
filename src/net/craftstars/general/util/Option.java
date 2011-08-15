@@ -10,10 +10,8 @@ public abstract class Option {
 	public static OptionBoolean SHOW_USAGE = new OptionBoolean("show-usage-on-fail", true);
 	public static OptionString TAG_FORMAT = new OptionString("tag-fmt", "name:");
 	public static OptionBoolean SHOW_MOTD = new OptionBoolean("show-motd", true);
-	public static OptionString PERMISSIONS_SYSTEM = new OptionString("permissions.system", "Basic");
 	public static OptionBoolean AUTO_SAVE = new OptionBoolean("auto-save", false);
 	public static OptionBoolean LOG_COMMANDS = new OptionBoolean("log-commands", false);
-	public static OptionStringList OPS_ONLY = new OptionStringList("permissions.ops-only", null);
 	public static OptionBoolean SHOW_WORLD = new OptionBoolean("playerlist.show-world", false);
 	public static OptionBoolean SHOW_HEALTH = new OptionBoolean("playerlist.show-health", true);
 	public static OptionBoolean SHOW_COORDS = new OptionBoolean("playerlist.show-coords", true);

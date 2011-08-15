@@ -1,4 +1,4 @@
-package net.craftstars.general.security;
+package net.craftstars.general.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,38 +29,24 @@ import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
-public class BukkitPermissionsHandler extends WorldListener implements PermissionsHandler {
-	public BukkitPermissionsHandler() {
+public class PermissionsHandler extends WorldListener {
+	public PermissionsHandler() {
 		// Here we set up the complicated container permissions
 		for(PermissionSet set : PermissionSet.values()) set.build();
 		Bukkit.getServer().getPluginManager().registerEvent(Type.WORLD_LOAD, this, Priority.Monitor, General.plugin);
 		Bukkit.getServer().getPluginManager().registerEvent(Type.WORLD_UNLOAD, this, Priority.Monitor, General.plugin);
 	}
 	
-	@Override
 	public boolean hasPermission(Player who, String what) {
 		return who.hasPermission(what);
 	}
 	
-	@Override
 	public boolean wasLoaded() {
 		return true;
 	}
 	
-	@Override
 	public boolean inGroup(Player who, String which) {
-		if(which == ".isop") return who.isOp();
-		return false;
-	}
-	
-	@Override
-	public String getVersion() {
-		return "built-in";
-	}
-	
-	@Override
-	public String getName() {
-		return "Bukkit";
+		return hasPermission(who, "group." + which.toLowerCase());
 	}
 	
 	@Override

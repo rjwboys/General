@@ -3,8 +3,6 @@ package net.craftstars.general.util;
 import java.io.File;
 import java.util.HashMap;
 
-import net.craftstars.general.General;
-
 import org.bukkit.util.config.Configuration;
 
 /**
@@ -247,12 +245,6 @@ public enum LanguageText {
 		"downgrade iConomy, or edit your config.yml to specify iConomy5."),
 	LOG_ICONOMY_4NOT5("log.iconomy.4not5", "Was looking for iConomy 4 but found iConomy 5 instead. Please either " +
 		"update iConomy, or edit your config.yml to specify iConomy5."),
-	LOG_PERMISSIONS_ERROR("log.permissions.error","Error loading Permissions. Please report to the Permissions dev."),
-	LOG_PERMISSIONS_MISSING("log.permissions.missing","[{system}] not detected; falling back to [Basic] permissions."),
-	LOG_PERMISSIONS_FAIL("log.permissions.fail","There was a big problem loading permissions system [{system}]!" +
-		" Please report this error!"),
-	LOG_PERMISSIONS_NOTE("log.permissions.note", "Note: Using permissions [{system}]"),
-	LOG_PERMISSIONS_RESULT("log.permissions.result", "Using [{system} {version}] for permissions."),
 	LOG_COMMAND_NO_ALIASES("log.cmd.no-aliases","No command aliases defined; did you forget to copy the aliases section " +
 		"from the example config.yml?"),
 	LOG_COMMAND_REG_ERROR("log.cmd.reg-error", "Command [{command}] could not be registered."),

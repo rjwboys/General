@@ -10,14 +10,13 @@ import java.util.Scanner;
 
 import net.craftstars.general.items.Items;
 import net.craftstars.general.items.Kits;
-import net.craftstars.general.security.BasicPermissionsHandler;
-import net.craftstars.general.security.PermissionsHandler;
 import net.craftstars.general.util.CommandHandler;
 import net.craftstars.general.util.HelpHandler;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.MessageOfTheDay;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Option;
+import net.craftstars.general.util.PermissionsHandler;
 import net.craftstars.general.util.PluginLogger;
 
 import org.bukkit.entity.Player;
@@ -45,8 +44,6 @@ public class General extends JavaPlugin {
 	public Configuration config;
 	public PermissionsHandler permissions;
 	public GenericBank economy;
-	@SuppressWarnings("unused")
-	private boolean gotRequestedPermissions;
 	
 	private HashMap<String, String> playersAway = new HashMap<String, String>();
 	private HashMap<String,String> lastMessager = new HashMap<String,String>();
@@ -132,7 +129,7 @@ public class General extends JavaPlugin {
 		Messaging.load();
 		
 		Items.setup();
-		setupPermissions(true);
+		setupPermissions();
 		Kits.loadKits();
 		setupEconomy();
 	}
@@ -149,30 +146,8 @@ public class General extends JavaPlugin {
 		economy = allpay.getEconPlugin();
 	}
 	
-	private void setupPermissions(boolean firstTime) {
-		if(permissions != null && ! (permissions instanceof BasicPermissionsHandler)) return;
-		String permType = "unknown";
-		gotRequestedPermissions = true;
-		try {
-			permType = Option.PERMISSIONS_SYSTEM.get();
-			Class<? extends PermissionsHandler> clazz = this.getClass().getClassLoader()
-							.loadClass("net.craftstars.general.security." + permType + "PermissionsHandler")
-							.asSubclass(PermissionsHandler.class);
-			permissions = clazz.newInstance();
-			if(firstTime && (permissions == null || !permissions.wasLoaded())) {
-				logger.info(LanguageText.LOG_PERMISSIONS_MISSING.value("system", permType));
-				permissions = new BasicPermissionsHandler();
-				gotRequestedPermissions = false;
-			}
-		} catch(Exception ex) {
-			logger.error(LanguageText.LOG_PERMISSIONS_FAIL.value("system", permType));
-			ex.printStackTrace();
-			if(!firstTime) General.logger.error(LanguageText.LOG_PERMISSIONS_NOTE.value("system", permissions.getName()));
-			gotRequestedPermissions = false;
-		}
-		if(permissions == null) permissions = new BasicPermissionsHandler();
-		logger.info(LanguageText.LOG_PERMISSIONS_RESULT.value("system", permissions.getName(),
-			"version", permissions.getVersion()));
+	private void setupPermissions() {
+		permissions = new PermissionsHandler();
 	}
 	
 	@Override

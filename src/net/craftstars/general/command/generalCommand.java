@@ -124,16 +124,6 @@ public class generalCommand extends CommandBase {
 			freeze(who);
 			plugin.getServer().dispatchCommand(who, check);
 			return true;
-		} else if(args[0].equalsIgnoreCase("restrict")) {
-			if(Toolbox.lacksPermission(sender, "general.admin.restrict"))
-				return Messaging.lacksPermission(sender, "general.admin.restrict");
-			if(args.length < 2) return false;
-			return doPermissions(sender, args[1], true);
-		} else if(args[0].equalsIgnoreCase("release")) {
-			if(Toolbox.lacksPermission(sender, "general.admin.release"))
-				return Messaging.lacksPermission(sender, "general.admin.release");
-			if(args.length < 2) return false;
-			return doPermissions(sender, args[1], false);
 		} else if(args[0].equalsIgnoreCase("kit")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.kit"))
 				return Messaging.lacksPermission(sender, "administrate the General plugin");
@@ -150,16 +140,6 @@ public class generalCommand extends CommandBase {
 			if(args.length < 3) return false;
 			return setVar(sender, Arrays.copyOfRange(args, 1, args.length));
 		}
-		return false;
-	}
-
-	private boolean doPermissions(CommandSender sender, String node, boolean opsOnly) {
-		List<String> restricted = Option.OPS_ONLY.get();
-		if(opsOnly) restricted.add(node);
-		else restricted.remove(node);
-		Option.OPS_ONLY.set(restricted);
-		Messaging.send(sender, (opsOnly ? LanguageText.PERMISSIONS_RESTRICT : LanguageText.PERMISSIONS_RELEASE)
-			.value("node", node));
 		return false;
 	}
 
@@ -516,15 +496,7 @@ public class generalCommand extends CommandBase {
 		Option node = null;
 		Object value = null;
 		if(args.length != 2) return false;
-		if(args[0].equalsIgnoreCase("permissions")) {
-			node = Option.PERMISSIONS_SYSTEM;
-			if(!Toolbox.equalsOne(args[1], "Basic", "Permissions", "WorldEdit")) {
-				Messaging.send(sender, "&cInvalid permissions system.");
-				return true;
-			}
-			String nice = Character.toUpperCase(args[1].charAt(0)) + args[1].substring(1).toLowerCase();
-			value = nice;
-		} else if(args[0].equalsIgnoreCase("others-for-all")) {
+		if(args[0].equalsIgnoreCase("others-for-all")) {
 			node = Option.OTHERS4ALL;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, "&cMust be a boolean.");
