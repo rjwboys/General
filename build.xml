@@ -9,8 +9,6 @@
   
   <taskdef resource="checkstyletask.properties" classpath="${lib}/checkstyle-5.3-all.jar"/>
   <property name="craftbukkit.jar"  value="craftbukkit.jar"/>
-  <property name="permissions.jar"  value="Permissions.jar"/>
-  <property name="worldedit.jar"    value="WorldEdit.jar"/>
   <property name="help.jar" value="Help.jar"/>
   <property name="iconomy4.jar" value="iConomy4.jar"/>
   <property name="iconomy.jar" value="iConomy.jar"/>
@@ -26,16 +24,8 @@
   
   <target name="get_latest_libs" depends="init"><!--
     <get src="http://ci.bukkit.org/job/dev-CraftBukkit/promotion/latest/Recommended/artifact/target/craftbukkit-0.0.1-SNAPSHOT.jar"
-      dest="${lib}/craftbukkit.jar" usetimestamp="true"/>
-    <get src="http://www.theyeticave.net/downloads/permissions/latest/Permissions.jar"
-      dest="${lib}" usetimestamp="true"/>--><!--
+      dest="${lib}/craftbukkit.jar" usetimestamp="true"/> --><!--
     <get src="http://taylorkelly.me/plugins/Help/Help.jar"
-      dest="${lib}" usetimestamp="true"/> -->
-    <!-- This is to get latest for GroupManager and WorldEdit. Unfortunately, they don't have a nice convenient
-    way to get just the jar, so it's currently disabled.
-    <get src=""
-      dest="${lib}" usetimestamp="true"/>
-    <get src=""
       dest="${lib}" usetimestamp="true"/> -->
   </target>
   
@@ -43,8 +33,6 @@
     <javac srcdir="${src}" destdir="${classes}" includeantruntime="false" debug="on" deprecation="on">
       <classpath>
         <pathelement location="${lib}/${craftbukkit.jar}"/>
-        <pathelement location="${lib}/${permissions.jar}"/>
-        <pathelement location="${lib}/${worldedit.jar}"/>
         <pathelement location="${lib}/${help.jar}"/>
         <pathelement location="${lib}/${iconomy.jar}"/>
         <pathelement location="${lib}/${iconomy4.jar}"/>

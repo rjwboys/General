@@ -44,6 +44,7 @@ public class General extends JavaPlugin {
 	public Configuration config;
 	public PermissionsHandler permissions;
 	public GenericBank economy;
+	private AllPay allpay;
 	
 	private HashMap<String, String> playersAway = new HashMap<String, String>();
 	private HashMap<String,String> lastMessager = new HashMap<String,String>();
@@ -129,9 +130,10 @@ public class General extends JavaPlugin {
 		Messaging.load();
 		
 		Items.setup();
-		setupPermissions();
+		permissions = new PermissionsHandler();
 		Kits.loadKits();
-		setupEconomy();
+		allpay = new AllPay(this, "General [" + codename + "] ");
+		economy = allpay.getEconPlugin();
 	}
 
 	private void registerEvents() {
@@ -139,15 +141,6 @@ public class General extends JavaPlugin {
 		pm.registerEvent(PLAYER_JOIN, pl, Priority.Monitor, this);
 		pm.registerEvent(PLAYER_CHAT, pl, Priority.Monitor, this);
 		pm.registerEvent(PLAYER_LOGIN, pl, Priority.Monitor, this);
-	}
-	
-	private void setupEconomy() {
-		AllPay allpay = new AllPay(this, "General [" + codename + "] ");
-		economy = allpay.getEconPlugin();
-	}
-	
-	private void setupPermissions() {
-		permissions = new PermissionsHandler();
 	}
 	
 	@Override

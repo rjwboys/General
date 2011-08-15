@@ -1,32 +1,4 @@
 
-# The ops-only flag is used if the permissions system is set to Basic, and specifies which actions
-# should be restricted to ops. If any other permissions system is specified, it is ignored.
-# Valid permission systems: Basic, Permissions, GroupManager, WorldEdit, CraftBukkit
-
-permissions:
-  system: WorldEdit
-  ops-only:
-   - general.time.set
-   - general.teleport
-   - general.teleport.other
-   - general.teleport.coords
-   - general.teleport.other.mass
-   - general.summon
-   - general.give
-   - general.give.infinite
-   - general.give.group.notitem
-   - general.give.group.bedrock
-   - general.give.group.fluid
-   - general.spawn.set
-   - general.spawn.other
-   - general.getpos.other
-   - general.clear.other
-   - general.take.other
-   - general.heal
-   - general.mobspawn
-   - general.kit.<kitname>
-   - general.kit-now
-   - general.admin
 
 # This section lets you restrict certain items to particular groups in the /give command.
 # The default configuration shown here restricts items that either are not an item (ie they
@@ -61,11 +33,8 @@ time:
   format-24-hour: false
   show-ticks: true
 
-# This section is for if you want economy enabled. Currently the only accepted option is system,
-# which should be either None, iConomy, or BOSEconomy.
-
+# Set the costs of various actions, and other miscellaneous economy-related things
 economy:
-  system: None
   heal: 0
   hurt: 0
   time:
