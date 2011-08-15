@@ -3,6 +3,8 @@ package net.craftstars.general.util;
 import java.io.File;
 import java.util.HashMap;
 
+import net.craftstars.general.General;
+
 import org.bukkit.util.config.Configuration;
 
 /**
@@ -370,9 +372,9 @@ public enum LanguageText {
 		return config.getString(language + "." + node, fmt);
 	}
 	
-	public static Configuration setLanguage(String lang, String file) {
+	public static Configuration setLanguage(String lang, File folder, String file) {
 		language = lang;
-		config = new Configuration(new File(file));
+		config = new Configuration(new File(folder, file));
 		config.load();
 		return config;
 	}
