@@ -380,11 +380,10 @@ public enum LanguageText {
 	}
 	
 	static {
-		for(LanguageText lang : values())
-			byNode.put(lang.node, lang);
+		for(LanguageText lang : values()) byNode.put(lang.node, lang);
 	}
 	
 	public static LanguageText byNode(String n) {
-		return byNode.get(n.toUpperCase());
+		return byNode.get(n);
 	}
 }
