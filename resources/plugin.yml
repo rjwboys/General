@@ -130,6 +130,9 @@ permissions:
       general.weather.*: true
       general.admin.*: true
       general.tell: true
+      general.op: true
+      general.deop: true
+      general.kick: true
   general.bypass:
     description: Gives permissions that involve bypassing normal restrictions, such as delays or economy.
     children:
@@ -375,10 +378,22 @@ permissions:
       general.admin.kit: true
       general.admin.economy: true
       general.admin.set: true
+  general.op:
+    description: Gives permission to grant operator status.
+    default: op
+  general.deop:
+    description: Gives permission to remove operator status.
+    default: op
+  general.kick:
+    description: Gives permission to kick people off the server.
+    default: op
   general.admin:
     description: Gives access to all administrative commands.
     children:
       general.admin.*: true
+      general.op: true
+      general.deop: true
+      general.kick: true
   general.admin.reload:
     description: Allows you to reload the configuration from the files.
   general.admin.item:
