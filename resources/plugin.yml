@@ -94,14 +94,14 @@ commands:
     permission: general.mobspawn
     description: Spawns a mob.
     usage: /<command> <mob-name>[;<mount>] [<how-many>]
-  admin.op:
-    permission: general.op
-    description: Promotes a player to operator
-    usage: /<command> [player1 player2 ... playerN]
-  admin.deop:
-    permission: general.deop
-    description: Demotes a player from operator
-    usage: /<command< [player1 player2 ... playerN]
+#  admin.op:
+#    permission: general.op
+#    description: Promotes a player to operator
+#    usage: /<command> [player1 player2 ... playerN]
+#  admin.deop:
+#    permission: general.deop
+#    description: Demotes a player from operator
+#    usage: /<command< [player1 player2 ... playerN]
   admin.kick:
     permission: general.kick
     description: Kicks a player off the server

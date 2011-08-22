@@ -53,7 +53,7 @@
 			dest="${lib}" usetimestamp="true"/> -->
 	</target>
 	
-	<target name="allpay" depends="update">
+	<target name="allpay">
 		<javac srcdir="${allpay}" destdir="${classes}" includeantruntime="false" debug="on" depreceation="on">
 			<classpath>
 				<pathelement location="${lib}/${iConomy4}"/>
@@ -67,7 +67,7 @@
 		</javac>
 	</target>
 	
-	<target name="compile" depends="update">
+	<target name="compile">
 		<javac srcdir="${src}" destdir="${classes}" includeantruntime="false" debug="on" deprecation="on">
 			<classpath>
 				<pathelement location="${lib}/${CraftBukkit}"/>
