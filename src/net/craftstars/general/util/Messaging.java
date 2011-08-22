@@ -18,7 +18,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 
-public class Messaging {
+public final class Messaging {
 	private static HashMap<String, Object> colours = new HashMap<String, Object>();
 	private static Configuration config;
 	static final String[] defaultColours = {

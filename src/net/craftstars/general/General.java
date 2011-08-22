@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import net.craftstars.general.items.Items;
 import net.craftstars.general.items.Kits;
+import net.craftstars.general.mobs.MobType;
 import net.craftstars.general.money.EconomyBase;
 import net.craftstars.general.security.BasicPermissionsHandler;
 import net.craftstars.general.security.PermissionsHandler;
@@ -130,6 +131,7 @@ public class General extends JavaPlugin {
 		Messaging.load();
 		
 		Items.setup();
+		MobType.setup();
 		setupPermissions(true);
 		Kits.loadKits();
 		setupEconomy();
@@ -231,7 +233,7 @@ public class General extends JavaPlugin {
 		FileWriter out = new FileWriter(configFile);
 		Scanner lines = new Scanner(defaultConfig);
 		while(lines.hasNextLine())
-			out.write(lines.nextLine());
+			out.write(lines.nextLine() + "\n");
 		out.flush();
 		out.close();
 		defaultConfig.close();

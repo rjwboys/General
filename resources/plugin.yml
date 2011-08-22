@@ -206,6 +206,7 @@ permissions:
   general.mobspawn.*:
     description: Gives full access to the /mobspawn command.
     children:
+      general.mobspawn: true
       general.mobspawn.all: true
       general.mobspawn.variants: true
   general.mobspawn.neutral.angry:

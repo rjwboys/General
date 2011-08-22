@@ -24,7 +24,7 @@ import org.bukkit.entity.*;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.config.Configuration;
 
-public class Toolbox {
+public final class Toolbox {
 	public static Player matchPlayer(String pat) {
 		Player[] players = General.plugin.getServer().getOnlinePlayers();
 		if(players.length == 0) return null;

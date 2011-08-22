@@ -23,7 +23,7 @@ import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
-public class Items {
+public final class Items {
 	private static Configuration config;
 	private static HashMap<String, ItemID> aliases;
 	private static HashMap<ItemID, String> names;

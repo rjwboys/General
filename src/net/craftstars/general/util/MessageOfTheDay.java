@@ -14,7 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class MessageOfTheDay {
+public final class MessageOfTheDay {
 	public static String parseMotD(CommandSender sender, String original) {
 		String displayName = getDisplayName(sender), name = getName(sender), location = getLocation(sender);
 		double health = getHealth(sender);

@@ -21,7 +21,7 @@ import org.bukkit.util.config.Configuration;
 import com.ensifera.animosity.craftirc.CraftIRC;
 import com.ensifera.animosity.craftirc.CommandEndPoint;
 
-public class CommandHandler {
+public final class CommandHandler {
 	public static boolean setAliases = false;
 	private static SimpleCommandMap commandMap = null;
 	private static Method register = null;

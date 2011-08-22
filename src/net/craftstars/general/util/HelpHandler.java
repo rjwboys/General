@@ -14,7 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 
-public class HelpHandler {
+public final class HelpHandler {
 	public static boolean gotHelp;
 	
 	public static void setup() {
