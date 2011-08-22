@@ -227,7 +227,8 @@ public class generalCommand extends CommandBase {
 			}
 			kit.setSavedCost(cost);
 			String displayCost = Double.toString(cost);
-			if(plugin.economy != null) displayCost = plugin.economy.getFormattedMoneyAmount(cost);
+			Player player = sender instanceof Player ? (Player)sender : null;
+			if(plugin.economy != null) displayCost = plugin.economy.getFormattedAmount(player, cost, -1);
 			Messaging.send(sender, LanguageText.KIT_COST.value("kit", kitName, "cost", displayCost));
 			return true;
 		} else if(args[1].equalsIgnoreCase("trash")) {

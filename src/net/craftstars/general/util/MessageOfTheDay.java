@@ -18,7 +18,7 @@ public class MessageOfTheDay {
 	public static String parseMotD(CommandSender sender, String original) {
 		String displayName = getDisplayName(sender), name = getName(sender), location = getLocation(sender);
 		double health = getHealth(sender);
-		String address = getAddress(sender), balance = getBalance(sender), currency = getCurrency();
+		String address = getAddress(sender), balance = getBalance(sender), currency = getCurrency(sender);
 		int numPlayers = General.plugin.getServer().getOnlinePlayers().length;
 		String online = getOnline(), world = getWorld(sender), time = getTime(sender);
 		original = Messaging.substitute(original, new String[] {
@@ -66,9 +66,10 @@ public class MessageOfTheDay {
 		return list;
 	}
 	
-	private static String getCurrency() {
+	private static String getCurrency(CommandSender sender) {
 		if(General.plugin.economy == null) return "none";
-		String zero = General.plugin.economy.getFormattedMoneyAmount(0);
+		Player player = sender instanceof Player ? (Player)sender : null;
+		String zero = General.plugin.economy.getFormattedAmount(player, 0, -1);
 		String currency = Toolbox.join(zero.split(" "), 1);
 		return currency;
 	}
@@ -80,7 +81,7 @@ public class MessageOfTheDay {
 	
 	private static String getBalance(CommandSender sender) {
 		if(General.plugin.economy == null || ! (sender instanceof Player)) return "0";
-		return General.plugin.economy.getBalance((Player) sender);
+		return Double.toString(General.plugin.economy.getBalance((Player) sender, -1));
 	}
 	
 	private static double getHealth(CommandSender sender) {

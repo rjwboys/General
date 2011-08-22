@@ -157,7 +157,7 @@ public class Toolbox {
 				AccountStatus.price *= Double.parseDouble(permission.substring(1)) / 100.0;
 			else AccountStatus.price += Option.ECONOMY_COST(permission).get() * quantity;
 		if(CommandBase.isFrozen(player)) return AccountStatus.FROZEN;
-		if(General.plugin.economy.hasMoney(player, AccountStatus.price))
+		if(General.plugin.economy.hasEnough(player, AccountStatus.price, -1))
 			return AccountStatus.SUFFICIENT;
 		return AccountStatus.INSUFFICIENT;
 	}
@@ -183,7 +183,7 @@ public class Toolbox {
 				return false;
 			case SUFFICIENT:
 				Messaging.showPayment(player);
-				General.plugin.economy.payMoney(player, AccountStatus.price);
+				General.plugin.economy.pay(player, AccountStatus.price, -1);
 			}
 			return true;
 		}

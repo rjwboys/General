@@ -208,13 +208,13 @@ public class Messaging {
 	}
 
 	public static void showCost(Player sender) {
-		String cost = General.plugin.economy.getFormattedMoneyAmount(AccountStatus.price);
+		String cost = General.plugin.economy.getFormattedAmount(sender, AccountStatus.price, -1);
 		send(sender, LanguageText.ECONOMY_SHOW_COST.value("cost", cost));
 	}
 	
 	public static void showPayment(Player sender) {
 		if(AccountStatus.price > 0) {
-			String cost = General.plugin.economy.getFormattedMoneyAmount(AccountStatus.price);
+			String cost = General.plugin.economy.getFormattedAmount(sender, AccountStatus.price, -1);
 			send(sender, LanguageText.ECONOMY_PAY.value("cost", cost));
 		}
 	}
