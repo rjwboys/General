@@ -228,8 +228,6 @@ public enum LanguageText {
 	LOG_ITEM_BAD_HOOK("log.item.bad-hook", "Invalid hook: {hook}"),
 	LOG_ITEM_BAD_ALIAS("log.item.bad-alias", "Invalid item alias assignment '{alias}'."),
 	LOG_ITEM_NO_ALIASES("log.item.no-aliases", "No aliases were defined in items.yml."),
-	LOG_ITEM_CONVERTED("log.item.converted", "Your items.db aliases will be inserted into the items.yml upon " +
-		"shutdown,\nor you can force it earlier using /general save"),
 	LOG_ITEM_BAD_KEY("log.item.bad-key", "Invalid item alias assignment for '{alias}'."),
 	LOG_ITEM_NO_NAMES("log.item.no-names", "Names of items are missing."),
 	LOG_ITEM_BAD_NAMES("log.item.bad-names", "The names section of items.yml is missing or invalid."),
@@ -238,13 +236,7 @@ public enum LanguageText {
 	LOG_KIT_NO_ITEMS("log.kit.no-items", "Kit '{kit}' has no items and has been skipped."),
 	LOG_KIT_BAD_ITEM("log.kit.bad-item", "Kit '{kit}' has an invalid item '{item}' which has been skipped."),
 	LOG_KIT_BAD("log.kit.error", "Kit '{kit}' has a malformed entry: \"{item}\""),
-	LOG_KIT_CONVERTED("log.kit.converted", "A general.kits file was found and converted to the new kits.yml format. " +
-		"You may now delete the general.kits file without information loss."),
 	LOG_MOB_BAD("log.mob.error", "Mob ID {mob} has a malformed entry: \"{name}\""),
-	LOG_ICONOMY_5NOT4("log.iconomy.5not4", "Was looking for iConomy 4 but found iConomy 5 instead. Please either " +
-		"downgrade iConomy, or edit your config.yml to specify iConomy5."),
-	LOG_ICONOMY_4NOT5("log.iconomy.4not5", "Was looking for iConomy 4 but found iConomy 5 instead. Please either " +
-		"update iConomy, or edit your config.yml to specify iConomy5."),
 	LOG_COMMAND_NO_ALIASES("log.cmd.no-aliases","No command aliases defined; did you forget to copy the aliases section " +
 		"from the example config.yml?"),
 	LOG_COMMAND_REG_ERROR("log.cmd.reg-error", "Command [{command}] could not be registered."),

@@ -138,9 +138,6 @@ public class Items {
 		List<String> ymlAliases = config.getKeys("aliases");
 		if(ymlAliases == null) {
 			General.logger.warn(LanguageText.LOG_ITEM_NO_ALIASES.value());
-			if(!aliases.isEmpty()) {
-				General.logger.info(LanguageText.LOG_ITEM_CONVERTED.value());
-			}
 			return;
 		}
 		for(String alias : ymlAliases) {
