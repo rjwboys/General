@@ -1,17 +1,12 @@
 
 package net.craftstars.general.items;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
@@ -26,8 +21,6 @@ public class Kits {
 	public static boolean loadKits() {
 		kits.clear();
 		File folder = General.plugin.getDataFolder();
-		File oldKits = new File(folder, "general.kits");
-		if(oldKits.exists()) loadOldKits();
 		File kitsFile = new File(folder, "kits.yml");
 		if(!kitsFile.exists()) return !kits.isEmpty();
 		Configuration kitsYml = new Configuration(kitsFile);
@@ -85,85 +78,6 @@ public class Kits {
 
 	private static void warnMalformed(String kit, Object id) {
 		General.logger.warn(LanguageText.LOG_KIT_BAD.value("kit", kit, "item", id.toString()));
-	}
-	
-	@Deprecated
-	public static boolean loadOldKits() {
-		boolean foundAnException = false;
-		Exception exceptionToShow = new Exception("If you see this, something's VERY wrong.");
-		try {
-			File dataFolder = General.plugin.getDataFolder();
-			BufferedReader br = new BufferedReader(new FileReader(new File(dataFolder, "general.kits")));
-			String l;
-			int lineNumber = 1;
-			kits.clear();
-			String list;
-			String[] listing;
-			Pattern idPat = Pattern.compile("^([0-9a-zA-Z_']+).*$");
-			Pattern dataPat = Pattern.compile("^.*\\+([0-9a-zA-Z_']+).*$");
-			Pattern nPat = Pattern.compile("^.*-([0-9a-zA-Z]+).*$");
-			while( (l = br.readLine()) != null) {
-				list = l.trim();
-				if(!list.startsWith("#") && !list.isEmpty()) {
-					listing = list.split(":");
-					try {
-						int delay = Integer.valueOf(listing[2]);
-						String[] stuff = listing[1].split(",");
-						Kit theKit = new Kit(listing[0], delay, 0);
-						for(String item : stuff) {
-							int n = 1;
-							String id, data = "";
-							Matcher m;
-							item = item.trim();
-							m = idPat.matcher(item);
-							if(m.matches()) {
-								id = m.group(1);
-							} else throw new InputMismatchException(item);
-							m = dataPat.matcher(item);
-							if(m.matches()) {
-								data = m.group(1);
-							}
-							m = nPat.matcher(item);
-							if(m.matches()) {
-								n = Integer.valueOf(m.group(1));
-							}
-							ItemID type;
-							if(data.isEmpty())
-								type = Items.validate(id);
-							else type = Items.validate(id + ":" + data);
-							if(type == null || !type.isValid())
-								throw new IllegalArgumentException(id + ":" + data + ", null: " + (item == null));
-							theKit.add(new ItemID(type), n);
-						}
-						kits.put(listing[0].toLowerCase(), theKit);
-						if(listing.length > 3) {
-							General.logger.warn("Note: line " + lineNumber
-									+ " in general.kits has more than three components; excess ignored");
-						}
-					} catch(Exception x) {
-						General.logger.warn("Note: line " + lineNumber
-								+ " in general.kits is improperly defined and is ignored (" + x.getClass().getName()
-								+ ", " + x.getMessage() + ")");
-						if(!foundAnException) {
-							foundAnException = true;
-							exceptionToShow = x;
-						}
-					}
-				}
-				lineNumber++;
-			}
-		} catch(Exception e) {
-			General.logger.warn("An error occured: either general.kits does not exist or it could not be read; kits ignored");
-			return false;
-		}
-		if(foundAnException) {
-			General.logger.error("First exception loading the kits:");
-			exceptionToShow.printStackTrace();
-		}
-		save();
-		General.logger.info(LanguageText.LOG_KIT_CONVERTED.value());
-		// Return success
-		return true;
 	}
 	
 	public static void save() {

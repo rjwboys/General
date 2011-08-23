@@ -45,25 +45,9 @@ public class Messaging {
 	}
 	
 	public static void send(CommandSender who, String string) {
-		String coloured = colourize(string);
-		coloured = substitute(coloured, new String[] {"&&","~!@#$%^&*()"}, new String[] {"~!@#$%^&*()","&"});
-		coloured = MessageFormat.format(coloured, colours);
+		String coloured = MessageFormat.format(string, colours);
 		for(String line : splitLines(coloured).split("[\\n\\r][\\n\\r]?"))
 			who.sendMessage(line);
-	}
-	
-	@Deprecated // in favour of format
-	public static String colourize(String string) {
-		String coloured = substitute(string,
-				new String[] {
-					"&black;,&0","&navy;,&1","&green;,&2","&teal;,&3",
-					"&red;,&4","&purple;,&5","&gold;,&6","&silver;,&7",
-					"&gray;,&grey;,&8","&blue;,&9","&lime;,&a,&A","&aqua;,&b,&B",
-					"&rose;,&c,&C","&pink;,&d,&D","&yellow;,&e,&E","&white;,&f,&F"
-				},
-				ChatColor.values()
-		);
-		return coloured;
 	}
 	
 	public static void broadcast(String string) {
@@ -71,30 +55,6 @@ public class Messaging {
 		for(Player p : mc.getOnlinePlayers())
 			send(p, string);
 		send(new ConsoleCommandSender(mc), string);
-	}
-	
-	/**
-	 * Substitutes values for variables in a string. If there are more values than arguments, the excess are ignored;
-	 * if there are more arguments than variables, the extras are assumed to be the empty string.
-	 * 
-	 * @deprecated in favour of format
-	 * @author Celtic Minstrel
-	 * @param format The format string
-	 * @param arguments A list of arguments and comma-separated lists of equivalent arguments
-	 * @param values A list of values to substitute for each respective argument
-	 * @return The resulting string
-	 */
-	@Deprecated
-	public static String substitute(String format, String[] arguments, Object[] values) {
-		for(int i = 0; i < arguments.length; i++) {
-			String subst = i < values.length ? values[i].toString() : "";
-			if(arguments[i].contains(",")) {
-				String[] args = arguments[i].split(",");
-				for(String arg : args)
-					format = format.replace(arg, subst);
-			} else format = format.replace(arguments[i], subst);
-		}
-		return format;
 	}
 	
 	/**

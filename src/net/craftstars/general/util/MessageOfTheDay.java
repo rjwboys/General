@@ -21,15 +21,6 @@ public class MessageOfTheDay {
 		String address = getAddress(sender), balance = getBalance(sender), currency = getCurrency(sender);
 		int numPlayers = General.plugin.getServer().getOnlinePlayers().length;
 		String online = getOnline(), world = getWorld(sender), time = getTime(sender);
-		original = Messaging.substitute(original, new String[] {
-			"++", "+dname,+d,&dname;", "+name,+n,&name;", "+location,+l,&location;",
-			"+health,+h,&health;", "+ip,+a,&ip;", "+balance,+$,&balance;", "+currency,+m,&currency;",
-			"+online,+c,&online;", "+list,+p,&list;", "+world,+w,&world;", "+time,+t,&time;", "~!@#$%^&*()"
-		}, new Object[] {
-			"~!@#$%^&*()", displayName, name, location,
-			health, address, balance, currency,
-			numPlayers, online, world, time, "+"
-		});
 		return Messaging.format(original, 
 			"dname", displayName, "name", name, "location", location, "health", health,
 			"ip", address, "balance", balance, "currency", currency, "online", numPlayers,

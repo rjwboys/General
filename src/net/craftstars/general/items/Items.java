@@ -104,12 +104,6 @@ public class Items {
 		// This loads in the item names from items.yml
 		loadItemNames();
 		
-		// Now load the aliases from items.db
-		try {
-			loadItemsDB(itemsdb);
-		} catch(Exception x) {
-			General.logger.error(x.getMessage());
-		}
 		// try {
 		loadItemAliases();
 		// } catch(Exception x) {
@@ -139,38 +133,7 @@ public class Items {
 		}
 	}
 	
-	private static final String invalidItemAlias = "I am not a valid item.";
 	private static Pattern itemPat = Pattern.compile("([0-9]+)(?:[.,:/|]([0-9]+))?");
-	@Deprecated
-	private static void loadItemsDB(Properties itemsdb) {
-		for(String alias : itemsdb.stringPropertyNames()) {
-			ItemID val;
-			String code = itemsdb.getProperty(alias);
-			Matcher m = itemPat.matcher(code);
-			if(!m.matches()) continue;
-			int num = 0, data;
-			boolean problem = false;
-			try {
-				num = Integer.valueOf(m.group(1));
-			} catch(NumberFormatException x) {
-				problem = true;
-			}
-			if(m.groupCount() > 1 && m.group(2) != null) {
-				try {
-					data = Integer.valueOf(m.group(2));
-				} catch(NumberFormatException x) {
-					General.logger.warn(LanguageText.LOG_ITEM_BAD_ALIAS.value("alias", m.group(1) + ":" + m.group(2)));
-					continue;
-				}
-				val = new ItemID(num, data);
-			} else if(problem) {
-				General.logger.warn(LanguageText.LOG_ITEM_BAD_ALIAS.value("alias", m.group(1)));
-				continue;
-			} else val = new ItemID(num, null);
-			aliases.put(alias, val);
-		}
-	}
-	
 	private static void loadItemAliases() {
 		List<String> ymlAliases = config.getKeys("aliases");
 		if(ymlAliases == null) {
@@ -182,8 +145,8 @@ public class Items {
 		}
 		for(String alias : ymlAliases) {
 			ItemID val;
-			String code = config.getString("aliases." + alias, invalidItemAlias);
-			if(code.equals(invalidItemAlias)) {
+			String code = config.getString("aliases." + alias);
+			if(code == null) {
 				General.logger.warn(LanguageText.LOG_ITEM_BAD_KEY.value());
 				continue;
 			}
