@@ -149,6 +149,10 @@ public class generalCommand extends CommandBase {
 				return Messaging.lacksPermission(sender, "general.admin.set");
 			if(args.length < 3) return false;
 			return setVar(sender, Arrays.copyOfRange(args, 1, args.length));
+		} else if(args[0].equalsIgnoreCase("genlang")) {
+			for(LanguageText lang : LanguageText.values())
+				lang.getFormat();
+			Messaging.save();
 		}
 		return false;
 	}

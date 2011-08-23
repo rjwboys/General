@@ -155,16 +155,18 @@ public class whoCommand extends CommandBase {
 		HashMap<String, Object> params = new HashMap<String,Object>();
 		if(label.equalsIgnoreCase("whoami") || args.length == 0) {
 			int mask = 0;
-			if(Toolbox.equalsOne(args[0], "all", "uname", "name", "username")) mask |= UNAME;
-			if(Toolbox.equalsOne(args[0], "all", "dname", "name", "displayname", "nick", "nickname")) mask |= DNAME;
-			if(Toolbox.equalsOne(args[0], "all", "health", "hp", "version")) mask |= HEALTH;
-			if(Toolbox.equalsOne(args[0], "all", "loc", "location", "pos", "position", "coords")) mask |= LOC;
-			if(Toolbox.equalsOne(args[0], "all", "home", "spawn", "bed")) mask |= HOME;
-			if(Toolbox.equalsOne(args[0], "all", "world", "worldname")) mask |= WORLD;
-			if(Toolbox.equalsOne(args[0], "all", "ip", "address")) mask |= IP;
-			if(Toolbox.equalsOne(args[0], "all", "status", "away")) mask |= STATUS;
+			if(args.length == 1) {
+				if(Toolbox.equalsOne(args[0], "all", "uname", "name", "username")) mask |= UNAME;
+				if(Toolbox.equalsOne(args[0], "all", "dname", "name", "displayname", "nick", "nickname")) mask |= DNAME;
+				if(Toolbox.equalsOne(args[0], "all", "health", "hp", "version")) mask |= HEALTH;
+				if(Toolbox.equalsOne(args[0], "all", "loc", "location", "pos", "position", "coords")) mask |= LOC;
+				if(Toolbox.equalsOne(args[0], "all", "home", "spawn", "bed")) mask |= HOME;
+				if(Toolbox.equalsOne(args[0], "all", "world", "worldname")) mask |= WORLD;
+				if(Toolbox.equalsOne(args[0], "all", "ip", "address")) mask |= IP;
+				if(Toolbox.equalsOne(args[0], "all", "status", "away")) mask |= STATUS;
+			} else mask = defaultMask;
 			// If they're not allowed to override, mask out disabled values
-			if(!Option.ALLOW_OVERRIDE.get()) mask &= defaultMask;
+			if(!Option.ALLOW_OVERRIDE.get()) mask &= ~defaultMask;
 			params.put("mask", mask);
 			params.put("who", sender);
 		} else {

@@ -35,7 +35,7 @@ public class MappedMessageFormat extends Format {
 		while(mat.find()) keys.add(mat.group(1));
 		String[] keyArray = keys.toArray(new String[0]);
 		for(int i = 0; i < keyArray.length; i++)
-			pattern = pattern.replace("{" + keyArray[i], "{" + i);
+			pattern = pattern.replaceAll("\\{" + keyArray[i] + "([,\\}])", "\\{" + i + "$1");
 		return pattern;
 	}
 	

@@ -3,8 +3,6 @@ package net.craftstars.general.util;
 import java.io.File;
 import java.util.HashMap;
 
-import net.craftstars.general.General;
-
 import org.bukkit.util.config.Configuration;
 
 /**
@@ -141,8 +139,8 @@ public enum LanguageText {
 	WEATHER_ACTIVE("weather.storm.active", "{blue}World '{white}{world}{blue}' has a storm active for " +
 		"{white}{duration}{blue}."),
 	WEATHER_INACTIVE("weather.storm.inactive", "{blue}World '{white}{world}{blue}' does not have a storm active."),
-	WEATHER_START("weather.storm.start", "{blue}Weather storm stopped!"),
-	WEATHER_STOP("weather.storm.stop", "{blue}Weather storm started!"),
+	WEATHER_START("weather.storm.start", "{blue}Weather storm started!"),
+	WEATHER_STOP("weather.storm.stop", "{blue}Weather storm stopped!"),
 	WEATHER_CHANGE("weather.storm.change", "{blue}Weather storm will stop in {time}!"),
 	WEATHER_SET("weather.storm.set", "{blue}Weather storm started for {time}!"),
 	WEATHER_LIGHTNING("weather.lightning", "{yellow}Lightning strike!"),
