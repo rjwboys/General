@@ -55,8 +55,7 @@ public class MappedMessageFormat extends Format {
 		return format(formatKeys, dest, null);
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
+	@Override@SuppressWarnings("unchecked")
 	public StringBuffer format(Object obj, StringBuffer dest, FieldPosition pos) {
 		return format((Map<String, Object>) obj, dest, pos);
 	}
@@ -73,8 +72,7 @@ public class MappedMessageFormat extends Format {
 		format.applyPattern(namedToIndexed(pattern));
 	}
 	
-	@Override
-	@SuppressWarnings("unchecked")
+	@Override@SuppressWarnings("unchecked")
 	public MappedMessageFormat clone() {
 		return new MappedMessageFormat((MessageFormat) format.clone(), (LinkedHashSet<String>) keys.clone());
 	}

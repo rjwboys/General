@@ -16,8 +16,8 @@ public enum LanguageText {
 	AWAY_HERE("away.here", "{silver}You are not away."),
 	AWAY_CHANGE("away.change", "{silver}Away reason changed."),
 	AWAY_SET("away.set", "{silver}You are now marked as away."),
-	AWAY_CONSOLE("away.console", "{rose}It's not possible for the console to be marked as away."),
-	AWAY_UNKNOWN("away.unknown", "{rose}I don't know what you are, so I can't mark you as away."),
+	AWAY_CONSOLE("away.console", "{rose}It''s not possible for the console to be marked as away."),
+	AWAY_UNKNOWN("away.unknown", "{rose}I don''t know what you are, so I can''t mark you as away."),
 	AWAY_IS("away.is", "{silver}{name} is currently away."),
 	AWAY_REASON("away.reason", "{silver}Reason: {reason}"),
 	AWAY_BRIEF("away.brief", "{rose}{name} is away: {reason}"),
@@ -25,19 +25,19 @@ public enum LanguageText {
 	WHISPER_TO("whisper.to", "{gray}(whisper)   to <{name}> {message}"),
 	WHISPER_FROM_PLAYER("whisper.from-player", "(whisper) from <{name}> {message}"),
 	WHISPER_FROM_UNKNOWN("whisper.from-unknown", "(whisper) from [{name}] {message}"),
-	WHISPER_SELF("whisper.self","&c;You can't message yourself!"),
+	WHISPER_SELF("whisper.self","&c;You can''t message yourself!"),
 	NO_REPLY("no-reply", "{rose}No-one has messaged you yet."),
 	// Messages related to /getpos
 	GETPOS_INVALID("getpos.invalid", "{rose}Invalid getpos option."),
 	GETPOS_ANGLE("getpos.angle", "{yellow} ({white}{angle}{yellow} deg)"),
 	GETPOS_COMPASS("getpos.compass", "{yellow}Compass: {white}{direction}"),
 	GETPOS_ROTATION("getpos.rotation", "{yellow}Rotation: {white}{yaw}{yellow} Pitch: {white}{pitch}"),
-	GETPOS_WORLD("getpos.world", "{yellow} in '{white}{world}{yellow}'"),
-	GETPOS_POS("getpos.pos", "{yellow}Pos X: {white}{x}{yellow} Y: {white}" + "{y}{yellow} Z: {white}{z}{yellow}"),
+	GETPOS_WORLD("getpos.world", "{yellow} in ''{white}{world}{yellow}''"),
+	GETPOS_POS("getpos.pos", "{yellow}Pos X: {white}{x}{yellow} Y: {white}{y}{yellow} Z: {white}{z}{yellow}"),
 	GETPOS_DIR("getpos.dir", "{yellow}Direction: {white}{direction}"),
 	// Messages relating to /online
 	ONLINE_ALL("online.all","&eOnline Players ({count}):"),
-	ONLINE_WORLD("online.world","&eOnline Players in world '{world}' ({count}):"),
+	ONLINE_WORLD("online.world","&eOnline Players in world ''{world}'' ({count}):"),
 	// Messages relating to /who and /worldinfo
 	INFO_DIVIDER("info.divider","{white}------------------------------------------------"),
 	INFO_TITLE_PLAYER("info.title.player","{yellow} Player {white}[{name}]{yellow} Info"),
@@ -46,8 +46,10 @@ public enum LanguageText {
 	INFO_TITLE_UNKNOWN("info.title.unknown","{yellow} Unknown Command Sender"),
 	INFO_USERNAME("info.username","{gold} Username: {white}{name}"),
 	INFO_DISPLAYNAME("info.display","{gold} Display Name: {white}{name}"),
-	INFO_HEALTH("info.health","{gold} -{yellow} Health: {white}{bar}{value,choice,0#{rose}|3#{yellow}|7#{green}}{value}"),
-	INFO_HEALTHBAR("info.healthbar","[{value,choice,0#{rose}|3#{yellow}|7#{green}}{health}{silver}{filler}{white}]  "),
+	INFO_HEALTH("info.health","{gold} -{yellow} Health: " +
+		"{white}{bar}{value,choice,0#{rose}|3#{yellow}|7#{green}}{value}"),
+	INFO_HEALTHBAR("info.healthbar","[{value,choice,0#{rose}|3#{yellow}|7#{green}}" +
+		"{health}{silver}{filler}{white}]  "),
 	INFO_LOCATION("info.location","{gold} -{yellow} Location: {white}{location}"),
 	INFO_SPAWN("info.spawn","{gold} -{yellow} Spawn: {white}{location}"),
 	INFO_WORLD("info.world","{gold} -{yellow} World: {white}{world}"),
@@ -69,7 +71,7 @@ public enum LanguageText {
 	CLEAR_INVALID("clear.invalid", "{rose}Invalid option."),
 	CLEAR_SELF("clear.self", "{green}You have cleared your {inventory}."),
 	CLEAR_YOURS("clear.yours", "{green}Your {inventory} has been cleared."),
-	CLEAR_THEIRS("clear.theirs", "{white}{player}{green}'s {inventory} has been cleared."),
+	CLEAR_THEIRS("clear.theirs", "{white}{player}{green}''s {inventory} has been cleared."),
 	CLEAR_FULL("clear.inventory", "inventory"),
 	CLEAR_QUICKBAR("clear.quick-bar", "quick-bar"),
 	CLEAR_PACK("clear.pack", "pack"),
@@ -79,10 +81,10 @@ public enum LanguageText {
 	GIVE_BAD_AMOUNT("give.error.amount", "{rose}The amount must be an integer."),
 	GIVE_BAD_ID("give.error.id", "{rose}Invalid item."),
 	GIVE_BAD_DATA("give.error.data", "{white}{data}{rose} is not a valid data type for {white}{item}{rose}."),
-	GIVE_GIFT("give.gift", "{green}Gave {white}{amount,choice,-1#infinite|0#{amount}}{green} of {white}{item}{green} " +
-		"to {white}{player}{green}!"),
-	GIVE_GIFTED("give.gifted", "{green}Enjoy the gift! {white}{amount,choice,-1#infinite|0#{amount}}{green} of " +
-		"{white}{item}{green}!"),
+	GIVE_GIFT("give.gift", "{green}Gave {white}{amount,choice,-1#infinite|0#{amount}}{green} of " +
+		"{white}{item}{green} to {white}{player}{green}!"),
+	GIVE_GIFTED("give.gifted", "{green}Enjoy the gift! {white}{amount,choice,-1#infinite|0#{amount}}{green} " +
+		"of {white}{item}{green}!"),
 	GIVE_ENJOY("give.enjoy", "{green}Enjoy! Giving {white}{amount,choice,-1#infinite|0#{amount}}{green} of " +
 		"{white}{item}{green}."),
 	// Messages relating to /items
@@ -97,13 +99,15 @@ public enum LanguageText {
 		"{yellow}{time}{rose} seconds."),
 	KIT_GIVE("kit.give", "{green}Here you go!"),
 	// Messages relating to /take
-	TAKE_THEFT("take.theft", "{green}Took {white}{amount}{green} of {white}{item}{green} from {white}{player}{green}."),
-	TAKE_TOOK("take.took", "{white}{amount,choice,0#All|1#{amount}}{green} of {white}{item}{green} was taken from you."),
+	TAKE_THEFT("take.theft", "{green}Took {white}{amount}{green} of {white}{item}{green} from " +
+		"{white}{player}{green}."),
+	TAKE_TOOK("take.took", "{white}{amount,choice,0#All|1#{amount}}{green} of {white}{item}{green} " +
+		"was taken from you."),
 	// Messages relating to /masstake
 	MASSTAKE_THEFT("take.mass.theft", "{green}Took {white}{amount}{green} of {white}{items}{green} from " +
 		"{white}{player}{green}."),
-	MASSTAKE_TOOK("take.mass.took", "{white}{amount,choice,0#All|1#{amount}}{green} of {white}{items}{green} was " +
-		"taken from you."),
+	MASSTAKE_TOOK("take.mass.took", "{white}{amount,choice,0#All|1#{amount}}{green} of {white}{items}{green} " +
+		"was taken from you."),
 	// Messages relating to /heal
 	HEAL_THEM("heal.them", "{yellow}{name}{white} has been {health,choice,-10#{hurt}|0#{healed}} by {yellow}" +
 		"{health,number,#0.0;#0.0}{white} hearts."),
@@ -112,8 +116,8 @@ public enum LanguageText {
 	HEAL_HURT("heal.hurt", "hurt"),
 	HEAL_HEALED("heal.healed", "healed"),
 	// Messages relating to /mobspawn
-	MOB_NO_DEST("mob.error.no-dest", "{rose}Can't determine where to spawn the mob; you're not a player and either " +
-		"didn't specify a destination, or tried to specify an invalid destination."),
+	MOB_NO_DEST("mob.error.no-dest", "{rose}Can''t determine where to spawn the mob; you''re not a player and " +
+		"either didn''t specify a destination, or tried to specify an invalid destination."),
 	MOB_TOO_FEW("mob.error.too-few", "{rose}Cannot spawn less than one mob."),
 	MOB_BAD_TYPE("mob.error.bad-type", "{rose}Invalid {mob} type: {type}"),
 	MOB_MOB("mob.mob", "mob"),
@@ -135,50 +139,55 @@ public enum LanguageText {
 	// Messages related to /weather
 	WEATHER_NEGATIVE("weather.error.negative", "{rose}Only positive durations accepted for weather."),
 	WEATHER_BAD_THUNDER("weather.error.thunder", "{rose}Duration too large for thunder."),
-	WEATHER_NETHER("weather.storm.nether", "{rose}The nether doesn't have weather!"),
-	WEATHER_ACTIVE("weather.storm.active", "{blue}World '{white}{world}{blue}' has a storm active for " +
+	WEATHER_NETHER("weather.storm.nether", "{rose}The nether doesn''t have weather!"),
+	WEATHER_ACTIVE("weather.storm.active", "{blue}World ''{white}{world}{blue}'' has a storm active for " +
 		"{white}{duration}{blue}."),
-	WEATHER_INACTIVE("weather.storm.inactive", "{blue}World '{white}{world}{blue}' does not have a storm active."),
+	WEATHER_INACTIVE("weather.storm.inactive", "{blue}World ''{white}{world}{blue}'' " +
+		"does not have a storm active."),
 	WEATHER_START("weather.storm.start", "{blue}Weather storm started!"),
 	WEATHER_STOP("weather.storm.stop", "{blue}Weather storm stopped!"),
 	WEATHER_CHANGE("weather.storm.change", "{blue}Weather storm will stop in {time}!"),
 	WEATHER_SET("weather.storm.set", "{blue}Weather storm started for {time}!"),
 	WEATHER_LIGHTNING("weather.lightning", "{yellow}Lightning strike!"),
 	THUNDER_NETHER("weather.thunder.nether", "{rose}Only normal worlds have thunder."),
-	THUNDER_ACTIVE("weather.thunder.active", "{yellow}World '{white}{world}{yellow}' is thundering for {duration}."),
-	THUNDER_INACTIVE("weather.thunder.inactive", "{yellow}World '{white}{world}{yellow}' is not thundering."),
+	THUNDER_ACTIVE("weather.thunder.active", "{yellow}World ''{white}{world}{yellow}'' " +
+		"is thundering for {duration}."),
+	THUNDER_INACTIVE("weather.thunder.inactive", "{yellow}World ''{white}{world}{yellow}'' is not thundering."),
 	THUNDER_START("weather.thunder.start", "{yellow}Thunder started!"),
 	THUNDER_STOP("weather.thunder.stop", "{yellow}Thunder stopped!"),
 	THUNDER_CHANGE("weather.thunder.change", "{yellow}Thunder will stop in {time} ticks!"),
 	THUNDER_SET("weather.thunder.set", "{yellow}Thunder started for {time} ticks!"),
 	// Messages related to /teleport
 	TELEPORT_SELF("teleport.self", "{white}You teleported to {blue}{destination}{white}!"),
-	TELEPORT_OTHER("teleport.other", "{white}You teleported {blue}{target}{white} to {blue}{destination}{white}!"),
+	TELEPORT_OTHER("teleport.other", "{white}You teleported {blue}{target}{white} to " +
+		"{blue}{destination}{white}!"),
 	TELEPORT_WHOA("teleport.whoa", "{white}You have been teleported to {blue}{destination}{white}!"),
 	TELEPORT_WARMUP("teleport.warmup", "{yellow}Warming up. Teleport will commence in {time} ticks."),
 	// Messages related to /setspawn
-	SETHOME("setspawn.home", "{yellow}Home position of player '{white}{player}{yellow}' changed to {white}({x},{y},{z})"),
+	SETHOME("setspawn.home", "{yellow}Home position of player ''{white}{player}{yellow}'' changed to " +
+		"{white}({x},{y},{z})"),
 	SETSPAWN("setspawn.no-world", "{yellow}Spawn position changed to {white}({x],{y},{z})"),
-	SETSPAWN_WORLD("setspawn.world", "{yellow}Spawn position in world '{white}{world}{yellow}' changed to " +
+	SETSPAWN_WORLD("setspawn.world", "{yellow}Spawn position in world ''{white}{world}{yellow}'' changed to " +
 		"{white}({x},{y},{z})"),
 	SETSPAWN_HERE("setspawn.here", "{yellow}Spawn position changed to where you are standing."),
 	SETSPAWN_PLAYER("setspawn.player", "{yellow}Spawn position changed to where {player} is standing."),
-	SETSPAWN_ERROR("setspawn.error", "{rose}There was an error setting the spawn location. It has not been changed."),
+	SETSPAWN_ERROR("setspawn.error", "{rose}There was an error setting the spawn location. " +
+		"It has not been changed."),
 	// Messages related to destinations
 	DESTINATION_WORLD("destination.world", "other worlds"),
 	DESTINATION_PLAYER("destination.player", "other players"),
 	DESTINATION_COORDS("destination.coords", "specific coordinates"),
 	DESTINATION_HOME("destination.home", "player homes"),
-	DESTINATION_HOME_OTHER("destination.home_other", "other players' homes"),
+	DESTINATION_HOME_OTHER("destination.home_other", "other players'' homes"),
 	DESTINATION_SPAWN("destination.spawn", "spawn"),
 	DESTINATION_SPAWN_OTHER("destination.spawn_other", "spawn by player"),
 	DESTINATION_TARGET("destination.target", "the targeted block"),
-	DESTINATION_TARGET_OTHER("destination.target_other", "other players' targeted block"),
+	DESTINATION_TARGET_OTHER("destination.target_other", "other players'' targeted block"),
 	DESTINATION_COMPASS("destination.compass", "the compass target"),
-	DESTINATION_COMPASS_OTHER("destination.compass", "other players' compass target"),
+	DESTINATION_COMPASS_OTHER("destination.compass", "other players'' compass target"),
 	DESTINATION_BAD("destination.bad", "{rose}Invalid destination."),
-	DESTINATION_THEIR_HOME("destination.their_home", "{player}'s home"),
-	DESTINATION_THEIR_COMPASS("destination.their_compass", "{player}'s compass"),
+	DESTINATION_THEIR_HOME("destination.their_home", "{player}''s home"),
+	DESTINATION_THEIR_COMPASS("destination.their_compass", "{player}''s compass"),
 	// Messages relating to targets
 	TARGET_BAD("target.bad", "{rose}Invalid target."),
 	TARGET_SELF("target.self", "yourself"),
@@ -200,67 +209,75 @@ public enum LanguageText {
 	MOTD_NOONE("motd.no-one", "(no-one)"),
 	// Messages relating to the /general subcommands
 	ECONOMY_NO_PLAYER("econ.no-player", "Please specify the player you would like to dry-run the command as."),
-	PERMISSIONS_RESTRICT("permissions.restrict", "Permission '{node}' has been added to the list of permissions " +
-		"restricted to ops."),
-	PERMISSIONS_RELEASE("permissions.release", "Permission '{node}' has been removed from the list of permissions " +
-		"restricted to ops."),
+	PERMISSIONS_RESTRICT("permissions.restrict", "Permission ''{node}'' has been added to the " +
+		"list of permissions restricted to ops."),
+	PERMISSIONS_RELEASE("permissions.release", "Permission ''{node}'' has been removed from the " +
+		"list of permissions restricted to ops."),
 	GENERAL_RELOAD("general.reload", "{purple}General config reloaded."),
 	GENERAL_SAVE("general.save", "{purple}General config saved."),
-	KIT_NEW("kit.new", "{green}New kit '{yellow}{kit}{green}' created."),
-	KIT_ADD("kit.add", "{yellow}{amount}{green} of {yellow}{item}{green} added to kit '{yellow}{kit}{green}'."),
-	KIT_NOT_IN("kit.not-in", "{green}The kit '{yellow}{kit}{green}' does not include {yellow}{item}{green}."),
-	KIT_REMOVE("kit.remove", "{yellow}{amount,choice,0#All|1#{amount}}{green} of {yellow}{item}{green} removed from " +
-		"kit '{yellow}{kit}{green}'."),
+	KIT_NEW("kit.new", "{green}New kit ''{yellow}{kit}{green}'' created."),
+	KIT_ADD("kit.add", "{yellow}{amount}{green} of {yellow}{item}{green} added to kit " +
+		"''{yellow}{kit}{green}''."),
+	KIT_NOT_IN("kit.not-in", "{green}The kit ''{yellow}{kit}{green}'' does not include " +
+		"{yellow}{item}{green}."),
+	KIT_REMOVE("kit.remove", "{yellow}{amount,choice,0#All|1#{amount}}{green} of {yellow}{item}{green} " +
+		"removed from kit ''{yellow}{kit}{green}''."),
 	KIT_BAD_DELAY("kit.bad-delay", "{rose}Invalid delay."),
-	KIT_DELAY("kit.delay", "{green}Delay of kit '{yellow}{kit}{green}' set to {yellow}{delay}{green} milliseconds."),
+	KIT_DELAY("kit.delay", "{green}Delay of kit ''{yellow}{kit}{green}'' set to {yellow}{delay}{green} " +
+		"milliseconds."),
 	KIT_BAD_COST("kit.bad-cost", "{rose}Invalid cost."),
-	KIT_COST("kit.cost", "{green}Cost of kit '{yellow}{kit}{green}' set to {yellow}{cost}{green}."),
-	KIT_TRASH("kit.trash", "{green}Kit '{yellow}{kit}{green}' has been deleted."),
-	KIT_CONTAINS("kit.contains", "{green}Kit '{yellow}{kit}{green}' contains: {white}{items"),
-	KIT_INFO("kit.info", "{green}Its delay is {yellow}{delay}{green} and its recorded cost is {yellow}{cost}{green}."),
+	KIT_COST("kit.cost", "{green}Cost of kit ''{yellow}{kit}{green}'' set to {yellow}{cost}{green}."),
+	KIT_TRASH("kit.trash", "{green}Kit ''{yellow}{kit}{green}'' has been deleted."),
+	KIT_CONTAINS("kit.contains", "{green}Kit ''{yellow}{kit}{green}'' contains: {white}{items"),
+	KIT_INFO("kit.info", "{green}Its delay is {yellow}{delay}{green} and its recorded cost is " +
+		"{yellow}{cost}{green}."),
 	// Log messages
-	LOG_CONFIG_DEFAULT("log.config.default", "Configuration file {file} does not exist. Attempting to create " +
-		"default one..."),
+	LOG_CONFIG_DEFAULT("log.config.default", "Configuration file {file} does not exist. " +
+		"Attempting to create default one..."),
 	LOG_CONFIG_ERROR("log.config.error", "Could not read and/or write {file}! Continuing with default values!"),
 	LOG_CONFIG_SUCCESS("log.config.success", "Default configuration created successfully! You can now "
 		+ "stop the server and edit plugins/General/config.yml."),
 	LOG_ITEM_NO_HOOKS("log.item.no-hooks", "Hooks are missing."),
 	LOG_ITEM_BAD_HOOK("log.item.bad-hook", "Invalid hook: {hook}"),
-	LOG_ITEM_BAD_ALIAS("log.item.bad-alias", "Invalid item alias assignment '{alias}'."),
+	LOG_ITEM_BAD_ALIAS("log.item.bad-alias", "Invalid item alias assignment ''{alias}''."),
 	LOG_ITEM_NO_ALIASES("log.item.no-aliases", "No aliases were defined in items.yml."),
 	LOG_ITEM_CONVERTED("log.item.converted", "Your items.db aliases will be inserted into the items.yml upon " +
 		"shutdown,\nor you can force it earlier using /general save"),
-	LOG_ITEM_BAD_KEY("log.item.bad-key", "Invalid item alias assignment for '{alias}'."),
+	LOG_ITEM_BAD_KEY("log.item.bad-key", "Invalid item alias assignment for ''{alias}''."),
 	LOG_ITEM_NO_NAMES("log.item.no-names", "Names of items are missing."),
 	LOG_ITEM_BAD_NAMES("log.item.bad-names", "The names section of items.yml is missing or invalid."),
 	LOG_ITEM_BAD_NAME("log.item.bad-name", "Invalid keys in the names section of items.yml (eg {name})"),
-	LOG_KIT_BAD_METHOD("log.kit.bad-method", "Invalid method for kit costing; falling back to default of 'individual'"),
-	LOG_KIT_NO_ITEMS("log.kit.no-items", "Kit '{kit}' has no items and has been skipped."),
-	LOG_KIT_BAD_ITEM("log.kit.bad-item", "Kit '{kit}' has an invalid item '{item}' which has been skipped."),
-	LOG_KIT_BAD("log.kit.error", "Kit '{kit}' has a malformed entry: \"{item}\""),
-	LOG_KIT_CONVERTED("log.kit.converted", "A general.kits file was found and converted to the new kits.yml format. " +
-		"You may now delete the general.kits file without information loss."),
+	LOG_KIT_BAD_METHOD("log.kit.bad-method", "Invalid method for kit costing; falling back to default of " +
+		"''individual''"),
+	LOG_KIT_NO_ITEMS("log.kit.no-items", "Kit ''{kit}'' has no items and has been skipped."),
+	LOG_KIT_BAD_ITEM("log.kit.bad-item", "Kit ''{kit}'' has an invalid item ''{item}'' which has been skipped."),
+	LOG_KIT_BAD("log.kit.error", "Kit ''{kit}'' has a malformed entry: \"{item}\""),
+	LOG_KIT_CONVERTED("log.kit.converted", "A general.kits file was found and converted to the new " +
+		"kits.yml format. You may now delete the general.kits file without information loss."),
 	LOG_MOB_BAD("log.mob.error", "Mob ID {mob} has a malformed entry: \"{name}\""),
-	LOG_ICONOMY_5NOT4("log.iconomy.5not4", "Was looking for iConomy 4 but found iConomy 5 instead. Please either " +
-		"downgrade iConomy, or edit your config.yml to specify iConomy5."),
-	LOG_ICONOMY_4NOT5("log.iconomy.4not5", "Was looking for iConomy 4 but found iConomy 5 instead. Please either " +
-		"update iConomy, or edit your config.yml to specify iConomy5."),
-	LOG_PERMISSIONS_ERROR("log.permissions.error","Error loading Permissions. Please report to the Permissions dev."),
-	LOG_PERMISSIONS_MISSING("log.permissions.missing","[{system}] not detected; falling back to [Basic] permissions."),
-	LOG_PERMISSIONS_FAIL("log.permissions.fail","There was a big problem loading permissions system [{system}]!" +
-		" Please report this error!"),
+	LOG_ICONOMY_5NOT4("log.iconomy.5not4", "Was looking for iConomy 4 but found iConomy 5 instead. " +
+		"Please either downgrade iConomy, or edit your config.yml to specify iConomy5."),
+	LOG_ICONOMY_4NOT5("log.iconomy.4not5", "Was looking for iConomy 4 but found iConomy 5 instead. " +
+		"Please either update iConomy, or edit your config.yml to specify iConomy5."),
+	LOG_PERMISSIONS_ERROR("log.permissions.error","Error loading Permissions. Please report to the " +
+		"Permissions dev."),
+	LOG_PERMISSIONS_MISSING("log.permissions.missing","[{system}] not detected; falling back to " +
+		"[Basic] permissions."),
+	LOG_PERMISSIONS_FAIL("log.permissions.fail","There was a big problem loading permissions system " +
+		"[{system}]! Please report this error!"),
 	LOG_PERMISSIONS_NOTE("log.permissions.note", "Note: Using permissions [{system}]"),
 	LOG_PERMISSIONS_RESULT("log.permissions.result", "Using [{system} {version}] for permissions."),
-	LOG_COMMAND_NO_ALIASES("log.cmd.no-aliases","No command aliases defined; did you forget to copy the aliases section " +
-		"from the example config.yml?"),
+	LOG_COMMAND_NO_ALIASES("log.cmd.no-aliases","No command aliases defined; did you forget to copy " +
+		"the aliases section from the example config.yml?"),
 	LOG_COMMAND_REG_ERROR("log.cmd.reg-error", "Command [{command}] could not be registered."),
-	LOG_COMMAND_TAKEN("log.cmd.taken", "Command alias {alias} was not registered because [{plugin}] claimed it."),
+	LOG_COMMAND_TAKEN("log.cmd.taken", "Command alias {alias} was not registered because [{plugin}] " +
+		"claimed it."),
 	LOG_COMMAND_ERROR("log.cmd.error", "There was an error with command [{command}] during {errorPlace}!" +
 		" Please report this!"),
 	LOG_COMMAND_ERROR_INFO("log.cmd.error-info", "Full command string: [{command}]"),
 	LOG_COMMAND_USED("log.cmd.used", "{sender} used command: {command}"),
 	LOG_HELP_ENABLED("log.help.enabled", "[Help {version}] support enabled."),
-	LOG_HELP_MISSING("log.help.missing", "[Help] isn't detected. No /help support; instead use /general help"),
+	LOG_HELP_MISSING("log.help.missing", "[Help] isn''t detected. No /help support; instead use /general help"),
 	LOG_TWICE("log.twice", "Seems to have loaded twice for some reason; skipping initialization. " +
 		"Use /general reload if you actually want to reload General."),
 	LOG_SUCCESS("log.success", "Plugin successfully loaded!"),
@@ -272,26 +289,26 @@ public enum LanguageText {
 	LOG_ECONOMY_FAIL("log.econ.fail", "Requested economy failed to load; no economy will be used."),
 	LOG_DISABLED("log.disabled", "Plugin disabled!"),
 	// Messages relating to missing permissions
-	PERMISSION_LACK("permissions.lacking", "{rose}You don't have permission to {action}. ({permission})"),
+	PERMISSION_LACK("permissions.lacking", "{rose}You don''t have permission to {action}. ({permission})"),
 	PERMISSION_ERROR("permissions.error", "{rose}Error checking permissions."),
 	LACK_AWAY("permissions.away","set your away status"),
 	LACK_TELL("permissions.tell","send private messages to players"),
 	LACK_GETPOS("permissions.getpos","check your location"),
-	LACK_GETPOS_OTHER("permissions.getpos_other","check someone else's location"),
+	LACK_GETPOS_OTHER("permissions.getpos_other","check someone else''s location"),
 	LACK_PLAYERLIST("permissions.playerlist","view the player list"),
 	LACK_WHO("permissions.who","view info on users other than yourself"),
 	LACK_WORLDINFO("permissions.worldinfo","view info on worlds"),
 	LACK_CLEAR("permissions.clear","clear your inventory"),
-	LACK_CLEAR_OTHER("permissions.clear_other","clear someone else's inventory"),
+	LACK_CLEAR_OTHER("permissions.clear_other","clear someone else''s inventory"),
 	LACK_GIVE("permissions.give","give items"),
 	LACK_GIVE_OTHER("permissions.give_other","give items to others"),
 	LACK_GIVE_INFINITE("permissions.give_infinte","give infinite stacks of items"),
 	LACK_GIVE_MASS("permissions.give_mass","give many items at once"),
 	LACK_GIVE_ITEM("permissions.give_item","get {item}."),
 	LACK_KIT("permissions.kit","get kits"),
-	LACK_KIT_NAME("permissions.kit_name","get the kit '{kit}'."),
+	LACK_KIT_NAME("permissions.kit_name","get the kit ''{kit}''."),
 	LACK_TAKE("permissions.take","remove items from your inventory"),
-	LACK_TAKE_OTHER("permissions.take_other","take items from someone else's inventory"),
+	LACK_TAKE_OTHER("permissions.take_other","take items from someone else''s inventory"),
 	LACK_TAKE_MASS("permissions.take_mass","massively remove items from your inventory"),
 	LACK_HURT("permissions.hurt","hurt players"),
 	LACK_HEAL("permissions.heal","heal players"),
@@ -314,15 +331,15 @@ public enum LanguageText {
 	LACK_TELEPORT("permissions.teleport","teleport"),
 	LACK_TELEPORT_TARGET("permissions.teleport_target","teleport {target}"),
 	LACK_TELEPORT_TO("permissions.teleport_to","teleport to {destination}"),
-	LACK_TELEPORT_INTO("permissions.teleport_into","teleport into world '{destination}'"),
-	LACK_TELEPORT_FROM("permissions.teleport_from","teleport out of world '{destination}'"),
+	LACK_TELEPORT_INTO("permissions.teleport_into","teleport into world ''{destination}''"),
+	LACK_TELEPORT_FROM("permissions.teleport_from","teleport out of world ''{destination}''"),
 	LACK_TELEPORT_MASS("permissions.teleport_mass","teleport en masse"),
 	LACK_SETSPAWN_WORLD("permissions.setspawn_world","set the spawn location"),
-	LACK_SETSPAWN_OTHER("permissions.setspawn_other","set someone else's home location"),
+	LACK_SETSPAWN_OTHER("permissions.setspawn_other","set someone else''s home location"),
 	LACK_SETSPAWN_SELF("permissions.setspawn_self","set your home location"),
 	LACK_SETSPAWN_TO("permissions.setspawn_to","set the spawn location to {destination}"),
-	LACK_SETSPAWN_INTO("permissions.setspawn_into","set the spawn location of world '{destination}'"),
-	LACK_SETSPAWN_FROM("permissions.setspawn_from","set the spawn location from world '{destination}'"),
+	LACK_SETSPAWN_INTO("permissions.setspawn_into","set the spawn location of world ''{destination}''"),
+	LACK_SETSPAWN_FROM("permissions.setspawn_from","set the spawn location from world ''{destination}''"),
 	LACK_INSTANT("permissions.instant", "{action} so soon after the last time"),
 	LACK_ADMIN_RELOAD("permissions.admin_reload", "reload the General configuration"),
 	LACK_ADMIN_ITEM("permissions.admin_item", "edit the item aliases"),
