@@ -167,6 +167,7 @@ public class whoCommand extends CommandBase {
 			} else mask = defaultMask;
 			// If they're not allowed to override, mask out disabled values
 			if(!Option.ALLOW_OVERRIDE.get()) mask &= ~defaultMask;
+			General.logger.debug(Integer.toString(mask));
 			params.put("mask", mask);
 			params.put("who", sender);
 		} else {

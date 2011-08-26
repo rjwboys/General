@@ -36,6 +36,9 @@ public class MappedMessageFormat extends Format {
 		String[] keyArray = keys.toArray(new String[0]);
 		for(int i = 0; i < keyArray.length; i++)
 			pattern = pattern.replaceAll("\\{" + keyArray[i] + "([,\\}])", "\\{" + i + "$1");
+		// To make things easier, we use ` instead of ' for the escape character; thus we need to
+		// convert escapes and apostrophes.
+		pattern = pattern.replace('`', '\u0001').replace("'", "''''").replace('\u0001', '`');
 		return pattern;
 	}
 	
@@ -44,6 +47,9 @@ public class MappedMessageFormat extends Format {
 		String[] keyArray = keys.toArray(new String[0]);
 		for(int i = 0; i < keyArray.length; i++)
 			pattern = pattern.replace("{" + i, "{" + keyArray[i]);
+		// To make things easier, we use ` instead of ' for the escape character; thus we need to
+		// convert escapes and apostrophes. This is likely imperfect.
+		pattern = pattern.replace("''''", "\u0001").replace('\'', '`').replace('\u0001', '\'');
 		return pattern;
 	}
 	

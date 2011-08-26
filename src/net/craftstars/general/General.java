@@ -37,7 +37,7 @@ public class General extends JavaPlugin {
 	public static General plugin = null;
 	
 	public static final boolean DEBUG = true;
-	public static final String codename = "Schoenberg";
+	public static final String codename = "Webern";
 	
 	public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG);
 	
@@ -48,7 +48,7 @@ public class General extends JavaPlugin {
 	private boolean gotRequestedPermissions, gotRequestedEconomy;
 	
 	private HashMap<String, String> playersAway = new HashMap<String, String>();
-	private HashMap<String,String> lastMessager = new HashMap<String,String>();
+	private HashMap<String,String> lastMessager = new HashMap<String, String>();
 	private String tagFormat;
 	
 	public boolean isAway(Player who) {
