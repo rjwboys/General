@@ -1,14 +1,17 @@
 package net.craftstars.general.util;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import org.bukkit.util.config.Configuration;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.DumperOptions.FlowStyle;
+import org.yaml.snakeyaml.DumperOptions.ScalarStyle;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
+import org.yaml.snakeyaml.representer.Representer;
 
-/**
- * Manager for localized messages for built-in functions.
- * @author SpaceManiac
- */
 public enum LanguageText {
 	// Server log messages
 	// Messages related to /away
@@ -25,7 +28,7 @@ public enum LanguageText {
 	WHISPER_TO("whisper.to", "{gray}(whisper)   to <{name}> {message}"),
 	WHISPER_FROM_PLAYER("whisper.from-player", "(whisper) from <{name}> {message}"),
 	WHISPER_FROM_UNKNOWN("whisper.from-unknown", "(whisper) from [{name}] {message}"),
-	WHISPER_SELF("whisper.self","&c;You can't message yourself!"),
+	WHISPER_SELF("whisper.self","{rose}You can't message yourself!"),
 	NO_REPLY("no-reply", "{rose}No-one has messaged you yet."),
 	// Messages related to /getpos
 	GETPOS_INVALID("getpos.invalid", "{rose}Invalid getpos option."),
@@ -33,7 +36,7 @@ public enum LanguageText {
 	GETPOS_COMPASS("getpos.compass", "{yellow}Compass: {white}{direction}"),
 	GETPOS_ROTATION("getpos.rotation", "{yellow}Rotation: {white}{yaw}{yellow} Pitch: {white}{pitch}"),
 	GETPOS_WORLD("getpos.world", "{yellow} in '{white}{world}{yellow}'"),
-	GETPOS_POS("getpos.pos", "{yellow}Pos X: {white}{x}{yellow} Y: {white}" + "{y}{yellow} Z: {white}{z}{yellow}"),
+	GETPOS_POS("getpos.pos", "{yellow}Pos X: {white}{x}{yellow} Y: {white}{y}{yellow} Z: {white}{z}{yellow}"),
 	GETPOS_DIR("getpos.dir", "{yellow}Direction: {white}{direction}"),
 	// Messages relating to /online
 	ONLINE_ALL("online.all","&eOnline Players ({count}):"),
@@ -46,8 +49,10 @@ public enum LanguageText {
 	INFO_TITLE_UNKNOWN("info.title.unknown","{yellow} Unknown Command Sender"),
 	INFO_USERNAME("info.username","{gold} Username: {white}{name}"),
 	INFO_DISPLAYNAME("info.display","{gold} Display Name: {white}{name}"),
-	INFO_HEALTH("info.health","{gold} -{yellow} Health: {white}{bar}{value,choice,0#{rose}|3#{yellow}|7#{green}}{value}"),
-	INFO_HEALTHBAR("info.healthbar","[{value,choice,0#{rose}|3#{yellow}|7#{green}}{health}{silver}{filler}{white}]  "),
+	INFO_HEALTH("info.health","{gold} -{yellow} Health: " +
+		"{white}{bar}{value,choice,0#{rose}|3#{yellow}|7#{green}}{value}"),
+	INFO_HEALTHBAR("info.healthbar","[{value,choice,0#{rose}|3#{yellow}|7#{green}}" +
+		"{health}{silver}{filler}{white}]  "),
 	INFO_LOCATION("info.location","{gold} -{yellow} Location: {white}{location}"),
 	INFO_SPAWN("info.spawn","{gold} -{yellow} Spawn: {white}{location}"),
 	INFO_WORLD("info.world","{gold} -{yellow} World: {white}{world}"),
@@ -79,10 +84,10 @@ public enum LanguageText {
 	GIVE_BAD_AMOUNT("give.error.amount", "{rose}The amount must be an integer."),
 	GIVE_BAD_ID("give.error.id", "{rose}Invalid item."),
 	GIVE_BAD_DATA("give.error.data", "{white}{data}{rose} is not a valid data type for {white}{item}{rose}."),
-	GIVE_GIFT("give.gift", "{green}Gave {white}{amount,choice,-1#infinite|0#{amount}}{green} of {white}{item}{green} " +
-		"to {white}{player}{green}!"),
-	GIVE_GIFTED("give.gifted", "{green}Enjoy the gift! {white}{amount,choice,-1#infinite|0#{amount}}{green} of " +
-		"{white}{item}{green}!"),
+	GIVE_GIFT("give.gift", "{green}Gave {white}{amount,choice,-1#infinite|0#{amount}}{green} of " +
+		"{white}{item}{green} to {white}{player}{green}!"),
+	GIVE_GIFTED("give.gifted", "{green}Enjoy the gift! {white}{amount,choice,-1#infinite|0#{amount}}{green} " +
+		"of {white}{item}{green}!"),
 	GIVE_ENJOY("give.enjoy", "{green}Enjoy! Giving {white}{amount,choice,-1#infinite|0#{amount}}{green} of " +
 		"{white}{item}{green}."),
 	// Messages relating to /items
@@ -97,13 +102,15 @@ public enum LanguageText {
 		"{yellow}{time}{rose} seconds."),
 	KIT_GIVE("kit.give", "{green}Here you go!"),
 	// Messages relating to /take
-	TAKE_THEFT("take.theft", "{green}Took {white}{amount}{green} of {white}{item}{green} from {white}{player}{green}."),
-	TAKE_TOOK("take.took", "{white}{amount,choice,0#All|1#{amount}}{green} of {white}{item}{green} was taken from you."),
+	TAKE_THEFT("take.theft", "{green}Took {white}{amount}{green} of {white}{item}{green} from " +
+		"{white}{player}{green}."),
+	TAKE_TOOK("take.took", "{white}{amount,choice,0#All|1#{amount}}{green} of {white}{item}{green} " +
+		"was taken from you."),
 	// Messages relating to /masstake
 	MASSTAKE_THEFT("take.mass.theft", "{green}Took {white}{amount}{green} of {white}{items}{green} from " +
 		"{white}{player}{green}."),
-	MASSTAKE_TOOK("take.mass.took", "{white}{amount,choice,0#All|1#{amount}}{green} of {white}{items}{green} was " +
-		"taken from you."),
+	MASSTAKE_TOOK("take.mass.took", "{white}{amount,choice,0#All|1#{amount}}{green} of {white}{items}{green} " +
+		"was taken from you."),
 	// Messages relating to /heal
 	HEAL_THEM("heal.them", "{yellow}{name}{white} has been {health,choice,-10#{hurt}|0#{healed}} by {yellow}" +
 		"{health,number,#0.0;#0.0}{white} hearts."),
@@ -112,8 +119,8 @@ public enum LanguageText {
 	HEAL_HURT("heal.hurt", "hurt"),
 	HEAL_HEALED("heal.healed", "healed"),
 	// Messages relating to /mobspawn
-	MOB_NO_DEST("mob.error.no-dest", "{rose}Can't determine where to spawn the mob; you're not a player and either " +
-		"didn't specify a destination, or tried to specify an invalid destination."),
+	MOB_NO_DEST("mob.error.no-dest", "{rose}Can't determine where to spawn the mob; you're not a player and " +
+		"either didn't specify a destination, or tried to specify an invalid destination."),
 	MOB_TOO_FEW("mob.error.too-few", "{rose}Cannot spawn less than one mob."),
 	MOB_BAD_TYPE("mob.error.bad-type", "{rose}Invalid {mob} type: {type}"),
 	MOB_MOB("mob.mob", "mob"),
@@ -138,14 +145,16 @@ public enum LanguageText {
 	WEATHER_NETHER("weather.storm.nether", "{rose}The nether doesn't have weather!"),
 	WEATHER_ACTIVE("weather.storm.active", "{blue}World '{white}{world}{blue}' has a storm active for " +
 		"{white}{duration}{blue}."),
-	WEATHER_INACTIVE("weather.storm.inactive", "{blue}World '{white}{world}{blue}' does not have a storm active."),
-	WEATHER_START("weather.storm.start", "{blue}Weather storm stopped!"),
-	WEATHER_STOP("weather.storm.stop", "{blue}Weather storm started!"),
+	WEATHER_INACTIVE("weather.storm.inactive", "{blue}World '{white}{world}{blue}' " +
+		"does not have a storm active."),
+	WEATHER_START("weather.storm.start", "{blue}Weather storm started!"),
+	WEATHER_STOP("weather.storm.stop", "{blue}Weather storm stopped!"),
 	WEATHER_CHANGE("weather.storm.change", "{blue}Weather storm will stop in {time}!"),
 	WEATHER_SET("weather.storm.set", "{blue}Weather storm started for {time}!"),
 	WEATHER_LIGHTNING("weather.lightning", "{yellow}Lightning strike!"),
 	THUNDER_NETHER("weather.thunder.nether", "{rose}Only normal worlds have thunder."),
-	THUNDER_ACTIVE("weather.thunder.active", "{yellow}World '{white}{world}{yellow}' is thundering for {duration}."),
+	THUNDER_ACTIVE("weather.thunder.active", "{yellow}World '{white}{world}{yellow}' " +
+		"is thundering for {duration}."),
 	THUNDER_INACTIVE("weather.thunder.inactive", "{yellow}World '{white}{world}{yellow}' is not thundering."),
 	THUNDER_START("weather.thunder.start", "{yellow}Thunder started!"),
 	THUNDER_STOP("weather.thunder.stop", "{yellow}Thunder stopped!"),
@@ -153,17 +162,20 @@ public enum LanguageText {
 	THUNDER_SET("weather.thunder.set", "{yellow}Thunder started for {time} ticks!"),
 	// Messages related to /teleport
 	TELEPORT_SELF("teleport.self", "{white}You teleported to {blue}{destination}{white}!"),
-	TELEPORT_OTHER("teleport.other", "{white}You teleported {blue}{target}{white} to {blue}{destination}{white}!"),
+	TELEPORT_OTHER("teleport.other", "{white}You teleported {blue}{target}{white} to " +
+		"{blue}{destination}{white}!"),
 	TELEPORT_WHOA("teleport.whoa", "{white}You have been teleported to {blue}{destination}{white}!"),
 	TELEPORT_WARMUP("teleport.warmup", "{yellow}Warming up. Teleport will commence in {time} ticks."),
 	// Messages related to /setspawn
-	SETHOME("setspawn.home", "{yellow}Home position of player '{white}{player}{yellow}' changed to {white}({x},{y},{z})"),
+	SETHOME("setspawn.home", "{yellow}Home position of player '{white}{player}{yellow}' changed to " +
+		"{white}({x},{y},{z})"),
 	SETSPAWN("setspawn.no-world", "{yellow}Spawn position changed to {white}({x],{y},{z})"),
 	SETSPAWN_WORLD("setspawn.world", "{yellow}Spawn position in world '{white}{world}{yellow}' changed to " +
 		"{white}({x},{y},{z})"),
 	SETSPAWN_HERE("setspawn.here", "{yellow}Spawn position changed to where you are standing."),
 	SETSPAWN_PLAYER("setspawn.player", "{yellow}Spawn position changed to where {player} is standing."),
-	SETSPAWN_ERROR("setspawn.error", "{rose}There was an error setting the spawn location. It has not been changed."),
+	SETSPAWN_ERROR("setspawn.error", "{rose}There was an error setting the spawn location. " +
+		"It has not been changed."),
 	// Messages related to destinations
 	DESTINATION_WORLD("destination.world", "other worlds"),
 	DESTINATION_PLAYER("destination.player", "other players"),
@@ -200,27 +212,31 @@ public enum LanguageText {
 	MOTD_NOONE("motd.no-one", "(no-one)"),
 	// Messages relating to the /general subcommands
 	ECONOMY_NO_PLAYER("econ.no-player", "Please specify the player you would like to dry-run the command as."),
-	PERMISSIONS_RESTRICT("permissions.restrict", "Permission '{node}' has been added to the list of permissions " +
-		"restricted to ops."),
-	PERMISSIONS_RELEASE("permissions.release", "Permission '{node}' has been removed from the list of permissions " +
-		"restricted to ops."),
+	PERMISSIONS_RESTRICT("permissions.restrict", "Permission '{node}' has been added to the " +
+		"list of permissions restricted to ops."),
+	PERMISSIONS_RELEASE("permissions.release", "Permission '{node}' has been removed from the " +
+		"list of permissions restricted to ops."),
 	GENERAL_RELOAD("general.reload", "{purple}General config reloaded."),
 	GENERAL_SAVE("general.save", "{purple}General config saved."),
 	KIT_NEW("kit.new", "{green}New kit '{yellow}{kit}{green}' created."),
-	KIT_ADD("kit.add", "{yellow}{amount}{green} of {yellow}{item}{green} added to kit '{yellow}{kit}{green}'."),
-	KIT_NOT_IN("kit.not-in", "{green}The kit '{yellow}{kit}{green}' does not include {yellow}{item}{green}."),
-	KIT_REMOVE("kit.remove", "{yellow}{amount,choice,0#All|1#{amount}}{green} of {yellow}{item}{green} removed from " +
-		"kit '{yellow}{kit}{green}'."),
+	KIT_ADD("kit.add", "{yellow}{amount}{green} of {yellow}{item}{green} added to kit " +
+		"'{yellow}{kit}{green}'."),
+	KIT_NOT_IN("kit.not-in", "{green}The kit '{yellow}{kit}{green}' does not include " +
+		"{yellow}{item}{green}."),
+	KIT_REMOVE("kit.remove", "{yellow}{amount,choice,0#All|1#{amount}}{green} of {yellow}{item}{green} " +
+		"removed from kit '{yellow}{kit}{green}'."),
 	KIT_BAD_DELAY("kit.bad-delay", "{rose}Invalid delay."),
-	KIT_DELAY("kit.delay", "{green}Delay of kit '{yellow}{kit}{green}' set to {yellow}{delay}{green} milliseconds."),
+	KIT_DELAY("kit.delay", "{green}Delay of kit '{yellow}{kit}{green}' set to {yellow}{delay}{green} " +
+		"milliseconds."),
 	KIT_BAD_COST("kit.bad-cost", "{rose}Invalid cost."),
 	KIT_COST("kit.cost", "{green}Cost of kit '{yellow}{kit}{green}' set to {yellow}{cost}{green}."),
 	KIT_TRASH("kit.trash", "{green}Kit '{yellow}{kit}{green}' has been deleted."),
 	KIT_CONTAINS("kit.contains", "{green}Kit '{yellow}{kit}{green}' contains: {white}{items"),
-	KIT_INFO("kit.info", "{green}Its delay is {yellow}{delay}{green} and its recorded cost is {yellow}{cost}{green}."),
+	KIT_INFO("kit.info", "{green}Its delay is {yellow}{delay}{green} and its recorded cost is " +
+		"{yellow}{cost}{green}."),
 	// Log messages
-	LOG_CONFIG_DEFAULT("log.config.default", "Configuration file {file} does not exist. Attempting to create " +
-		"default one..."),
+	LOG_CONFIG_DEFAULT("log.config.default", "Configuration file {file} does not exist. " +
+		"Attempting to create default one..."),
 	LOG_CONFIG_ERROR("log.config.error", "Could not read and/or write {file}! Continuing with default values!"),
 	LOG_CONFIG_SUCCESS("log.config.success", "Default configuration created successfully! You can now "
 		+ "stop the server and edit plugins/General/config.yml."),
@@ -232,7 +248,8 @@ public enum LanguageText {
 	LOG_ITEM_NO_NAMES("log.item.no-names", "Names of items are missing."),
 	LOG_ITEM_BAD_NAMES("log.item.bad-names", "The names section of items.yml is missing or invalid."),
 	LOG_ITEM_BAD_NAME("log.item.bad-name", "Invalid keys in the names section of items.yml (eg {name})"),
-	LOG_KIT_BAD_METHOD("log.kit.bad-method", "Invalid method for kit costing; falling back to default of 'individual'"),
+	LOG_KIT_BAD_METHOD("log.kit.bad-method", "Invalid method for kit costing; falling back to default of " +
+		"'individual'"),
 	LOG_KIT_NO_ITEMS("log.kit.no-items", "Kit '{kit}' has no items and has been skipped."),
 	LOG_KIT_BAD_ITEM("log.kit.bad-item", "Kit '{kit}' has an invalid item '{item}' which has been skipped."),
 	LOG_KIT_BAD("log.kit.error", "Kit '{kit}' has a malformed entry: \"{item}\""),
@@ -240,7 +257,8 @@ public enum LanguageText {
 	LOG_COMMAND_NO_ALIASES("log.cmd.no-aliases","No command aliases defined; did you forget to copy the aliases section " +
 		"from the example config.yml?"),
 	LOG_COMMAND_REG_ERROR("log.cmd.reg-error", "Command [{command}] could not be registered."),
-	LOG_COMMAND_TAKEN("log.cmd.taken", "Command alias {alias} was not registered because [{plugin}] claimed it."),
+	LOG_COMMAND_TAKEN("log.cmd.taken", "Command alias {alias} was not registered because [{plugin}] " +
+		"claimed it."),
 	LOG_COMMAND_ERROR("log.cmd.error", "There was an error with command [{command}] during {errorPlace}!" +
 		" Please report this!"),
 	LOG_COMMAND_ERROR_INFO("log.cmd.error-info", "Full command string: [{command}]"),
@@ -353,13 +371,24 @@ public enum LanguageText {
 	public static Configuration setLanguage(String lang, File folder, String file) {
 		language = lang;
 		config = new Configuration(new File(folder, file));
+		DumperOptions options = new DumperOptions();
+        options.setIndent(4);
+        options.setDefaultFlowStyle(FlowStyle.BLOCK);
+		options.setDefaultScalarStyle(ScalarStyle.DOUBLE_QUOTED);
+		try {
+			Field yamlField = Configuration.class.getDeclaredField("yaml");
+			yamlField.setAccessible(true);
+			yamlField.set(config, new Yaml(new SafeConstructor(), new Representer(), options));
+		} catch(SecurityException e) {}
+		catch(IllegalArgumentException e) {}
+		catch(NoSuchFieldException e) {}
+		catch(IllegalAccessException e) {}
 		config.load();
 		return config;
 	}
 	
 	static {
-		for(LanguageText lang : values())
-			byNode.put(lang.node, lang);
+		for(LanguageText lang : values()) byNode.put(lang.node, lang);
 	}
 	
 	public static LanguageText byNode(String n) {

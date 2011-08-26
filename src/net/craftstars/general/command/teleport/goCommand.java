@@ -43,8 +43,8 @@ public class goCommand extends CommandBase {
 			target = Target.get(args[0], player);
 			dest = Destination.get(args[1], player);
 		} else if(args.length == 1 && isPlayer) {
-			target = Target.get(args[0], player);
-			dest = Destination.get(args[1], player);
+			target = Target.fromPlayer(player);
+			dest = Destination.get(args[0], player);
 		} else return null;
 		if(dest == null || target == null) return null;
 		params.put("target", target);
@@ -78,7 +78,8 @@ public class goCommand extends CommandBase {
 					}
 				};
 				int warmup = Option.TELEPORT_WARMUP.get();
-				if(warmup == 0 || (target.hasInstant(sender) && hasDestInstant(player, target, dest))) teleport.run();
+				if(warmup == 0 || (target.hasInstant(sender) && hasDestInstant(player, target, dest)))
+					teleport.run();
 				else {
 					Messaging.send(sender, LanguageText.TELEPORT_WARMUP.value("time", warmup));
 					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, teleport, warmup);

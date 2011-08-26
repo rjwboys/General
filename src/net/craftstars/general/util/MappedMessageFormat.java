@@ -35,7 +35,10 @@ public class MappedMessageFormat extends Format {
 		while(mat.find()) keys.add(mat.group(1));
 		String[] keyArray = keys.toArray(new String[0]);
 		for(int i = 0; i < keyArray.length; i++)
-			pattern = pattern.replace("{" + keyArray[i], "{" + i);
+			pattern = pattern.replaceAll("\\{" + keyArray[i] + "([,\\}])", "\\{" + i + "$1");
+		// To make things easier, we use ` instead of ' for the escape character; thus we need to
+		// convert escapes and apostrophes.
+		pattern = pattern.replace('`', '\u0001').replace("'", "''''").replace('\u0001', '`');
 		return pattern;
 	}
 	
@@ -44,6 +47,9 @@ public class MappedMessageFormat extends Format {
 		String[] keyArray = keys.toArray(new String[0]);
 		for(int i = 0; i < keyArray.length; i++)
 			pattern = pattern.replace("{" + i, "{" + keyArray[i]);
+		// To make things easier, we use ` instead of ' for the escape character; thus we need to
+		// convert escapes and apostrophes. This is likely imperfect.
+		pattern = pattern.replace("''''", "\u0001").replace('\'', '`').replace('\u0001', '\'');
 		return pattern;
 	}
 	
@@ -55,8 +61,7 @@ public class MappedMessageFormat extends Format {
 		return format(formatKeys, dest, null);
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
+	@Override@SuppressWarnings("unchecked")
 	public StringBuffer format(Object obj, StringBuffer dest, FieldPosition pos) {
 		return format((Map<String, Object>) obj, dest, pos);
 	}
@@ -73,8 +78,7 @@ public class MappedMessageFormat extends Format {
 		format.applyPattern(namedToIndexed(pattern));
 	}
 	
-	@Override
-	@SuppressWarnings("unchecked")
+	@Override@SuppressWarnings("unchecked")
 	public MappedMessageFormat clone() {
 		return new MappedMessageFormat((MessageFormat) format.clone(), (LinkedHashSet<String>) keys.clone());
 	}

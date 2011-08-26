@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import net.craftstars.general.items.Items;
 import net.craftstars.general.items.Kits;
+import net.craftstars.general.mobs.MobType;
 import net.craftstars.general.util.CommandHandler;
 import net.craftstars.general.util.HelpHandler;
 import net.craftstars.general.util.LanguageText;
@@ -37,7 +38,7 @@ public class General extends JavaPlugin {
 	public static General plugin = null;
 	
 	public static final boolean DEBUG = true;
-	public static final String codename = "Schoenberg";
+	public static final String codename = "Webern";
 	
 	public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG);
 	
@@ -47,7 +48,7 @@ public class General extends JavaPlugin {
 	private AllPay allpay;
 	
 	private HashMap<String, String> playersAway = new HashMap<String, String>();
-	private HashMap<String,String> lastMessager = new HashMap<String,String>();
+	private HashMap<String,String> lastMessager = new HashMap<String, String>();
 	private String tagFormat;
 	
 	public boolean isAway(Player who) {
@@ -130,6 +131,7 @@ public class General extends JavaPlugin {
 		Messaging.load();
 		
 		Items.setup();
+		MobType.setup();
 		permissions = new PermissionsHandler();
 		Kits.loadKits();
 		allpay = new AllPay(this, "General [" + codename + "] ");
@@ -176,7 +178,7 @@ public class General extends JavaPlugin {
 		FileWriter out = new FileWriter(configFile);
 		Scanner lines = new Scanner(defaultConfig);
 		while(lines.hasNextLine())
-			out.write(lines.nextLine());
+			out.write(lines.nextLine() + "\n");
 		out.flush();
 		out.close();
 		defaultConfig.close();

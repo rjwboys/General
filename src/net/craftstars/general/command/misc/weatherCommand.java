@@ -50,12 +50,10 @@ public class weatherCommand extends CommandBase {
 					if(player != null) {
 						setCommand("lightning");
 						params.put("location", player.getLocation());
-//						doLightning(sender, player.getWorld(), player.getLocation());
 					} else Messaging.invalidWorld(sender, args[0]);
 				} else {
 					setCommand("weatherreport");
 					params.put("world", world);
-//					showWeatherInfo(sender, world);
 				}
 			}
 		break;
@@ -80,7 +78,6 @@ public class weatherCommand extends CommandBase {
 				}
 				setCommand("lightning");
 				params.put("location", loc);
-//				doLightning(sender, world, loc);
 			} else { // weather <world> on|off|zap|thunder|<duration>
 				World world = Toolbox.matchWorld(args[0]);
 				if(world == null) {
@@ -88,7 +85,6 @@ public class weatherCommand extends CommandBase {
 					return null;
 				}
 				if(!parseSimpleWeather(sender, args[1], world.getSpawnLocation(), params)) return null;
-//				doWeather(sender, args[1], world, world.getSpawnLocation());
 			}
 		break;
 		case 3: // /weather <world> thunder on|off|<duration>
@@ -103,7 +99,6 @@ public class weatherCommand extends CommandBase {
 					world = player.getWorld();
 				}
 				if(!parseThunder(sender, args[2], world, params)) return null;
-//				doThunder(sender, world, (int) duration);
 				break;
 			} // fallthrough intentional
 		default:
@@ -123,17 +118,14 @@ public class weatherCommand extends CommandBase {
 			setCommand("lightning");
 			params.remove("world");
 			params.put("location", where);
-//			doLightning(sender, in, where);
 		// /weather [<world>] start -- starts a storm for a random duration
 		} else if(isStart(key)) {
 			setCommand("storm");
-			params.put("duration", -1);
-//			doWeather(sender, in, -1);
+			params.put("duration", -1L);
 		// /weather [<world>] stop -- stops a storm
 		} else if(isStop(key)) {
 			setCommand("storm");
-			params.put("duration", 0);
-//			doWeather(sender, in, 0);
+			params.put("duration", 0L);
 		// /weather [<world>] <duration> -- starts a storm for a specified duration
 		} else try {
 			long duration = Time.extractDuration(key);
@@ -143,7 +135,6 @@ public class weatherCommand extends CommandBase {
 			}
 			setCommand("storm");
 			params.put("duration", duration);
-//			doWeather(sender, in, duration);
 		} catch(NumberFormatException e) {
 			params.remove("world");
 			return false;
@@ -174,7 +165,6 @@ public class weatherCommand extends CommandBase {
 		setCommand("thunder");
 		params.put("duration", duration);
 		params.put("world", in);
-//		doThunder(sender, sender.getWorld(), (int) duration);
 		return true;
 	}
 	

@@ -5,7 +5,7 @@ import java.util.Formatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Time {
+public final class Time {
 	public enum TimeFormat {
 		TWENTY_FOUR_HOUR, TWELVE_HOUR
 	};

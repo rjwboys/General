@@ -91,14 +91,14 @@ commands:
     permission: general.mobspawn
     description: Spawns a mob.
     usage: /<command> <mob-name>[;<mount>] [<how-many>]
-  admin.op:
-    permission: general.op
-    description: Promotes a player to operator
-    usage: /<command> [player1 player2 ... playerN]
-  admin.deop:
-    permission: general.deop
-    description: Demotes a player from operator
-    usage: /<command< [player1 player2 ... playerN]
+#  admin.op:
+#    permission: general.op
+#    description: Promotes a player to operator
+#    usage: /<command> [player1 player2 ... playerN]
+#  admin.deop:
+#    permission: general.deop
+#    description: Demotes a player from operator
+#    usage: /<command< [player1 player2 ... playerN]
   admin.kick:
     permission: general.kick
     description: Kicks a player off the server
@@ -127,6 +127,9 @@ permissions:
       general.weather.*: true
       general.admin.*: true
       general.tell: true
+      general.op: true
+      general.deop: true
+      general.kick: true
   general.bypass:
     description: Gives permissions that involve bypassing normal restrictions, such as delays or economy.
     children:
@@ -200,6 +203,7 @@ permissions:
   general.mobspawn.*:
     description: Gives full access to the /mobspawn command.
     children:
+      general.mobspawn: true
       general.mobspawn.all: true
       general.mobspawn.variants: true
   general.mobspawn.neutral.angry:
@@ -372,10 +376,22 @@ permissions:
       general.admin.kit: true
       general.admin.economy: true
       general.admin.set: true
+  general.op:
+    description: Gives permission to grant operator status.
+    default: op
+  general.deop:
+    description: Gives permission to remove operator status.
+    default: op
+  general.kick:
+    description: Gives permission to kick people off the server.
+    default: op
   general.admin:
     description: Gives access to all administrative commands.
     children:
       general.admin.*: true
+      general.op: true
+      general.deop: true
+      general.kick: true
   general.admin.reload:
     description: Allows you to reload the configuration from the files.
   general.admin.item:

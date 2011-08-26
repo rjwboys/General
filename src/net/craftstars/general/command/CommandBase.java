@@ -31,7 +31,7 @@ import com.ensifera.animosity.craftirc.CraftIRC;
 import com.ensifera.animosity.craftirc.RelayedCommand;
 import com.ensifera.animosity.craftirc.RelayedMessage;
 
-public abstract class CommandBase extends BasePoint implements CommandExecutor, CommandEndPoint {
+public abstract class CommandBase implements CommandExecutor {
 	enum FailurePlace {INIT, HELP, PARSE, EXECUTE, NONE};
 	private static HashSet<String> frozenAccounts = new HashSet<String>();
 	protected final General plugin;
@@ -153,147 +153,155 @@ public abstract class CommandBase extends BasePoint implements CommandExecutor, 
 			newArgs[i] = args[i];
 		return newArgs;
 	}
-
-	@Override
-	public Type getType() {
-		return Type.MINECRAFT;
-	}
-
-	@Override
-	public void commandIn(RelayedCommand cmd) {
-		String commandLabel = cmd.getField("command");
-		String cmdStr = commandLabel + " " + cmd.getField("args");
-		String senderName = cmd.getField("sender");
-		String[] args = cmd.getField("args").split(" ");
-		Command command = plugin.getCommand(commandLabel);
-		FailurePlace error = FailurePlace.NONE, at = FailurePlace.INIT;
-		if(Option.LOG_COMMANDS.get())
-			General.logger.info(LanguageText.LOG_COMMAND_USED.value("sender", senderName, "command", cmdStr));
-		try {
-			IRCReturnSender sender = new IRCReturnSender(cmd);
-			if(isHelpCommand(command, commandLabel, args)) {
-				at = FailurePlace.HELP;
-				String topic = getHelpTopic(command, commandLabel, args);
-				boolean commandResult = HelpHandler.displayEntry(sender, topic);
-				if(!commandResult) error = at;
-			} else {
-				setCommand(commandLabel);
-				at = FailurePlace.PARSE;
-				Map<String,Object> parsedArgs = parse(sender, command, commandLabel, args, false);
-				if(parsedArgs != null) {
-					at = FailurePlace.EXECUTE;
-					boolean commandResult = execute(sender, cmdToExecute, parsedArgs);
-					if(!commandResult) error = at;
-				} else error = at;
-			}
-		} catch(Exception e) {
-			error = at;
-			General.logger.error(LanguageText.LOG_COMMAND_ERROR.value("command", command.getName(), "errorPlace", error));
-			General.logger.error(LanguageText.LOG_COMMAND_ERROR_INFO.value("command", cmdStr));
-			e.printStackTrace();
-		}
-	}
 	
-	private class IRCReturnSender implements CommandSender {
-		private char prefix;
-		private String channel;
-		private String command;
+	public class CraftIRCForwarder extends BasePoint implements CommandEndPoint {
+		public CraftIRCForwarder(CraftIRC irc, String tag) {
+			irc.registerEndPoint(tag, this);
+			// Second argument below is the command name
+			irc.registerCommand(tag, tag); // TODO: Make the command name friendly; configurable?
+		}
+
+		@Override
+		public Type getType() {
+			return Type.MINECRAFT;
+		}
+	
+		@Override
+		public void commandIn(RelayedCommand cmd) {
+			String commandLabel = cmd.getField("command");
+			String cmdStr = commandLabel + " " + cmd.getField("args");
+			String senderName = cmd.getField("sender");
+			String[] args = cmd.getField("args").split(" ");
+			Command command = plugin.getCommand(commandLabel);
+			FailurePlace error = FailurePlace.NONE, at = FailurePlace.INIT;
+			if(Option.LOG_COMMANDS.get())
+				General.logger.info(LanguageText.LOG_COMMAND_USED.value("sender", senderName, "command", cmdStr));
+			try {
+				IRCReturnSender sender = new IRCReturnSender(cmd);
+				if(isHelpCommand(command, commandLabel, args)) {
+					at = FailurePlace.HELP;
+					String topic = getHelpTopic(command, commandLabel, args);
+					boolean commandResult = HelpHandler.displayEntry(sender, topic);
+					if(!commandResult) error = at;
+				} else {
+					setCommand(commandLabel);
+					at = FailurePlace.PARSE;
+					Map<String,Object> parsedArgs = parse(sender, command, commandLabel, args, false);
+					if(parsedArgs != null) {
+						at = FailurePlace.EXECUTE;
+						boolean commandResult = execute(sender, cmdToExecute, parsedArgs);
+						if(!commandResult) error = at;
+					} else error = at;
+				}
+			} catch(Exception e) {
+				error = at;
+				General.logger.error(LanguageText.LOG_COMMAND_ERROR.value("command", command.getName(), "errorPlace", error));
+				General.logger.error(LanguageText.LOG_COMMAND_ERROR_INFO.value("command", cmdStr));
+				e.printStackTrace();
+			}
+		}
 		
-		public IRCReturnSender(RelayedCommand from) {
-			prefix = from.getField("ircPrefix").charAt(0);
-			channel = from.getField("srcChannel");
-			command = from.getField("command");
-		}
-
-		@Override
-		public boolean isPermissionSet(String name) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean isPermissionSet(Permission perm) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean hasPermission(String name) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean hasPermission(Permission perm) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public PermissionAttachment addAttachment(Plugin plugin) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public void removeAttachment(PermissionAttachment attachment) {
-			// TODO Auto-generated method stub
+		private class IRCReturnSender implements CommandSender {
+			private char prefix;
+			private String channel;
+			private String command;
 			
-		}
+			public IRCReturnSender(RelayedCommand from) {
+				prefix = from.getField("ircPrefix").charAt(0);
+				channel = from.getField("srcChannel");
+				command = from.getField("command");
+			}
 
-		@Override
-		public void recalculatePermissions() {
-			// TODO Auto-generated method stub
-			
-		}
+			@Override
+			public boolean isPermissionSet(String name) {
+				// TODO Auto-generated method stub
+				return false;
+			}
 
-		@Override
-		public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-			// TODO Auto-generated method stub
-			return null;
-		}
+			@Override
+			public boolean isPermissionSet(Permission perm) {
+				// TODO Auto-generated method stub
+				return false;
+			}
 
-		@Override
-		public boolean isOp() {
-			return prefix == '@';
-		}
+			@Override
+			public boolean hasPermission(String name) {
+				// TODO Auto-generated method stub
+				return false;
+			}
 
-		@Override
-		public void setOp(boolean value) {
-			// TODO Auto-generated method stub
-			
-		}
+			@Override
+			public boolean hasPermission(Permission perm) {
+				// TODO Auto-generated method stub
+				return false;
+			}
 
-		@Override
-		public void sendMessage(String message) {
-			CraftIRC irc = (CraftIRC) plugin.getServer().getPluginManager().getPlugin("CraftIRC");
-			RelayedMessage msg = irc.newMsgToTag(CommandBase.this, channel, "generalReply");
-			msg.setField("command", command);
-			msg.setField("message", message);
-			msg.post();
-		}
+			@Override
+			public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-		@Override
-		public Server getServer() {
-			return plugin.getServer();
+			@Override
+			public PermissionAttachment addAttachment(Plugin plugin) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public void removeAttachment(PermissionAttachment attachment) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void recalculatePermissions() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public boolean isOp() {
+				return prefix == '@';
+			}
+
+			@Override
+			public void setOp(boolean value) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void sendMessage(String message) {
+				CraftIRC irc = (CraftIRC) plugin.getServer().getPluginManager().getPlugin("CraftIRC");
+				RelayedMessage msg = irc.newMsgToTag(CraftIRCForwarder.this, channel, "generalReply");
+				msg.setField("command", command);
+				msg.setField("message", message);
+				msg.post();
+			}
+
+			@Override
+			public Server getServer() {
+				return plugin.getServer();
+			}
 		}
 	}
 }

@@ -1,6 +1,7 @@
 
 package net.craftstars.general.teleport;
 
+import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;
@@ -28,7 +29,8 @@ public enum TargetType {
 	}
 	
 	public String getName() {
-		return LanguageText.byNode("target." + toString().toLowerCase()).value();
+		String node = "target." + toString().toLowerCase();
+		return LanguageText.byNode(node).value();
 	}
 
 	public boolean hasInstant(CommandSender sender) {

@@ -27,25 +27,51 @@ public class getposCommand extends CommandBase {
 	@Override
 	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
 		HashMap<String,Object> params = new HashMap<String,Object>();
-		if(isPlayer && args.length == 0) params.put("player", sender);
-		else if(args.length <= 2) {
+		String cmd = null;
+		switch(args.length) {
+		case 0:
+			if(isPlayer) {
+				params.put("player", sender);
+				cmd = "full";
+			} else return null;
+			break;
+		case 1:
 			Player who = Toolbox.matchPlayer(args[0]);
 			if(who != null) {
 				params.put("player", who);
+				cmd = "full";
+			} else if(isPlayer) {
+				params.put("player", sender);
+				cmd = checkCommand(sender, args[0]);
 			} else {
 				Messaging.invalidPlayer(sender, args[0]);
 				return null;
 			}
-			if(args.length == 2) {
-				if(!Toolbox.equalsOne(args[1], "dir", "direction", "brief", "pos", "where", "compass", "full",
-					"short", "long", "facing", "rotation", "pointing", "rotation", "rot")) {
-					Messaging.send(sender, LanguageText.GETPOS_INVALID.value("option", args[1]));
-					return null;
-				}
-				setCommand(args[1]);
-			} else params.put("option", "full");
-		} else return null;
+			break;
+		case 2:
+			Player player = Toolbox.matchPlayer(args[0]);
+			if(player != null) params.put("player", player);
+			else {
+				Messaging.invalidPlayer(sender, args[0]);
+				return null;
+			}
+			cmd = checkCommand(sender, args[1]);
+			break;
+		default:
+			return null;
+		}
+		if(cmd == null) return null;
+		setCommand(cmd);
 		return params;
+	}
+	
+	private String checkCommand(CommandSender sender, String cmd) {
+		if(!Toolbox.equalsOne(cmd, "dir", "direction", "brief", "pos", "where", "compass", "full",
+			"short", "long", "facing", "rotation", "pointing", "rotation", "rot")) {
+			Messaging.send(sender, LanguageText.GETPOS_INVALID.value("option", cmd));
+			return null;
+		}
+		return cmd;
 	}
 
 	@Override
@@ -58,6 +84,7 @@ public class getposCommand extends CommandBase {
 		double degrees = getRotation(whose);
 		double compass = getCompass(whose);
 		String player = whose.getName();
+		General.logger.debug(command);
 		if(Toolbox.equalsOne(command, "dir", "direction")) {
 			Messaging.send(sender, LanguageText.GETPOS_DIR.value("player", player,
 				"direction", this.getDirection(degrees)));

@@ -3,6 +3,7 @@ package net.craftstars.general.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 import net.craftstars.general.General;
@@ -13,15 +14,20 @@ import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.util.config.Configuration;
 
-public class CommandHandler {
+import com.ensifera.animosity.craftirc.CraftIRC;
+import com.ensifera.animosity.craftirc.CommandEndPoint;
+
+public final class CommandHandler {
 	public static boolean setAliases = false;
 	private static SimpleCommandMap commandMap = null;
 	private static Method register = null;
 	public static String[] compassAliases;
 	public static String[] posAliases;
+	public static HashMap<CommandEndPoint, String> cmdTags = null;
 	
 	public static void setup(Configuration config) {
 		if(setAliases) return;
@@ -29,6 +35,8 @@ public class CommandHandler {
 		if(register == null && !getRegisterMethod()) return;
 		if(!config.getKeys(null).contains("aliases"))
 			General.logger.warn(LanguageText.LOG_COMMAND_NO_ALIASES.value());
+		Plugin chat = General.plugin.getServer().getPluginManager().getPlugin("CraftIRC");
+		boolean foundIRC = isCraftIRC3(chat);
 		PluginDescriptionFile plug = General.plugin.getDescription();
 		try {
 			@SuppressWarnings({"unchecked", "rawtypes"})
@@ -46,6 +54,13 @@ public class CommandHandler {
 						.asSubclass(CommandBase.class);
 					CommandBase commandInstance = clazz.getConstructor(General.class).newInstance(General.plugin);
 					generalCommand.setExecutor(commandInstance);
+					if(foundIRC) {
+						if(cmdTags == null) cmdTags = new HashMap<CommandEndPoint, String>();
+						CraftIRC irc = (CraftIRC) chat;
+						String tag = generalCommand.getLabel();
+						CommandEndPoint ep = commandInstance.new CraftIRCForwarder(irc, tag);
+						cmdTags.put(ep, tag);
+					}
 				} catch(ClassNotFoundException e) {
 					General.logger.error(LanguageText.LOG_COMMAND_REG_ERROR.value("command", generalCommand.getName()),e);
 				} catch(IllegalArgumentException e) {
@@ -69,6 +84,11 @@ public class CommandHandler {
 		}
 	}
 	
+	private static boolean isCraftIRC3(Plugin irc) {
+		if(irc != null && irc instanceof CraftIRC && irc.getDescription().getVersion().startsWith("3")) return true;
+		return false;
+	}
+
 	public static boolean register(String label, Command command) {
 		try {
 			boolean success = (Boolean) register.invoke(commandMap, label, "General.dynalias", command, true);

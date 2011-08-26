@@ -14,7 +14,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
 
-public class Kits {
+public final class Kits {
 	public static HashMap<String, Kit> kits = new HashMap<String, Kit>();
 	public static HashMap<GotKit, Long> players = new HashMap<GotKit, Long>();
 	
