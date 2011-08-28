@@ -6,32 +6,40 @@ import java.util.List;
 import org.bukkit.util.config.Configuration;
 
 public abstract class Option {
+	// Misc settings
 	public static OptionBoolean AWAY_SLEEP = new OptionBoolean("away-sleep", true);
 	public static OptionBoolean SHOW_USAGE = new OptionBoolean("show-usage-on-fail", true);
 	public static OptionString TAG_FORMAT = new OptionString("tag-fmt", "name:");
 	public static OptionBoolean SHOW_MOTD = new OptionBoolean("show-motd", true);
 	public static OptionBoolean AUTO_SAVE = new OptionBoolean("auto-save", false);
 	public static OptionBoolean LOG_COMMANDS = new OptionBoolean("log-commands", false);
+	public static OptionString LANGUAGE = new OptionString("language", "en");
+	// Playerlist settings
 	public static OptionBoolean SHOW_WORLD = new OptionBoolean("playerlist.show-world", false);
 	public static OptionBoolean SHOW_HEALTH = new OptionBoolean("playerlist.show-health", true);
 	public static OptionBoolean SHOW_COORDS = new OptionBoolean("playerlist.show-coords", true);
 	public static OptionBoolean SHOW_IP = new OptionBoolean("playerlist.show-ip", false);
 	public static OptionBoolean ALLOW_OVERRIDE = new OptionBoolean("playerlist.allow-all", false);
+	// Economy settings
 	public static OptionDouble ECONOMY_SELL = new OptionDouble("economy.give.sell", 100);
 	public static OptionString ECONOMY_TAKE_SELL = new OptionString("economy.give.take", "sell");
 	public static OptionString ECONOMY_CLEAR_SELL = new OptionString("economy.give.clear", "sell");
+	public static OptionString KIT_METHOD = new OptionString("economy.give.kits", "individual");
+	public static OptionDouble KIT_DISCOUNT = new OptionDouble("economy.give.discount", 80);
+	// Give settings
 	public static OptionInteger GIVE_MASS = new OptionInteger("give.mass", 64);
+	public static OptionBoolean OTHERS4ALL = new OptionBoolean("give.others-for-all", true);
+	// Range settings
 	public static OptionInteger LIGHTNING_RANGE = new OptionInteger("lightning-range", 20);
 	public static OptionInteger SUMMON_RANGE = new OptionInteger("summon-range", 30);
+	// Teleport settings
 	public static OptionStringList TELEPORT_BASICS = new OptionStringList("teleport.basics",
 		Arrays.asList("world", "player", "home", "spawn"));
 	public static OptionInteger TELEPORT_WARMUP = new OptionInteger("teleport.warm-up", 0);
-	public static OptionString KIT_METHOD = new OptionString("economy.give.kits", "individual");
-	public static OptionDouble KIT_DISCOUNT = new OptionDouble("economy.give.discount", 80);
-	public static OptionString LANGUAGE = new OptionString("language", "en");
+	// Time Settings
 	public static OptionBoolean SHOW_TICKS = new OptionBoolean("time.show-ticks", true);
 	public static OptionBoolean TIME_FORMAT = new OptionBoolean("time.format-24-hour", false);
-	public static OptionBoolean OTHERS4ALL = new OptionBoolean("give.others-for-all", true);
+	// Complex settings
 	public static OptionInteger COOLDOWN(String command) {
 		return new OptionInteger("cooldown." + command, 0);
 	}
