@@ -18,8 +18,8 @@ public abstract class Option {
 	public static OptionBoolean SHOW_IP = new OptionBoolean("playerlist.show-ip", false);
 	public static OptionBoolean ALLOW_OVERRIDE = new OptionBoolean("playerlist.allow-all", false);
 	public static OptionDouble ECONOMY_SELL = new OptionDouble("economy.give.sell", 100);
-	public static OptionString ECONOMY_TAKE_SELL = new OptionString("economy.give.sell", "sell");
-	public static OptionString ECONOMY_CLEAR_SELL = new OptionString("economy.give.sell", "sell");
+	public static OptionString ECONOMY_TAKE_SELL = new OptionString("economy.give.take", "sell");
+	public static OptionString ECONOMY_CLEAR_SELL = new OptionString("economy.give.clear", "sell");
 	public static OptionInteger GIVE_MASS = new OptionInteger("give.mass", 64);
 	public static OptionInteger LIGHTNING_RANGE = new OptionInteger("lightning-range", 20);
 	public static OptionInteger SUMMON_RANGE = new OptionInteger("summon-range", 30);

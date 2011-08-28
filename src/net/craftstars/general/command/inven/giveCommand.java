@@ -51,8 +51,7 @@ public class giveCommand extends CommandBase {
 				}
 			}
 		break;
-		case 3: // /give <item>[:<data>] <amount> <player> OR /give <player> <item>[:<data>]
-				// <amount>
+		case 3: // /give <item>[:<data>] <amount> <player> OR /give <player> <item>[:<data>] <amount>
 			try {
 				amount = Integer.valueOf(args[2]);
 				who = Toolbox.matchPlayer(args[0]);
