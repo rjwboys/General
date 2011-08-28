@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project name="General" default="dist" basedir=".">
+<project name="General" default="build" basedir=".">
 	<property name="src" location="src"/>
 	<property name="rsrc" location="resources"/>
 	<property name="allpay" location="dep/allpay/src"/>
@@ -73,8 +73,9 @@
 	</target>
 	
 	<target name="allpay" depends="init">
-		<javac srcdir="${allpay}" destdir="${classes}" includeantruntime="false" debug="on" depreceation="on">
+		<javac srcdir="${allpay}" destdir="${classes}" includeantruntime="false" debug="on" deprecation="on">
 			<classpath>
+				<pathelement location="${lib}/${CraftBukkit}"/>
 				<pathelement location="${lib}/${iConomy4}"/>
 				<pathelement location="${lib}/${iConomy5}"/>
 				<pathelement location="${lib}/${iConomy6}"/>
@@ -86,7 +87,7 @@
 		</javac>
 	</target>
 	
-	<target name="compile" depends="init">
+	<target name="compile" depends="allpay">
 		<javac srcdir="${src}" destdir="${classes}" includeantruntime="false" debug="on" deprecation="on">
 			<classpath>
 				<pathelement location="${lib}/${CraftBukkit}"/>

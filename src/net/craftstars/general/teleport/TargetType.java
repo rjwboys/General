@@ -1,7 +1,6 @@
 
 package net.craftstars.general.teleport;
 
-import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
 import net.craftstars.general.util.Toolbox;

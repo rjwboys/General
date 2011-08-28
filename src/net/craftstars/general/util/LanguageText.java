@@ -392,6 +392,6 @@ public enum LanguageText {
 	}
 	
 	public static LanguageText byNode(String n) {
-		return byNode.get(n.toUpperCase());
+		return byNode.get(n);
 	}
 }

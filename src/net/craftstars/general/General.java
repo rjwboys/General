@@ -135,7 +135,7 @@ public class General extends JavaPlugin {
 		permissions = new PermissionsHandler();
 		Kits.loadKits();
 		allpay = new AllPay(this, "General [" + codename + "] ");
-		economy = allpay.getEconPlugin();
+		economy = allpay.loadEconPlugin();
 	}
 
 	private void registerEvents() {

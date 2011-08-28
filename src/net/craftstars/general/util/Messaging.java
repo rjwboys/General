@@ -78,7 +78,7 @@ public final class Messaging {
 	}
 	
 	public static String format(String format, Map<String,Object> args) {
-		return new MappedMessageFormat(format).format(args).toString();
+		return MappedMessageFormat.format(format, args).toString();
 	}
 	
 	/**

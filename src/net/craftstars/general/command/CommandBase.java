@@ -4,7 +4,6 @@ package net.craftstars.general.command;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -213,80 +212,8 @@ public abstract class CommandBase implements CommandExecutor {
 			}
 
 			@Override
-			public boolean isPermissionSet(String name) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			@Override
-			public boolean isPermissionSet(Permission perm) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			@Override
-			public boolean hasPermission(String name) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			@Override
-			public boolean hasPermission(Permission perm) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			@Override
-			public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public PermissionAttachment addAttachment(Plugin plugin) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public void removeAttachment(PermissionAttachment attachment) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void recalculatePermissions() {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
 			public boolean isOp() {
 				return prefix == '@';
-			}
-
-			@Override
-			public void setOp(boolean value) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
@@ -302,6 +229,61 @@ public abstract class CommandBase implements CommandExecutor {
 			public Server getServer() {
 				return plugin.getServer();
 			}
+
+			@Override
+			public boolean isPermissionSet(String name) {
+				return false;
+			}
+
+			@Override
+			public boolean isPermissionSet(Permission perm) {
+				return false;
+			}
+
+			@Override
+			public boolean hasPermission(String name) {
+				Permission perm = getServer().getPluginManager().getPermission(name);
+				if(perm == null) return isOp();
+				return hasPermission(perm);
+			}
+
+			@Override
+			public boolean hasPermission(Permission perm) {
+				return getServer().getPluginManager().getDefaultPermissions(isOp()).contains(perm);
+			}
+
+			@Override
+			public PermissionAttachment addAttachment(Plugin p, String name, boolean value) {
+				return null;
+			}
+
+			@Override
+			public PermissionAttachment addAttachment(Plugin p) {
+				return null;
+			}
+
+			@Override
+			public PermissionAttachment addAttachment(Plugin p, String name, boolean value, int ticks) {
+				return null;
+			}
+
+			@Override
+			public PermissionAttachment addAttachment(Plugin p, int ticks) {
+				return null;
+			}
+
+			@Override
+			public void removeAttachment(PermissionAttachment attachment) {
+			}
+
+			@Override
+			public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+				return null;
+			}
+
+			@Override public void setOp(boolean value) {}
+
+			@Override public void recalculatePermissions() {}
 		}
 	}
 }
