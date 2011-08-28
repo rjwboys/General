@@ -1,6 +1,7 @@
 
 package net.craftstars.general.util;
 
+import static java.lang.Math.round;
 import java.util.Formatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,7 +21,7 @@ public final class Time {
 	public static String formatTime(long time, TimeFormat fmt) {
 		String suffix = "", formatString = "";
 		long minutes = time % 1000, ticks = time;
-		minutes = Math.round(minutes * 0.06);
+		minutes = round(minutes * 0.06);
 		time /= 1000;
 		time += 6;
 		while(time > 24)
@@ -97,19 +98,17 @@ public final class Time {
 			} else return Long.valueOf(time);
 		}
 		hour *= 1000;
-		minutes = Math.round(minutes / 0.06);
+		minutes = round(minutes / 0.06);
 		return hour + minutes;
 	}
 	
 	public static String formatDuration(long time) {
-		// TODO: Put this format in LanguageText
 		long minutes = time % 1000, hours = time / 1000;
-		minutes = Math.round(minutes * 0.06);
-		Formatter fmtr = new Formatter();
-		if(minutes + hours == 0) return fmtr.format("%d ticks", time).toString();
-		if(minutes == 0) return fmtr.format("%d hours", hours).toString();
-		if(hours == 0) return fmtr.format("%d minutes", minutes).toString();
-		return fmtr.format("%d hours and %d minutes", hours, minutes).toString();
+		minutes = round(minutes * 0.06);
+		if(minutes + hours == 0) return LanguageText.TIME_TICKS.value("ticks", time);
+		if(minutes == 0) return LanguageText.TIME_HOURS.value("hours", hours);
+		if(hours == 0) return LanguageText.TIME_MINUTES.value("minutes", minutes);
+		return LanguageText.TIME_FORMAT.value("hours", hours, "minutes", minutes);
 	}
 	
 	// private static Pattern patDuration = Pattern.compile("(\\d*[hH])(\\d*[mM])");
@@ -131,7 +130,7 @@ public final class Time {
 			minutes = Long.valueOf(m.group(1));
 			matched = true;
 		}
-		if(matched) return (hours * 1000) + Math.round(minutes / 0.06);
+		if(matched) return (hours * 1000) + round(minutes / 0.06);
 		return Long.valueOf(time);
 	}
 }

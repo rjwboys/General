@@ -139,6 +139,10 @@ public enum LanguageText {
 	TIME_CURRENT("time.current", "Current Time: {name} {time}"),
 	TIME_BAD_DURATION("time.error.duration", "{rose}Invalid duration format."),
 	TIME_BAD_TIME("time.error.time", "{rose}Invalid time format."),
+	TIME_FORMAT("time.format","{hours} hours and {minutes} minutes"),
+	TIME_HOURS("time.hours","{hours} hours"),
+	TIME_MINUTES("time.minutes","{minutes} minutes"),
+	TIME_TICKS("time.ticks","{ticks} ticks"),
 	// Messages related to /weather
 	WEATHER_NEGATIVE("weather.error.negative", "{rose}Only positive durations accepted for weather."),
 	WEATHER_BAD_THUNDER("weather.error.thunder", "{rose}Duration too large for thunder."),
