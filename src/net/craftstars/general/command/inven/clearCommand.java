@@ -99,7 +99,7 @@ public class clearCommand extends CommandBase {
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(Toolbox.lacksPermission(sender, "general.clear"))
 			return Messaging.lacksPermission(sender, "general.clear");
-		boolean sell = General.plugin.economy != null;
+		boolean sell = General.economy != null;
 		sell = sell && Option.ECONOMY_CLEAR_SELL.get().equalsIgnoreCase("sell");
 		Player player = (Player) args.get("player");
 		CleanType option = (CleanType) args.get("option");

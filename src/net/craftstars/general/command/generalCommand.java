@@ -153,7 +153,7 @@ public class generalCommand extends CommandBase {
 	}
 	
 	private void doSave(CommandSender sender) {
-		plugin.config.save();
+		General.config.save();
 		Items.save();
 		Kits.save();
 		Messaging.save();
@@ -163,18 +163,18 @@ public class generalCommand extends CommandBase {
 	private boolean kitEdit(CommandSender sender, String[] args) {
 		if(args.length < 2) return false;
 		String kitName = args[0];
-		if(!Kits.kits.containsKey(kitName) && !args[1].equals("add")) {
+		if(!Kits.exists(kitName) && !args[1].equals("add")) {
 			Messaging.send(sender, LanguageText.KIT_INVALID.value("kit", kitName));
 			return true;
 		}
 		if(args[1].equalsIgnoreCase("add")) {
 			Kit kit;
-			if(Kits.kits.containsKey(kitName))
-				kit = Kits.kits.get(kitName);
+			if(Kits.exists(kitName))
+				kit = Kits.get(kitName);
 			else {
 				Messaging.send(sender, LanguageText.KIT_NEW.value("kit", kitName));
 				kit = new Kit(kitName, 0, 0);
-				Kits.kits.put(kitName, kit);
+				Kits.put(kitName, kit);
 				if(args.length < 3) return true;
 			}
 			if(args.length < 3) return false;
@@ -190,7 +190,7 @@ public class generalCommand extends CommandBase {
 			Messaging.send(sender, LanguageText.KIT_NEW.value("amount", amount, "item", item.getName(), "kit", kitName));
 			return true;
 		} else if(args[1].equalsIgnoreCase("remove")) {
-			Kit kit = Kits.kits.get(kitName);
+			Kit kit = Kits.get(kitName);
 			if(args.length < 3) return false;
 			ItemID item = Items.validate(args[2]);
 			if(!kit.contains(item)) {
@@ -209,7 +209,7 @@ public class generalCommand extends CommandBase {
 			Messaging.send(sender, LanguageText.KIT_REMOVE.value("kit",kitName,"item",item.getName(),"amount",amount));
 			return true;
 		} else if(args[1].equalsIgnoreCase("delay")) {
-			Kit kit = Kits.kits.get(kitName);
+			Kit kit = Kits.get(kitName);
 			int delay;
 			try {
 				delay = Integer.parseInt(args[2]);
@@ -221,7 +221,7 @@ public class generalCommand extends CommandBase {
 			Messaging.send(sender, LanguageText.KIT_DELAY.value("kit", kitName, "delay", delay));
 			return true;
 		} else if(args[1].equalsIgnoreCase("cost")) {
-			Kit kit = Kits.kits.get(kitName);
+			Kit kit = Kits.get(kitName);
 			double cost;
 			try {
 				cost = Double.parseDouble(args[2]);
@@ -232,15 +232,15 @@ public class generalCommand extends CommandBase {
 			kit.setSavedCost(cost);
 			String displayCost = Double.toString(cost);
 			Player player = sender instanceof Player ? (Player)sender : null;
-			if(plugin.economy != null) displayCost = plugin.economy.getFormattedAmount(player, cost, -1);
+			if(General.economy != null) displayCost = General.economy.getFormattedAmount(player, cost, -1);
 			Messaging.send(sender, LanguageText.KIT_COST.value("kit", kitName, "cost", displayCost));
 			return true;
 		} else if(args[1].equalsIgnoreCase("trash")) {
-			Kits.kits.remove(kitName);
+			Kits.remove(kitName);
 			Messaging.send(sender, LanguageText.KIT_TRASH.value("kit", kitName));
 			return true;
 		} else if(args[1].equalsIgnoreCase("list")) {
-			Kit kit = Kits.kits.get(kitName);
+			Kit kit = Kits.get(kitName);
 			ArrayList<String> names = new ArrayList<String>();
 			for(ItemID item : kit) names.add(kit.get(item) + "x " + item.getName());
 			String items = Toolbox.join(names.toArray(new String[0]), LanguageText.ITEMS_JOINER.value());
@@ -380,15 +380,15 @@ public class generalCommand extends CommandBase {
 						if(mountData != null) path += mountData.getCostNode(path);
 					}
 					// Rewrite existing nodes to allow for the new path.
-					if(!Toolbox.nodeExists(plugin.config, path)) {
+					if(!Toolbox.nodeExists(General.config, path)) {
 						String checkPath = path;
 						do {
 							int lastDot = checkPath.lastIndexOf('.');
 							checkPath = checkPath.substring(0, lastDot);
 							if(checkPath.endsWith("mobspawn")) break;
 							if(checkPath.endsWith("riding")) continue;
-							if(!Toolbox.nodeExists(plugin.config, checkPath)) continue;
-							Object node = plugin.config.getProperty(checkPath);
+							if(!Toolbox.nodeExists(General.config, checkPath)) continue;
+							Object node = General.config.getProperty(checkPath);
 							if(node instanceof Number) {
 								Map<String, Object> map = new HashMap<String,Object>();
 								// Okay, we found a leaf, but where is it?
@@ -399,7 +399,7 @@ public class generalCommand extends CommandBase {
 									if(checkPath.lastIndexOf(".") == checkPath.indexOf("riding") + "riding".length()) {
 										if(mount != null && path.replace(checkPath + ".", "").contains(".")) {
 											map.put(mount.getNewData().getCostNode("").replace(".", ""), node);
-											plugin.config.setProperty(checkPath, map);
+											General.config.setProperty(checkPath, map);
 										}
 									}
 								} else if(path.contains("riding")) { // but checkPath doesn't contain "riding"
@@ -407,13 +407,13 @@ public class generalCommand extends CommandBase {
 									//  ->Put the value in a "free" subnode.
 									if(checkPath.replace("economy.mobspawn.", "").contains(".")) {
 										map.put("free", node);
-										plugin.config.setProperty(checkPath, map);
+										General.config.setProperty(checkPath, map);
 									}
 									// 3. This may or may not be a riding node, and it's the mob name of the rider.
 									//  ->If our path specifies a datavalue, we need to rearrange.
 									else {
 										map.put(mob.getNewData().getCostNode("").replace(".", ""), node);
-										plugin.config.setProperty(checkPath, map);
+										General.config.setProperty(checkPath, map);
 									}
 								}
 								break;
@@ -489,7 +489,7 @@ public class generalCommand extends CommandBase {
 					}
 				}
 			}
-			plugin.config.setProperty(path, value);
+			General.config.setProperty(path, value);
 			Messaging.send(sender, "Set economy value '" + path + "' to " + value + "!");
 			return true;
 		}
@@ -777,12 +777,12 @@ public class generalCommand extends CommandBase {
 				return true;
 			case 3:
 				if(args[2].equalsIgnoreCase("delete")) {
-					Map<String, Object> allGroups = plugin.config.getNode("give.groups").getAll();
+					Map<String, Object> allGroups = General.config.getNode("give.groups").getAll();
 					if(!allGroups.containsKey(groupName))
 						Messaging.send(sender, "Group '" + groupName + "' does not exist or is empty.");
 					else {
 						allGroups.remove(groupName);
-						plugin.config.setProperty("general.groups", allGroups);
+						General.config.setProperty("general.groups", allGroups);
 						Messaging.send(sender, "Group '" + groupName + "' has been deleted if it existed.");
 					}
 				} else switch(args[2].charAt(0)) {

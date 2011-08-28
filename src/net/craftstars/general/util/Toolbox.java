@@ -3,7 +3,6 @@ package net.craftstars.general.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -11,7 +10,6 @@ import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.items.ItemID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -20,6 +18,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.*;
+import org.bukkit.permissions.Permissible;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.config.Configuration;
 
@@ -95,10 +94,6 @@ public final class Toolbox {
 		return tst;
 	}
 	
-	public static String string(int i) {
-		return String.valueOf(i);
-	}
-	
 	/**
 	 * Turns "SomeName" into "Some Name" or "MyABC" into "My ABC". (Inserts a space before a capital letter unless it
 	 * is at the beginning of the string or preceded by a capital letter.) Also turns "SOME_NAME" into "Some Name".
@@ -129,18 +124,14 @@ public final class Toolbox {
 		return newStr.trim();
 	}
 	
-	public static boolean lacksPermission(CommandSender sender, String... permissions) {
+	public static boolean lacksPermission(Permissible sender, String... permissions) {
 		return !hasPermission(sender, permissions);
 	}
 	
-	public static boolean hasPermission(CommandSender sender, String... permissions) {
-		if(sender instanceof ConsoleCommandSender)
-			return true;
-		else if(!(sender instanceof Player)) return false; // TODO: Some allowance for non-player-or-console permissions?
-		Player who = (Player) sender;
+	public static boolean hasPermission(Permissible sender, String... permissions) {
 		boolean foundPermission = false;
 		for(String permission : permissions) {
-			if(General.plugin.permissions.hasPermission(who, permission)) foundPermission = true;
+			if(General.permissions.hasPermission(sender, permission)) foundPermission = true;
 		}
 		return foundPermission;
 	}
@@ -157,14 +148,13 @@ public final class Toolbox {
 				AccountStatus.price *= Double.parseDouble(permission.substring(1)) / 100.0;
 			else AccountStatus.price += Option.ECONOMY_COST(permission).get() * quantity;
 		if(CommandBase.isFrozen(player)) return AccountStatus.FROZEN;
-		if(General.plugin.economy.hasEnough(player, AccountStatus.price, -1))
+		if(General.economy.hasEnough(player, AccountStatus.price, -1))
 			return AccountStatus.SUFFICIENT;
 		return AccountStatus.INSUFFICIENT;
 	}
 	
 	public static boolean canPay(CommandSender sender, int quantity, String... permissions) {
-		//General.logger.debug("Checking cost of: " + Arrays.toString(permissions));
-		if(General.plugin.economy == null) return true;
+		if(General.economy == null) return true;
 		if(sender instanceof ConsoleCommandSender) return true;
 		if(!(sender instanceof Player)) return false;
 		Player player = (Player) sender;
@@ -176,14 +166,12 @@ public final class Toolbox {
 				break;
 			case FROZEN:
 				Messaging.showCost(player);
-				return false;
 			case INSUFFICIENT:
-				Messaging.showCost(player);
 				Messaging.send(sender, "&cUnfortunately, you don't have that much.");
 				return false;
-			case SUFFICIENT:
+			case SUFFICIENT: // TODO: I think pay() prints its own message, so this may cause double messages
 				Messaging.showPayment(player);
-				General.plugin.economy.pay(player, AccountStatus.price, -1);
+				General.economy.pay(player, AccountStatus.price, -1);
 			}
 			return true;
 		}
@@ -303,36 +291,12 @@ public final class Toolbox {
 	}
 
 	public static double sellItem(ItemID item, int amount) {
-		if(General.plugin.economy == null) return 0;
+		if(General.economy == null) return 0;
 		String node = "economy.give.item" + item.toString();
 		double percent = Option.ECONOMY_SELL.get() / 100.0;
 		return Option.ECONOMY_COST(node).get() * amount * percent;
 	}
-
-	private static HashMap<String, HashSet<World>> inCooldown = new HashMap<String, HashSet<World>>();
-	public static boolean inCooldown(CommandSender sender, final World world, final String command, String permissionBase) {
-		int cooldownTime = Option.COOLDOWN(command).get();
-		if(cooldownTime > 0) {
-			String instant = permissionBase + ".instant";
-			if(Toolbox.hasPermission(sender, instant)) return false;
-			if(!inCooldown.containsKey(command)) inCooldown.put(command, new HashSet<World>());
-			if(inCooldown.get(command).contains(world)) {
-				String langNode = permissionBase.replace('.', '_').replace("general_", "permissions.");
-				return Messaging.lacksPermission(sender, instant, LanguageText.LACK_INSTANT,
-					"action", LanguageText.byNode(langNode).value());
-			}
-			inCooldown.get(command).add(world);
-			Runnable cooldown = new Runnable() {
-				@Override
-				public void run() {
-					inCooldown.get(command).remove(world);
-				}
-			};
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(General.plugin, cooldown, cooldownTime);
-		}
-		return false;
-	}
-
+	
 	public static CreatureType getCreatureType(LivingEntity entity) {
 		if(entity instanceof Pig) return CreatureType.PIG;
 		else if(entity instanceof Sheep) return CreatureType.SHEEP;
@@ -350,5 +314,10 @@ public final class Toolbox {
 		else if(entity instanceof Zombie) return CreatureType.ZOMBIE;
 		else if(entity instanceof Monster) return CreatureType.MONSTER;
 		return null;
+	}
+	
+	public static void cooldown(Permissible sender, String permission, int delay) {
+		if(delay > 0 && lacksPermission(sender, permission + ".instant"))
+			sender.addAttachment(General.plugin, permission, false, delay);
 	}
 }

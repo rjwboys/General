@@ -209,7 +209,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		String itemNode = Material.getMaterial(ID).toString();
 		itemNode = "general.give.item." + itemNode.toLowerCase().replace('_', '-');
 		permissions.add(itemNode);
-		ConfigurationNode config = General.plugin.config.getNode("give");
+		ConfigurationNode config = General.config.getNode("give");
 		if(config == null) return true;
 		List<String> groups = config.getKeys("groups");
 		if(groups == null) return true;

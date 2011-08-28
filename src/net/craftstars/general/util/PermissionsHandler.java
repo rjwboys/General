@@ -20,12 +20,12 @@ import net.craftstars.general.util.Option;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.world.WorldListener;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
+import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
@@ -37,15 +37,11 @@ public class PermissionsHandler extends WorldListener {
 		Bukkit.getServer().getPluginManager().registerEvent(Type.WORLD_UNLOAD, this, Priority.Monitor, General.plugin);
 	}
 	
-	public boolean hasPermission(Player who, String what) {
+	public boolean hasPermission(Permissible who, String what) {
 		return who.hasPermission(what);
 	}
 	
-	public boolean wasLoaded() {
-		return true;
-	}
-	
-	public boolean inGroup(Player who, String which) {
+	public boolean inGroup(Permissible who, String which) {
 		return hasPermission(who, "group." + which.toLowerCase());
 	}
 	
@@ -81,7 +77,7 @@ public class PermissionsHandler extends WorldListener {
 			@Override public void build() {
 				// general.give.group.<group>, general.give.group.*
 				HashMap<String, Boolean> allGroups = new HashMap<String,Boolean>();
-				for(String group : General.plugin.config.getKeys("give.groups")) {
+				for(String group : General.config.getKeys("give.groups")) {
 					register("general.give.group." + group,
 						"Gives access to the following items: " + Option.GROUP(group).get());
 					allGroups.put("general.give.group." + group, true);
@@ -93,12 +89,18 @@ public class PermissionsHandler extends WorldListener {
 			@Override public void build() {
 				// general.kit.<kit>, general.kit.*
 				HashMap<String, Boolean> allKits = new HashMap<String,Boolean>();
-				for(Kit kit : Kits.kits.values()) {
+				HashMap<String, Boolean> instants = new HashMap<String,Boolean>();
+				for(Kit kit : Kits.all()) {
 					register("general.kit." + kit.getName(), "Gives access to the '" + kit.getName() + "' kit.");
 					allKits.put("general.kit." + kit.getName(), true);
+					register("general.kit." + kit.getName() + ".instant", "Gives instant access to the '" +
+						kit.getName() + "' kit.");
+					instants.put("general.kit." + kit.getName() + ".instant", true);
 				}
 				allKits.put("general.kit", true);
 				register("general.kit.*", "Gives access to all kits.", allKits);
+				register("general.kit.*.instant", "Gives instant access to all kits.", instants);
+				register("general.kit-now", "Gives instant access to all kits.", instants);
 			}
 		},
 		MOBSPAWN {

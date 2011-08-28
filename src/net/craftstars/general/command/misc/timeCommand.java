@@ -8,6 +8,7 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
 import net.craftstars.general.util.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
 
@@ -94,7 +95,9 @@ public class timeCommand extends CommandBase {
 		}
 		if(Toolbox.lacksPermission(sender, "general.time.set"))
 			return Messaging.lacksPermission(sender, "general.time.set");
-		if(Toolbox.inCooldown(sender, world, "time", "general.time")) return true;
+		String cooldownPerm = "general.time.set." + world.getName();
+		if(Toolbox.lacksPermission(sender, cooldownPerm)) return true;
+		Toolbox.cooldown(sender, cooldownPerm, Option.COOLDOWN("time").get());
 		LanguageText timeName;
 		int timeTicks;
 		if(timeStr.equalsIgnoreCase("day")) { // 6am

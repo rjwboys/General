@@ -94,7 +94,7 @@ public class takeCommand extends CommandBase {
 		boolean sell = who.equals(sender);
 		if(!sell && Toolbox.lacksPermission(sender, "general.take.other"))
 			return Messaging.lacksPermission(sender, "general.take.other");
-		sell = sell && plugin.economy != null;
+		sell = sell && General.economy != null;
 		sell = sell && Option.ECONOMY_TAKE_SELL.get().equalsIgnoreCase("sell");
 		amount = doTake(who, item, amount, sell);
 		if(!sender.equals(who)) Messaging.send(sender, LanguageText.TAKE_THEFT.value("item", item.getName(),

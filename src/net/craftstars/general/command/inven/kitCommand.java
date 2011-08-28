@@ -30,7 +30,7 @@ public class kitCommand extends CommandBase {
 			return params;
 		case 1:
 			if(!isPlayer) return null;
-			kit = Kits.kits.get(args[0]);
+			kit = Kits.get(args[0]);
 			if(kit == null) {
 				Messaging.send(sender, LanguageText.KIT_INVALID.value("kit", args[0]));
 				return null;
@@ -38,7 +38,7 @@ public class kitCommand extends CommandBase {
 			params.put("player", sender);
 		break;
 		case 2:
-			kit = Kits.kits.get(args[0]);
+			kit = Kits.get(args[0]);
 			if(kit == null) {
 				Messaging.send(sender, LanguageText.KIT_INVALID.value("kit", args[0]));
 				return null;
@@ -63,8 +63,8 @@ public class kitCommand extends CommandBase {
 			return Messaging.lacksPermission(sender, "general.kit");
 		if(command.equals("listkits")) {
 			String msg = LanguageText.KIT_LIST.value();
-			for(String thisKit : Kits.kits.keySet()) {
-				if(Kits.kits.get(thisKit).canGet(sender)) {
+			for(Kit thisKit : Kits.all()) {
+				if(thisKit.canGet(sender)) {
 					msg += thisKit + " ";
 				}
 			}
@@ -74,34 +74,14 @@ public class kitCommand extends CommandBase {
 			Kit kit = (Kit) args.get("kit");
 			if(!kit.canGet(who)) return true;
 			if(!kit.canAfford(who)) return true;
-			GotKit check = new GotKit(sender, kit);
 			
-			// Player did not request any kit previously
-			if(!canBypassDelay(sender) && Kits.players.containsKey(check)) {
-				long time = System.currentTimeMillis() / 1000;
-				long left = kit.delay - (time - Kits.players.get(check));
-				
-				// Time did not expire yet
-				if(left > 0) {
-					Messaging.send(sender, LanguageText.KIT_COOLDOWN.value("time", left));
-					return true;
-				}
-			}
-			// Add the kit and timestamp into the list
-			insertIntoPlayerList(check);
+			// Initiate cooldown unless they have bypass permission
+			Toolbox.cooldown(sender, kit.getPermission(), kit.delay);
+			
 			// Receive the kit
 			getKit(who, kit);
 		}
 		return true;
-	}
-	
-	private boolean canBypassDelay(CommandSender sender) {
-		return Toolbox.hasPermission(sender, "general.kit-now");
-	}
-	
-	private void insertIntoPlayerList(GotKit what) {
-		long time = System.currentTimeMillis() / 1000;
-		Kits.players.put(what, time);
 	}
 	
 	private void getKit(Player sender, Kit kit) {

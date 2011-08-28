@@ -58,9 +58,9 @@ public final class MessageOfTheDay {
 	}
 	
 	private static String getCurrency(CommandSender sender) {
-		if(General.plugin.economy == null) return "none";
+		if(General.economy == null) return "none";
 		Player player = sender instanceof Player ? (Player)sender : null;
-		String zero = General.plugin.economy.getFormattedAmount(player, 0, -1);
+		String zero = General.economy.getFormattedAmount(player, 0, -1);
 		String currency = Toolbox.join(zero.split(" "), 1);
 		return currency;
 	}
@@ -71,8 +71,8 @@ public final class MessageOfTheDay {
 	}
 	
 	private static String getBalance(CommandSender sender) {
-		if(General.plugin.economy == null || ! (sender instanceof Player)) return "0";
-		return Double.toString(General.plugin.economy.getBalance((Player) sender, -1));
+		if(General.economy == null || ! (sender instanceof Player)) return "0";
+		return Double.toString(General.economy.getBalance((Player) sender, -1));
 	}
 	
 	private static double getHealth(CommandSender sender) {

@@ -147,7 +147,7 @@ public class mobspawnCommand extends CommandBase {
 		int numMobs = (Integer) args.get("num");
 		if(numMobs > 5 && Toolbox.lacksPermission(sender, "general.mobspawn.mass"))
 			return Messaging.lacksPermission(sender, "general.mobspawn.mass");
-		boolean canPay = plugin.economy == null;
+		boolean canPay = General.economy == null;
 		if(!canPay) canPay = Toolbox.canPay(sender, numMobs, economyNodes);
 		if(canPay) {
 			while(numMobs-- > 0) doSpawn(sender, spawn, dest.getLoc());

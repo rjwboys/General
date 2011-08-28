@@ -3,6 +3,7 @@ package net.craftstars.general.items;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -15,8 +16,7 @@ import net.craftstars.general.General;
 import net.craftstars.general.util.LanguageText;
 
 public final class Kits {
-	public static HashMap<String, Kit> kits = new HashMap<String, Kit>();
-	public static HashMap<GotKit, Long> players = new HashMap<GotKit, Long>();
+	static HashMap<String, Kit> kits = new HashMap<String, Kit>();
 	
 	public static boolean loadKits() {
 		kits.clear();
@@ -99,5 +99,25 @@ public final class Kits {
 			kitsYml.setProperty(key, yaml);
 		}
 		kitsYml.save();
+	}
+
+	public static Kit get(String name) {
+		return kits.get(name);
+	}
+	
+	public static Collection<Kit> all() {
+		return kits.values();
+	}
+
+	public static boolean exists(String kitName) {
+		return kits.containsKey(kitName);
+	}
+
+	public static void put(String kitName, Kit kit) {
+		kits.put(kitName, kit);
+	}
+
+	public static void remove(String kitName) {
+		kits.remove(kitName);
 	}
 }

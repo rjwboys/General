@@ -175,8 +175,6 @@ permissions:
       general.give.any: true
   general.give.groupless:
     description: Gives access to items not in a group.
-  general.kit-now:
-    description: The ability to bypass cooldown times on kits.
   general.clear.*:
     description: Gives full access to the /clear command
     children:

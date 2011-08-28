@@ -61,7 +61,7 @@ public class masstakeCommand extends CommandBase {
 		@SuppressWarnings("unchecked")
 		ArrayList<ItemID> items = (ArrayList<ItemID>) args.get("items");
 		boolean sell = who.equals(sender);
-		sell = sell && plugin.economy != null;
+		sell = sell && General.economy != null;
 		sell = sell && Option.ECONOMY_TAKE_SELL.get().equalsIgnoreCase("sell");
 		StringBuilder itemsText = new StringBuilder();
 		int amount = doTake(who, items, sell, itemsText);

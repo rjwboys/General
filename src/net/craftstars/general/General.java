@@ -42,9 +42,9 @@ public class General extends JavaPlugin {
 	
 	public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG);
 	
-	public Configuration config;
-	public PermissionsHandler permissions;
-	public GenericBank economy;
+	public static Configuration config;
+	public static PermissionsHandler permissions;
+	public static GenericBank economy;
 	private AllPay allpay;
 	
 	private HashMap<String, String> playersAway = new HashMap<String, String>();
@@ -125,8 +125,8 @@ public class General extends JavaPlugin {
 	public void loadAllConfigs() {
 		// The load order here is very delicate, as LanguageText is used nearly everywhere
 		// and Messaging.load uses Option.
-		this.config = this.getConfiguration();
-		this.loadConfiguration();
+		config = getConfiguration();
+		loadConfiguration();
 		Option.setConfiguration(config);
 		Messaging.load();
 		
@@ -169,7 +169,7 @@ public class General extends JavaPlugin {
 		} catch(Exception ex) {
 			General.logger.warn(LanguageText.LOG_CONFIG_ERROR.value("file", "config.yml"), ex);
 		}
-		this.config.load();
+		config.load();
 	}
 
 	public void createDefaultConfig(File configFile) throws IOException {
