@@ -12,8 +12,6 @@
 	
 	<taskdef resource="checkstyletask.properties" classpath="${lib}/checkstyle-5.3-all.jar"/>
 	<property name="CraftBukkit"  value="craftbukkit.jar"/>
-	<property name="YetiPerms"  value="Permissions.jar"/>
-	<property name="WorldEdit"    value="WorldEdit.jar"/>
 	<property name="Help" value="Help.jar"/>
 	<property name="iConomy4" value="economy/iConomy4.jar"/>
 	<property name="iConomy5" value="economy/iConomy5.jar"/>

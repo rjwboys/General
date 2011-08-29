@@ -240,7 +240,7 @@ public class weatherCommand extends CommandBase {
 			return;
 		}
 		String cooldownPerm = "general.weather.thunder." + world.getName();
-		if(Toolbox.lacksPermission(sender, cooldownPerm)) return;
+		if(sender.isPermissionSet(cooldownPerm) && Toolbox.lacksPermission(sender, cooldownPerm)) return;
 		Toolbox.cooldown(sender, cooldownPerm, Option.COOLDOWN("thunder").get());
 		if(!Toolbox.canPay(sender, 1, "economy.weather.thunder")) return;
 		boolean state = duration != 0;
@@ -264,7 +264,7 @@ public class weatherCommand extends CommandBase {
 		if(Toolbox.lacksPermission(sender, "general.weather.set"))
 			Messaging.lacksPermission(sender, "general.weather.set");
 		String cooldownPerm = "general.weather.set." + world.getName();
-		if(Toolbox.lacksPermission(sender, cooldownPerm)) return;
+		if(sender.isPermissionSet(cooldownPerm) && Toolbox.lacksPermission(sender, cooldownPerm)) return;
 		Toolbox.cooldown(sender, cooldownPerm, Option.COOLDOWN("storm").get());
 		if(!Toolbox.canPay(sender, 1, "economy.weather.storm")) return;
 		boolean state = duration != 0;
@@ -285,7 +285,7 @@ public class weatherCommand extends CommandBase {
 		if(Toolbox.lacksPermission(sender, "general.weather.zap"))
 			Messaging.lacksPermission(sender, "general.weather.zap");
 		String cooldownPerm = "general.weather.zap." + world.getName();
-		if(Toolbox.lacksPermission(sender, cooldownPerm)) return;
+		if(sender.isPermissionSet(cooldownPerm) && Toolbox.lacksPermission(sender, cooldownPerm)) return;
 		Toolbox.cooldown(sender, cooldownPerm, Option.COOLDOWN("lightning").get());
 		if(!Toolbox.canPay(sender, 1, "economy.weather.zap")) return;
 		else {

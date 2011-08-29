@@ -61,7 +61,7 @@ public final class MessageOfTheDay {
 		if(General.economy == null) return "none";
 		Player player = sender instanceof Player ? (Player)sender : null;
 		String zero = General.economy.getFormattedAmount(player, 0, -1);
-		String currency = Toolbox.join(zero.split(" "), 1);
+		String currency = zero.replaceAll("\\d+(\\.\\d+)?", "");
 		return currency;
 	}
 	

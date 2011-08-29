@@ -39,8 +39,8 @@ public enum LanguageText {
 	GETPOS_POS("getpos.pos", "{yellow}Pos X: {white}{x}{yellow} Y: {white}{y}{yellow} Z: {white}{z}{yellow}"),
 	GETPOS_DIR("getpos.dir", "{yellow}Direction: {white}{direction}"),
 	// Messages relating to /online
-	ONLINE_ALL("online.all","&eOnline Players ({count}):"),
-	ONLINE_WORLD("online.world","&eOnline Players in world '{world}' ({count}):"),
+	ONLINE_ALL("online.all","{yellow}Online Players ({count}):"),
+	ONLINE_WORLD("online.world","{yellow}Online Players in world '{world}' ({count}):"),
 	// Messages relating to /who and /worldinfo
 	INFO_DIVIDER("info.divider","{white}------------------------------------------------"),
 	INFO_TITLE_PLAYER("info.title.player","{yellow} Player {white}[{name}]{yellow} Info"),
@@ -91,9 +91,9 @@ public enum LanguageText {
 	GIVE_ENJOY("give.enjoy", "{green}Enjoy! Giving {white}{amount,choice,-1#infinite|0#{amount}}{green} of " +
 		"{white}{item}{green}."),
 	// Messages relating to /items
-	ITEMS_ENJOY("give.items.enjoy", "&2Enjoy! Giving &f{items}&f!"),
-	ITEMS_GIFT("give.items.gift", "Giving &f{items}&2 to &f{player}&f!"),
-	ITEMS_GIFTED("give.items.gifted", "&2Enjoy the gift! Giving &f{items}&f!"),
+	ITEMS_ENJOY("give.items.enjoy", "{green}Enjoy! Giving {white}{items}{white}!"),
+	ITEMS_GIFT("give.items.gift", "{green}Giving {white}{items}{green} to {white}{player}{green}!"),
+	ITEMS_GIFTED("give.items.gifted", "{green}Enjoy the gift! Giving {white}{items}{green}!"),
 	ITEMS_JOINER("give.items.join", "{green}, {white}"),
 	// Messages relating to /kit
 	KIT_INVALID("kit.invalid", "{rose}Kit by the name of {yellow}{kit}{rose} does not exist!"),
