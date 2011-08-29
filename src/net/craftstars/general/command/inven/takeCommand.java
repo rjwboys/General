@@ -127,6 +127,7 @@ public class takeCommand extends CommandBase {
 			"amount", removed <= amount ? removed : 0));
 		if(sell) {
 			double revenue = Toolbox.sellItem(item, removed);
+			Toolbox.giveMoney(who, revenue);
 			Messaging.earned(who, revenue);
 		}
 		return removed;

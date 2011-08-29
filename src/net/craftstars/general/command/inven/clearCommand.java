@@ -148,7 +148,10 @@ public class clearCommand extends CommandBase {
 			Messaging.send(who, LanguageText.CLEAR_YOURS.value("inventory", inven));
 			Messaging.send(fromWhom, LanguageText.CLEAR_THEIRS.value("inventory", inven, "player", who.getName()));
 		}
-		if(sell) Messaging.earned(who, revenue);
+		if(sell) {
+			Toolbox.giveMoney(who, revenue);
+			Messaging.earned(who, revenue);
+		}
 		return true;
 	}
 	

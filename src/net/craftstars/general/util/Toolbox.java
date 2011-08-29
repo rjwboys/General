@@ -320,4 +320,10 @@ public final class Toolbox {
 		if(delay > 0 && lacksPermission(sender, permission + ".instant"))
 			sender.addAttachment(General.plugin, permission, false, delay);
 	}
+
+	public static void giveMoney(Player who, double revenue) {
+		if(General.economy == null) return;
+		// TODO: AllPay has not "give" function yet, so pay the inverse
+		General.economy.pay(who, -revenue, -1);
+	}
 }
