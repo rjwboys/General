@@ -125,6 +125,7 @@ public class General extends JavaPlugin {
 	public void loadAllConfigs() {
 		// The load order here is very delicate, as LanguageText is used nearly everywhere
 		// and Messaging.load uses Option.
+		LanguageText.setLanguage("en", getDataFolder(), "messages_en.yml"); // Make sure we have a default language!
 		config = getConfiguration();
 		loadConfiguration();
 		Option.setConfiguration(config);
