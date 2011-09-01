@@ -305,7 +305,7 @@ public enum LanguageText {
 	LACK_CLEAR_OTHER("permissions.clear_other","clear someone else's inventory"),
 	LACK_GIVE("permissions.give","give items"),
 	LACK_GIVE_OTHER("permissions.give_other","give items to others"),
-	LACK_GIVE_INFINITE("permissions.give_infinte","give infinite stacks of items"),
+	LACK_GIVE_INFINITE("permissions.give_infinite","give infinite stacks of items"),
 	LACK_GIVE_MASS("permissions.give_mass","give many items at once"),
 	LACK_GIVE_ITEM("permissions.give_item","get {item}."),
 	LACK_KIT("permissions.kit","get kits"),

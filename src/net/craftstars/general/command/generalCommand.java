@@ -41,6 +41,7 @@ public class generalCommand extends CommandBase {
 	
 	@Override
 	protected boolean isHelpCommand(Command command, String commandLabel, String[] args) {
+		if(args.length == 0) return false;
 		if(isHelp(args[0])) return true;
 		if(args[0] == "economy") {
 			String[] ecoArgs = Toolbox.join(args, 0).split("\\s*=\\s*");
@@ -844,6 +845,7 @@ public class generalCommand extends CommandBase {
 
 	@Override // TODO: This is cheating
 	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
+		if(args.length == 0) return null;
 		return Collections.singletonMap("args", (Object) args);
 	}
 	
