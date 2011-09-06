@@ -41,22 +41,23 @@ public class generalCommand extends CommandBase {
 	
 	@Override
 	protected boolean isHelpCommand(Command command, String commandLabel, String[] args) {
-		if(args.length == 0) return false;
+		// /general
+		if(args.length == 0) return true;
+		// /general help [<topic>]
 		if(isHelp(args[0])) return true;
-		if(args[0] == "economy") {
-			String[] ecoArgs = Toolbox.join(args, 0).split("\\s*=\\s*");
-			return ecoArgs.length == 1;
-		}
+		// /general economy <variable>
+		if(args[0].equalsIgnoreCase("economy"))
+			return !Toolbox.join(args).contains("=");
 		switch(args.length) {
-		case 0:
-			return true;
-		case 1:
+		case 1: // /general help
 			return isHelp(args[0]);
-		case 2:
+		case 2: // /general <command> help OR /general set list
 			return isHelp(args[1]) || (args[0]+args[1]).equalsIgnoreCase("setlist");
 		case 3:
+			// /general <command> help <subcommand>
 			if(Toolbox.equalsOne(args[0], "kit", "set", "item"))
 				return isHelp(args[1]);
+			// /general <command> <subcommand> help
 			return isHelp(args[2]);
 		}
 		return false;
@@ -64,22 +65,28 @@ public class generalCommand extends CommandBase {
 	
 	@Override
 	protected String getHelpTopic(Command command, String commandLabel, String[] args) {
+		// /general -> about
+		if(args.length == 0) return "about";
+		// /general help <topic> -> <topic>
 		if(isHelp(args[0])) return Toolbox.join(args, "_", 1);
-		if(args[0] == "economy") {
-			String[] ecoArgs = Toolbox.join(args, 0).split("\\s*=\\s*");
-			return "general_economy_" + ecoArgs[0].replace(' ', '_');
+		// /general economy <variable> -> general_economy_<veriable>
+		if(args[0].equalsIgnoreCase("economy")) {
+			String[] ecoArgs = Toolbox.join(args, "_").split("\\s*=\\s*");
+			return "general_economy_" + ecoArgs[0];
 		}
 		switch(args.length) {
-		case 0:
-			return "about";
-		case 1:
+		case 1: // /general help -> toc
 			return "toc";
 		case 2:
+			// /general set list -> general_set_list
 			if((args[0]+args[1]).equalsIgnoreCase("setlist")) return "general_set_list";
-			return command.getName() + "_" + args[0];
+			// /general <command> help -> general_<command>
+			return "general_" + args[0];
 		case 3:
-			if(isHelp(args[2])) return command.getName() + "_" + args[0] + "_" + args[1];
-			else if(Toolbox.equalsOne(args[0], "kit", "set", "item")) return Toolbox.join(args, "_");
+			// /general <command> <subcommand> help -> general_<command>_<subcommand>
+			if(isHelp(args[2])) return "general_" + args[0] + "_" + args[1];
+			// /general <command> help <subcommand> -> general_<command>_<subcommand>
+			else if(Toolbox.equalsOne(args[0], "kit", "set", "item")) return "general_" + Toolbox.join(args, "_");
 		}
 		return null;
 	}
