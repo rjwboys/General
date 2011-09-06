@@ -1,4 +1,4 @@
-package net.craftstars.general.util;
+package net.craftstars.general.text;
 
 import java.io.File;
 import java.lang.reflect.Field;

@@ -23,10 +23,10 @@ import net.craftstars.general.mobs.MobData;
 import net.craftstars.general.mobs.MobType;
 import net.craftstars.general.teleport.DestinationType;
 import net.craftstars.general.teleport.TargetType;
-import net.craftstars.general.util.HelpHandler;
-import net.craftstars.general.util.LanguageText;
-import net.craftstars.general.util.MessageOfTheDay;
-import net.craftstars.general.util.Messaging;
+import net.craftstars.general.text.HelpHandler;
+import net.craftstars.general.text.LanguageText;
+import net.craftstars.general.text.MessageOfTheDay;
+import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 

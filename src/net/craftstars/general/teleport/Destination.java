@@ -8,8 +8,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.craftstars.general.General;
-import net.craftstars.general.util.LanguageText;
-import net.craftstars.general.util.Messaging;
+import net.craftstars.general.text.LanguageText;
+import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 import net.minecraft.server.ChunkCoordinates;

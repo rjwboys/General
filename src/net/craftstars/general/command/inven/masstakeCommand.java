@@ -9,8 +9,8 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
-import net.craftstars.general.util.LanguageText;
-import net.craftstars.general.util.Messaging;
+import net.craftstars.general.text.LanguageText;
+import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 

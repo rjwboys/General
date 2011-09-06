@@ -2,8 +2,8 @@ package net.craftstars.general.mobs;
 
 import java.util.HashMap;
 
-import net.craftstars.general.util.LanguageText;
-import net.craftstars.general.util.Messaging;
+import net.craftstars.general.text.LanguageText;
+import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.CommandSender;

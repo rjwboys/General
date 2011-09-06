@@ -6,6 +6,8 @@ import java.util.Formatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.craftstars.general.text.LanguageText;
+
 public final class Time {
 	public enum TimeFormat {
 		TWENTY_FOUR_HOUR, TWELVE_HOUR

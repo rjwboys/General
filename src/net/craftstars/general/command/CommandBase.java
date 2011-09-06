@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import net.craftstars.general.General;
-import net.craftstars.general.util.HelpHandler;
-import net.craftstars.general.util.LanguageText;
+import net.craftstars.general.text.HelpHandler;
+import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 

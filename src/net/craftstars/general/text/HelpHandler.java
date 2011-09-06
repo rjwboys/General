@@ -1,5 +1,5 @@
 
-package net.craftstars.general.util;
+package net.craftstars.general.text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import me.taylorkelly.help.Help;
 import net.craftstars.general.General;
+import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;

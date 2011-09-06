@@ -1,5 +1,5 @@
 
-package net.craftstars.general.util;
+package net.craftstars.general.text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Scanner;
 
 import net.craftstars.general.General;
+import net.craftstars.general.util.Time;
+import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;

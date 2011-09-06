@@ -1,4 +1,4 @@
-package net.craftstars.general.util;
+package net.craftstars.general.text;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;

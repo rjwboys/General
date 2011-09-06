@@ -16,8 +16,8 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.mobs.MobData;
 import net.craftstars.general.mobs.MobType;
 import net.craftstars.general.teleport.Destination;
-import net.craftstars.general.util.LanguageText;
-import net.craftstars.general.util.Messaging;
+import net.craftstars.general.text.LanguageText;
+import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class mobspawnCommand extends CommandBase {

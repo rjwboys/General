@@ -13,7 +13,7 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import net.craftstars.general.General;
-import net.craftstars.general.util.LanguageText;
+import net.craftstars.general.text.LanguageText;
 
 public final class Kits {
 	static HashMap<String, Kit> kits = new HashMap<String, Kit>();

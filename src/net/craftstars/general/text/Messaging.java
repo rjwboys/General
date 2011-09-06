@@ -1,5 +1,5 @@
 
-package net.craftstars.general.util;
+package net.craftstars.general.text;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.craftstars.general.General;
+import net.craftstars.general.util.AccountStatus;
+import net.craftstars.general.util.Option;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
