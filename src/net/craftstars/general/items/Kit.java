@@ -1,8 +1,9 @@
 package net.craftstars.general.items;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 
@@ -13,7 +14,7 @@ import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class Kit implements Iterable<ItemID> {
-	private HashMap<ItemID, Integer> items;
+	private Map<ItemID, Integer> items;
 	public int delay;
 	private double savedCost;
 	private String[] cost;
@@ -22,7 +23,7 @@ public class Kit implements Iterable<ItemID> {
 	@SuppressWarnings("hiding")
 	public Kit(String name, int delay, double cost) {
 		this.name = name;
-		this.items = new HashMap<ItemID, Integer>();
+		this.items = new LinkedHashMap<ItemID, Integer>();
 		this.delay = delay;
 		this.savedCost = cost;
 		calculateCost();
