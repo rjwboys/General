@@ -15,7 +15,7 @@
 	<property name="Help" value="Help.jar"/>
 	<property name="iConomy4" value="economy/iConomy4.jar"/>
 	<property name="iConomy5" value="economy/iConomy5.jar"/>
-	<property name="iConomy6" value="economy/iConomy.jar"/>
+	<property name="iConomy6" value="economy/iConomy6.jar"/>
 	<property name="BOSEconomy" value="economy/BOSEconomy.jar"/>
 	<property name="EssentialsEco" value="economy/Essentials.jar"/>
 	<property name="RealShop" value="economy/RealShop.jar"/>
