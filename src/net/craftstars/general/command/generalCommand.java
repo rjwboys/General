@@ -68,7 +68,7 @@ public class generalCommand extends CommandBase {
 		// /general -> about
 		if(args.length == 0) return "about";
 		// /general help <topic> -> <topic>
-		if(isHelp(args[0])) return Toolbox.join(args, "_", 1);
+		if(isHelp(args[0]) && args.length > 1) return Toolbox.join(args, "_", 1);
 		// /general economy <variable> -> general_economy_<veriable>
 		if(args[0].equalsIgnoreCase("economy")) {
 			String[] ecoArgs = Toolbox.join(args, "_").split("\\s*=\\s*");
