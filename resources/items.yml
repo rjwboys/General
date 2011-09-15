@@ -74,6 +74,10 @@ names:
    - Sandstone Slab
    - Wood Slab
    - Cobblestone Slab
+   - Brick Slab
+   - Stone Brick Slab
+   - null
+   - Slab
   item45: Brick Block
   item46: TNT
   item47: Bookshelf
@@ -144,6 +148,22 @@ names:
   item94: Redstone Repeater Block
   item95: Locked Chest
   item96: Trapdoor
+  item97: Monster Eggs
+  item98:
+  - Stone Brick
+  - Mossy Stone Brick
+  - Crumbling Stone Brick
+  item99: Huge Red Mushroom
+  item100: Huge Brown Mushroom
+  item101: Iron Fence
+  item102: Glass Pane
+  item103: Melon
+  item104: Pumpkin_Stem
+  item105: Melon_Stem
+  item106: Vine
+  item107: Fence Gate
+  item108: Brick Stairs
+  item109: Stone Brick Stairs
   item256: Iron Shovel
   item257: Iron Pickaxe
   item258: Iron Axe
@@ -185,7 +205,7 @@ names:
   item292: Iron Hoe
   item293: Diamond Hoe
   item294: Golden Hoe
-  item295: Seeds
+  item295: Wheat Seeds
   item296: Wheat
   item297: Bread
   item298: Leather Cap
@@ -266,6 +286,15 @@ names:
   item357: Cookie
   item358: Map
   item359: Shears
+  item360: Melon Slice
+  item361: Pumpkin Seeds
+  item362: Melon Seeds
+  item363: Raw Beef
+  item364: Steak
+  item365: Raw Chicken
+  item366: Cooked Chicken
+  item367: Rotten Flesh
+  item368: Ender Pearl
   item2256: Gold Music Disc
   item2257: Green Music Disc
 
@@ -304,11 +333,15 @@ variants:
     type1: [sandstone]
     type2: [wood, wooden]
     type3: [cobble, cobblestone]
+    type4: [brick, claybrick, redbrick]
+    type5: [stonebrick, smoothbrick, graybrick, greybrick]
   item44:
     type0: [stone]
     type1: [sandstone]
     type2: [wood, wooden]
     type3: [cobble, cobblestone]
+    type4: [brick, claybrick, redbrick]
+    type5: [stonebrick, smoothbrick, graybrick, greybrick]
   item52:
     type0: [pig]
     type1: [chicken, duck]
@@ -324,6 +357,10 @@ variants:
     type11: [slime]
     type12: [giant, giantzombie, zombiegiant, bigzombie]
     type13: [human, monster]
+  item98:
+    type0: [normal, regular, intact]
+    type1: [mossy]
+    type2: [cracked, crumbling]
   item351:
     type0: [black, ink]
     type1: [rose, red, darkred]
@@ -358,6 +395,9 @@ hooks:
   dust: {redstone: 331, red: 331, glowstone: 348, glow: 348}
   ball: {snow: 332, clay: 337, slime: 341}
   record: {gold: 2256, green: 2257}
+  brick: {clay: 45, stone: 98}
+  stairs: {cobble: 67, wood: 53, brick: 108, stonebrick: 109}
+  seeds: {wheat: 295, pumpkin: 361, melon: 362}
 
 # You may notice some glaring omissions here, for example air, stone, grass, dirt.
 # These are deliberate, since they match their Material.* names.
@@ -427,6 +467,15 @@ aliases: {
   BrittleGold: 89, Lightstone: 89, GlowRock: 89, GlowingRock: 89, GlowstoneBlock: 89, GlowstoneOre: 89,
   Jack'o'lantern: 91, LitPumpkin: 91, PumpkinOff: 91, Jack: 91, PumpkinLit: 91, PumpkinLight: 91, WaterLantern: 91,
   Hatch: 96,
+  StoneEgg: 97, SilverfishStone: 97,
+  StoneBrick: 98,
+  HugeToadstool: 99, HugeRedMushroom: 99,
+  HugeMushroom: 100, HugeBrownMushroom: 100,
+  IronBars: 101,
+  GlassPane: 102,
+  Melon: 103,
+  Vines: 106,
+  StoneBrickStairs: 109,
   # Shovels
   WoodenShovel: 269, WoodenSpade: 269, WoodShovel: 269, WShovel: 269, WSpade: 269,
   StoneShovel: 273, SShovel: 273, SSword: 273,
@@ -463,12 +512,15 @@ aliases: {
   FishingPole: 346, Rod: 346, Fishing: 346, Tackle: 346,
   Clock: 347, Time: 347,
   # Food
-  Fruit: 260,
+  MelonSlice: 360,
   MushroomStew: 282, Stew: 282, Soup: 282, BowlWithSoup: 282, BowlWithStew: 282,
   Loaf: 297, BreadLoaf: 297, LoafOfBread: 297,
-  RawPorkchop: 319, RawPork: 319, Meat: 319,
+  RawPorkchop: 319, RawPork: 319,
   CookedPorkchop: 320, GrilledPorkchop: 320, RoastedPorkchop: 320, CookedPork: 320, RoastedPork: 320,
-  CookedMeat: 320, RoastedMeat: 320, GrilledMeat: 320,
+  RawSteak: 363,
+  CookedSteak: 364, Steak: 364, GrilledSteak: 364,
+  GrilledChicken: 366,
+  ZombieMeat: 267,
   Restore: 322, GoldApple: 322, GApple: 322, GoldenFruit: 322, GoldFruit: 322, GFruit: 322,
   Fish: 349,
   RoastedFish: 350, GrilledFish: 350,
@@ -481,7 +533,9 @@ aliases: {
   Yarn: 287, Rope: 287, Silk: 287, Twine: 287,
   Feathers: 288, Quill: 288, Quills: 288,
   Sulfur: 289, Gunpowder: 289,
-  Seed: 295,
+  Seed: 295, WheatSeed: 295, WheatSeeds: 295,
+  PumpkinSeed: 361,
+  MelonSeed: 362,
   Grain: 296,
   RedstoneDust: 331, RDust: 331,
   Skin: 334, Pelt: 334,
@@ -526,6 +580,7 @@ aliases: {
   Paintings: 321, Picture: 321,
   Door: 324, WoodenDoor: 324, WDoor: 324,
   IDoor: 330, MetalDoor: 330,
+  Gate: 107,
   RedstoneRepeater: 356, RedstoneDelay: 356, RedstoneDiode: 356, Repeater: 356, Delay: 356,
   GoldMusicDisc: 2256, GoldMusicDisc: 2256, GoldDisc: 2256, GoldenMusicDisc: 2256, GoldenMusicDisc: 2256,
   GoldenRecord: 2256, GoldenDisc: 2256, GoldenDisc: 2256, GoldCD: 2256, GoldenCD: 2256,

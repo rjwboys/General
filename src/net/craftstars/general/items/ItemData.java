@@ -9,6 +9,7 @@ public abstract class ItemData {
 	public final static ItemData COAL = new CoalData();
 	public final static ItemData STEP = new StepData();
 	public final static ItemData MAP = new MapData();
+	public final static ItemData STONE_BRICK = new StoneBrickData();
 	public final static ItemData SPAWNER = new CreatureBoxData();
 	public final static ItemData BOOK = new BookWormData();
 	public abstract boolean validate(ItemID id, Material check);
@@ -35,6 +36,8 @@ public abstract class ItemData {
 			return MAP;
 		case BOOK: // BookWorm support
 			return BOOK;
+		case SMOOTH_BRICK:
+			return STONE_BRICK;
 		}
 	}
 
