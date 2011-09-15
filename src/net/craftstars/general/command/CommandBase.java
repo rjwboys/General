@@ -204,11 +204,13 @@ public abstract class CommandBase implements CommandExecutor {
 			private char prefix;
 			private String channel;
 			private String command;
+			private String name;
 			
 			public IRCReturnSender(RelayedCommand from) {
 				prefix = from.getField("ircPrefix").charAt(0);
 				channel = from.getField("srcChannel");
 				command = from.getField("command");
+				name = from.getField("sender");
 			}
 
 			@Override
@@ -284,6 +286,11 @@ public abstract class CommandBase implements CommandExecutor {
 			@Override public void setOp(boolean value) {}
 
 			@Override public void recalculatePermissions() {}
+
+			@Override
+			public String getName() {
+				return name;
+			}
 		}
 	}
 }
