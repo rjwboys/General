@@ -22,15 +22,18 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.config.Configuration;
 
 public enum MobType {
+	CAVE_SPIDER(null, MobAlignment.ENEMY, null /* CreatureType.CAVE_SPIDER */, -1),
 	CHICKEN(null, MobAlignment.FRIENDLY, CreatureType.CHICKEN, 1),
 	COW(null, MobAlignment.FRIENDLY, CreatureType.COW, 2),
 	CREEPER(CreeperState.class, MobAlignment.ENEMY, CreatureType.CREEPER, 5),
+	ENDERMAN(null, MobAlignment.NEUTRAL, null /* CreatureType.ENDERMAN */, -1),
 	GHAST(null, MobAlignment.ENEMY, CreatureType.GHAST, 6),
 	GIANT_ZOMBIE(null, MobAlignment.ENEMY, CreatureType.GIANT, 13),
 	HUMAN(null, MobAlignment.ENEMY, CreatureType.MONSTER, 12),
 	PIG(PigState.class, MobAlignment.FRIENDLY, CreatureType.PIG, 0),
 	PIG_ZOMBIE(PigZombieAttitude.class, MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 7),
 	SHEEP(SheepState.class, MobAlignment.FRIENDLY, CreatureType.SHEEP, 3),
+	SILVERFISH(null, MobAlignment.ENEMY, null /* CreatureType.SILVERFISH */, -1),
 	SKELETON(null, MobAlignment.ENEMY, CreatureType.SKELETON, 8),
 	SLIME(SlimeSize.class, MobAlignment.ENEMY, CreatureType.SLIME, 11),
 	SPIDER(null, MobAlignment.ENEMY, CreatureType.SPIDER, 9),
@@ -64,6 +67,7 @@ public enum MobType {
 		for(MobType mob : values()) {
 			@SuppressWarnings("unchecked")
 			List<Object> names = (List<Object>) yml.getProperty("mobs.mob" + mob.id);
+			if(names == null) continue;
 			boolean gotBase = false;
 			ArrayList<String> aliases = new ArrayList<String>();
 			for(Object name : names) {
