@@ -12,15 +12,12 @@ import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
-import net.minecraft.server.ChunkCoordinates;
-import net.minecraft.server.EntityPlayer;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class Destination {
@@ -224,17 +221,11 @@ public class Destination {
 	
 	public static Destination homeOf(Player player) {
 		if(player == null) return null;
-		// Begin accessing Minecraft code
-		// TODO: Rewrite to use Bukkit API
-		CraftPlayer cp = (CraftPlayer) player;
-		EntityPlayer ep = cp.getHandle();
-		ChunkCoordinates coords = ep.getBed();
-		if(coords != null) {
-			Location loc = new Location(player.getWorld(), coords.x, coords.y, coords.z);
+		Location loc = player.getBedSpawnLocation();
+		if(loc != null) {
 			String name = LanguageText.DESTINATION_THEIR_HOME.value("player", player.getDisplayName());
 			return new Destination(loc, player, name, DestinationType.HOME);
 		}
-		// End accessing Minecraft code
 		return spawnOf(player);
 	}
 	
