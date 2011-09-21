@@ -45,6 +45,14 @@ mobs:
   mob14:
    - Wolf: Wolves
    - Dog: Dogs
+  mob15:
+   - CaveSpider: CaveSpiders
+   - PoisonSpider: PoisonSpiders
+   - BlueSpider: BlueSpiders
+  mob16:
+   - Enderman: Endermen
+  mob17:
+   - Silverfish
 
 data:
   mob0:
