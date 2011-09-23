@@ -26,12 +26,14 @@ import org.bukkit.entity.Player;
 
 public class Target {
 	private List<LivingEntity> teleportees;
+	private World world;
 	private TargetType type;
 	private String title;
 	
-	private Target(List<LivingEntity> l, TargetType t) {
+	private Target(List<LivingEntity> l, World w, TargetType t) {
 		teleportees = l;
 		type = t;
+		world = w;
 		switch(t) {
 		case SELF:
 			title = LanguageText.TARGET_SELF.value();
@@ -57,17 +59,23 @@ public class Target {
 				title = LanguageText.TARGET_ONE_MOB.value("mob", entity);
 			}
 		break;
+		default:
 		}
 	}
 	
-	public boolean hasPermission(CommandSender sender) {
-		boolean perm = type.hasPermission(sender);
+	private Target(World w) {
+		type = TargetType.WORLD;
+		title = w.getName();
+		teleportees = new ArrayList<LivingEntity>();
+	}
+	
+	public boolean hasMassPermission(CommandSender sender) {
+		boolean canMass;
 		if(teleportees.size() > 1) {
-			boolean canMass = Toolbox.hasPermission(sender, "general.teleport.mass");
-			perm = perm && canMass;
+			canMass = Toolbox.hasPermission(sender, "general.teleport.mass");
 			if(!canMass) Messaging.lacksPermission(sender, "general.teleport.mass");
-		}
-		return perm;
+		} else canMass = true;
+		return canMass;
 	}
 	
 	public void teleport(Destination to) {
@@ -117,20 +125,20 @@ public class Target {
 		if(victim != null) {
 			TargetType tt = TargetType.OTHER;
 			if(victim.equals(teleporter)) tt = TargetType.SELF;
-			return new Target(Arrays.asList(victim), tt);
+			return new Target(Arrays.asList(victim), victim.getWorld(), tt);
 		}
 		// Is it a world? Optionally prefixed by @
 		World globe = Toolbox.matchWorld(targ.replaceFirst("^@", ""));
 		if(globe != null) {
 			List<Player> players = globe.getPlayers();
-			return new Target(new ArrayList<LivingEntity>(players), TargetType.OTHER);
+			return new Target(new ArrayList<LivingEntity>(players), globe, TargetType.OTHER);
 		}
 		// Is it a wildcard?
 		if(targ.equals("*")) {
 			ArrayList<LivingEntity> players = new ArrayList<LivingEntity>();
 			for(World flat : mc.getWorlds())
 				players.addAll(flat.getPlayers());
-			return new Target(players, TargetType.OTHER);
+			return new Target(players, null, TargetType.OTHER);
 		}
 		// Is it a list of players?
 		if(targ.contains(",")) {
@@ -138,7 +146,7 @@ public class Target {
 			ArrayList<LivingEntity> players = new ArrayList<LivingEntity>();
 			for(String p : split)
 				players.add(Toolbox.matchPlayer(p));
-			return new Target(players, TargetType.OTHER);
+			return new Target(players, null, TargetType.OTHER);
 		}
 		if(teleporter != null) {
 			// Is it a special keyword?
@@ -150,7 +158,7 @@ public class Target {
 					if(what instanceof Player) players.add((LivingEntity) what);
 				}
 				if(players.size() > 0) {
-					return new Target(players, TargetType.OTHER);
+					return new Target(players, teleporter.getWorld(), TargetType.OTHER);
 				} else {
 					Messaging.send(notify, LanguageText.TARGET_NO_PLAYERS);
 				}
@@ -162,7 +170,7 @@ public class Target {
 					if(what instanceof LivingEntity && ! (what instanceof Player)) victims.add((LivingEntity) what);
 				}
 				if(victims.size() > 0) {
-					return new Target(victims, TargetType.MOBS);
+					return new Target(victims, teleporter.getWorld(), TargetType.MOBS);
 				} else {
 					Messaging.send(notify, LanguageText.TARGET_NO_MOBS);
 				}
@@ -185,7 +193,7 @@ public class Target {
 					if(victim instanceof Player)
 						tt = TargetType.OTHER;
 					else tt = TargetType.MOBS;
-					return new Target(Arrays.asList(victim), tt);
+					return new Target(Arrays.asList(victim), victim.getWorld(), tt);
 				} else {
 					Messaging.send(notify, LanguageText.TARGET_NO_TARGET);
 				}
@@ -198,7 +206,11 @@ public class Target {
 	}
 	
 	public static Target fromPlayer(Player player) {
-		return new Target(Arrays.asList((LivingEntity) player), TargetType.SELF);
+		return new Target(Arrays.asList((LivingEntity) player), player.getWorld(), TargetType.SELF);
+	}
+	
+	public static Target fromWorld(World world) {
+		return new Target(world);
 	}
 	
 	private static int findInSightLine(Player who, LivingEntity what, int radius) {
@@ -229,7 +241,15 @@ public class Target {
 		return type;
 	}
 
-	public boolean hasInstant(CommandSender sender) {
-		return type.hasInstant(sender);
+	public String getPermission(String base) {
+		return type.getPermission(base);
+	}
+
+	public void makeOther() {
+		if(type == TargetType.SELF) type = TargetType.OTHER;
+	}
+
+	public World getWorld() {
+		return world;
 	}
 }

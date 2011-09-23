@@ -63,40 +63,20 @@ public class Destination {
 		return keystone;
 	}
 	
-	public boolean hasPermission(CommandSender sender, String base) {
+	public boolean hasPermission(CommandSender sender, String base, Target what) {
 		if(sender instanceof ConsoleCommandSender) return true;
 		if(!(sender instanceof Player)) return false;
 		Player player = (Player) sender;
 		boolean perm = true;
+		String permission = what.getPermission(base);
+		permission += ".into." + player.getWorld().getName().replace('.','`');
 		for(DestinationType type : t) {
-			boolean can = type.hasPermission(player, base);
+			boolean can = type.hasPermission(player, base, what);
 			perm = perm && can;
-			if(type.isSpecial() && !player.equals(keystone)) {
-				boolean canOther = type.hasOtherPermission(player, base);
-				perm = perm && canOther;
-			}
 		}
-		if(!player.getWorld().equals(calc.getWorld())) {
-			perm = perm && hasWorldPermission(player, calc.getWorld(), base);
-			perm = perm && canLeaveWorld(player, player.getWorld(), base);
-		}
+		boolean canMass = what.hasMassPermission(sender);
+		perm = perm && canMass;
 		return perm;
-	}
-	
-	public static boolean hasWorldPermission(CommandSender player, World world, String base) {
-		String name = world.getName();
-		String node = base + ".into." + name;
-		if(Toolbox.hasPermission(player, node)) return true;
-		Messaging.lacksPermission(player, node, LanguageText.LACK_TELEPORT_INTO, "destination", name);
-		return false;
-	}
-	
-	public static boolean canLeaveWorld(CommandSender player, World world, String base) {
-		String name = world.getName();
-		String node = base + ".from";
-		if(Toolbox.hasPermission(player, node)) return true;
-		Messaging.lacksPermission(player, node, LanguageText.LACK_TELEPORT_FROM, "destination", name);
-		return false;
 	}
 
 	public String[] getCostClasses(Player sender, String base) {
@@ -177,10 +157,12 @@ public class Destination {
 			General.logger.debug(Arrays.asList(split).toString());
 			if(split.length == 2) {
 				Player target = Toolbox.matchPlayer(split[0]);
+				other = !target.equals(keystone);
 				if(split[1].equalsIgnoreCase("there")) return targetOf(target);
 				if(split[1].equalsIgnoreCase("home")) return homeOf(target);
 				if(split[1].equalsIgnoreCase("spawn")) return spawnOf(target);
 				if(split[1].equalsIgnoreCase("compass")) return compassOf(target);
+				other = false;
 			}
 		}
 		// Well, nothing matches; give up.
@@ -188,6 +170,7 @@ public class Destination {
 		return null;
 	}
 	
+	private static boolean other;
 	public static Destination fromWorld(World globe) {
 		if(globe == null) return null;
 		return new Destination(globe, DestinationType.WORLD);
@@ -196,7 +179,9 @@ public class Destination {
 	public static Destination targetOf(Player player) {
 		if(player == null) return null;
 		Location targetBlock = Toolbox.getTargetBlock(player);
-		return new Destination(targetBlock, player, player.getDisplayName(), DestinationType.TARGET);
+		String name = player.getDisplayName();
+		if(!other) return new Destination(targetBlock, player, name, DestinationType.TARGET);
+		else return new Destination(targetBlock, player, name, DestinationType.TARGET, DestinationType.OTHER);
 	}
 	
 	public static Destination locOf(Player player) {
@@ -206,7 +191,9 @@ public class Destination {
 	
 	public static Destination spawnOf(Player player) {
 		if(player == null) return null;
-		Destination d = new Destination(player.getWorld(), DestinationType.SPAWN);
+		Destination d;
+		if(!other) d = new Destination(player.getWorld(), DestinationType.SPAWN);
+		else d = new Destination(player.getWorld(), DestinationType.SPAWN, DestinationType.OTHER);
 		d.keystone = player;
 		return d;
 	}
@@ -214,7 +201,9 @@ public class Destination {
 	public static Destination compassOf(Player player) {
 		if(player == null) return null;
 		String name = LanguageText.DESTINATION_THEIR_COMPASS.value("player", player.getDisplayName());
-		Destination d = new Destination(player.getCompassTarget(), name, DestinationType.COMPASS);
+		Destination d;
+		if(!other) d = new Destination(player.getCompassTarget(), name, DestinationType.COMPASS);
+		else d = new Destination(player.getCompassTarget(), name, DestinationType.COMPASS, DestinationType.OTHER);
 		d.keystone = player;
 		return d;
 	}
@@ -224,7 +213,8 @@ public class Destination {
 		Location loc = player.getBedSpawnLocation();
 		if(loc != null) {
 			String name = LanguageText.DESTINATION_THEIR_HOME.value("player", player.getDisplayName());
-			return new Destination(loc, player, name, DestinationType.HOME);
+			if(!other) return new Destination(loc, player, name, DestinationType.HOME);
+			else return new Destination(loc, player, name, DestinationType.HOME, DestinationType.OTHER);
 		}
 		return spawnOf(player);
 	}
@@ -237,10 +227,15 @@ public class Destination {
 		calc.setWorld(world);
 	}
 
-	public boolean hasInstant(CommandSender sender, String base) {
+	public boolean hasInstant(CommandSender sender, String base, Target what) {
+		if(sender instanceof ConsoleCommandSender) return true;
+		if(!(sender instanceof Player)) return false;
+		Player player = (Player) sender;
 		boolean perm = true;
+		String permission = what.getPermission(base);
+		permission += ".into." + player.getWorld().getName().replace('.','`');
 		for(DestinationType type : t) {
-			boolean can = type.hasInstant(sender, base);
+			boolean can = type.hasInstant(sender, base, what);
 			perm = perm && can;
 		}
 		return perm;

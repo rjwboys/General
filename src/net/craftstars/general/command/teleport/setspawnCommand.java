@@ -7,6 +7,7 @@ import java.util.Map;
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.teleport.Destination;
+import net.craftstars.general.teleport.Target;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Toolbox;
@@ -65,22 +66,19 @@ public class setspawnCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(command.equals("setspawn")) {
-			if(Toolbox.lacksPermission(sender, "general.setspawn.world", "general.spawn.set"))
-				return Messaging.lacksPermission(sender, "general.setspawn.world");
 			Destination dest = (Destination) args.get("dest");
 			World world = (World) args.get("world");
-			setSpawn(sender, dest, world);
+			if(dest.hasPermission(sender, "general.setspawn", Target.fromWorld(world)))
+				setSpawn(sender, dest, world);
 			return true;
 		} else if(command.equals("sethome")) {
 			Destination dest = (Destination) args.get("dest");
 			Player who = (Player) args.get("player");
 			boolean other = (Boolean) args.get("other");
-			if(other) {
-				if(Toolbox.lacksPermission(sender, "general.setspawn.other", "general.spawn.home.other"))
-					return Messaging.lacksPermission(sender, "general.setspawn.other");
-			} else if(Toolbox.lacksPermission(sender, "general.setspawn.self", "general.spawn.home"))
-				return Messaging.lacksPermission(sender, "general.setspawn.self");
-			setHome(sender, dest, who);
+			Target what = Target.fromPlayer(who);
+			if(other) what.makeOther();
+			if(dest.hasPermission(sender, "general.setspawn", what))
+				setHome(sender, dest, who);
 			return true;
 		}
 		return false;
@@ -119,28 +117,26 @@ public class setspawnCommand extends CommandBase {
 			Player setter = (Player) sender;
 			if(cannotPay(dest, setter, "economy.setspawn.world")) return;
 		}
-		if(dest.hasPermission(sender, "general.setspawn")) {
-			Location loc = dest.getLoc();
-			World world = loc.getWorld();
-			LanguageText feedback;
-			if(from == null || !world.equals(from)) {
-				feedback = LanguageText.SETSPAWN_WORLD;
-			} else {
-				feedback = LanguageText.SETSPAWN;
-			}
-			Player who = dest.getPlayer();
-			if(who != null && loc.equals(who.getLocation())) {
-				if(who.equals(sender)) {
-					feedback = LanguageText.SETSPAWN_HERE;
-				} else {
-					feedback = LanguageText.SETSPAWN_PLAYER;
-				}
-			}
-			if(!world.setSpawnLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()))
-				feedback = LanguageText.SETSPAWN_ERROR;
-			String player = who == null ? "null" : who.getDisplayName();
-			Messaging.send(sender, feedback.value("world", world.getName(), "player", player,
-				"x", loc.getBlockX(), "y", loc.getBlockY(), "z", loc.getBlockZ()));
+		Location loc = dest.getLoc();
+		World world = loc.getWorld();
+		LanguageText feedback;
+		if(from == null || !world.equals(from)) {
+			feedback = LanguageText.SETSPAWN_WORLD;
+		} else {
+			feedback = LanguageText.SETSPAWN;
 		}
+		Player who = dest.getPlayer();
+		if(who != null && loc.equals(who.getLocation())) {
+			if(who.equals(sender)) {
+				feedback = LanguageText.SETSPAWN_HERE;
+			} else {
+				feedback = LanguageText.SETSPAWN_PLAYER;
+			}
+		}
+		if(!world.setSpawnLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()))
+			feedback = LanguageText.SETSPAWN_ERROR;
+		String player = who == null ? "null" : who.getDisplayName();
+		Messaging.send(sender, feedback.value("world", world.getName(), "player", player,
+			"x", loc.getBlockX(), "y", loc.getBlockY(), "z", loc.getBlockZ()));
 	}
 }

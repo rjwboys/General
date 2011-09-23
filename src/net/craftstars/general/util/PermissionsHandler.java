@@ -1,10 +1,14 @@
 package net.craftstars.general.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import net.craftstars.general.General;
 import net.craftstars.general.items.Kits;
@@ -28,11 +32,14 @@ import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.PluginManager;
 
 public class PermissionsHandler extends WorldListener {
 	public PermissionsHandler() {
 		// Here we set up the complicated container permissions
+		PermissionSet.init();
 		for(PermissionSet set : PermissionSet.values()) set.build();
+		PermissionSet.finish();
 		Bukkit.getServer().getPluginManager().registerEvent(Type.WORLD_LOAD, this, Priority.Monitor, General.plugin);
 		Bukkit.getServer().getPluginManager().registerEvent(Type.WORLD_UNLOAD, this, Priority.Monitor, General.plugin);
 	}
@@ -47,27 +54,24 @@ public class PermissionsHandler extends WorldListener {
 	
 	@Override
 	public void onWorldLoad(WorldLoadEvent event) {
-		List<String> destinationBases = new ArrayList<String>();
-		destinationBases.addAll(Arrays.asList("general.teleport", "general.setspawn", "general.spawn.set"));
-		destinationBases.addAll(PermissionSet.teleportBases);
-		for(String base : destinationBases) {
-			Permission perm = Bukkit.getServer().getPluginManager().getPermission(base + ".into.*");
-			Map<String, Boolean> worlds = perm.getChildren();
-			worlds.put(event.getWorld().getName(), true);
-			perm.recalculatePermissibles();
-		}
+		// TODO: Is there a more graceful way?
+		nukeTeleportPermissions();
+		PermissionSet.TARGET_DEST.build();
 	}
 	
 	@Override
 	public void onWorldUnload(WorldUnloadEvent event) {
-		List<String> destinationBases = new ArrayList<String>();
-		destinationBases.addAll(Arrays.asList("general.teleport", "general.setspawn", "general.spawn.set"));
-		destinationBases.addAll(PermissionSet.teleportBases);
-		for(String base : destinationBases) {
-			Permission perm = Bukkit.getServer().getPluginManager().getPermission(base + ".into.*");
-			Map<String, Boolean> worlds = perm.getChildren();
-			worlds.remove(event.getWorld().getName());
-			perm.recalculatePermissibles();
+		// TODO: There is a more graceful way. Do it.
+		nukeTeleportPermissions();
+		PermissionSet.TARGET_DEST.build();
+	}
+
+	private void nukeTeleportPermissions() {
+		PluginManager pm = Bukkit.getPluginManager();
+		Set<Permission> perms = pm.getPermissions();
+		for(Permission p : perms) {
+			if(p.getName().startsWith("general.teleport") || p.getName().startsWith("general.setspawn"))
+				pm.removePermission(p);
 		}
 	}
 
@@ -176,92 +180,144 @@ public class PermissionsHandler extends WorldListener {
 					"Gives access to all mob variants, but only for mobs you already have separate access to.", permsMap);
 			}
 		},
-		TELEPORT {
-			@Override public void build() {
-				teleportBases = new ArrayList<String>();
-				// general.teleport.any, general.teleport.any.instant, general.teleport.<target>.*
-				HashMap<String, Boolean> allTargets = new HashMap<String,Boolean>();
-				allTargets.put("general.teleport", true);
-				HashMap<String, Boolean> allInstants = new HashMap<String,Boolean>();
-				allInstants.put("general.teleport", true);
-				for(TargetType targ : TargetType.values()) {
-					String base = "general.teleport." + targ.toString().toLowerCase();
-					allTargets.put(base, true);
-					allInstants.put(base + ".instant", true);
-					HashMap<String, Boolean> allDests = new HashMap<String,Boolean>();
-					allDests.put("general.teleport", true);
-					allDests.put(base, true);
-					allDests.put(base + ".to.*", true);
-					allDests.put(base + ".into.*", true);
-					allDests.put(base + ".from", true);
-					register(base + ".*", "Gives permission to teleport " + targ.getName() + " to anywhere at all.",
-						allDests);
-					register(base + ".from", "Gives permission to teleport to from the current world to another one.");
-					// for general.teleport.<target>.to|into|from.*
-					teleportBases.add(base);
+		TARGET_DEST {
+			class Base implements Cloneable {
+				private String[] bases = {"general.teleport.?","general.teleport.?.instant","general.setspawn.?"};
+				private String[] descrs = {"teleport", "instantly teleport", "set the spawn of"};
+				public Base subst(String replacement) {
+					Base clone = clone();
+					String replace = replacement.isEmpty() ? ".?" : "?";
+					for(int i = 0; i < clone.bases.length; i++)
+						clone.bases[i] = clone.bases[i].replace(replace, replacement);
+					return clone;
 				}
-				allTargets.put("general.teleport.mass", true);
-				register("general.teleport.any", "Gives permission to teleport anything.", allTargets);
-				register("general.teleport.any.instant", "Gives permission to instantly teleport anything.", allInstants);
+				@Override
+				public Base clone() {
+					Base clone = new Base();
+					clone.bases = bases.clone();
+					clone.descrs = descrs.clone();
+					return clone;
+				}
+				public Base append(String string) {
+					Base clone = clone();
+					for(int i = 0; i < clone.bases.length; i++)
+						clone.bases[i] += string;
+					return clone;
+				}
+				public void register() {
+					for(int i = 0; i < bases.length; i++)
+						PermissionSet.TARGET_DEST.register(bases[i], "Gives permission to " + descrs[i]);
+				}
+				public void register(Set<Base> children) {
+					for(int i = 0; i < bases.length; i++) {
+						Map<String, Boolean> map = new HashMap<String, Boolean>();
+						for(Base child : children) map.put(child.bases[i], true);
+						if(i == 1) map.put(bases[0], true);
+						PermissionSet.TARGET_DEST.register(bases[i], "Gives permission to " + descrs[i], map);
+					}
+				}
 			}
-		},
-		DESTINATION {
 			@Override public void build() {
-				// This setup is to avoid looping twice through the possible targets
-				List<String> destinationBases = new ArrayList<String>();
-				destinationBases.addAll(Arrays.asList("general.teleport", "general.setspawn", "general.spawn.set"));
-				destinationBases.addAll(PermissionSet.teleportBases);
-				// This is setup for the teleport.basic permissions
-				List<String> basicDestinations = Option.TELEPORT_BASICS.get();
-				// Destination-based permissions
-				for(String base : destinationBases) {
-					String permDesc, basePermDesc;
-					boolean isTeleport = false;
-					if(base.contains("spawn"))
-						basePermDesc = "set the spawn";
-					else {
-						isTeleport = true;
-						basePermDesc = "teleport ";
-						if(!base.endsWith("teleport")) {
-							String target = base.substring(base.lastIndexOf('.') + 1).toUpperCase();
-							basePermDesc += TargetType.valueOf(target).getName() + " ";
+				// Three nested loops; first targets, then worlds, and finally destinations.
+				Base base = new Base();
+				Set<Base> allChildren = set();
+				Map<DestinationType, Set<Base>> destinationsChildren = this.<Set<Base>>destmap();
+				Map<World, Set<Base>> worldsChildren = new HashMap<World,Set<Base>>();
+				Map<DestinationType, Map<World, Set<Base>>> worldsDestChildren = this.<Map<World,Set<Base>>>destmap();
+				for(TargetType targ : TargetType.values()) {
+					Base targBase = base.subst(targ.toString().toLowerCase() + ".?");
+					targBase = targBase.append(" " + targ.getName());
+					Set<Base> targetsChildren = set();
+					Map<DestinationType, Set<Base>> targetsDestChildren = this.<Set<Base>>destmap();
+					for(World world : Bukkit.getServer().getWorlds()) {
+						Base worldBase = targBase.subst("into." + world.getName() + ".?");
+						worldBase = worldBase.append(" into " + world.getName());
+						Set<Base> targetsWorldsChildren = set();
+						for(DestinationType dest : DestinationType.values()) {
+							// general.<cmd>.<target>.into.<world>.to.<dest>
+							Base destBase = worldBase.subst("to." + dest.toString().toLowerCase());
+							destBase = destBase.append(" at " + dest.getName(false));
+							destBase.register();
+							// Other permissions
+							targetsWorldsChildren.add(destBase);
+							if(!targetsDestChildren.containsKey(dest))
+								targetsDestChildren.put(dest, set());
+							targetsDestChildren.get(dest).add(destBase);
+							if(!destinationsChildren.containsKey(dest))
+								destinationsChildren.put(dest, set());
+							destinationsChildren.get(dest).add(destBase);
+							if(!worldsDestChildren.containsKey(dest))
+								worldsDestChildren.put(dest, new HashMap<World, Set<Base>>());
+							if(!worldsDestChildren.get(dest).containsKey(world))
+								worldsDestChildren.get(dest).put(world, set());
+							worldsDestChildren.get(dest).get(world).add(destBase);
 						}
+						// general.<cmd>.<target>.into.<world>
+						Base targetWorldBase = worldBase.subst("");
+						targetWorldBase.register(targetsWorldsChildren);
+						// Other permissions
+						targetsChildren.add(targetWorldBase);
+						if(!worldsChildren.containsKey(world))
+							worldsChildren.put(world, set());
+						worldsChildren.get(world).add(targetWorldBase);
+						
 					}
-					// <base>.to.*
-					HashMap<String, Boolean> to = new HashMap<String,Boolean>();
-					to.put(base, true);
-					HashMap<String, Boolean> instants = null;
-					instants = new HashMap<String,Boolean>();
-					instants.put(base, true);
-					for(DestinationType dest : DestinationType.values()) {
-						to.put(base + ".to." + dest.toString().toLowerCase(), true);
-						instants.put(base + ".to." + dest.toString().toLowerCase() + ".instant", true);
+					// general.<cmd>.<target>
+					Base targetsBase = targBase.subst("");
+					targetsBase.register(targetsChildren);
+					// general.<cmd>.<target>.to.<dest>
+					for(Entry<DestinationType,Set<Base>> entry : targetsDestChildren.entrySet()) {
+						Base targetsDestBase = targBase.subst("to." + entry.getKey().toString().toLowerCase());
+						targetsDestBase.register(entry.getValue());
 					}
-					permDesc = basePermDesc + " to";
-					register(base + ".to.*", "Gives permission to " + permDesc + " any type of destination.", to);
-					if(isTeleport) register(base + ".to.*.instant",
-						"Gives permission to instantly" + permDesc + " any type of destination.", instants);
-					// <base>.into.*, <base>.from.*
-					HashMap<String, Boolean> into = new HashMap<String,Boolean>();
-					for(World world : Bukkit.getServer().getWorlds()) into.put(base + ".into." + world.getName(), true);
-					if(base.contains("spawn"))
-						permDesc = "remotely " + basePermDesc + " of";
-					else permDesc = basePermDesc + " to";
-					register(base + ".into.*", "Gives permission to " + permDesc + " any world.", into);
-					// <base>.basic
-					HashMap<String, Boolean> basics = new HashMap<String,Boolean>();
-					basics.put("general.teleport", true);
-					if(base.equals("general.teleport")) // general.teleport.basic also includes general.teleport.self
-						basics.put("general.teleport.self", true);
-					for(String dest : basicDestinations)
-						basics.put(base + ".to." + dest.toLowerCase(), true);
-					register(base + ".basic", "Gives basic abilities to " + basePermDesc + ".", basics);
+					// Other permissions
+					allChildren.add(targetsBase);
+					
 				}
+				// general.<cmd>
+				Base allBase = base.subst("");
+				allBase.register(allChildren);
+				// general.<cmd>.to.<dest>
+				for(Entry<DestinationType,Set<Base>> entry : destinationsChildren.entrySet()) {
+					Base destinationsBase = base.subst("to." + entry.getKey().toString().toLowerCase());
+					destinationsBase.register(entry.getValue());
+				}
+				// general.<cmd>.into.<world>
+				for(Entry<World,Set<Base>> entry : worldsChildren.entrySet()) {
+					Base worldsBase = base.subst("into." + entry.getKey().toString().toLowerCase());
+					worldsBase.register(entry.getValue());
+				}
+				// general.<cmd>.into.<world>.to.<dest>
+				for(Entry<DestinationType,Map<World,Set<Base>>> entry : worldsDestChildren.entrySet()) {
+					for(Entry<World,Set<Base>> subentry : entry.getValue().entrySet()) {
+						Base worldsDestBase = base.subst("into." + subentry.getKey().toString().toLowerCase() + ".?");
+						worldsDestBase = base.subst("to." + entry.getKey().toString().toLowerCase());
+						worldsDestBase.register(subentry.getValue());
+					}
+				}
+			}
+			private Set<Base> set() {
+				return new HashSet<Base>();
+			}
+			private <V> EnumMap<DestinationType,V> destmap() {
+				return new EnumMap<DestinationType,V>(DestinationType.class);
 			}
 		},
 		;
-		protected static ArrayList<String> teleportBases;
 		public abstract void build();
+		private static PrintWriter file = null;
+		
+		public static void init() {
+			if(!Option.EXPORT_PERMISSIONS.get()) return;
+			try {
+				file = new PrintWriter(new File(General.plugin.getDataFolder(), "allpermissions.txt"));
+			} catch(FileNotFoundException e) {
+				file = null;
+			}
+		}
+		public static void finish() {
+			if(file != null) file.close();
+		}
 		protected void register(String name) {
 			register(name, null, null, null);
 		}
@@ -296,8 +352,10 @@ public class PermissionsHandler extends WorldListener {
 			register(name, desc, def ? PermissionDefault.TRUE : PermissionDefault.FALSE, children);
 		}
 		protected void register(String name, String desc, PermissionDefault def, Map<String,Boolean> children) {
+			// Welcome to Rome!
 			Permission perm = new Permission(name, desc, def, children);
 			Bukkit.getServer().getPluginManager().addPermission(perm);
+			if(file != null) file.println(name);
 		}
 	}
 }

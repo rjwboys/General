@@ -23,16 +23,6 @@ public class goCommand extends CommandBase {
 		super(instance);
 	}
 
-	public boolean hasDestPermission(CommandSender sender, Target targ, Destination dest) {
-		if(dest.hasPermission(sender, "general.teleport")) return true;
-		return dest.hasPermission(sender, targ.getType().getPermission("general.teleport"));
-	}
-
-	public boolean hasDestInstant(CommandSender sender, Target targ, Destination dest) {
-		if(dest.hasInstant(sender, "general.teleport")) return true;
-		return dest.hasInstant(sender, targ.getType().getPermission("general.teleport"));
-	}
-
 	@Override
 	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -58,7 +48,7 @@ public class goCommand extends CommandBase {
 			return Messaging.lacksPermission(sender, "general.teleport");
 		final Target target = (Target) args.get("target");
 		final Destination dest = (Destination) args.get("dest");
-		if(target.hasPermission(sender) && hasDestPermission(sender, target, dest)) {
+		if(dest.hasPermission(sender, "general.teleport", target)) {
 			if(sender instanceof Player) {
 				final Player player = (Player) sender;
 				String[] costs = dest.getCostClasses(player, "general.teleport");
@@ -78,7 +68,7 @@ public class goCommand extends CommandBase {
 					}
 				};
 				int warmup = Option.TELEPORT_WARMUP.get();
-				if(warmup == 0 || (target.hasInstant(sender) && hasDestInstant(player, target, dest)))
+				if(warmup == 0 || dest.hasInstant(player, "general.teleport", target))
 					teleport.run();
 				else {
 					Messaging.send(sender, LanguageText.TELEPORT_WARMUP.value("time", warmup));

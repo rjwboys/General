@@ -14,6 +14,7 @@ public abstract class Option {
 	public static OptionBoolean AUTO_SAVE = new OptionBoolean("auto-save", false);
 	public static OptionBoolean LOG_COMMANDS = new OptionBoolean("log-commands", false);
 	public static OptionString LANGUAGE = new OptionString("language", "en");
+	public static OptionBoolean EXPORT_PERMISSIONS = new OptionBoolean("export-permissions", false);
 	// Playerlist settings
 	public static OptionBoolean SHOW_WORLD = new OptionBoolean("playerlist.show-world", false);
 	public static OptionBoolean SHOW_HEALTH = new OptionBoolean("playerlist.show-health", true);

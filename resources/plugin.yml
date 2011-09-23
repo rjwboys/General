@@ -104,7 +104,12 @@ commands:
     description: Kicks a player off the server
     usage: /<command> player [reason]
 permissions:
-  general.*:
+  # Wildcard syntax for backwards compatibility
+  general.*: {children: {general: true}}
+  general.teleport.*: {children: {general.teleport.all: true}}
+  general.setspawn.*: {children: {general.setspawn.world: true}}
+  # Actual permissions start here
+  general:
     description: Gives all General permissions.
     # General defines no permissions that an op should not have.
     default: op
@@ -141,7 +146,7 @@ permissions:
     description: Allows you to use things free of cost that normally require money.
   general.basic:
     description: Gives a set of basic, harmless General permissions.
-    default: notop
+    default: true
     children:
       general.time: true
       general.playerlist: true
@@ -253,42 +258,13 @@ permissions:
     description: Lets you spawn any naturally-occurring colour of sheep.
     children:
       general.mobspawn.sheep.coloured.natural: true
-  general.teleport:
-    description: Gives basic access to the /teleport command, which is no access at all but required to use it.
-  general.teleport.*:
-    description: Gives full access to the /teleport command.
-    children:
-      general.teleport: true
-      general.teleport.any: true
-      general.teleport.to.*: true
-      general.teleport.into.*: true
-      general.teleport.from.*: true
-  general.teleport.mass:
-    description: Allows you to teleport several entities at a time.
-  general.teleport.instant:
-    description: Allows you to teleport instantly, without any warmup period.
-    children:
-      general.teleport.any.instant: true
-      general.teleport.to.*.instant: true
-  general.setspawn.*:
-    description: Gives full access to the /setspawn command.
-    children:
-      general.setspawn.self: true
-      general.setspawn.other: true
-      general.setspawn.world: true
-      general.setspawn.to.*: true
-      general.setspawn.into.*: true
-      general.setspawn.from.*: true
-  general.setspawn:
-    description: Gives access to the /setspawn command for worlds.
-    children:
-      general.setspawn.world: true
-  general.setspawn.world:
-    description: Gives access to the /setspawn command for worlds.
-  general.setspawn.self:
-    description: Gives access to the /setspawn command for yourself, to set your bed location.
-  general.setspawn.other:
-    description: Gives access to the /setspawn command for players, to set their bed location.
+   general.teleport.mass:
+     description: Allows you to teleport several entities at a time.
+   general.teleport.all:
+     description: Gives full access to the teleport command, including bypassing warm-up
+     children:
+       general.teleport.instant: true
+       general.teleport.mass: true
   general.time.*:
     description: Allows you to view and set the time.
     children:
