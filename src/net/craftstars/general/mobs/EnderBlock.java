@@ -35,17 +35,21 @@ public class EnderBlock extends MobData {
 	public void setForMob(LivingEntity mob) {
 		if(block == null || !(mob instanceof Enderman)) return;
 		MaterialData mdata = block.getNewData((byte)data);
-		if(mdata == null) return;
+		if(mdata == null) mdata = new MaterialData(block, (byte)data);
 		((Enderman)mob).setCarriedMaterial(mdata);
 	}
 	
 	@Override
 	public void parse(CommandSender setter, String carry) {
 		ItemID item = Items.validate(carry);
-		if(item == null || !item.isValid() || !item.getMaterial().isBlock()) invalidate();
+		if(item == null) invalidate();
+		else if(!item.isValid()) invalidate();
+		else if(!item.getMaterial().isBlock()) invalidate();
 		else {
 			block = item.getMaterial();
-			data = item.getData();
+			if(item.getData() != null)
+				data = item.getData();
+			else data = 0;
 		}
 	}
 	

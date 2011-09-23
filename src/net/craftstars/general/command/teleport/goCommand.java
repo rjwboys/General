@@ -44,8 +44,6 @@ public class goCommand extends CommandBase {
 
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.teleport"))
-			return Messaging.lacksPermission(sender, "general.teleport");
 		final Target target = (Target) args.get("target");
 		final Destination dest = (Destination) args.get("dest");
 		if(dest.hasPermission(sender, "general.teleport", target)) {

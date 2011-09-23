@@ -42,11 +42,7 @@ public enum DestinationType {
 		return LanguageText.byNode(node).value();
 	}
 
-	public boolean hasInstant(CommandSender sender, String base, Target what) {
-		if(Toolbox.hasPermission(sender, getPermission(base) + ".instant")) return true;
-		Messaging.lacksPermission(sender, getPermission(base), LanguageText.LACK_INSTANT, "action",
-			LanguageText.LACK_TELEPORT.value("destination", getName(true), "world", what.getWorld().getName(),
-				"target", what.getName()));
-		return false;
+	public boolean hasInstant(CommandSender sender, String base) {
+		return Toolbox.hasPermission(sender, getPermission(base) + ".instant");
 	}
 }
