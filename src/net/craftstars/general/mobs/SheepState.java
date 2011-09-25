@@ -1,6 +1,5 @@
 package net.craftstars.general.mobs;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Random;
 
@@ -26,23 +25,14 @@ public class SheepState extends MobData {
 		DyeColor.BROWN, DyeColor.PINK
 	);
 	
+	public SheepState() {
+		super(MobType.SHEEP);
+	}
+	
 	@Override
 	public boolean hasPermission(CommandSender byWhom) {
-		if(Toolbox.hasPermission(byWhom, "general.mobspawn.variants")) return true;
 		if(sheared) return Toolbox.hasPermission(byWhom, "general.mobspawn.sheep.sheared");
-		else {
-			if(clr == DyeColor.WHITE) return true;
-			ArrayList<String> permissions = new ArrayList<String>();
-			permissions.add("general.mobspawn.sheep.coloured");
-			if(natural.contains(clr))
-				permissions.add("general.mobspawn.sheep.coloured.natural");
-			String colour = getColourName();
-			permissions.add("general.mobspawn.sheep.coloured." + colour);
-			int n = permissions.size();
-			for(int i = 0; i < n; i++)
-				permissions.add(permissions.get(i).replace("colour", "color"));
-			return Toolbox.hasPermission(byWhom, permissions.toArray(new String[0]));
-		}
+		else return Toolbox.hasPermission(byWhom, "general.mobspawn.sheep." + getColourName());
 	}
 	
 	@Override
@@ -89,8 +79,9 @@ public class SheepState extends MobData {
 	public void lacksPermission(CommandSender fromWhom) {
 		if(sheared) Messaging.lacksPermission(fromWhom, "general.mobspawn.sheep.sheared");
 		else {
-			String node = "general.mobspawn.sheep.coloured." + getColourName();
-			Messaging.lacksPermission(fromWhom, node, LanguageText.LACK_MOBSPAWN_SHEEP_COLOURED);
+			String colour = getColourName();
+			String node = "general.mobspawn.sheep." + colour;
+			Messaging.lacksPermission(fromWhom, node, LanguageText.LACK_MOBSPAWN_SHEEP_COLOURED, "colour", colour);
 		}
 	}
 
@@ -100,9 +91,7 @@ public class SheepState extends MobData {
 		String[] values = new String[nColours + 1];
 		for(int i = 0; i < nColours; i++) {
 			DyeColor thisColour = DyeColor.getByData((byte) i);
-			if(thisColour == DyeColor.WHITE)
-				values[i] = "default";
-			else values[i] = thisColour.toString().toLowerCase().replace('_', '-');
+			values[i] = thisColour.toString().toLowerCase().replace('_', '-');
 		}
 		values[nColours] = "sheared";
 		return values;

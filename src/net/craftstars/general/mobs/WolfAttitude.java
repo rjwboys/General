@@ -13,26 +13,8 @@ import org.bukkit.entity.Wolf;
 
 public class WolfAttitude extends MobData {
 	enum Attitude {
-		WILD {
-			@Override
-			public boolean hasPermission(CommandSender byWhom) {
-				return true;
-			}
-		},
-		ANGRY {
-			@Override
-			public boolean hasPermission(CommandSender byWhom) {
-				return Toolbox.hasPermission(byWhom, "general.mobspawn.wolf.angry","general.mobspawn.neutral.angry");
-			}
-		},
-		TAME {
-			@Override
-			public boolean hasPermission(CommandSender byWhom) {
-				return Toolbox.hasPermission(byWhom, "general.mobspawn.wolf.tamed");
-			}
-		};
+		WILD, ANGRY, TAMED;
 		private static HashMap<String, Attitude> mapping = new HashMap<String, Attitude>();
-		public abstract boolean hasPermission(CommandSender byWhom);
 		
 		static void setup() {
 			mapping.clear();
@@ -67,10 +49,13 @@ public class WolfAttitude extends MobData {
 		}
 	}
 	
+	public WolfAttitude() {
+		super(MobType.WOLF);
+	}
+	
 	@Override
 	public boolean hasPermission(CommandSender byWhom) {
-		if(Toolbox.hasPermission(byWhom, "general.mobspawn.variants")) return true;
-		return attitude.hasPermission(byWhom);
+		return Toolbox.hasPermission(byWhom, "general.mobspawn.wolf." + attitude.toString().toLowerCase());
 	}
 	
 	@Override
@@ -78,7 +63,7 @@ public class WolfAttitude extends MobData {
 		if(!(mob instanceof Wolf)) return;
 		Wolf dog = (Wolf) mob;
 		switch(attitude) {
-		case TAME:
+		case TAMED:
 			dog.setTamed(true);
 			dog.setOwner(player);
 			break;
@@ -94,14 +79,14 @@ public class WolfAttitude extends MobData {
 	public void parse(CommandSender setter, String data) {
 		attitude = Attitude.match(data);
 		if(attitude == null) {
-			attitude = Attitude.TAME;
+			attitude = Attitude.TAMED;
 			player = Toolbox.matchPlayer(data);
 			if(player == null) {
 				if(setter != null)
 					Messaging.invalidPlayer(setter, data);
 				invalidate();
 			}
-		} else if(attitude == Attitude.TAME && player == null && setter instanceof Player) {
+		} else if(attitude == Attitude.TAMED && player == null && setter instanceof Player) {
 			player = (Player) setter;
 		}
 	}

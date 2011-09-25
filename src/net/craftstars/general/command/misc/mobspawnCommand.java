@@ -160,9 +160,7 @@ public class mobspawnCommand extends CommandBase {
 		Location actual = where.add(xOffset, 0, zOffset);
 		while(actual.getBlock().getType() != Material.AIR)
 			actual = actual.add(0, 1, 0);
-		LivingEntity entity = mob.spawn(sender, actual);
-		mob.setData(entity, sender, data);
-		return entity;
+		return mob.spawn(sender, actual, data);
 	}
 	
 	private LivingEntity doSpawn(CommandSender sender, SpawnResult mob, Location where) {
@@ -179,7 +177,6 @@ public class mobspawnCommand extends CommandBase {
 	}
 	
 	private static class SpawnResult {
-		//public LivingEntity mob;
 		public MobType type;
 		public MobData data;
 		SpawnResult rider;

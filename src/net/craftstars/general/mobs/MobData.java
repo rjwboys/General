@@ -3,15 +3,22 @@ package net.craftstars.general.mobs;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 
+import net.craftstars.general.text.LanguageText;
+import net.craftstars.general.text.Messaging;
+
 public abstract class MobData {
 	public abstract boolean hasPermission(CommandSender sender);
-	public abstract void setForMob(LivingEntity mob);
+	public abstract void setForMob(LivingEntity entity);
 	public abstract void parse(CommandSender setter, String data);
 	public abstract String getCostNode(String baseNode);
-	public abstract void lacksPermission(CommandSender sender);
 	public abstract String[] getValues();
 	
 	protected boolean valid = true;
+	private MobType mob;
+	
+	MobData(MobType creature) {
+		mob = creature;
+	}
 	
 	public static MobData parse(MobType mob, CommandSender setter, String data) {
 		MobData instance = mob.getNewData();
@@ -35,31 +42,9 @@ public abstract class MobData {
 	public String getBasic() {
 		return getValues()[0];
 	}
-
-	private final static String[] noneValues = new String[] {"regular"};
-	public static final MobData none = new MobData() {
-		@Override
-		public boolean hasPermission(CommandSender byWhom) {
-			return true;
-		}
-
-		@Override
-		public void setForMob(LivingEntity mob) {}
-
-		@Override
-		public void parse(CommandSender setter, String data) {}
-
-		@Override
-		public String getCostNode(String node) {
-			return node + ".regular";
-		}
-
-		@Override
-		public void lacksPermission(CommandSender sender) {}
-
-		@Override
-		public String[] getValues() {
-			return noneValues.clone();
-		}
-	};
+	
+	public void lacksPermission(CommandSender sender) {
+		Messaging.lacksPermission(sender, mob.getPermission(), LanguageText.LACK_MOBSPAWN_MOB,
+			"mob", mob.getName(), "mobs", mob.getPluralName());
+	}
 }

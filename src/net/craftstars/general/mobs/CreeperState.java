@@ -11,11 +11,14 @@ public class CreeperState extends MobData {
 	private boolean powered = false;
 	private final static String[] values = new String[] {"regular","powered"};
 	
+	public CreeperState() {
+		super(MobType.CREEPER);
+	}
+	
 	@Override
 	public boolean hasPermission(CommandSender byWhom) {
-		if(powered)
-			return Toolbox.hasPermission(byWhom, "general.mobspawn.variants", "general.mobspawn.creeper.powered");
-		return true;
+		if(powered) return Toolbox.hasPermission(byWhom, "general.mobspawn.creeper.powered");
+		return Toolbox.hasPermission(byWhom, "general.mobspawn.creeper.regular");
 	}
 	
 	@Override
@@ -43,6 +46,7 @@ public class CreeperState extends MobData {
 	@Override
 	public void lacksPermission(CommandSender fromWhom) {
 		if(powered) Messaging.lacksPermission(fromWhom, "general.mobspawn.creeper.powered");
+		else super.lacksPermission(fromWhom);
 	}
 
 	@Override

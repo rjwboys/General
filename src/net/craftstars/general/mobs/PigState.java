@@ -11,10 +11,14 @@ public class PigState extends MobData {
 	private boolean saddled = false;
 	private final static String[] values = new String[] {"regular","saddled"};
 	
+	public PigState() {
+		super(MobType.PIG);
+	}
+	
 	@Override
 	public boolean hasPermission(CommandSender byWhom) {
-		if(saddled) return Toolbox.hasPermission(byWhom, "general.mobspawn.variants", "general.mobspawn.pig.saddled");
-		return true;
+		if(saddled) return Toolbox.hasPermission(byWhom, "general.mobspawn.pig.saddled");
+		return Toolbox.hasPermission(byWhom, "general.mobspawn.pig.regular");
 	}
 	
 	@Override
@@ -42,6 +46,7 @@ public class PigState extends MobData {
 	@Override
 	public void lacksPermission(CommandSender fromWhom) {
 		if(saddled) Messaging.lacksPermission(fromWhom, "general.mobspawn.pig.saddled");
+		else super.lacksPermission(fromWhom);
 	}
 
 	@Override

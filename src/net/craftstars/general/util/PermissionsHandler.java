@@ -16,13 +16,11 @@ import net.craftstars.general.items.Kit;
 import net.craftstars.general.mobs.MobAlignment;
 import net.craftstars.general.mobs.MobData;
 import net.craftstars.general.mobs.MobType;
-import net.craftstars.general.mobs.SlimeSize.NamedSize;
 import net.craftstars.general.teleport.DestinationType;
 import net.craftstars.general.teleport.TargetType;
 import net.craftstars.general.util.Option;
 
 import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
 import org.bukkit.World;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -109,75 +107,53 @@ public class PermissionsHandler extends WorldListener {
 		},
 		MOBSPAWN {
 			@Override public void build() {
-				// general.mobspawn.<mob>, general.mobspawn.all, general.mobspawn.<alignment>
-				HashMap<String, Boolean> allMobs = new HashMap<String,Boolean>();
-				HashMap<MobAlignment,HashMap<String,Boolean>> index = new HashMap<MobAlignment,HashMap<String,Boolean>>();
-				for(MobAlignment attitude : MobAlignment.values()) {
-					HashMap<String, Boolean> map = new HashMap<String,Boolean>();
-					map.put("general.mobspawn", true);
-					index.put(attitude, map);
-				}
-				allMobs.put("general.mobspawn", true);
-				for(MobType mob : MobType.values()) {
-					allMobs.put("general.mobspawn." + mob.getAlignment().toString().toLowerCase(), true);
-					register("general.mobspawn." + mob.toString().toLowerCase().replace('_', '-'),
-						"Gives permission to spawn " + mob.getPluralName() + ".");
-					HashMap<String,Boolean> addTo = index.get(mob.getAlignment());
-					addTo.put("general.mobspawn." + mob.toString().toLowerCase().replace('_', '-'), true);
-				}
-				for(MobAlignment attitude : MobAlignment.values()) {
-					HashMap<String,Boolean> useMap = index.get(attitude);
-					register("general.mobspawn." + attitude.toString().toLowerCase(),
-						"Gives permission to spawn " + attitude.toString().toLowerCase() + " mobs.", useMap);
-				}
-				register("general.mobspawn.all",
-					"Gives permission to spawn any type of mob, but only the basic variant of each.", allMobs);
-			}
-		},
-		SHEEP {
-			@Override public void build() {
-				// general.mobspawn.sheep.coloured.*, general.mobspawn.sheep.colo[u]red.<colour>
-				HashMap<String, Boolean> allColours = new HashMap<String,Boolean>();
-				allColours.put("general.mobspawn", true);
-				for(DyeColor colour : DyeColor.values()) {
-					if(colour == DyeColor.WHITE) continue;
-					String colourNode = colour.toString().toLowerCase().replace('_', '-');
-					register("general.mobspawn.sheep.coloured." + colourNode,
-						"Gives permission to spawn " + colourNode + " sheep.");
-					HashMap<String, Boolean> colorSynonym = new HashMap<String,Boolean>();
-					colorSynonym.put("general.mobspawn.sheep.coloured." + colourNode, true);
-					register("general.mobspawn.sheep.colored." + colourNode,
-						"Gives permission to spawn " + colourNode + " sheep.", colorSynonym);
-					allColours.put("general.mobspawn.sheep.coloured." + colourNode, true);
-				}
-				allColours.put("general.mobspawn.sheep", true);
-				register("general.mobspawn.sheep.coloured.*", "Lets you spawn any colour of sheep.", allColours);
-			}
-		},
-		SLIME {
-			@Override public void build() {
-				// general.mobspawn.slime.*
-				HashMap<String, Boolean> allSizes = new HashMap<String,Boolean>();
-				allSizes.put("general.mobspawn", true);
-				for(NamedSize size : NamedSize.values())
-					allSizes.put("general.mobspawn.slime." + size.toString().toLowerCase(), true);
-				register("general.mobspawn.slime.*", "Lets you spawn any size of slime.", allSizes);
-			}
-		},
-		MOBDATA {
-			@Override public void build() {
-				HashMap<String, Boolean> permsMap = new HashMap<String,Boolean>();
-				permsMap.put("general.mobspawn", true);
-				for(MobType mob : MobType.values()) {
-					MobData data = mob.getNewData();
-					if(data == MobData.none) continue;
-					for(String dataName : data.getValues()) {
-						if(dataName.equals(data.getBasic())) continue;
-						permsMap.put("general.mobspawn." + dataName + ".*", true);
+				// Three nested loops: alignment, mob, data
+				// general.mobspawn
+				HashMap<String,Boolean> all = new HashMap<String,Boolean>();
+				// general.mobspawn.basic
+				HashMap<String,Boolean> basics = new HashMap<String,Boolean>();
+				for(MobAlignment align : MobAlignment.values()) {
+					// general.mobspawn.<alignment>
+					HashMap<String,Boolean> alignments = new HashMap<String,Boolean>();
+					// general.mobspawn.<alignment>.basic
+					HashMap<String,Boolean> alignBasics = new HashMap<String,Boolean>();
+					for(MobType mob : MobType.byAlignment(align)) {
+						// general.mobspawn.<mob>
+						HashMap<String,Boolean> variants = new HashMap<String,Boolean>();
+						MobData basicData = mob.getNewData();
+						for(String data : basicData.getValues()) {
+							// general.mobspawn.<mob>.<data>
+							String perm = mob.getPermission() + "." + data;
+							register(perm, "Gives permission to spawn " + mob.getPluralName() + " of the " + data +
+								" variant.");
+							variants.put(perm, true);
+							all.put(perm, true);
+							if(data.equals(basicData.getBasic())) {
+								alignBasics.put(perm, true);
+								basics.put(perm, true);
+							}
+						}
+						register(mob.getPermission(), "Gives permission to spawn any type of " + mob.getName(), variants);
+						alignments.put(mob.getPermission(), true);
 					}
+					String alignName = align.toString().toLowerCase();
+					String alignPerm = "general.mobspawn." + alignName;
+					register(alignPerm, "Gives permission to spawn any type of" + alignName + " mobs.", alignments);
+					register(alignPerm + ".basic", "Gives permission to spawn the basic type of any " + alignName +
+						" mobs.", alignBasics);
 				}
-				register("general.mobspawn.variants",
-					"Gives access to all mob variants, but only for mobs you already have separate access to.", permsMap);
+				register("general.mobspawn.basic", "Gives permission to spawn the basic type of any mob.", basics);
+				register("general.mobspawn", "Gives permission to spawn any type of mob.", all);
+			}
+		},
+		TELEPORT_BASIC {
+			@Override
+			public void build() {
+				HashMap<String, Boolean> basics = new HashMap<String, Boolean>();
+				for(String node : Option.TELEPORT_BASICS.get()) {
+					basics.put("general.teleport.self.to." + node, true);
+				}
+				register("general.teleport.basic","Gives basic teleport permissions.",basics);
 			}
 		},
 		TARGET_DEST {

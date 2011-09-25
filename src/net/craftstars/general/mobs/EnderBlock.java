@@ -11,12 +11,14 @@ import org.bukkit.material.MaterialData;
 
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
+import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class EnderBlock extends MobData {
 	private static List<String> values = new ArrayList<String>();
 	static {
+		values.add("nothing");
 		for(Material material : Material.values()) {
 			if(material.getId() > 0 && material.isBlock())
 				values.add(material.toString().toLowerCase().replace('_', '-'));
@@ -24,11 +26,15 @@ public class EnderBlock extends MobData {
 	}
 	private Material block;
 	private int data;
+	private ItemID id;
+	
+	public EnderBlock() {
+		super(MobType.ENDERMAN);
+	}
 	
 	@Override
 	public boolean hasPermission(CommandSender sender) {
-		if(block == null) return true;
-		return Toolbox.hasPermission(sender, "general.mobspawn.variants", "general.mobspawn.enderman." + block.toString().toLowerCase().replace('_', '-'));
+		return Toolbox.hasPermission(sender, getPermission());
 	}
 	
 	@Override
@@ -51,6 +57,7 @@ public class EnderBlock extends MobData {
 				data = item.getData();
 			else data = 0;
 		}
+		id = item;
 	}
 	
 	@Override
@@ -61,8 +68,14 @@ public class EnderBlock extends MobData {
 	
 	@Override
 	public void lacksPermission(CommandSender sender) {
-		if(block != null) Messaging.lacksPermission(sender, "general.mobspawn.enderman." + block.toString().toLowerCase().replace('_', '-'));
-		// TODO: Need a whole lot of LanguageText nodes for this...
+		if(block != null) Messaging.lacksPermission(sender, getPermission(), LanguageText.LACK_MOBSPAWN_ENDERMAN,
+			"block", id.getName());
+		else super.lacksPermission(sender);
+	}
+
+	private String getPermission() {
+		if(block == null) return "general.mobspawn.enderman.nothing";
+		return "general.mobspawn.enderman." + block.toString().toLowerCase().replace('_', '-');
 	}
 	
 	@Override

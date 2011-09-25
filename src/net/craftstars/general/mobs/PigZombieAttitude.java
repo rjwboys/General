@@ -11,11 +11,14 @@ public class PigZombieAttitude extends MobData {
 	private int anger = 0;
 	private final static String[] values = new String[] {"regular","angry"};
 	
+	public PigZombieAttitude() {
+		super(MobType.PIG_ZOMBIE);
+	}
+	
 	@Override
 	public boolean hasPermission(CommandSender byWhom) {
-		if(anger > 0)
-			return Toolbox.hasPermission(byWhom, "general.mobspawn.variants", "general.mobspawn.pig-zombie.angry", "general.mobspawn.neutral.angry");
-		return true;
+		if(anger > 0) return Toolbox.hasPermission(byWhom, "general.mobspawn.pig-zombie.angry");
+		return Toolbox.hasPermission(byWhom, "general.mobspawn.pig-zombie.regular");
 	}
 	
 	@Override
@@ -48,6 +51,7 @@ public class PigZombieAttitude extends MobData {
 	@Override
 	public void lacksPermission(CommandSender fromWhom) {
 		if(anger > 0) Messaging.lacksPermission(fromWhom, "general.mobspawn.pig-zombie.angry");
+		else super.lacksPermission(fromWhom);
 	}
 
 	@Override

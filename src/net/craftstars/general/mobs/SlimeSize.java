@@ -72,9 +72,13 @@ public class SlimeSize extends MobData {
 		}
 	}
 	
+	public SlimeSize() {
+		super(MobType.SLIME);
+	}
+	
 	@Override
 	public boolean hasPermission(CommandSender byWhom) {
-		return Toolbox.hasPermission(byWhom, "general.mobspawn.variants", size.getPermission());
+		return Toolbox.hasPermission(byWhom, size.getPermission());
 	}
 
 	@Override
@@ -94,10 +98,9 @@ public class SlimeSize extends MobData {
 				size = NamedSize.closestMatch(sz);
 			} catch(NumberFormatException e) {
 				invalidate();
-				size = NamedSize.TINY;
+				size = NamedSize.MEDIUM;
 			}
 		} else sz = size.getSize();
-		if(size == null) return;
 	}
 
 	@Override
@@ -124,6 +127,6 @@ public class SlimeSize extends MobData {
 	
 	@Override
 	public String getBasic() {
-		return "random";
+		return "medium";
 	}
 }

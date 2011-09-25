@@ -135,31 +135,17 @@ public enum MobType {
 		this.id = cboxId;
 	}
 	
-	public LivingEntity spawn(CommandSender sender, Location where) {
-		if(hasPermission(sender)) {
+	public LivingEntity spawn(CommandSender sender, Location where, MobData withData) {
+		if(withData.hasPermission(sender)) {
 			World world = where.getWorld();
-			return world.spawnCreature(where, ctype);
+			LivingEntity entity = world.spawnCreature(where, ctype);
+			withData.setForMob(entity);
+			return entity;
 		}
+		withData.lacksPermission(sender);
 		Messaging.lacksPermission(sender, getPermission(), LanguageText.LACK_MOBSPAWN_MOB,
 			"mob", singular, "mobs", plural);
 		return null;
-	}
-	
-	public void setData(LivingEntity mob, CommandSender sender, MobData info) {
-		if(info == null) return;
-		if(info.hasPermission(sender))
-			info.setForMob(mob);
-		else info.lacksPermission(sender);
-	}
-	
-	public boolean hasPermission(CommandSender sender) {
-		if(Toolbox.hasPermission(sender, "general.mobspawn.all"))
-			return true;
-		else if(alignment.hasPermission(sender))
-			return true;
-		else {
-			return Toolbox.hasPermission(sender, getPermission());
-		}
 	}
 
 	public String getPermission() {
@@ -184,10 +170,7 @@ public enum MobType {
 	}
 	
 	public String getCostClass(MobData info) {
-		if(info == null) try {
-			info = data == null ? MobData.none : data.newInstance();
-		} catch(InstantiationException e) {}
-		catch(IllegalAccessException e) {}
+		if(info == null) info = getNewData();
 		String baseNode = "economy.mobspawn.";
 		baseNode += toString().toLowerCase().replace('_', '-');
 		return getCostClassHelper(info, baseNode);
@@ -232,11 +215,11 @@ public enum MobType {
 		try {
 			return data.newInstance();
 		} catch(InstantiationException e) {
-			return MobData.none;
+			return new NoData(this);
 		} catch(IllegalAccessException e) {
-			return MobData.none;
+			return new NoData(this);
 		} catch(NullPointerException e) {
-			return MobData.none;
+			return new NoData(this);
 		}
 	}
 
@@ -252,5 +235,13 @@ public enum MobType {
 		String node = "data.mob" + id;
 		if(!key.isEmpty()) node += "." + key;
 		return yml.getStringList(node, null).toArray(new String[0]);
+	}
+	
+	public static List<MobType> byAlignment(MobAlignment align) {
+		List<MobType> list = new ArrayList<MobType>();
+		for(MobType mob : values()) {
+			if(mob.getAlignment() == align) list.add(mob);
+		}
+		return list;
 	}
 }
