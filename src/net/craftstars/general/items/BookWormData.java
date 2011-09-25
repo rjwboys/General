@@ -12,7 +12,7 @@ import com.nisovin.bookworm.BookWorm;
 public class BookWormData extends ItemData {
 	@Override
 	public boolean validate(ItemID id, Material check) {
-		Plugin bookworm = Bukkit.getServer().getPluginManager().getPlugin("BookWorm");
+		Plugin bookworm = Bukkit.getPluginManager().getPlugin("BookWorm");
 		if(bookworm == null) return id.getData() == 0;
 		if(id.getData() == null) id.setData(0);
 		if(id.getData() > 0) {

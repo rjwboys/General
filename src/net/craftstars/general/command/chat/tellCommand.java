@@ -49,7 +49,7 @@ public class tellCommand extends CommandBase {
 				Messaging.send(sender, LanguageText.NO_REPLY);
 				return null;
 			}
-			recipient = Bukkit.getServer().getPlayer(name);
+			recipient = Bukkit.getPlayer(name);
 		} else recipient = Toolbox.matchPlayer(args[0]);
 		if(recipient == null) {
 			Messaging.invalidPlayer(sender, args[0]);

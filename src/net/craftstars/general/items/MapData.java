@@ -8,7 +8,7 @@ public class MapData extends ItemData {
 	@Override
 	public boolean validate(ItemID id, Material check) {
 		if(id.getData() == null) id.setData(0);
-		MapView map = Bukkit.getServer().getMap(id.getData().shortValue());
+		MapView map = Bukkit.getMap(id.getData().shortValue());
 		if(map == null) return false;
 		return true;
 	}

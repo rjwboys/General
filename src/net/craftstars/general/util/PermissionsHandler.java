@@ -40,8 +40,8 @@ public class PermissionsHandler extends WorldListener {
 		PermissionSet.init();
 		for(PermissionSet set : PermissionSet.values()) set.build();
 		PermissionSet.finish();
-		Bukkit.getServer().getPluginManager().registerEvent(Type.WORLD_LOAD, this, Priority.Monitor, General.plugin);
-		Bukkit.getServer().getPluginManager().registerEvent(Type.WORLD_UNLOAD, this, Priority.Monitor, General.plugin);
+		Bukkit.getPluginManager().registerEvent(Type.WORLD_LOAD, this, Priority.Monitor, General.plugin);
+		Bukkit.getPluginManager().registerEvent(Type.WORLD_UNLOAD, this, Priority.Monitor, General.plugin);
 	}
 	
 	public boolean hasPermission(Permissible who, String what) {
@@ -229,7 +229,7 @@ public class PermissionsHandler extends WorldListener {
 					targBase = targBase.append(" " + targ.getName());
 					Set<Base> targetsChildren = set();
 					Map<DestinationType, Set<Base>> targetsDestChildren = this.<Set<Base>>destmap();
-					for(World world : Bukkit.getServer().getWorlds()) {
+					for(World world : Bukkit.getWorlds()) {
 						Base worldBase = targBase.subst("into." + world.getName() + ".?");
 						worldBase = worldBase.append(" into " + world.getName());
 						Set<Base> targetsWorldsChildren = set();
@@ -354,7 +354,7 @@ public class PermissionsHandler extends WorldListener {
 		protected void register(String name, String desc, PermissionDefault def, Map<String,Boolean> children) {
 			// Welcome to Rome!
 			Permission perm = new Permission(name, desc, def, children);
-			Bukkit.getServer().getPluginManager().addPermission(perm);
+			Bukkit.getPluginManager().addPermission(perm);
 			if(file != null) file.println(name);
 		}
 	}

@@ -9,7 +9,7 @@ public class CreatureBoxData extends ItemData {
 	@Override
 	public boolean validate(ItemID id, Material check) {
 		if(id.getData() == null) return true;
-		if(Bukkit.getServer().getPluginManager().getPlugin("creaturebox") == null) {
+		if(Bukkit.getPluginManager().getPlugin("creaturebox") == null) {
 			ItemID tmp = id.clone();
 			tmp.setData(null);
 			id.setName(Items.name(tmp));

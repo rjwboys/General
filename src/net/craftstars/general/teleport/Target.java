@@ -12,6 +12,7 @@ import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -118,7 +119,7 @@ public class Target {
 		Server mc = General.plugin.getServer();
 		CommandSender notify;
 		if(teleporter == null)
-			notify = new ConsoleCommandSender(mc);
+			notify = Bukkit.getConsoleSender();
 		else notify = teleporter;
 		// Is it a player? Optionally prefixed by !
 		LivingEntity victim = Toolbox.matchPlayer(targ.replaceFirst("^!", ""));

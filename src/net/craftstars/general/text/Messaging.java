@@ -12,6 +12,7 @@ import net.craftstars.general.General;
 import net.craftstars.general.util.AccountStatus;
 import net.craftstars.general.util.Option;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -56,7 +57,7 @@ public final class Messaging {
 		Server mc = General.plugin.getServer();
 		for(Player p : mc.getOnlinePlayers())
 			send(p, string);
-		send(new ConsoleCommandSender(mc), string);
+		send(Bukkit.getConsoleSender(), string);
 	}
 	
 	/**

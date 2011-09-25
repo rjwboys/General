@@ -297,7 +297,6 @@ public enum LanguageText {
 	LACK_TAKE_MASS("permissions.take_mass","massively remove items from your inventory"),
 	LACK_HURT("permissions.hurt","hurt players"),
 	LACK_HEAL("permissions.heal","heal players"),
-	LACK_MOBSPAWN("permissions.mobspawn","spawn mobs"),
 	LACK_MOBSPAWN_MASS("permissions.mobspawn_mass","spawn mobs en masse"),
 	LACK_MOBSPAWN_CREEPER_POWERED("permissions.mobspawn_creeper_powered", "spawn powered creepers"),
 	LACK_MOBSPAWN_PIG_SADDLED("permissions.mobspawn_pig_saddled", "spawn saddled pigs"),

@@ -94,12 +94,12 @@ public final class CommandHandler {
 		try {
 			boolean success = (Boolean) register.invoke(commandMap, label, "General.dynalias", command, true);
 			if(!success) {
-				Command cmd = Bukkit.getServer().getPluginCommand(label);
+				Command cmd = Bukkit.getPluginCommand(label);
 				String claimant;
 				if(cmd instanceof PluginCommand)
 					claimant = ((PluginCommand) cmd).getPlugin().getDescription().getName();
 				else
-					claimant = Bukkit.getServer().getName();
+					claimant = Bukkit.getName();
 				General.logger.info(LanguageText.LOG_COMMAND_TAKEN.value("alias", label, "plugin", claimant));
 			}
 			return success;
