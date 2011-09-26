@@ -28,6 +28,7 @@ import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.MessageOfTheDay;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Option;
+import net.craftstars.general.util.PermissionsHandler;
 import net.craftstars.general.util.Toolbox;
 
 public class generalCommand extends CommandBase {
@@ -148,6 +149,8 @@ public class generalCommand extends CommandBase {
 			if(args.length < 3) return false;
 			return setVar(sender, Arrays.copyOfRange(args, 1, args.length));
 		} else if(args[0].equalsIgnoreCase("genlang")) {
+			if(Toolbox.lacksPermission(sender, "general.admin.genlang"))
+				return Messaging.lacksPermission(sender, "general.admin.genlang");
 			for(LanguageText lang : LanguageText.values())
 				lang.getFormat();
 			Messaging.save();
@@ -157,6 +160,7 @@ public class generalCommand extends CommandBase {
 
 	private void doReload(CommandSender sender) {
 		plugin.loadAllConfigs();
+		PermissionsHandler.refreshItemGroups();
 		Messaging.send(sender, LanguageText.GENERAL_RELOAD);
 	}
 	

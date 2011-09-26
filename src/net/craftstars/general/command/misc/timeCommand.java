@@ -178,8 +178,8 @@ public class timeCommand extends CommandBase {
 			Messaging.send(sender, LanguageText.TIME_NONE);
 			return;
 		}
-		if(Toolbox.lacksPermission(sender, "general.time", "general.basic"))
-			Messaging.lacksPermission(sender, "general.time");
+		if(Toolbox.lacksPermission(sender, "general.time.view", "general.basic"))
+			Messaging.lacksPermission(sender, "general.time.view");
 		else {
 			int time = (int) world.getTime();
 			String timeName = this.getFriendlyTime(time);

@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -21,6 +22,7 @@ import net.craftstars.general.teleport.TargetType;
 import net.craftstars.general.util.Option;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -50,6 +52,11 @@ public class PermissionsHandler extends WorldListener {
 		return hasPermission(who, "group." + which.toLowerCase());
 	}
 	
+	public static void refreshItemGroups() {
+		Permission perm = Bukkit.getPluginManager().getPermission("general.give.groupless");
+		perm.setDefault(Option.OTHERS4ALL.get() ? PermissionDefault.TRUE : PermissionDefault.FALSE);
+	}
+	
 	@Override
 	public void onWorldLoad(WorldLoadEvent event) {
 		// TODO: Is there a more graceful way?
@@ -77,31 +84,60 @@ public class PermissionsHandler extends WorldListener {
 	private enum PermissionSet {
 		GIVE {
 			@Override public void build() {
-				// general.give.group.<group>, general.give.group.*
-				HashMap<String, Boolean> allGroups = new HashMap<String,Boolean>();
-				for(String group : General.config.getKeys("give.groups")) {
-					register("general.give.group." + group,
-						"Gives access to the following items: " + Option.GROUP(group).get());
-					allGroups.put("general.give.group." + group, true);
+				// general.give.group.<group>
+				Map<String,Map<String,Boolean>> groups = new HashMap<String,Map<String,Boolean>>();
+				// general.give.groupless
+				Map<String,Boolean> groupless = new HashMap<String,Boolean>();
+				// Two nested loops; first Material, then groups
+				List<String> groupNames = Option.ITEM_GROUPS.get();
+				for(Material material : Material.values()) {
+					String itemName = material.toString().toLowerCase().replace('_', '-');
+					String itemPerm = "general.give.item." + itemName;
+					// general.give.item.<item-name>
+					register(itemPerm, "Gives permission to give " + itemName);
+					boolean gotGroup = false;
+					for(String group : groupNames) {
+						List<Integer> groupItems = Option.GROUP(group).get();
+						if(groupItems.contains(material.getId())) {
+							gotGroup = true;
+							if(!groups.containsKey(group)) groups.put(group, new HashMap<String,Boolean>());
+							groups.get(group).put(itemPerm, true);
+						}
+					}
+					if(!gotGroup) {
+						groupless.put(itemPerm, true);
+					}
 				}
-				register("general.give.group.*", "Gives access to all item whitelist groups.", allGroups);
+				// general.give.groups
+				Map<String,Boolean> allGroups = new HashMap<String,Boolean>();
+				for(String group : groups.keySet()) {
+					String permission = "general.give.group." + group;
+					register(permission, "Gives permission to give items in the " + group +
+						" group.", groups.get(group));
+					allGroups.put(permission, true);
+				}
+				register("general.give.groupless", "Gives permission to give items not assigned to a group.",
+					Option.OTHERS4ALL.get(), groupless);
+				register("general.give.groups", "Gives permission to give items from any item group.", allGroups);
 			}
 		},
 		KIT {
 			@Override public void build() {
 				// general.kit.<kit>, general.kit.*
-				HashMap<String, Boolean> allKits = new HashMap<String,Boolean>();
-				HashMap<String, Boolean> instants = new HashMap<String,Boolean>();
+				Map<String, Boolean> allKits = new HashMap<String,Boolean>();
+				Map<String, Boolean> instants = new HashMap<String,Boolean>();
 				for(Kit kit : Kits.all()) {
-					register("general.kit." + kit.getName(), "Gives access to the '" + kit.getName() + "' kit.");
-					allKits.put("general.kit." + kit.getName(), true);
-					register("general.kit." + kit.getName() + ".instant", "Gives instant access to the '" +
-						kit.getName() + "' kit.");
-					instants.put("general.kit." + kit.getName() + ".instant", true);
+					String perm = "general.kit." + kit.getName();
+					register(perm, "Gives access to the '" + kit.getName() + "' kit.");
+					allKits.put(perm, true);
+					Map<String,Boolean> instant = new HashMap<String,Boolean>();
+					String instantPerm = perm + ".instant";
+					instant.put(instantPerm, true);
+					register(instantPerm, "Gives instant access to the '" + kit.getName() + "' kit.", instant);
+					instants.put(instantPerm, true);
 				}
-				allKits.put("general.kit", true);
-				register("general.kit.*", "Gives access to all kits.", allKits);
-				register("general.kit.*.instant", "Gives instant access to all kits.", instants);
+				instants.put("general.kit", true);
+				register("general.kit", "Gives access to all kits.", allKits);
 				register("general.kit-now", "Gives instant access to all kits.", instants);
 			}
 		},
@@ -109,17 +145,17 @@ public class PermissionsHandler extends WorldListener {
 			@Override public void build() {
 				// Three nested loops: alignment, mob, data
 				// general.mobspawn
-				HashMap<String,Boolean> all = new HashMap<String,Boolean>();
+				Map<String,Boolean> all = new HashMap<String,Boolean>();
 				// general.mobspawn.basic
-				HashMap<String,Boolean> basics = new HashMap<String,Boolean>();
+				Map<String,Boolean> basics = new HashMap<String,Boolean>();
 				for(MobAlignment align : MobAlignment.values()) {
 					// general.mobspawn.<alignment>
-					HashMap<String,Boolean> alignments = new HashMap<String,Boolean>();
+					Map<String,Boolean> alignments = new HashMap<String,Boolean>();
 					// general.mobspawn.<alignment>.basic
-					HashMap<String,Boolean> alignBasics = new HashMap<String,Boolean>();
+					Map<String,Boolean> alignBasics = new HashMap<String,Boolean>();
 					for(MobType mob : MobType.byAlignment(align)) {
 						// general.mobspawn.<mob>
-						HashMap<String,Boolean> variants = new HashMap<String,Boolean>();
+						Map<String,Boolean> variants = new HashMap<String,Boolean>();
 						MobData basicData = mob.getNewData();
 						for(String data : basicData.getValues()) {
 							// general.mobspawn.<mob>.<data>
@@ -149,10 +185,9 @@ public class PermissionsHandler extends WorldListener {
 		TELEPORT_BASIC {
 			@Override
 			public void build() {
-				HashMap<String, Boolean> basics = new HashMap<String, Boolean>();
-				for(String node : Option.TELEPORT_BASICS.get()) {
+				Map<String, Boolean> basics = new HashMap<String, Boolean>();
+				for(String node : Option.TELEPORT_BASICS.get())
 					basics.put("general.teleport.self.to." + node, true);
-				}
 				register("general.teleport.basic","Gives basic teleport permissions.",basics);
 			}
 		},

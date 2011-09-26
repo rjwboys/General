@@ -1,22 +1,12 @@
-/**
- * 
- */
-
 package net.craftstars.general.items;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.config.ConfigurationNode;
 
 public class ItemID implements Cloneable, Comparable<ItemID> {
 	private int ID;
@@ -204,31 +194,11 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 	}
 	
 	public boolean canGive(CommandSender who) {
-		ArrayList<String> permissions = new ArrayList<String>();
-		permissions.add("general.give.any");
 		String itemNode = Material.getMaterial(ID).toString();
 		itemNode = "general.give.item." + itemNode.toLowerCase().replace('_', '-');
-		permissions.add(itemNode);
-		ConfigurationNode config = General.config.getNode("give");
-		if(config == null) return true;
-		List<String> groups = config.getKeys("groups");
-		if(groups == null) return true;
-		for(String group : groups) {
-			List<Integer> items = Option.GROUP(group).get();
-			if(items.isEmpty()) continue;
-			if(items.contains(ID)) {
-				permissions.add("general.give.group." + group);
-			}
-		}
-		boolean othersForAll = Option.OTHERS4ALL.get();
-		if(permissions.size() <= 2 && !othersForAll)
-			permissions.add("general.give.groupless");
-		String[] permNodes = new String[permissions.size()];
-		permNodes = permissions.toArray(permNodes);
-		boolean hasPermission = Toolbox.hasPermission(who, permNodes);
-		if(!hasPermission && othersForAll && permissions.size() <= 2) hasPermission = true;
+		boolean hasPermission = Toolbox.hasPermission(who, itemNode);
 		if(!hasPermission)
-			Messaging.lacksPermission(who, permNodes[permNodes.length], LanguageText.LACK_GIVE_ITEM, "item", getName());
+			Messaging.lacksPermission(who, itemNode, LanguageText.LACK_GIVE_ITEM, "item", getName());
 		return hasPermission;
 	}
 }

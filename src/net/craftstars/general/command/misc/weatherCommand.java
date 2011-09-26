@@ -186,8 +186,6 @@ public class weatherCommand extends CommandBase {
 
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.weather"))
-			return Messaging.lacksPermission(sender, "general.weather");
 		if(command.equals("weatherreport")) {
 			World world = (World) args.get("world");
 			showWeatherInfo(sender, world);
@@ -215,6 +213,10 @@ public class weatherCommand extends CommandBase {
 	}
 	
 	private void showWeatherInfo(CommandSender sender, World where) {
+		if(Toolbox.lacksPermission(sender, "general.weather.view")) {
+			Messaging.lacksPermission(sender, "general.weather.view");
+			return;
+		}
 		if(where.getEnvironment() == Environment.NETHER) {
 			Messaging.send(sender, LanguageText.WEATHER_NETHER);
 			return;

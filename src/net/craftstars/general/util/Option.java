@@ -1,6 +1,8 @@
 package net.craftstars.general.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.util.config.Configuration;
@@ -30,6 +32,7 @@ public abstract class Option {
 	// Give settings
 	public static OptionInteger GIVE_MASS = new OptionInteger("give.mass", 64);
 	public static OptionBoolean OTHERS4ALL = new OptionBoolean("give.others-for-all", true);
+	public static OptionKeys ITEM_GROUPS = new OptionKeys("give.groups");
 	// Range settings
 	public static OptionInteger LIGHTNING_RANGE = new OptionInteger("lightning-range", 20);
 	public static OptionInteger SUMMON_RANGE = new OptionInteger("summon-range", 30);
@@ -141,6 +144,19 @@ public abstract class Option {
 		@Override@SuppressWarnings("unchecked")
 		public List<Integer> get() {
 			return config.getIntList(node, (List<Integer>) def);
+		}
+	}
+
+	public static class OptionKeys extends Option {
+		@SuppressWarnings("hiding") OptionKeys(String node) {
+			super(node, new HashMap<String,Object>());
+		}
+
+		@Override
+		public List<String> get() {
+			List<String> keys = config.getKeys(node);
+			if(keys == null) return new ArrayList<String>();
+			return keys;
 		}
 	}
 }

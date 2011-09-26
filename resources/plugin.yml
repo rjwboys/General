@@ -105,102 +105,178 @@ commands:
     usage: /<command> player [reason]
 permissions:
   # Wildcard syntax for backwards compatibility
-  general.*: {children: {general: true}}
+  general.*: {children: {general.unlimited: true}}
   general.teleport.*: {children: {general.teleport.all: true}}
-  general.setspawn.*: {children: {general.setspawn.world: true}}
+  general.setspawn.*: {children: {general.setspawn: true}}
+  general.mobspawn.*: {children: {general.mobspawn: true}}
+  general.kit.*: {children: {general.kit: true}}
+  general.kit.*.instant: {children: {general.kit-now: true}}
+  general.mobspawn.*: {children: {general.mobspawn: true}}
+  general.give.*: {children: {general.give.unlimited: true}}
+  general.give.group.*: {children: {general.give.groups: true}}
+  general.give.item.*: {children: {general.give.any: true}}
+  general.time.*: {children: {general.time}}
+  general.who.*: {children: {general.who.ip}}
+  general.weather.*: {children: {general.weather: true}}
+  general.heal.*: {children: {general.heal: true, general.hurt: true}}
+  general.getpos.*: {children: {general.getpos.other: true}}
+  general.admin.*: {children: {general.config: true}}
+  general.clear.*: {children: {general.clear.other: true}}
+  general.take.*: {children: {general.take.other: true, general.take.mass: true}}
   # Actual permissions start here
-  general:
+  general.admin:
     description: Gives all General permissions.
-    # General defines no permissions that an op should not have.
     default: op
     children:
-      general.give.*: true
-      general.clear.*: true
-      general.take.*: true
-      general.kit.*: true
-      general.kit-now: true
-      general.teleport.*: true
-      general.mobspawn.*: true
-      general.away: true
-      general.worldinfo: true
-      general.setspawn.*: true
-      general.time.*: true
-      general.playerlist: true
-      general.who.*: true
-      general.getpos.*: true
-      general.heal.*: true
-      general.weather.*: true
-      general.admin.*: true
-      general.tell: true
-      general.op: true
-      general.deop: true
-      general.kick: true
-  general.bypass:
-    description: Gives permissions that involve bypassing normal restrictions, such as delays or economy.
-    children:
-      general.no-money: true
-      general.kit-now: true
-      general.teleport.instant: true
-      general.weather.instant: true
-  general.no-money:
-    description: Allows you to use things free of cost that normally require money.
+      general:
+        description: Gives all relatively safe General permissions.
+        children:
+          general.give.unlimited:
+            description: Gives full access to the /give command.
+            children:
+              general.give:
+                description: Gives basic access to the /give command.
+              general.give.infinite:
+                description: Gives access to /give for infinite stacks.
+              general.give.mass:
+                description: Gives access to /give for large quantities, and to /items.
+              general.give.any:
+                description: Gives permission to get any item regardless of whitelisting/blacklisting.
+                  general.give.groups: true # Defined dynamically
+                  general.give.groupless: true # Defined dynamically
+          general.clear.other:
+            description: Lets you clear the inventory of others.
+            children:
+              general.clear:
+                description: Gives basic access to the /clear command.
+          general.take.other:
+            description: Lets you take from the inventory of others.
+            children:
+              general.take:
+                description: Gives basic access to the /take command.
+          general.take.mass:
+            description: Gives access to the /masstake command.
+          general.kit: true # Defined dynamically
+          general.teleport.all:
+            description: Gives full access to the teleport command, including bypassing warm-up
+            children:
+              general.teleport.instant: true # Defined dynamically
+              general.teleport.mass:
+                description: Allows you to teleport several entities at a time.
+          general.setspawn: true # Defined dynamically
+          general.mobspawn: true # Defined dynamically
+          general.away:
+            description: Allows you to set an away message.
+          general.worldinfo:
+            description: Allows you to view info about worlds.
+          general.playerlist:
+            description: Allows you to view who's online.
+          general.tell:
+            description: Allows you to private message players.
+          general.time:
+            description: Allows you to view and set the time.
+            children:
+              general.time.view:
+                description: Allows you to view the time.
+              general.time.set:
+                description: Allows you to set the time.
+          general.who:
+            description: Gives basic access to the /who command.
+          general.getpos.other:
+            description: Allows you to see anyone's position.
+            children:
+              general.getpos:
+                description: Allows you to see your position with /getpos, /where, and /compass.
+          general.heal:
+            description: Gives access to /heal (and /hurt with negative amounts).
+          general.hurt:
+            description: Gives access to /hurt (and /heal with negative amounts).
+          general.weather:
+            description: Allows you to tamper with the weather.
+            children:
+              general.weather.view:
+                description: Allows you to see a weather report.
+              general.weather.set:
+                description: Allows you to start and stop storms.
+              general.weather.thunder:
+                description: Allows you to start and stop thunder.
+              general.weather.zap:
+                description: Allows you to summon lightning.
+      general.who.ip:
+        description: Allows you to view players' IP addresses in the /who command (if this feature is enabled).
+        children:
+          general.who: true
+      general.config:
+        description: Gives access to all administrative commands.
+        default: op
+        children:
+          general.admin.reload:
+            description: Allows you to reload the configuration from the files.
+          general.admin.item:
+            description: Allows you to edit item names and aliases, and whitelist/blacklist items.
+          general.admin.save:
+            description: Allows you to force General to save its configuration.
+          general.admin.kit:
+            description: Allows you to edit the kit definitions.
+          general.admin.economy:
+            description: Allows you to edit costs of various commands.
+          general.admin.set:
+            description: Allows you to set various configuration variables.
+          general.admin.genlang:
+            description: Allows you to generate all language format strings in the language file.
+      general.op:
+        description: Gives permission to grant operator status.
+        default: op
+      general.deop:
+        description: Gives permission to remove operator status.
+        default: op
+      general.kick:
+        description: Gives permission to kick people off the server.
+        default: op
+      general.ban:
+        description: Gives permission to ban people from the server.
+        default: op
+      general.pardon:
+        description: Gives permission to pardon banned people on the server.
+        default: op
+      general.bypass:
+        description: Gives permissions that involve bypassing normal restrictions, such as delays or economy.
+        children:
+          general.no-money:
+            description: Allows you to use things free of cost that normally require money.
+          general.kit-now: true # Defined dynamically
+          general.teleport.instant: true # Defined dynamically
+          general.time.instant:
+            description: Allows you to meddle with the time with no cooldown period.
+            children:
+              general.time: true
+          general.weather.instant:
+            description: Allows you to tamper with the weather with no cooldown period.
+            children:
+              general.weather.view: true
+              general.weather.set.instant:
+                description: Bypass the cooldown period when starting or stopping storms.
+                children:
+                  general.weather.set: true
+              general.weather.thunder.instant:
+                description: Bypass the cooldown period when starting or stopping thunder.
+                children:
+                  general.weather.thunder: true
+              general.weather.zap.instant:
+                description: Bypass the cooldown period when summoning lightning.
+                children:
+                  general.weather.zap: true
+  # Some additional shortcuts
   general.basic:
     description: Gives a set of basic, harmless General permissions.
     default: true
     children:
-      general.time: true
+      general.time.view: true
       general.playerlist: true
       general.who: true
       general.away: true
       general.getpos: true
       general.tell: true
-  general.give.*:
-    description: Gives full access to the /give command.
-    children:
-      general.give: true
-      general.give.infinite: true
-      general.give.mass: true
-      general.give.group.*: true # defined dynamically
-      general.give.item.*: true  # defined dynamically
-      general.give.groupless: true
-  general.give:
-    description: Gives basic access to the /give command.
-  general.give.infinite:
-    description: Gives access to /give for infinite stacks.
-  general.give.mass:
-    description: Gives access to /give for large quantities, and to /items.
-  general.give.any:
-    description: Gives permission to bypass the item whitelist/blacklist.
-    children:
-      general.give.groupless: true
-      general.give.group.*: true
-  general.give.items.*:
-    description: Gives access to all items, without exception.
-    children:
-      general.give.any: true
-  general.give.groupless:
-    description: Gives access to items not in a group.
-  general.clear.*:
-    description: Gives full access to the /clear command
-    children:
-      general.clear: true
-      general.clear.other: true
-  general.clear:
-    description: Gives basic access to the /clear command
-  general.clear.other:
-    description: Lets you clear the inventory of others.
-  general.take.*:
-    description: Gives full access to the /take command
-    children:
-      general.take: true
-      general.take.other: true
-      general.take.mass: true
-  general.take:
-    description: Gives basic access to the /take command.
-  general.take.other:
-    description: Lets you take from the inventory of others.
-  general.take.mass:
-    description: Gives access to the /masstake command.
   general.mobspawn.neutral.angry:
     description: Allows you to spawn any neutral mob you have access to as already angry.
     children:
@@ -215,127 +291,3 @@ permissions:
       general.mobspawn.sheep.black: true
       general.mobspawn.sheep.brown: true
       general.mobspawn.sheep.pink: true
-   general.teleport.mass:
-     description: Allows you to teleport several entities at a time.
-   general.teleport.all:
-     description: Gives full access to the teleport command, including bypassing warm-up
-     children:
-       general.teleport.instant: true
-       general.teleport.mass: true
-  general.time.*:
-    description: Allows you to view and set the time.
-    children:
-      general.time: true
-      general.time.set: true
-  general.time:
-    description: Allows you to view the time.
-  general.time.set:
-    description: Allows you to set the time.
-  general.time.instant:
-    description: Allows you to meddle with the time with no cooldown period.
-  general.who.*:
-    description: Gives full access to the /who command.
-    children:
-      general.who: true
-      general.who.ip: true
-  general.who:
-    description: Gives basic access to the /who command.
-  general.who.ip:
-    description: Allows you to view players' IP addresses in the /who command (if this feature is enabled).
-  general.getpos.*:
-    description: Gives full access to the /getpos, /where, and /compass commands.
-    children:
-      general.getpos: true
-      general.getpos.other: true
-  general.getpos:
-    description: Allows you to see your position with /getpos, /where, and /compass.
-  general.getpos.other:
-    description: Allows you to see anyone's position.
-  general.weather.*:
-    description: Allows you to tamper with the weather.
-    children:
-      general.weather: true
-      general.weather.set: true
-      general.weather.thunder: true
-      general.weather.zap: true
-  general.weather:
-    description: Allows you to see a weather report.
-  general.weather.set:
-    description: Allows you to start and stop storms.
-  general.weather.thunder:
-    description: Allows you to start and stop thunder.
-  general.weather.zap:
-    description: Allows you to summon lightning.
-  general.weather.set.instant:
-    description: Bypass the cooldown period when starting or stopping storms.
-  general.weather.thunder.instant:
-    description: Bypass the cooldown period when starting or stopping thunder.
-  general.weather.zap.instant:
-    description: Bypass the cooldown period when summoning lightning.
-  general.weather.instant:
-    description: Allows you to tamper with the weather with no cooldown period.
-    children:
-      general.weather.thunder.instant: true
-      general.weather.set.instant: true
-      general.weather.zap.instant: true
-  general.heal.*:
-    description: Gives access to both /heal and /hurt.
-    children:
-      general.heal: true
-      general.hurt: true
-  general.heal:
-    description: Gives access to /heal (and /hurt with negative amounts).
-  general.hurt:
-    description: Gives access to /hurt (and /heal with negative amounts).
-  general.away:
-    description: Allows you to set an away message.
-  general.worldinfo:
-    description: Allows you to view info about worlds.
-  general.playerlist:
-    description: Allows you to view who's online.
-  general.tell:
-    description: Allows you to private message players.
-  general.admin.*:
-    description: Gives access to all administrative commands.
-    default: op
-    children:
-      general.admin.reload: true
-      general.admin.item: true
-      general.admin.save: true
-      general.admin.restrict: true
-      general.admin.release: true
-      general.admin.kit: true
-      general.admin.economy: true
-      general.admin.set: true
-  general.op:
-    description: Gives permission to grant operator status.
-    default: op
-  general.deop:
-    description: Gives permission to remove operator status.
-    default: op
-  general.kick:
-    description: Gives permission to kick people off the server.
-    default: op
-  general.admin:
-    description: Gives access to all administrative commands.
-    children:
-      general.admin.*: true
-      general.op: true
-      general.deop: true
-      general.kick: true
-  general.admin.reload:
-    description: Allows you to reload the configuration from the files.
-  general.admin.item:
-    description: Allows you to edit item names and aliases, and whitelist/blacklist items.
-  general.admin.save:
-    description: Allows you to force General to save its configuration.
-  general.admin.restrict:
-    description: In ops-based mode, allows you to restrict permissions to ops.
-  general.admin.release:
-    description: In ops-based mode, allows you to release permissions to non-ops.
-  general.admin.kit:
-    description: Allows you to edit the kit definitions.
-  general.admin.economy:
-    description: Allows you to edit costs of various commands.
-  general.admin.set:
-    description: Allows you to set various configuration variables.
