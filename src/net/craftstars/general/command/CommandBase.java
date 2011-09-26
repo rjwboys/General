@@ -233,7 +233,7 @@ public abstract class CommandBase implements CommandExecutor {
 			}
 
 			@Override
-			public boolean isPermissionSet(String name) {
+			public boolean isPermissionSet(String perm) {
 				return false;
 			}
 
@@ -243,10 +243,10 @@ public abstract class CommandBase implements CommandExecutor {
 			}
 
 			@Override
-			public boolean hasPermission(String name) {
-				Permission perm = getServer().getPluginManager().getPermission(name);
-				if(perm == null) return isOp();
-				return hasPermission(perm);
+			public boolean hasPermission(String perm) {
+				Permission permission = getServer().getPluginManager().getPermission(perm);
+				if(permission == null) return isOp();
+				return hasPermission(permission);
 			}
 
 			@Override
@@ -255,7 +255,7 @@ public abstract class CommandBase implements CommandExecutor {
 			}
 
 			@Override
-			public PermissionAttachment addAttachment(Plugin p, String name, boolean value) {
+			public PermissionAttachment addAttachment(Plugin p, String perm, boolean value) {
 				return null;
 			}
 
@@ -265,7 +265,7 @@ public abstract class CommandBase implements CommandExecutor {
 			}
 
 			@Override
-			public PermissionAttachment addAttachment(Plugin p, String name, boolean value, int ticks) {
+			public PermissionAttachment addAttachment(Plugin p, String perm, boolean value, int ticks) {
 				return null;
 			}
 

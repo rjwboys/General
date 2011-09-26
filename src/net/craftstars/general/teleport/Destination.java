@@ -15,7 +15,6 @@ import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -107,7 +106,6 @@ public class Destination {
 	}
 	
 	public static Destination get(String dest, Player keystone) {
-		Server mc = General.plugin.getServer();
 		CommandSender notify;
 		if(keystone == null)
 			notify = Bukkit.getConsoleSender();
