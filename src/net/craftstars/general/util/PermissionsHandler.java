@@ -212,7 +212,7 @@ public class PermissionsHandler extends WorldListener {
 				public Base append(String string) {
 					Base clone = clone();
 					for(int i = 0; i < clone.bases.length; i++)
-						clone.bases[i] += string;
+						clone.descrs[i] += string;
 					return clone;
 				}
 				public void register() {
@@ -295,14 +295,14 @@ public class PermissionsHandler extends WorldListener {
 				}
 				// general.<cmd>.into.<world>
 				for(Entry<World,Set<Base>> entry : worldsChildren.entrySet()) {
-					Base worldsBase = base.subst("into." + entry.getKey().toString().toLowerCase());
+					Base worldsBase = base.subst("into." + entry.getKey().getName().toLowerCase());
 					worldsBase.register(entry.getValue());
 				}
 				// general.<cmd>.into.<world>.to.<dest>
 				for(Entry<DestinationType,Map<World,Set<Base>>> entry : worldsDestChildren.entrySet()) {
 					for(Entry<World,Set<Base>> subentry : entry.getValue().entrySet()) {
-						Base worldsDestBase = base.subst("into." + subentry.getKey().toString().toLowerCase() + ".?");
-						worldsDestBase = base.subst("to." + entry.getKey().toString().toLowerCase());
+						Base worldsDestBase = base.subst("into." + subentry.getKey().getName().toLowerCase() + ".?");
+						worldsDestBase = worldsDestBase.subst("to." + entry.getKey().toString().toLowerCase());
 						worldsDestBase.register(subentry.getValue());
 					}
 				}

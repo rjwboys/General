@@ -195,6 +195,7 @@ public enum LanguageText {
 	DESTINATION_BAD("destination.bad", "{rose}Invalid destination."),
 	DESTINATION_THEIR_HOME("destination.their_home", "{player}'s home"),
 	DESTINATION_THEIR_COMPASS("destination.their_compass", "{player}'s compass"),
+	DESTINATION_OTHER("destination.other", "other people's places"),
 	// Messages relating to targets
 	TARGET_BAD("target.bad", "{rose}Invalid target."),
 	TARGET_SELF("target.self", "yourself"),
@@ -208,6 +209,7 @@ public enum LanguageText {
 	TARGET_NO_PLAYERS("target.no-players", "{rose}No players nearby."),
 	TARGET_NO_MOBS("target.no-mobs", "{rose}No mobs nearby."),
 	TARGET_NO_TARGET("target.no-target", "{rose}No-one there."),
+	TARGET_WORLD("target.world", "the world"),
 	// Messages relating to help
 	HELP_UNAVAILABLE("help.unavail", "{rose}Help topic unavailable."),
 	// Messages relating to the message of the day

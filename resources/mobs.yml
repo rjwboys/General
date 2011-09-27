@@ -1,81 +1,79 @@
 
 mobs:
-  mob0:
+  mob90:
    - Pig: Pigs
    - Swine
-  mob1:
+  mob93:
    - Chicken: Chickens
    - Duck: Ducks
-  mob2:
+  mob92:
    - Cow: Cows
-  mob3:
+  mob91:
    - Sheep
-  mob4:
+  mob94:
    - Squid
-  mob5:
+  mob50:
    - Creeper: Creepers
-  mob6:
+  mob56:
    - Ghast: Ghasts
    - NetherSquid
-  mob7:
+  mob57:
    - ZombiePigman: ZombiePigmen
    - PigZombie: PigZombies
-  mob8:
+  mob51:
    - Skeleton: Skeletons
    - Skelly: Skellies
-  mob8;9:
+  mob51;52:
    - SpiderJockey: SpiderJockeys
-  mob9:
+  mob52:
    - Spider: Spiders
-  mob10:
+  mob54:
    - Zombie: Zombies
-  mob11:
+  mob55:
    - Slime: Slimes
    - GelatinousCube: GelatinousCubes
    - Goo: Goos
    - Gooey: Gooeys
-  mob12:
-   - Human: Humans
-   - Monster: Monsters
-   - Bandit: Bandits
-  mob13:
+  mob53:
    - Giant: Giants
    - GiantZombie: GiantZombies
    - ZombieGiant: ZombieGiants
-  mob14:
+  mob95:
    - Wolf: Wolves
    - Dog: Dogs
-  mob15:
+  mob59:
    - CaveSpider: CaveSpiders
    - PoisonSpider: PoisonSpiders
    - BlueSpider: BlueSpiders
-  mob16:
+  mob58:
    - Enderman: Endermen
-  mob17:
+  mob60:
    - Silverfish
 
 data:
-  mob0:
+  mob90:
     saddle: [tame, saddle, saddled]
     free: [wild, unsaddled, free]
-  mob3:
+  mob91:
     bald: [sheared, nude, naked, bald, bare, shorn]
     natural: [natural]
     random: [artificial, random]
-  mob5:
+  mob50:
     powered: [powered, power, zapped, zap, on, high]
     unpowered: [weak, off, low]
-  mob7:
+  mob57:
     calm: [calm, passive]
     angry: [angry, mad, aggressive, hostile]
-  mob11: 
+  mob55: 
     colossal: [colossal]
     huge: [huge]
     large: [large]
     medium: [medium]
     small: [small]
     tiny: [tiny]
-  mob14:
+  mob95:
     wild: [wild, calm, passive, friendly, free]
     angry: [angry, mad, hostile, aggressive]
     tame: [tame, pet, tamed]
+  mob58:
+    empty: [empty, empty-handed, nothing, air]

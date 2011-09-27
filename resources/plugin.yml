@@ -115,8 +115,8 @@ permissions:
   general.give.*: {children: {general.give.unlimited: true}}
   general.give.group.*: {children: {general.give.groups: true}}
   general.give.item.*: {children: {general.give.any: true}}
-  general.time.*: {children: {general.time}}
-  general.who.*: {children: {general.who.ip}}
+  general.time.*: {children: {general.time: true}}
+  general.who.*: {children: {general.who.ip: true}}
   general.weather.*: {children: {general.weather: true}}
   general.heal.*: {children: {general.heal: true, general.hurt: true}}
   general.getpos.*: {children: {general.getpos.other: true}}
@@ -142,6 +142,7 @@ permissions:
                 description: Gives access to /give for large quantities, and to /items.
               general.give.any:
                 description: Gives permission to get any item regardless of whitelisting/blacklisting.
+                children:
                   general.give.groups: true # Defined dynamically
                   general.give.groupless: true # Defined dynamically
           general.clear.other:

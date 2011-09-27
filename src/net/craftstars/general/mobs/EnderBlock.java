@@ -47,6 +47,12 @@ public class EnderBlock extends MobData {
 	
 	@Override
 	public void parse(CommandSender setter, String carry) {
+		if(Toolbox.equalsOne(carry, MobType.ENDERMAN.getDataList("empty"))) {
+			block = null;
+			data = 0;
+			id = new ItemID(0,0);
+			return;
+		}
 		ItemID item = Items.validate(carry);
 		if(item == null) invalidate();
 		else if(!item.isValid()) invalidate();
