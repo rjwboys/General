@@ -80,6 +80,8 @@ public class Target {
 	
 	public void teleport(Destination to) {
 		for(LivingEntity victim : teleportees) {
+			float pitch = victim.getLocation().getPitch();
+			float yaw = victim.getLocation().getYaw();
 			Location loc = to.getLoc();
 			Block bloc = loc.getBlock();
 			if(bloc != null) {
@@ -97,6 +99,8 @@ public class Target {
 				loc.setX(loc.getX()+0.5);
 				loc.setZ(loc.getZ()+0.5);
 			}
+			loc.setPitch(pitch);
+			loc.setYaw(yaw);
 			victim.teleport(loc);
 			if(victim instanceof Player) {
 				Player who = (Player) victim;
