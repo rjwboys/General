@@ -22,24 +22,23 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.config.Configuration;
 
 public enum MobType {
-	CAVE_SPIDER(null, MobAlignment.ENEMY, CreatureType.CAVE_SPIDER, 15),
-	CHICKEN(null, MobAlignment.FRIENDLY, CreatureType.CHICKEN, 1),
-	COW(null, MobAlignment.FRIENDLY, CreatureType.COW, 2),
-	CREEPER(CreeperState.class, MobAlignment.ENEMY, CreatureType.CREEPER, 5),
-	ENDERMAN(EnderBlock.class, MobAlignment.NEUTRAL, CreatureType.ENDERMAN, 16),
-	GHAST(null, MobAlignment.ENEMY, CreatureType.GHAST, 6),
-	GIANT_ZOMBIE(null, MobAlignment.ENEMY, CreatureType.GIANT, 13),
-	HUMAN(null, MobAlignment.ENEMY, CreatureType.MONSTER, 12),
-	PIG(PigState.class, MobAlignment.FRIENDLY, CreatureType.PIG, 0),
-	PIG_ZOMBIE(PigZombieAttitude.class, MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 7),
-	SHEEP(SheepState.class, MobAlignment.FRIENDLY, CreatureType.SHEEP, 3),
-	SILVERFISH(null, MobAlignment.ENEMY, CreatureType.SILVERFISH, 17),
-	SKELETON(null, MobAlignment.ENEMY, CreatureType.SKELETON, 8),
-	SLIME(SlimeSize.class, MobAlignment.ENEMY, CreatureType.SLIME, 11),
-	SPIDER(null, MobAlignment.ENEMY, CreatureType.SPIDER, 9),
-	SQUID(null, MobAlignment.FRIENDLY, CreatureType.SQUID, 4),
-	WOLF(WolfAttitude.class, MobAlignment.NEUTRAL, CreatureType.WOLF, 14),
-	ZOMBIE(null, MobAlignment.ENEMY, CreatureType.ZOMBIE, 10);
+	CAVE_SPIDER(null, MobAlignment.ENEMY, CreatureType.CAVE_SPIDER, 59),
+	CHICKEN(null, MobAlignment.FRIENDLY, CreatureType.CHICKEN, 93),
+	COW(null, MobAlignment.FRIENDLY, CreatureType.COW, 92),
+	CREEPER(CreeperState.class, MobAlignment.ENEMY, CreatureType.CREEPER, 50),
+	ENDERMAN(EnderBlock.class, MobAlignment.NEUTRAL, CreatureType.ENDERMAN, 58),
+	GHAST(null, MobAlignment.ENEMY, CreatureType.GHAST, 56),
+	GIANT_ZOMBIE(null, MobAlignment.ENEMY, CreatureType.GIANT, 53),
+	PIG(PigState.class, MobAlignment.FRIENDLY, CreatureType.PIG, 90),
+	PIG_ZOMBIE(PigZombieAttitude.class, MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 57),
+	SHEEP(SheepState.class, MobAlignment.FRIENDLY, CreatureType.SHEEP, 91),
+	SILVERFISH(null, MobAlignment.ENEMY, CreatureType.SILVERFISH, 60),
+	SKELETON(null, MobAlignment.ENEMY, CreatureType.SKELETON, 51),
+	SLIME(SlimeSize.class, MobAlignment.ENEMY, CreatureType.SLIME, 55),
+	SPIDER(null, MobAlignment.ENEMY, CreatureType.SPIDER, 52),
+	SQUID(null, MobAlignment.FRIENDLY, CreatureType.SQUID, 94),
+	WOLF(WolfAttitude.class, MobAlignment.NEUTRAL, CreatureType.WOLF, 95),
+	ZOMBIE(null, MobAlignment.ENEMY, CreatureType.ZOMBIE, 54);
 	private MobAlignment alignment;
 	private CreatureType ctype;
 	private String[] aliases;

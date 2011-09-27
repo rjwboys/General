@@ -10,7 +10,7 @@ public abstract class ItemData {
 	public final static ItemData STEP = new StepData();
 	public final static ItemData MAP = new MapData();
 	public final static ItemData STONE_BRICK = new StoneBrickData();
-	public final static ItemData SPAWNER = new CreatureBoxData();
+	public final static ItemData SPAWNER = new MobSpawnerData();
 	public final static ItemData BOOK = new BookWormData();
 	public abstract boolean validate(ItemID id, Material check);
 	
@@ -30,7 +30,7 @@ public abstract class ItemData {
 		case STEP:
 		case DOUBLE_STEP:
 			return STEP;
-		case MOB_SPAWNER: // CreatureBox support
+		case MOB_SPAWNER:
 			return SPAWNER;
 		case MAP:
 			return MAP;
