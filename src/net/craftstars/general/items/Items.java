@@ -366,6 +366,14 @@ public final class Items {
 	}
 	
 	private static Integer findVariant(int id, String data) {
+		// Special case for maps
+		if(id == Material.MAP.getId() && data.startsWith("z")) {
+			int zoom = 90000;
+			try {
+				zoom += Integer.parseInt(data.substring(1));
+				return zoom;
+			} catch(NumberFormatException e) {}
+		}
 		ConfigurationNode thisItem = config.getNode("variants.item" + Integer.toString(id));
 		if(thisItem == null) return null;
 		int i = 0;
@@ -394,26 +402,9 @@ public final class Items {
 	
 	public static void giveItem(Player who, ItemID x, Integer amount) {
 		PlayerInventory i = who.getInventory();
-		HashMap<Integer, ItemStack> excess = i.addItem(x.getStack(amount));
-		for(ItemStack leftover : excess.values()) {
-			if(i.getBoots().getType() == Material.AIR) {
-				i.setBoots(leftover);
-				continue;
-			}
-			if(i.getLeggings().getType() == Material.AIR) {
-				i.setLeggings(leftover);
-				continue;
-			}
-			if(i.getChestplate().getType() == Material.AIR) {
-				i.setChestplate(leftover);
-				continue;
-			}
-			if(i.getHelmet().getType() == Material.AIR) {
-				i.setHelmet(leftover);
-				continue;
-			}
+		HashMap<Integer, ItemStack> excess = i.addItem(x.getStack(amount, who));
+		for(ItemStack leftover : excess.values())
 			who.getWorld().dropItemNaturally(who.getLocation(), leftover);
-		}
 	}
 	
 	public static void setItemName(ItemID id, String name) {

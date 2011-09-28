@@ -7,6 +7,7 @@ import org.bukkit.map.MapView;
 public class MapData extends ItemData {
 	@Override
 	public boolean validate(ItemID id, Material check) {
+		if(id.getData() > 90000 && id.getData() < 90005) return true; // new maps
 		if(id.getData() == null) id.setData(0);
 		MapView map = Bukkit.getMap(id.getData().shortValue());
 		if(map == null) return false;

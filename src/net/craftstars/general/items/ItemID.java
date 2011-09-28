@@ -3,9 +3,13 @@ package net.craftstars.general.items;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.map.MapView;
+import org.bukkit.map.MapView.Scale;
 
 public class ItemID implements Cloneable, Comparable<ItemID> {
 	private int ID;
@@ -149,8 +153,22 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		return new ItemID(this);
 	}
 	
-	public ItemStack getStack(int amount) {
+	public ItemStack getStack(int amount, Player who) {
 		if(!isValid) return null;
+		if(ID == Material.MAP.getId() && data > 90000) {
+			// Create a new map with the given zoom scale!
+			MapView map = Bukkit.createMap(who.getWorld());
+			map.setCenterX(who.getLocation().getBlockX());
+			map.setCenterZ(who.getLocation().getBlockZ());
+			switch(data) {
+			case 90001: map.setScale(Scale.CLOSEST); break;
+			case 90002: map.setScale(Scale.CLOSE); break;
+			case 90003: map.setScale(Scale.NORMAL); break;
+			case 90004: map.setScale(Scale.FAR); break;
+			case 90005: map.setScale(Scale.FARTHEST); break;
+			}
+			data = map.getId();
+		}
 		if(dataMatters) return new ItemStack(ID, amount, (short) data);
 		return new ItemStack(ID, amount);
 	}

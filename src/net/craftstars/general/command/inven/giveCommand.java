@@ -129,14 +129,7 @@ public class giveCommand extends CommandBase {
 			amount = Items.maxStackSize(item.getId());
 		}
 		
-		int slot = who.getInventory().firstEmpty();
-		
-		if(slot < 0) {
-			who.getWorld().dropItem(who.getLocation(), item.getStack(amount));
-		} else {
-			who.getInventory().addItem(item.getStack(amount));
-		}
-		
+		Items.giveItem(who, item, amount);
 		LanguageText format = isGift ? LanguageText.GIVE_GIFTED : LanguageText.GIVE_ENJOY;
 		Messaging.send(who, format.value("item", item.getName(), "amount", amount));
 	}
