@@ -44,6 +44,11 @@ public class goCommand extends CommandBase {
 
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
+		int warmup = Option.TELEPORT_WARMUP.get();
+		if(warmup > 0) {
+			if(Toolbox.inCooldown(sender, "general.teleport")) return true;
+			Toolbox.cooldown(sender, "general.teleport", "general.teleport.instant", warmup);
+		}
 		final Target target = (Target) args.get("target");
 		final Destination dest = (Destination) args.get("dest");
 		if(dest.hasPermission(sender, "general.teleport", target)) {
@@ -65,7 +70,6 @@ public class goCommand extends CommandBase {
 						inWarmup.remove(player);
 					}
 				};
-				int warmup = Option.TELEPORT_WARMUP.get();
 				if(warmup == 0 || dest.hasInstant(player, "general.teleport", target))
 					teleport.run();
 				else {
