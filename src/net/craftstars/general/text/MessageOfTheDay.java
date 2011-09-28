@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 import net.craftstars.general.General;
 import net.craftstars.general.util.Time;
@@ -15,6 +16,7 @@ import net.craftstars.general.util.Toolbox;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 public final class MessageOfTheDay {
 	public static String parseMotD(CommandSender sender, String original) {
@@ -117,14 +119,27 @@ public final class MessageOfTheDay {
 	public static void showMotD(CommandSender sender) {
 		File dataFolder = General.plugin.getDataFolder();
 		if(!dataFolder.exists()) dataFolder.mkdirs();
+		String motd = getMotDFor(sender);
 		Scanner f;
 		try {
-			File helpFile = new File(dataFolder, "general.motd");
+			File helpFile = new File(dataFolder, motd);
 			f = new Scanner(helpFile);
 		} catch(FileNotFoundException e) {
 			Messaging.send(sender, LanguageText.MOTD_UNAVAILABLE);
 			return;
 		}
 		Toolbox.showFile(sender, f, true);
+	}
+
+	private static String getMotDFor(CommandSender sender) {
+		Set<PermissionAttachmentInfo> perms = sender.getEffectivePermissions();
+		for(PermissionAttachmentInfo attachment : perms) {
+			String permission = attachment.getPermission();
+			if(permission.startsWith("general.motd.")) {
+				permission = permission.replace("general.motd.", "");
+				return permission + ".motd";
+			}
+		}
+		return "general.motd";
 	}
 }

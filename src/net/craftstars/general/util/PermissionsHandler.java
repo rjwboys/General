@@ -2,6 +2,7 @@ package net.craftstars.general.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.PrintWriter;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -303,6 +304,25 @@ public class PermissionsHandler extends WorldListener {
 			}
 			private <V> EnumMap<DestinationType,V> destmap() {
 				return new EnumMap<DestinationType,V>(DestinationType.class);
+			}
+		},
+		MOTD {
+			class Filter implements FilenameFilter {
+				@Override
+				public boolean accept(File dir, String name) {
+					return name.endsWith(".motd");
+				}
+			}
+			Filter filter = new Filter();
+			@Override
+			public void build() {
+				File dir = General.plugin.getDataFolder();
+				for(String filename : dir.list(filter)) {
+					if(filename.equals("general.motd")) continue;
+					filename = filename.replace(".motd", "");
+					register("general.motd." + filename, "Shows the " + filename + " MOTD instead of the general " +
+						"one when you join.", PermissionDefault.FALSE);
+				}
 			}
 		},
 		;
