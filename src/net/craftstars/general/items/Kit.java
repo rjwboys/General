@@ -48,7 +48,7 @@ public class Kit implements Iterable<ItemID> {
 	
 	public boolean canGet(CommandSender who) {
 		String node = getPermission();
-		if(Toolbox.hasPermission(who, node)) return true;
+		if(who.hasPermission(node)) return true;
 		Messaging.lacksPermission(who, node, LanguageText.LACK_KIT_NAME, "kit", name);
 		return false;
 	}

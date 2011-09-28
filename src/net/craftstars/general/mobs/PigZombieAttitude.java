@@ -17,8 +17,8 @@ public class PigZombieAttitude extends MobData {
 	
 	@Override
 	public boolean hasPermission(CommandSender byWhom) {
-		if(anger > 0) return Toolbox.hasPermission(byWhom, "general.mobspawn.pig-zombie.angry");
-		return Toolbox.hasPermission(byWhom, "general.mobspawn.pig-zombie.regular");
+		if(anger > 0) return byWhom.hasPermission("general.mobspawn.pig-zombie.angry");
+		return byWhom.hasPermission("general.mobspawn.pig-zombie.regular");
 	}
 	
 	@Override

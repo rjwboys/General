@@ -72,7 +72,7 @@ public class Target {
 	public boolean hasMassPermission(CommandSender sender) {
 		boolean canMass;
 		if(teleportees.size() > 1) {
-			canMass = Toolbox.hasPermission(sender, "general.teleport.mass");
+			canMass = sender.hasPermission("general.teleport.mass");
 			if(!canMass) Messaging.lacksPermission(sender, "general.teleport.mass");
 		} else canMass = true;
 		return canMass;

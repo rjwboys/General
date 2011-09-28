@@ -31,8 +31,8 @@ public class SheepState extends MobData {
 	
 	@Override
 	public boolean hasPermission(CommandSender byWhom) {
-		if(sheared) return Toolbox.hasPermission(byWhom, "general.mobspawn.sheep.sheared");
-		else return Toolbox.hasPermission(byWhom, "general.mobspawn.sheep." + getColourName());
+		if(sheared) return byWhom.hasPermission("general.mobspawn.sheep.sheared");
+		else return byWhom.hasPermission("general.mobspawn.sheep." + getColourName());
 	}
 	
 	@Override

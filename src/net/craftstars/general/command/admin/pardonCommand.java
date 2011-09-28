@@ -14,7 +14,6 @@ import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
-import net.craftstars.general.util.Toolbox;
 
 public class pardonCommand extends CommandBase {
 	public pardonCommand(General instance) {
@@ -31,7 +30,7 @@ public class pardonCommand extends CommandBase {
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String,Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.pardon"))
+		if(!sender.hasPermission("general.pardon"))
 			return Messaging.lacksPermission(sender, "general.pardon");
 		@SuppressWarnings("unchecked")
 		List<OfflinePlayer> players = (List<OfflinePlayer>)args.get("players");

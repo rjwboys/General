@@ -17,8 +17,8 @@ public class CreeperState extends MobData {
 	
 	@Override
 	public boolean hasPermission(CommandSender byWhom) {
-		if(powered) return Toolbox.hasPermission(byWhom, "general.mobspawn.creeper.powered");
-		return Toolbox.hasPermission(byWhom, "general.mobspawn.creeper.regular");
+		if(powered) return byWhom.hasPermission("general.mobspawn.creeper.powered");
+		return byWhom.hasPermission("general.mobspawn.creeper.regular");
 	}
 	
 	@Override

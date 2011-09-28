@@ -17,8 +17,8 @@ public class PigState extends MobData {
 	
 	@Override
 	public boolean hasPermission(CommandSender byWhom) {
-		if(saddled) return Toolbox.hasPermission(byWhom, "general.mobspawn.pig.saddled");
-		return Toolbox.hasPermission(byWhom, "general.mobspawn.pig.regular");
+		if(saddled) return byWhom.hasPermission("general.mobspawn.pig.saddled");
+		return byWhom.hasPermission("general.mobspawn.pig.regular");
 	}
 	
 	@Override

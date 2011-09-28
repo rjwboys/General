@@ -98,16 +98,16 @@ public class giveCommand extends CommandBase {
 
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.give"))
+		if(!sender.hasPermission("general.give"))
 			return Messaging.lacksPermission(sender, "general.give");
 		Player who = (Player) args.get("player");
-		if(!who.equals(sender) && Toolbox.lacksPermission(sender, "general.give.other"))
+		if(!who.equals(sender) && !sender.hasPermission("general.give.other"))
 			return Messaging.lacksPermission(sender, "general.give.other");
 		int amount = (Integer) args.get("amount");
-		if(amount < 0 && Toolbox.lacksPermission(sender, "general.give.infinite"))
+		if(amount < 0 && !sender.hasPermission("general.give.infinite"))
 			return Messaging.lacksPermission(sender, "general.give.infinite");
 		int maxAmount = Option.GIVE_MASS.get();
-		if(amount > maxAmount && Toolbox.lacksPermission(sender, "general.give.mass"))
+		if(amount > maxAmount && !sender.hasPermission("general.give.mass"))
 			return Messaging.lacksPermission(sender, "general.give.mass");
 		ItemID item = (ItemID) args.get("item");
 		// Make sure this player is allowed this particular item

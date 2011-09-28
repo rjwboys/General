@@ -139,13 +139,11 @@ public class mobspawnCommand extends CommandBase {
 
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.mobspawn"))
-			return Messaging.lacksPermission(sender, "general.mobspawn");
 		String[] economyNodes = (String[]) args.get("economy");
 		SpawnResult spawn = (SpawnResult) args.get("mob");
 		Destination dest = (Destination) args.get("dest");
 		int numMobs = (Integer) args.get("num");
-		if(numMobs > 5 && Toolbox.lacksPermission(sender, "general.mobspawn.mass"))
+		if(numMobs > 5 && !sender.hasPermission("general.mobspawn.mass"))
 			return Messaging.lacksPermission(sender, "general.mobspawn.mass");
 		boolean canPay = General.economy == null;
 		if(!canPay) canPay = Toolbox.canPay(sender, numMobs, economyNodes);

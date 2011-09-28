@@ -55,7 +55,7 @@ public class WolfAttitude extends MobData {
 	
 	@Override
 	public boolean hasPermission(CommandSender byWhom) {
-		return Toolbox.hasPermission(byWhom, "general.mobspawn.wolf." + attitude.toString().toLowerCase());
+		return byWhom.hasPermission("general.mobspawn.wolf." + attitude.toString().toLowerCase());
 	}
 	
 	@Override

@@ -93,11 +93,12 @@ public class timeCommand extends CommandBase {
 			Messaging.send(sender, LanguageText.TIME_NONE);
 			return true;
 		}
-		if(Toolbox.lacksPermission(sender, "general.time.set"))
-			return Messaging.lacksPermission(sender, "general.time.set");
-		String cooldownPerm = "general.time.set." + world.getName();
-		if(sender.isPermissionSet(cooldownPerm) && Toolbox.lacksPermission(sender, cooldownPerm)) return true;
-		Toolbox.cooldown(sender, cooldownPerm, Option.COOLDOWN("time").get());
+		String permission = "general.time.set";
+		if(!sender.hasPermission(permission))
+			return Messaging.lacksPermission(sender, permission);
+		String cooldownPerm = permission + "." + world.getName();
+		if(Toolbox.inCooldown(sender, cooldownPerm)) return true;
+		Toolbox.cooldown(sender, cooldownPerm, permission + ".instant", Option.COOLDOWN("time").get());
 		LanguageText timeName;
 		int timeTicks;
 		if(timeStr.equalsIgnoreCase("day")) { // 6am
@@ -178,7 +179,7 @@ public class timeCommand extends CommandBase {
 			Messaging.send(sender, LanguageText.TIME_NONE);
 			return;
 		}
-		if(Toolbox.lacksPermission(sender, "general.time.view", "general.basic"))
+		if(!sender.hasPermission("general.time.view"))
 			Messaging.lacksPermission(sender, "general.time.view");
 		else {
 			int time = (int) world.getTime();

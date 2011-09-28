@@ -177,6 +177,8 @@ permissions:
                 description: Allows you to teleport several entities at a time.
           general.setspawn: true # Defined dynamically
           general.mobspawn: true # Defined dynamically
+          general.mobspawn.mass:
+            description: Allows you to spawn large numbers of mobs all at once.
           general.away:
             description: Allows you to set an away message.
           general.worldinfo:

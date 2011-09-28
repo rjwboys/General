@@ -2,7 +2,6 @@ package net.craftstars.general.items;
 
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
-import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -196,7 +195,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 	public boolean canGive(CommandSender who) {
 		String itemNode = Material.getMaterial(ID).toString();
 		itemNode = "general.give.item." + itemNode.toLowerCase().replace('_', '-');
-		boolean hasPermission = Toolbox.hasPermission(who, itemNode);
+		boolean hasPermission = who.hasPermission(itemNode);
 		if(!hasPermission)
 			Messaging.lacksPermission(who, itemNode, LanguageText.LACK_GIVE_ITEM, "item", getName());
 		return hasPermission;

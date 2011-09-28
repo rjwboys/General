@@ -29,7 +29,6 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.event.world.WorldListener;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
-import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
@@ -42,14 +41,6 @@ public class PermissionsHandler extends WorldListener {
 		PermissionSet.finish();
 		Bukkit.getPluginManager().registerEvent(Type.WORLD_LOAD, this, Priority.Monitor, General.plugin);
 		Bukkit.getPluginManager().registerEvent(Type.WORLD_UNLOAD, this, Priority.Monitor, General.plugin);
-	}
-	
-	public boolean hasPermission(Permissible who, String what) {
-		return who.hasPermission(what);
-	}
-	
-	public boolean inGroup(Permissible who, String which) {
-		return hasPermission(who, "group." + which.toLowerCase());
 	}
 	
 	public static void refreshItemGroups() {

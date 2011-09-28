@@ -34,7 +34,7 @@ public class EnderBlock extends MobData {
 	
 	@Override
 	public boolean hasPermission(CommandSender sender) {
-		return Toolbox.hasPermission(sender, getPermission());
+		return sender.hasPermission(getPermission());
 	}
 	
 	@Override

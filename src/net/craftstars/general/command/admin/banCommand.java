@@ -43,7 +43,7 @@ public class banCommand extends CommandBase {
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String,Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.ban"))
+		if(!sender.hasPermission("general.ban"))
 			return Messaging.lacksPermission(sender, "general.ban");
 		@SuppressWarnings("unchecked")
 		List<OfflinePlayer> players = (List<OfflinePlayer>)args.get("players");

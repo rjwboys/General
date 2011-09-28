@@ -66,10 +66,10 @@ public class healCommand extends CommandBase {
 		Player who = (Player) args.get("player");
 		double health = (Double) args.get("health");
 		if(command.equals("hurt")) {
-			if(Toolbox.lacksPermission(sender, "general.hurt"))
+			if(!sender.hasPermission("general.hurt"))
 				return Messaging.lacksPermission(sender, "general.hurt");
 			health = -health;
-		} else if(Toolbox.lacksPermission(sender, "general.heal"))
+		} else if(!sender.hasPermission("general.heal"))
 			return Messaging.lacksPermission(sender, "general.heal");
 		if(!Toolbox.canPay(sender, 1, "economy." + command)) return true;
 		health = doHeal(who, health);

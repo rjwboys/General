@@ -97,7 +97,7 @@ public class clearCommand extends CommandBase {
 
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.clear"))
+		if(!sender.hasPermission("general.clear"))
 			return Messaging.lacksPermission(sender, "general.clear");
 		boolean sell = General.economy != null;
 		sell = sell && Option.ECONOMY_CLEAR_SELL.get().equalsIgnoreCase("sell");
@@ -113,7 +113,7 @@ public class clearCommand extends CommandBase {
 		if(fromWhom instanceof Player) {
 			if(((Player) fromWhom).getName().equalsIgnoreCase(who.getName())) selfClear = true;
 		}
-		if(!selfClear && Toolbox.lacksPermission(fromWhom, "general.clear.other"))
+		if(!selfClear && !fromWhom.hasPermission("general.clear.other"))
 			return Messaging.lacksPermission(fromWhom, "general.clear.other");
 		sell = sell && selfClear;
 		PlayerInventory i = who.getInventory();

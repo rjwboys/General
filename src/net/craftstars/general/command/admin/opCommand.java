@@ -39,7 +39,7 @@ public class opCommand extends CommandBase {
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.op"))
+		if(!sender.hasPermission("general.op"))
 			return Messaging.lacksPermission(sender, "general.op");
 		@SuppressWarnings("unchecked")
 		ArrayList<Player> players = (ArrayList<Player>) args.get("players");

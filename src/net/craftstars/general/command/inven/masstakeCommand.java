@@ -53,10 +53,10 @@ public class masstakeCommand extends CommandBase {
 
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.take.mass"))
+		if(!sender.hasPermission("general.take.mass"))
 			return Messaging.lacksPermission(sender, "general.take.mass");
 		Player who = (Player) args.get("player");
-		if(!sender.equals(who) && Toolbox.lacksPermission(sender, "general.take.other"))
+		if(!sender.equals(who) && !sender.hasPermission("general.take.other"))
 			return Messaging.lacksPermission(sender, "general.take.other");
 		@SuppressWarnings("unchecked")
 		ArrayList<ItemID> items = (ArrayList<ItemID>) args.get("items");

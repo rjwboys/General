@@ -44,7 +44,7 @@ public class playerlistCommand extends CommandBase {
 
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.playerlist", "general.basic"))
+		if(!sender.hasPermission("general.playerlist"))
 			return Messaging.lacksPermission(sender, "general.playerlist");
 		World world = (World) args.get("world");
 		List<String> players = Toolbox.getPlayerList(plugin, world);

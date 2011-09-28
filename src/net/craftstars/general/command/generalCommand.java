@@ -97,7 +97,7 @@ public class generalCommand extends CommandBase {
 		String[] args = (String[]) params.get("args");
 		if(args.length < 1) return false;
 		if(args[0].equalsIgnoreCase("reload")) {
-			if(Toolbox.lacksPermission(sender, "general.admin.reload"))
+			if(!sender.hasPermission("general.admin.reload"))
 				return Messaging.lacksPermission(sender, "general.admin.reload");
 			doReload(sender);
 			return true;
@@ -113,12 +113,12 @@ public class generalCommand extends CommandBase {
 			MessageOfTheDay.showMotD(sender);
 			return true;
 		} else if(args[0].equalsIgnoreCase("item")) {
-			if(Toolbox.lacksPermission(sender, "general.admin.item"))
+			if(!sender.hasPermission("general.admin.item"))
 				return Messaging.lacksPermission(sender, "general.admin.item");
 			if(args.length < 3) return false;
 			return itemEdit(sender, Arrays.copyOfRange(args, 2, args.length));
 		} else if(args[0].equalsIgnoreCase("save")) {
-			if(Toolbox.lacksPermission(sender, "general.admin.save"))
+			if(!sender.hasPermission("general.admin.save"))
 				return Messaging.lacksPermission(sender, "general.admin.save");
 			doSave(sender);
 			return true;
@@ -134,22 +134,22 @@ public class generalCommand extends CommandBase {
 			plugin.getServer().dispatchCommand(who, check);
 			return true;
 		} else if(args[0].equalsIgnoreCase("kit")) {
-			if(Toolbox.lacksPermission(sender, "general.admin.kit"))
+			if(!sender.hasPermission("general.admin.kit"))
 				return Messaging.lacksPermission(sender, "general.admin.kit");
 			if(args.length < 3) return false;
 			return kitEdit(sender, Arrays.copyOfRange(args, 1, args.length));
 		} else if(args[0].equalsIgnoreCase("economy")) {
-			if(Toolbox.lacksPermission(sender, "general.admin.economy"))
+			if(!sender.hasPermission("general.admin.economy"))
 				return Messaging.lacksPermission(sender, "general.admin.economy");
 			if(args.length < 3) return false;
 			return setEconomy(sender, Arrays.copyOfRange(args, 1, args.length));
 		} else if(args[0].equalsIgnoreCase("set")) {
-			if(Toolbox.lacksPermission(sender, "general.admin.set"))
+			if(!sender.hasPermission("general.admin.set"))
 				return Messaging.lacksPermission(sender, "general.admin.set");
 			if(args.length < 3) return false;
 			return setVar(sender, Arrays.copyOfRange(args, 1, args.length));
 		} else if(args[0].equalsIgnoreCase("genlang")) {
-			if(Toolbox.lacksPermission(sender, "general.admin.genlang"))
+			if(!sender.hasPermission("general.admin.genlang"))
 				return Messaging.lacksPermission(sender, "general.admin.genlang");
 			for(LanguageText lang : LanguageText.values())
 				lang.getFormat();

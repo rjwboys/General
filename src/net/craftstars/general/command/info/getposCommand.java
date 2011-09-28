@@ -76,10 +76,10 @@ public class getposCommand extends CommandBase {
 
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.getpos", "general.basic"))
+		if(!sender.hasPermission("general.getpos"))
 			return Messaging.lacksPermission(sender, "general.getpos");
 		Player whose = (Player) args.get("player");
-		if(!whose.equals(sender) && Toolbox.lacksPermission(sender, "general.getpos.other"))
+		if(!whose.equals(sender) && !sender.hasPermission("general.getpos.other"))
 			return Messaging.lacksPermission(sender, "general.getpos.other");
 		double degrees = getRotation(whose);
 		double compass = getCompass(whose);

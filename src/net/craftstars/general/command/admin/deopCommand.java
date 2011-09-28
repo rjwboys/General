@@ -39,7 +39,7 @@ public class deopCommand extends CommandBase {
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.deop"))
+		if(!sender.hasPermission("general.deop"))
 			return Messaging.lacksPermission(sender, "general.deop");
 		@SuppressWarnings("unchecked")
 		ArrayList<Player> players = (ArrayList<Player>) args.get("players");

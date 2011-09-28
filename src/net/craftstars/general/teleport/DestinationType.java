@@ -3,7 +3,6 @@ package net.craftstars.general.teleport;
 
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
-import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.CommandSender;
 
@@ -20,7 +19,7 @@ public enum DestinationType {
 	}
 	
 	public boolean hasPermission(CommandSender who, String base, Target what) {
-		if(Toolbox.hasPermission(who, getPermission(base))) return true;
+		if(who.hasPermission(getPermission(base))) return true;
 		Messaging.lacksPermission(who, getPermission(base), LanguageText.LACK_TELEPORT,
 			"destination", getName(true), "world", what.getWorld().getName(), "target", what.getName());
 		return false;
@@ -43,6 +42,6 @@ public enum DestinationType {
 	}
 
 	public boolean hasInstant(CommandSender sender, String base) {
-		return Toolbox.hasPermission(sender, getPermission(base) + ".instant");
+		return sender.hasPermission(getPermission(base) + ".instant");
 	}
 }

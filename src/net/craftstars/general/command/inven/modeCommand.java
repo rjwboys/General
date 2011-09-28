@@ -77,15 +77,15 @@ public class modeCommand extends CommandBase {
 	public boolean execute(CommandSender sender, String command, Map<String,Object> args) {
 		Player who = (Player)args.get("who");
 		if(command.equals("view")) {
-			if(Toolbox.lacksPermission(sender, "general.gamemode.view"))
+			if(!sender.hasPermission("general.gamemode.view"))
 				return Messaging.lacksPermission(sender, "general.gamemode.view");
 			String modeName = Toolbox.formatItemName(who.getGameMode().toString());
 			Messaging.send(sender, LanguageText.MISC_IN_MODE.value("player", who.getDisplayName(), "mode", modeName));
 		} else if(command.equals("set")) {
 			if(who.equals(sender)) {
-				if(Toolbox.lacksPermission(sender, "general.gamemode.set"))
+				if(!sender.hasPermission("general.gamemode.set"))
 					return Messaging.lacksPermission(sender, "general.gamemode.set");
-			} else if(Toolbox.lacksPermission(sender, "general.gamemode.set.other"))
+			} else if(!sender.hasPermission("general.gamemode.set.other"))
 				return Messaging.lacksPermission(sender, "general.gamemode.set.other");
 			GameMode mode = (GameMode)args.get("mode");
 			String modeName = Toolbox.formatItemName(mode.toString());

@@ -26,6 +26,8 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.config.Configuration;
 
 public final class Toolbox {
+	private Toolbox() {}
+	
 	public static Player matchPlayer(String pat) {
 		Player[] players = General.plugin.getServer().getOnlinePlayers();
 		if(players.length == 0) return null;
@@ -127,20 +129,8 @@ public final class Toolbox {
 		return newStr.trim();
 	}
 	
-	public static boolean lacksPermission(Permissible sender, String... permissions) {
-		return !hasPermission(sender, permissions);
-	}
-	
-	public static boolean hasPermission(Permissible sender, String... permissions) {
-		boolean foundPermission = false;
-		for(String permission : permissions) {
-			if(General.permissions.hasPermission(sender, permission)) foundPermission = true;
-		}
-		return foundPermission;
-	}
-	
 	private static AccountStatus hasFunds(CommandSender sender, int quantity, String... permissions) {
-		if(hasPermission(sender, "general.no-money") || sender instanceof ConsoleCommandSender)
+		if(sender.hasPermission("general.no-money") || sender instanceof ConsoleCommandSender)
 			return AccountStatus.BYPASS;
 		Player player = (Player) sender;
 		AccountStatus.price = 0;
@@ -319,14 +309,19 @@ public final class Toolbox {
 		return null;
 	}
 	
-	public static void cooldown(Permissible sender, String permission, int delay) {
-		if(delay > 0 && lacksPermission(sender, permission + ".instant"))
-			sender.addAttachment(General.plugin, permission, false, delay);
+	public static void cooldown(Permissible sender, String cooldown, String instant, int delay) {
+		if(delay > 0 && !sender.hasPermission(instant))
+			sender.addAttachment(General.plugin, cooldown, false, delay);
+	}
+	
+	public static boolean inCooldown(Permissible sender, String cooldown) {
+		if(!sender.isPermissionSet(cooldown)) return false;
+		return !sender.hasPermission(cooldown);
 	}
 
 	public static void giveMoney(Player who, double revenue) {
 		if(General.economy == null) return;
-		// TODO: AllPay has not "give" function yet, so pay the inverse
+		// TODO: AllPay has no "give" function yet, so pay the inverse
 		General.economy.pay(who, -revenue, -1);
 	}
 }

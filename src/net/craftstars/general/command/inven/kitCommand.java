@@ -77,7 +77,7 @@ public class kitCommand extends CommandBase {
 			if(!kit.canAfford(who)) return true;
 			
 			// Initiate cooldown unless they have bypass permission
-			Toolbox.cooldown(sender, kit.getPermission(), kit.delay);
+			Toolbox.cooldown(sender, kit.getPermission(), kit.getPermission() + ".instant", kit.delay);
 			
 			// Receive the kit
 			getKit(who, kit);

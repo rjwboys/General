@@ -57,7 +57,7 @@ public class worldinfoCommand extends CommandBase {
 
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.worldinfo"))
+		if(!sender.hasPermission("general.worldinfo"))
 			return Messaging.lacksPermission(sender, "general.worldinfo");
 		World world = (World) args.get("world");
 		showInfo(sender, world);

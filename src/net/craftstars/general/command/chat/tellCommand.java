@@ -61,7 +61,7 @@ public class tellCommand extends CommandBase {
 
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.tell", "general.basic"))
+		if(!sender.hasPermission("general.tell"))
 			return Messaging.lacksPermission(sender, "general.tell");
 		Player who = (Player) args.get("recipient");
 		if(sender instanceof Player) {

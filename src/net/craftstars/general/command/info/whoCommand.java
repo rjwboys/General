@@ -136,7 +136,7 @@ public class whoCommand extends CommandBase {
 			Player p = (Player) who;
 			if(p.getName().equals(ofWhom.getName()))
 				canSeeIp = true;
-			else canSeeIp = Toolbox.hasPermission(p, "general.who.ip");
+			else canSeeIp = p.hasPermission("general.who.ip");
 		} else if(who instanceof ConsoleCommandSender) canSeeIp = true;
 		return canSeeIp;
 	}
@@ -177,7 +177,7 @@ public class whoCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		CommandSender who = (CommandSender) args.get("who");
-		if(!who.equals(sender) && Toolbox.lacksPermission(sender, "general.who", "general.basic"))
+		if(!who.equals(sender) && !sender.hasPermission("general.who"))
 			return Messaging.lacksPermission(sender, "general.who");
 		int mask = (Integer) args.get("mask");
 		if(who instanceof Player) showInfo((Player) who, sender, mask);

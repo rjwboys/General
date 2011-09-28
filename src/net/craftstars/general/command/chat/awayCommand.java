@@ -22,7 +22,7 @@ public class awayCommand extends CommandBase {
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.away", "general.basic"))
+		if(!sender.hasPermission("general.away"))
 			return Messaging.lacksPermission(sender, "general.away");
 		Player who = (Player) sender;
 		String reason = args.get("reason").toString();

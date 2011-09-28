@@ -35,7 +35,7 @@ public class kickCommand extends CommandBase {
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.kick"))
+		if(!sender.hasPermission("general.kick"))
 			return Messaging.lacksPermission(sender, "general.kick");
 		Player villain = (Player) args.get("villain");
 		String reason = args.get("reason").toString();

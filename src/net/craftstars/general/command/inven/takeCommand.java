@@ -86,13 +86,13 @@ public class takeCommand extends CommandBase {
 
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.take"))
+		if(!sender.hasPermission("general.take"))
 			return Messaging.lacksPermission(sender, "general.take");
 		Player who = (Player) args.get("player");
 		ItemID item = (ItemID) args.get("item");
 		int amount = (Integer) args.get("amount");
 		boolean sell = who.equals(sender);
-		if(!sell && Toolbox.lacksPermission(sender, "general.take.other"))
+		if(!sell && !sender.hasPermission("general.take.other"))
 			return Messaging.lacksPermission(sender, "general.take.other");
 		sell = sell && General.economy != null;
 		sell = sell && Option.ECONOMY_TAKE_SELL.get().equalsIgnoreCase("sell");

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Option;
-import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
@@ -78,7 +77,7 @@ public class SlimeSize extends MobData {
 	
 	@Override
 	public boolean hasPermission(CommandSender byWhom) {
-		return Toolbox.hasPermission(byWhom, size.getPermission());
+		return byWhom.hasPermission(size.getPermission());
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public class itemsCommand extends CommandBase {
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		if(Toolbox.lacksPermission(sender, "general.give.mass"))
+		if(!sender.hasPermission("general.give.mass"))
 			return Messaging.lacksPermission(sender, "general.give.mass");
 		Player toWhom = (Player) args.get("player");
 		String[] items = (String[]) args.get("items");
