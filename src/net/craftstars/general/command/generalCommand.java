@@ -135,7 +135,7 @@ public class generalCommand extends CommandBase {
 			return true;
 		} else if(args[0].equalsIgnoreCase("kit")) {
 			if(Toolbox.lacksPermission(sender, "general.admin.kit"))
-				return Messaging.lacksPermission(sender, "administrate the General plugin");
+				return Messaging.lacksPermission(sender, "general.admin.kit");
 			if(args.length < 3) return false;
 			return kitEdit(sender, Arrays.copyOfRange(args, 1, args.length));
 		} else if(args[0].equalsIgnoreCase("economy")) {
@@ -279,34 +279,34 @@ public class generalCommand extends CommandBase {
 			if(Toolbox.equalsOne(args[0], "heal", "hurt")) path += args[0];
 			else if(args[0].equalsIgnoreCase("time")) {
 				if(args.length == 1) {
-					Messaging.send(sender, "{rose}Which time?");
+					Messaging.send(sender, LanguageText.ADMIN_ECON_WHICH_TIME);
 					return true;
 				} else if(Toolbox.equalsOne(args[1], "day", "night", "dawn", "dusk", "noon", "midnight", "set"))
 					path += args[1];
 				else {
-					Messaging.send(sender, "{rose}Invalid time.");
+					Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_TIME);
 					return true;
 				}
 			} else if(args[0].equalsIgnoreCase("weather")) {
 				if(args.length == 1) {
-					Messaging.send(sender, "{rose}Which weather?");
+					Messaging.send(sender, LanguageText.ADMIN_ECON_WHICH_WEATHER);
 					return true;
 				} else if(Toolbox.equalsOne(args[1], "storm", "thunder", "zap"))
 					path += args[1];
 				else {
-					Messaging.send(sender, "{rose}Invalid weather.");
+					Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_WEATHER);
 					return true;
 				}
 			} else if(args[0].equalsIgnoreCase("mobspawn")) {
 				if(args.length == 1) {
-					Messaging.send(sender, "{rose}Which mob?");
+					Messaging.send(sender, LanguageText.ADMIN_ECON_WHICH_MOB);
 					return true;
 				} else {
 					path += "mobspawn.";
 					// Validate mob name
 					MobType mob = MobType.getMob(args[1]);
 					if(mob == null) {
-						Messaging.send(sender, "{rose}Invalid mob.");
+						Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_MOB);
 						return true;
 					}
 					path += mob.toString().toLowerCase().replace('_', '-');
@@ -323,7 +323,7 @@ public class generalCommand extends CommandBase {
 						if(!args[2].equalsIgnoreCase("riding")) {
 							// mobspawn <mob> <data> free
 							if(!args[3].equalsIgnoreCase("free")) {
-								Messaging.send(sender, "Invalid mob specification.");
+								Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_MOBSPEC);
 								return true;
 							}
 							data = args[2];
@@ -341,13 +341,13 @@ public class generalCommand extends CommandBase {
 							data = args[2];
 							mountName = args[4];
 						} else {
-							Messaging.send(sender, "Invalid mob specification.");
+							Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_MOBSPEC);
 							return true;
 						}
 						break;
 					case 6: // mobspawn <mob> <data> riding <mob> <data>
 						if(!args[3].equalsIgnoreCase("riding")) {
-							Messaging.send(sender, "Invalid mob specification.");
+							Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_MOBSPEC);
 							return true;
 						}
 						data = args[2];
@@ -355,7 +355,7 @@ public class generalCommand extends CommandBase {
 						dataMount = args[5];
 						break;
 					default:
-						Messaging.send(sender, "Invalid mob specification.");
+						Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_MOBSPEC);
 						return true;
 					}
 					// Validate basic data, if present
@@ -363,7 +363,7 @@ public class generalCommand extends CommandBase {
 					if(data != null) {
 						mobData = MobData.parse(mob, null, data);
 						if(mobData == null) {
-							Messaging.send(sender, "Invalid mob data.");
+							Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_MOBDATA);
 							return true;
 						}
 					}
@@ -372,14 +372,14 @@ public class generalCommand extends CommandBase {
 					if(mountName != null) {
 						mount = MobType.getMob(mountName);
 						if(mount == null) {
-							Messaging.send(sender, "{rose}Invalid mob for mount.");
+							Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_MOUNT);
 							return true;
 						}
 						// Validate mount data, if present
 						if(dataMount != null) {
 							mountData = MobData.parse(mob, null, dataMount);
 							if(mountData == null) {
-								Messaging.send(sender, "Invalid mob data.");
+								Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_MOBDATA);
 								return true;
 							}
 						}
@@ -454,26 +454,21 @@ public class generalCommand extends CommandBase {
 				switch(args.length) {
 				case 2:
 					String target = null;
-					if(args[0].equalsIgnoreCase("teleport")) {
-						for(TargetType targetType : TargetType.values()) {
-							if(args[1].equalsIgnoreCase(targetType.toString())) {
-								target = args[1];
-								break;
-							}
+					if(args[0].equalsIgnoreCase("teleport") && args[1].equals("world")) {
+						Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_TARGET_TELE);
+						return true;
+					} else if(args[0].equalsIgnoreCase("setspawn") && args[1].equalsIgnoreCase("mobs")) {
+						Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_TARGET_SPAWN);
+						return true;
+					}
+					for(TargetType targetType : TargetType.values()) {
+						if(args[1].equalsIgnoreCase(targetType.toString())) {
+							target = args[1];
+							break;
 						}
-						if(target == null) {
-							Messaging.send(sender, "Invalid teleport target.");
-							return true;
-						}
-					} else if(args[0].equalsIgnoreCase("setspawn")) {
-						if(!Toolbox.equalsOne(args[1], "self", "world", "other")) {
-							Messaging.send(sender, "Invalid setspawn target.");
-							return true;
-						}
-						target = args[1];
 					}
 					if(target == null) {
-						Messaging.send(sender, "Invalid target.");
+						Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_TARGET);
 						return true;
 					}
 					path += target;
@@ -487,14 +482,14 @@ public class generalCommand extends CommandBase {
 							}
 						}
 						if(dest == null) {
-							Messaging.send(sender, "Invalid destination.");
+							Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_DEST);
 							return true;
 						}
 						path += "to." + dest;
 					} else if(Toolbox.equalsOne(args[1], "into", "from")) {
 						World world = Toolbox.matchWorld(args[2]);
 						if(world == null) {
-							Messaging.send(sender, "Invalid world.");
+							Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_WORLD);
 							return true;
 						}
 						path += args[1] + "." + world.getName();
@@ -502,7 +497,7 @@ public class generalCommand extends CommandBase {
 				}
 			}
 			General.config.setProperty(path, value);
-			Messaging.send(sender, "Set economy value '" + path + "' to " + value + "!");
+			Messaging.send(sender, LanguageText.ADMIN_ECON_SET.value("path", path, "value", value));
 			return true;
 		}
 		return false;
@@ -516,7 +511,7 @@ public class generalCommand extends CommandBase {
 		if(args[0].equalsIgnoreCase("others-for-all")) {
 			node = Option.OTHERS4ALL;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "{rose}Must be a boolean.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
@@ -525,76 +520,76 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "{rose}Must be an integer.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_INT);
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("show-health")) {
 			node = Option.SHOW_HEALTH;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "{rose}Must be a boolean.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-coords")) {
 			node = Option.SHOW_COORDS;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "{rose}Must be a boolean.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-world")) {
 			node = Option.SHOW_WORLD;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "{rose}Must be a boolean.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-ip")) {
 			node = Option.SHOW_IP;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "{rose}Must be a boolean.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-motd")) {
 			node = Option.SHOW_MOTD;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "{rose}Must be a boolean.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("24-hour")) {
 			node = Option.TIME_FORMAT;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "{rose}Must be a boolean.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-ticks")) {
 			node = Option.SHOW_TICKS;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "{rose}Must be a boolean.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("economy-take")) {
 			node = Option.ECONOMY_TAKE_SELL;
 			if(!Toolbox.equalsOne(args[1], "trash", "sell")) {
-				Messaging.send(sender, "{rose}Invalid economy-take method (must be trash or sell).");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_ECONTAKE);
 				return true;
 			}
 			value = args[1];
 		} else if(args[0].equalsIgnoreCase("economy-clear")) {
 			node = Option.ECONOMY_CLEAR_SELL;
 			if(!Toolbox.equalsOne(args[1], "trash", "sell")) {
-				Messaging.send(sender, "{rose}Invalid economy-clear method (must be trash or sell).");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_ECONCLEAR);
 				return true;
 			}
 			value = args[1];
 		} else if(args[0].equalsIgnoreCase("economy-kits")) {
 			node = Option.KIT_METHOD;
 			if(!Toolbox.equalsOne(args[1], "individual", "cumulative", "discount")) {
-				Messaging.send(sender, "{rose}Invalid economy-kits method (must be individual, cumulative, or discount).");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_ECONKIT);
 				return true;
 			}
 			value = args[1];
@@ -603,7 +598,7 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Double.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "{rose}Must be a number.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_NUM);
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("kits-discount")) {
@@ -611,7 +606,7 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Double.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "{rose}Must be a number.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_NUM);
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("chat-tag")) {
@@ -620,14 +615,14 @@ public class generalCommand extends CommandBase {
 		} else if(args[0].equalsIgnoreCase("log-commands")) {
 			node = Option.LOG_COMMANDS;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "{rose}Must be a boolean.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("auto-save")) {
 			node = Option.AUTO_SAVE;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "{rose}Must be a boolean.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
@@ -636,7 +631,7 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "{rose}Must be an integer.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_INT);
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("teleport-warmup")) {
@@ -644,7 +639,7 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "{rose}Must be an integer.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_INT);
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("time-cooldown")) {
@@ -652,7 +647,7 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "{rose}Must be an integer.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_INT);
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("storm-cooldown")) {
@@ -660,7 +655,7 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "{rose}Must be an integer.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_INT);
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("thunder-cooldown")) {
@@ -668,7 +663,7 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "{rose}Must be an integer.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_INT);
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("lighting-cooldown")) {
@@ -676,20 +671,20 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "{rose}Must be an integer.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_INT);
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("show-usage")) {
 			node = Option.SHOW_USAGE;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "{rose}Must be a boolean.");
+				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
-		} else Messaging.send(sender, "{rose}Unknown variable: " + args[0]);
+		} else Messaging.send(sender, LanguageText.ADMIN_VAR_UNKNOWN.value("var", args[0]));
 		if(node != null && value != null) {
 			node.set(value);
-			Messaging.send(sender, "Variable " + args[0] + " set to " + value + ".");
+			Messaging.send(sender, LanguageText.ADMIN_VAR_SET.value("var", args[0], "value", value));
 		}
 		return true;
 	}
@@ -703,26 +698,26 @@ public class generalCommand extends CommandBase {
 			case 2:
 				if(args[1].charAt(0) == '-') {
 					Items.removeAlias(args[1].substring(1));
-					Messaging.send(sender, "Alias " + args[1].substring(1) + " removed.");
+					Messaging.send(sender, LanguageText.ADMIN_ITEM_ALIAS_REMOVE.value("alias", args[1].substring(1)));
 				} else {
-					Messaging.send(sender, "The alias " + args[1] + " refers to " + Items.getAlias(args[1]));
+					Messaging.send(sender, LanguageText.ADMIN_ITEM_ALIAS_SHOW.value("alias", args[1], "item", Items.getAlias(args[1])));
 				}
 				return true;
 			case 3:
 				ItemID id = Items.validate(args[2]);
 				Items.addAlias(args[1], id);
-				Messaging.send(sender, "Alias " + args[1] + " added for " + id);
+				Messaging.send(sender, LanguageText.ADMIN_ITEM_ALIAS_ADD.value("alias", args[1], "item", id.toString()));
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("variant")) {
 			ItemID id = Items.validate(args[1]);
 			if(id == null) {
-				Messaging.send(sender, "{rose}No such item.");
+				Messaging.send(sender, LanguageText.ADMIN_ITEM_BAD);
 				return true;
 			}
 			switch(args.length) {
 			case 2:
-				Messaging.send(sender, "Variant names for " + id + ": " + Items.variantNames(id));
+				Messaging.send(sender, LanguageText.ADMIN_ITEM_VARIANT_SHOW.value("item", id.toString(), "variants", Items.variantNames(id).toString()));
 				return true;
 			case 3:
 				switch(args[2].charAt(0)) {
@@ -740,7 +735,7 @@ public class generalCommand extends CommandBase {
 					Items.setVariantNames(id, Arrays.asList(args[2].substring(1).split(",")));
 				break;
 				}
-				Messaging.send(sender, "Variant names for " + id + " are now: " + Items.variantNames(id));
+				Messaging.send(sender, LanguageText.ADMIN_ITEM_VARIANT_CHANGE.value("item", id.toString(), "variants", Items.variantNames(id).toString()));
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("name")) {
@@ -748,24 +743,23 @@ public class generalCommand extends CommandBase {
 			switch(args.length) {
 			case 2:
 				String name = Items.name(id);
-				Messaging.send(sender, "The name of item ID " + id + " is " + name);
+				Messaging.send(sender, LanguageText.ADMIN_ITEM_NAME_SHOW.value("item", id.toString(), "name", name));
 				return true;
 			case 3:
 				Items.setItemName(id, args[2].replace("_", " "));
-				Messaging.send(sender, "Item ID " + id + " is now called " + args[2].replace("_", " "));
+				Messaging.send(sender, LanguageText.ADMIN_ITEM_NAME_CHANGE.value("item", id.toString(), "name", args[2].replace("_", " ")));
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("hook")) {
 			String hook[] = args[1].split("[:/,.|]");
 			switch(args.length) {
 			case 2:
-				Messaging.send(sender,
-						"The hook " + hook[0] + ":" + hook[1] + " refers to " + Items.getHook(hook[0], hook[1]));
+				Messaging.send(sender, LanguageText.ADMIN_ITEM_HOOK_SHOW.value("hook", hook[0] + "/" + hook[1], "item", Items.getHook(hook[0], hook[1]).toString()));
 				return true;
 			case 3:
 				ItemID id = Items.validate(args[2]);
 				Items.setHook(hook[0], hook[1], id);
-				Messaging.send(sender, "The hook " + hook[0] + ":" + hook[1] + " now refers to " + id);
+				Messaging.send(sender, LanguageText.ADMIN_ITEM_HOOK_SHOW.value("hook", hook[0] + "/" + hook[1], "item", id.toString()));
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("group")) {
@@ -775,7 +769,7 @@ public class generalCommand extends CommandBase {
 			case 2:
 				List<Integer> group = Items.groupItems(groupName);
 				if(group.isEmpty())
-					Messaging.send(sender, "Group '" + groupName + "' does not exist or is empty.");
+					Messaging.send(sender, LanguageText.ADMIN_ITEM_GROUP_EMPTY.value("group", groupName));
 				else {
 					StringBuilder items = new StringBuilder();
 					for(int id : group) {
@@ -784,18 +778,18 @@ public class generalCommand extends CommandBase {
 					}
 					int lastComma = items.lastIndexOf(", ");
 					if(lastComma >= 0) items.delete(lastComma, items.length());
-					Messaging.send(sender, "Group '" + groupName + "' contains: " + items.toString());
+					Messaging.send(sender, LanguageText.ADMIN_ITEM_GROUP_SHOW.value("group", groupName, "items", items.toString()));
 				}
 				return true;
 			case 3:
 				if(args[2].equalsIgnoreCase("delete")) {
 					Map<String, Object> allGroups = General.config.getNode("give.groups").getAll();
 					if(!allGroups.containsKey(groupName))
-						Messaging.send(sender, "Group '" + groupName + "' does not exist or is empty.");
+						Messaging.send(sender, LanguageText.ADMIN_ITEM_GROUP_EMPTY.value("group", groupName));
 					else {
 						allGroups.remove(groupName);
 						General.config.setProperty("general.groups", allGroups);
-						Messaging.send(sender, "Group '" + groupName + "' has been deleted if it existed.");
+						Messaging.send(sender, LanguageText.ADMIN_ITEM_GROUP_REMOVE.value("group", groupName));
 					}
 				} else switch(args[2].charAt(0)) {
 				default:
@@ -812,7 +806,7 @@ public class generalCommand extends CommandBase {
 					Items.setGroupItems(groupName, Arrays.asList(args[2].substring(1).split(",")));
 				break;
 				}
-				Messaging.send(sender, "Group '" + groupName + "' now contains: " + Items.groupItems(groupName));
+				Messaging.send(sender, LanguageText.ADMIN_ITEM_GROUP_CHANGE.value("group", groupName, "items", Items.groupItems(groupName).toString()));
 				return true;
 			}
 		}
