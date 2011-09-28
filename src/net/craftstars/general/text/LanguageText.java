@@ -318,6 +318,9 @@ public enum LanguageText {
 	LACK_TELEPORT("permissions.teleport","teleport {target} to {destination} in world '{world}'"),
 	LACK_TELEPORT_MASS("permissions.teleport_mass","teleport en masse"),
 	LACK_SETSPAWN("permissions.setspawn_world","set the spawn location of {target} to {destination} in {world}"),
+	LACK_GAMEMODE_VIEW("permissions.gamemode_view","see people's game mode"),
+	LACK_GAMEMODE_SET("permissions.gamemode_set","set your game mode"),
+	LACK_GAMEMODE_SET_OTHER("permissions.gamemode_set_other","set people's game mode"),
 	LACK_INSTANT("permissions.instant", "{action} so soon after the last time"),
 	LACK_ADMIN_RELOAD("permissions.admin_reload", "reload the General configuration"),
 	LACK_ADMIN_ITEM("permissions.admin_item", "edit the item aliases"),
@@ -330,6 +333,8 @@ public enum LanguageText {
 	LACK_DEOP("permissions.deop", "deop players"),
 	LACK_OP("permissions.op", "op players"),
 	LACK_KICK("permissions.kick", "kick players"),
+	LACK_BAN("permissions.ban", "ban players"),
+	LACK_PARDON("permissions.pardon", "pardon banned players"),
 	// Miscellaneous common messages
 	MISC_BAD_PLAYER("misc.bad-player", "{rose}There is no player named {white}{name}{rose}."),
 	MISC_BAD_WORLD("misc.bad-world", "{rose}There is no world named {white}{name}{rose}."),
@@ -344,6 +349,13 @@ public enum LanguageText {
 	MISC_DEOPPING("misc.deopping", "Demoted players from operator: {ops}"),
 	MISC_OPPED("misc.opped", "You are now op!"),
 	MISC_DEOPPED("misc.deopped", "You are no longer op."),
+	MISC_BAD_MODE("misc.badmode", "{rose}Unknown game mode."),
+	MISC_IN_MODE("misc.inmode", "{player} {yellow}is in{white} {mode} {yellow}mode."),
+	MISC_SET_MODE("misc.setmode", "{yellow}Setting mode of {white}{player}{yellow} to {white}{mode}{yellow}."),
+	MISC_SET_OWN_MODE("misc.setownmode", "{yellow}Setting your mode to {white}{mode}{yellow}."),
+	MISC_BAN_ANYWAY("misc.bananyway", "{yellow}Note: invalid players are assumed offline and will still be banned."),
+	MISC_BANNED("misc.banned","{player} {yellow}has been banned."),
+	MISC_PARDONED("misc.pardoned","{player} {yellow}has been pardoned."),
 	;
 	
 	private static Configuration config;

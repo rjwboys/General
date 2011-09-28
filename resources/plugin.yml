@@ -123,6 +123,7 @@ permissions:
   general.admin.*: {children: {general.config: true}}
   general.clear.*: {children: {general.clear.other: true}}
   general.take.*: {children: {general.take.other: true, general.take.mass: true}}
+  general.gamemode.*: {children: {general.gamemode: true}}
   # Actual permissions start here
   general.admin:
     description: Gives all General permissions.
@@ -145,6 +146,16 @@ permissions:
                 children:
                   general.give.groups: true # Defined dynamically
                   general.give.groupless: true # Defined dynamically
+          general.gamemode:
+            description: Gives full access to the /gamemode command.
+            children:
+              general.gamemode.view:
+                description: Lets you view the game mode of other people.
+              general.gamemode.set.other:
+                description: Lets you set anyone's game mode.
+                children:
+                  general.gamemode.set:
+                    description: Lets you set your own game mode.
           general.clear.other:
             description: Lets you clear the inventory of others.
             children:

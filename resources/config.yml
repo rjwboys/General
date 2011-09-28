@@ -187,6 +187,7 @@ aliases:
     masstake: [mtake, mt]
     kit: []
     items: []
+    mode: [mode, gamemode]
   chat:
     tell: [msg, pm, whisper]
     away: [afk]
@@ -195,6 +196,8 @@ aliases:
     go: [teleport, tele, tp]
     summon: [tphere, teleporthere, s]
   admin:
-    op: []
-    deop: []
-    kick: []
+    op: [op]
+    deop: [deop]
+    kick: [kick]
+    ban: [ban]
+    pardon: [pardon]

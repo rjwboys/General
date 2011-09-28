@@ -20,3 +20,5 @@
 /where [$who=player()] = /getpos $who brief
 # Miscellaneous
 /motd = /general motd
+/creative = /gamemode creative
+/survival = /gamemode survival
