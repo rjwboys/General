@@ -179,56 +179,56 @@ public final class HelpHandler {
 	
 	@SuppressWarnings("unused")
 	// because it only LOOKS unused; it's accessed reflectively
-	private static String time = "&c/time day|night|nood|midday|midnight\n"
-			+ "&c/time dawn|sunrise|morning|dusk|sunset|evening\n" + "&c/time +&7[ticks]&f : Fast-forward time.\n"
-			+ "&c/time -&7[ticks|time]&f : Rewind time.\n" + "&c/time =&7[ticks|time]&f : Set time.\n"
-			+ "&cTime can be given in &7hh&f:&7mm&f format (with optional &7am&f/&7pm&f)"
-			+ " or as a number of ticks (&70&f-&724000&f).";
+	private static String time = "{rose}/time day|night|nood|midday|midnight\n"
+			+ "{rose}/time dawn|sunrise|morning|dusk|sunset|evening\n" + "{rose}/time +{grey}[ticks]{white} : Fast-forward time.\n"
+			+ "{rose}/time -{grey}[ticks|time]{white} : Rewind time.\n" + "{rose}/time ={grey}[ticks|time]{white} : Set time.\n"
+			+ "{rose}Time can be given in {grey}hh{white}:{grey}mm{white} format (with optional {grey}am{white}/{grey}pm{white})"
+			+ " or as a number of ticks ({grey}0{white}-{grey}24000{white}).";
 	@SuppressWarnings("unused")
 	// because it only LOOKS unused; it's accessed reflectively
-	private static String give = "&c/give &7[item]&c (&7[amount]&c)&f : Gives something to you.\n"
-			+ "&c/give &7[item]&c (&7[amount]&c)&f &7[player]&f : Gives something to someone else.\n"
-			+ "&fAn amount of &7-1&f is an infinite stack; &70&f is one full stack.\n"
-			+ "&fThe &7[item]&f and &7[variant]&f both may be either a number or a name.\n"
-			+ "&fExample: &c/give Notch wool:red 5&f : Gives a stack of five red wool to Notch.";
+	private static String give = "{rose}/give {grey}[item]{rose} ({grey}[amount]{rose}){white} : Gives something to you.\n"
+			+ "{rose}/give {grey}[item]{rose} ({grey}[amount]{rose}){white} {grey}[player]{white} : Gives something to someone else.\n"
+			+ "{white}An amount of {grey}-1{white} is an infinite stack; {grey}0{white} is one full stack.\n"
+			+ "{white}The {grey}[item]{white} and {grey}[variant]{white} both may be either a number or a name.\n"
+			+ "{white}Example: {rose}/give Notch wool:red 5{white} : Gives a stack of five red wool to Notch.";
 	@SuppressWarnings("unused")
 	// because it only LOOKS unused; it's accessed reflectively
-	private static String take = "&c/take &7[item]&c (&7[amount]&c)&f : Takes something from you.\n"
-			+ "&c/take &7[item]&c (&7[amount]&c)&f &7[player]&f : Takes something from someone else.\n"
-			+ "&fAn amount of &7-1&f means take all (but is also default); &70&f is one full stack.\n"
-			+ "&fThe &7[item]&f and &7[variant]&f both may be either a number or a name.\n"
-			+ "&fExample: &c/take wool:red 5 Notch&f : Takes five red wool from Notch.\n"
-			+ "&fExample: &c/take wool 5 Notch&f : Takes five wool of any colour from Notch.";
+	private static String take = "{rose}/take {grey}[item]{rose} ({grey}[amount]{rose}){white} : Takes something from you.\n"
+			+ "{rose}/take {grey}[item]{rose} ({grey}[amount]{rose}){white} {grey}[player]{white} : Takes something from someone else.\n"
+			+ "{white}An amount of {grey}-1{white} means take all (but is also default); {grey}0{white} is one full stack.\n"
+			+ "{white}The {grey}[item]{white} and {grey}[variant]{white} both may be either a number or a name.\n"
+			+ "{white}Example: {rose}/take wool:red 5 Notch{white} : Takes five red wool from Notch.\n"
+			+ "{white}Example: {rose}/take wool 5 Notch{white} : Takes five wool of any colour from Notch.";
 	@SuppressWarnings("unused")
 	// because it only LOOKS unused; it's accessed reflectively
-	private static String mobspawn = "&c/mobspawn &7[mob]&c(;&7[mount]&c)&f : Spawns a mob.\n"
-			+ "&fValid mobs and mounts are:\n"
-			+ "&7pig&f(:&7[saddle]&f), &7chicken&f, &7squid&f, &7cow&f, &7sheep&f(:&7[colour|bare]&f),"
-			+ "&7pigzombie&f(:&7[anger]&f), &7creeper&f(:&7[power]&f), &7ghast&f, &7skeleton&f,"
-			+ "&7spider&f, &7zombie&f, &7slime&f(:&7[size]&f), &7giant&f(&7zombie&f), &7human&f, "
-			+ "&7wolf&f(:&7[owner|anger]&f)\n" + "(sheep can be spawned without wool as well)\n"
-			+ "&cExample: /mobspawn skeleton;spider : Spawns a skeleton riding a spider.";
+	private static String mobspawn = "{rose}/mobspawn {grey}[mob]{rose}(;{grey}[mount]{rose}){white} : Spawns a mob.\n"
+			+ "{white}Valid mobs and mounts are:\n"
+			+ "{grey}pig{white}(:{grey}[saddle]{white}), {grey}chicken{white}, {grey}squid{white}, {grey}cow{white}, {grey}sheep{white}(:{grey}[colour|bare]{white}),"
+			+ "{grey}pigzombie{white}(:{grey}[anger]{white}), {grey}creeper{white}(:{grey}[power]{white}), {grey}ghast{white}, {grey}skeleton{white},"
+			+ "{grey}spider{white}, {grey}zombie{white}, {grey}slime{white}(:{grey}[size]{white}), {grey}giant{white}({grey}zombie{white}), {grey}human{white}, "
+			+ "{grey}wolf{white}(:{grey}[owner|anger]{white})\n" + "(sheep can be spawned without wool as well)\n"
+			+ "{rose}Example: /mobspawn skeleton;spider : Spawns a skeleton riding a spider.";
 	@SuppressWarnings("unused")
 	// because it only LOOKS unused; it's accessed reflectively
-	private static String go = "&c/teleport (&7[target]&c) &7[destination]&f : Teleports someone to somewhere.\n"
-		+ "&fValid targets are: &7self, there, near, nearmob, *, a world name, a player name, a list of players\n"
-		+ "&fValid destinations are: &7there, here, home, spawn, compass, a player, a world\n"
-		+ "&7player$there|home|spawn|compass   x,y,z   world(x,y,z)";
+	private static String go = "{rose}/teleport ({grey}[target]{rose}) {grey}[destination]{white} : Teleports someone to somewhere.\n"
+		+ "{white}Valid targets are: {grey}self, there, near, nearmob, *, a world name, a player name, a list of players\n"
+		+ "{white}Valid destinations are: {grey}there, here, home, spawn, compass, a player, a world\n"
+		+ "{grey}player$there|home|spawn|compass   x,y,z   world(x,y,z)";
 	@SuppressWarnings("unused")
 	// because it only LOOKS unused; it's accessed reflectively
-	private static String general_item = "&c/general item &7[command] [key] [value]&f : Edits item aliases and names.\n"
-		+ "&fThere are five subcommands:\n"
-		+ "&calias &7[alias] [item]&f : Set the item that an alias refers to.\n"
-		+ "&cvariant &7[item]&c:&7[data] [name]&f : Set the name of a variant for an item.\n"
-		+ "&cname &7[item] [name]&7 : Set the display name of an item.\n"
-		+ "&chook &7[primary]&c:&7[secondary] [item]&f : Set a new pseudo-variant alias.\n"
-		+ "&cgroup &7[group-name] delete|[item]&f : Edit the item white/blacklists.\n";
+	private static String general_item = "{rose}/general item {grey}[command] [key] [value]{white} : Edits item aliases and names.\n"
+		+ "{white}There are five subcommands:\n"
+		+ "{rose}alias {grey}[alias] [item]{white} : Set the item that an alias refers to.\n"
+		+ "{rose}variant {grey}[item]{rose}:{grey}[data] [name]{white} : Set the name of a variant for an item.\n"
+		+ "{rose}name {grey}[item] [name]{grey} : Set the display name of an item.\n"
+		+ "{rose}hook {grey}[primary]{rose}:{grey}[secondary] [item]{white} : Set a new pseudo-variant alias.\n"
+		+ "{rose}group {grey}[group-name] delete|[item]{white} : Edit the item white/blacklists.\n";
 	@SuppressWarnings("unused")
 	// because it only LOOKS unused; it's accessed reflectively
-	private static String general_set = "&c/general set &7[var] [value]&f : Sets configuration variables";
+	private static String general_set = "{rose}/general set {grey}[var] [value]{white} : Sets configuration variables";
 	@SuppressWarnings("unused")
 	// because it only LOOKS unused; it's accessed reflectively
-	private static String general_set_list = "&cThe following variables can be set. Type /general set help &7[var]&f"
+	private static String general_set_list = "{rose}The following variables can be set. Type /general set help {grey}[var]{white}"
 		+ "for more details.\n" 
 		+ "permissions  others-for-all  give-mass  show-health  show-coords  show-world  show-ip  show-motd\n"
 		+ "24-hour  show-ticks  economy  economy-take  economy-clear  economy-kits  economy-sell  kits-discount\n"
@@ -338,14 +338,14 @@ public final class HelpHandler {
 	private static String general_set_time_cooldown = "The cooldown period for changing the time, in ticks.";
 	@SuppressWarnings("unused")
 	// because it only LOOKS unused; it's accessed reflectively
-	private static String general_kit = "&c/general kit &7[kit] [command] [key] [value]&f : Edits kit definitions.\n"
-		+ "&fThere are five subcommands:\n"
-		+ "&cadd (&7[item]&f (&7[amount]&f)) : Add an item to a kit; creates it if it doesn't exist.\n"
-		+ "&cremove (&7[item]&f (&7[amount]&f)) : Removes an item from a kit.\n"
-		+ "&cdelay &7[delay]&7 : Set the cooldown delay of a kit.\n"
-		+ "&ccost &7[price]&f : Set the price of a kit (if economy is configured to use per-kit prices).\n"
-		+ "&ctrash : Delete a kit.\n"
-		+ "&clist : List the contents of a kit.\n";
+	private static String general_kit = "{rose}/general kit {grey}[kit] [command] [key] [value]{white} : Edits kit definitions.\n"
+		+ "{white}There are five subcommands:\n"
+		+ "{rose}add ({grey}[item]{white} ({grey}[amount]{white})) : Add an item to a kit; creates it if it doesn't exist.\n"
+		+ "{rose}remove ({grey}[item]{white} ({grey}[amount]{white})) : Removes an item from a kit.\n"
+		+ "{rose}delay {grey}[delay]{grey} : Set the cooldown delay of a kit.\n"
+		+ "{rose}cost {grey}[price]{white} : Set the price of a kit (if economy is configured to use per-kit prices).\n"
+		+ "{rose}trash : Delete a kit.\n"
+		+ "{rose}list : List the contents of a kit.\n";
 	// TODO: A way to account for permissions?
 	
 }

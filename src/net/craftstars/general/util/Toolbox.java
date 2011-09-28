@@ -170,7 +170,7 @@ public final class Toolbox {
 			case FROZEN:
 				Messaging.showCost(player);
 			case INSUFFICIENT:
-				Messaging.send(sender, "&cUnfortunately, you don't have that much.");
+				Messaging.send(sender, LanguageText.ECONOMY_INSUFFICIENT);
 				return false;
 			case SUFFICIENT: // TODO: I think pay() prints its own message, so this may cause double messages
 				Messaging.showPayment(player);

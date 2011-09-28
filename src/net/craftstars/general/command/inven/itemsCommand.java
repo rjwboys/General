@@ -28,7 +28,6 @@ public class itemsCommand extends CommandBase {
 			return Messaging.lacksPermission(sender, "general.give.mass");
 		Player toWhom = (Player) args.get("player");
 		String[] items = (String[]) args.get("items");
-		//StringBuilder text = new StringBuilder("Giving &f");
 		ArrayList<String> display = new ArrayList<String>();
 		for(String item : items) {
 			ItemID what = Items.validate(item);
@@ -38,7 +37,7 @@ public class itemsCommand extends CommandBase {
 			display.add(what.getName());
 			Items.giveItem(toWhom, what, 1);
 		}
-		String text = Toolbox.join(display.toArray(new String[0]), "&2, &f");
+		String text = Toolbox.join(display.toArray(new String[0]), LanguageText.ITEMS_JOINER.value());
 		if(toWhom == sender) {
 			Messaging.send(sender, LanguageText.ITEMS_ENJOY.value("items", text));
 		} else {

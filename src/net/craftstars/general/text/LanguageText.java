@@ -343,6 +343,7 @@ public enum LanguageText {
 	ECONOMY_SHOW_COST("econ.show-cost", "{yellow}That would cost {white}{cost}{yellow}."),
 	ECONOMY_PAY("econ.pay", "{yellow}You pay {white}{cost}{yellow}."),
 	ECONOMY_EARN("econ.earn", "{yellow}You have earned {white}{income}{yellow}!"),
+	ECONOMY_INSUFFICIENT("econ.insuff", "{rose}Unfortunately, you don't have that much."),
 	MISC_KICKED("misc.kicked", "Kicked by administrator"),
 	MISC_KICKING("misc.kicking", "Kicking player {player}: {reason}"),
 	MISC_OPPING("misc.opping", "Promoted players to operator: {ops}"),

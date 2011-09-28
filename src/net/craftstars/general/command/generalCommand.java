@@ -279,34 +279,34 @@ public class generalCommand extends CommandBase {
 			if(Toolbox.equalsOne(args[0], "heal", "hurt")) path += args[0];
 			else if(args[0].equalsIgnoreCase("time")) {
 				if(args.length == 1) {
-					Messaging.send(sender, "&cWhich time?");
+					Messaging.send(sender, "{rose}Which time?");
 					return true;
 				} else if(Toolbox.equalsOne(args[1], "day", "night", "dawn", "dusk", "noon", "midnight", "set"))
 					path += args[1];
 				else {
-					Messaging.send(sender, "&cInvalid time.");
+					Messaging.send(sender, "{rose}Invalid time.");
 					return true;
 				}
 			} else if(args[0].equalsIgnoreCase("weather")) {
 				if(args.length == 1) {
-					Messaging.send(sender, "&cWhich weather?");
+					Messaging.send(sender, "{rose}Which weather?");
 					return true;
 				} else if(Toolbox.equalsOne(args[1], "storm", "thunder", "zap"))
 					path += args[1];
 				else {
-					Messaging.send(sender, "&cInvalid weather.");
+					Messaging.send(sender, "{rose}Invalid weather.");
 					return true;
 				}
 			} else if(args[0].equalsIgnoreCase("mobspawn")) {
 				if(args.length == 1) {
-					Messaging.send(sender, "&cWhich mob?");
+					Messaging.send(sender, "{rose}Which mob?");
 					return true;
 				} else {
 					path += "mobspawn.";
 					// Validate mob name
 					MobType mob = MobType.getMob(args[1]);
 					if(mob == null) {
-						Messaging.send(sender, "&cInvalid mob.");
+						Messaging.send(sender, "{rose}Invalid mob.");
 						return true;
 					}
 					path += mob.toString().toLowerCase().replace('_', '-');
@@ -372,7 +372,7 @@ public class generalCommand extends CommandBase {
 					if(mountName != null) {
 						mount = MobType.getMob(mountName);
 						if(mount == null) {
-							Messaging.send(sender, "&cInvalid mob for mount.");
+							Messaging.send(sender, "{rose}Invalid mob for mount.");
 							return true;
 						}
 						// Validate mount data, if present
@@ -440,12 +440,12 @@ public class generalCommand extends CommandBase {
 				}
 			} else if(args[0].equalsIgnoreCase("give")) {
 				if(args.length == 1) {
-					Messaging.send(sender, "&cWhich item?");
+					Messaging.send(sender, "{rose}Which item?");
 					return true;
 				} else {
 					ItemID item = Items.validate(args[1]);
 					if(!item.isValid()) {
-						Messaging.send(sender, "&cInvalid item.");
+						Messaging.send(sender, "{rose}Invalid item.");
 						return true;
 					}
 					path += "item" + item.toString();
@@ -516,7 +516,7 @@ public class generalCommand extends CommandBase {
 		if(args[0].equalsIgnoreCase("others-for-all")) {
 			node = Option.OTHERS4ALL;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "&cMust be a boolean.");
+				Messaging.send(sender, "{rose}Must be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
@@ -525,76 +525,76 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "&cMust be an integer.");
+				Messaging.send(sender, "{rose}Must be an integer.");
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("show-health")) {
 			node = Option.SHOW_HEALTH;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "&cMust be a boolean.");
+				Messaging.send(sender, "{rose}Must be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-coords")) {
 			node = Option.SHOW_COORDS;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "&cMust be a boolean.");
+				Messaging.send(sender, "{rose}Must be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-world")) {
 			node = Option.SHOW_WORLD;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "&cMust be a boolean.");
+				Messaging.send(sender, "{rose}Must be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-ip")) {
 			node = Option.SHOW_IP;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "&cMust be a boolean.");
+				Messaging.send(sender, "{rose}Must be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-motd")) {
 			node = Option.SHOW_MOTD;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "&cMust be a boolean.");
+				Messaging.send(sender, "{rose}Must be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("24-hour")) {
 			node = Option.TIME_FORMAT;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "&cMust be a boolean.");
+				Messaging.send(sender, "{rose}Must be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-ticks")) {
 			node = Option.SHOW_TICKS;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "&cMust be a boolean.");
+				Messaging.send(sender, "{rose}Must be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("economy-take")) {
 			node = Option.ECONOMY_TAKE_SELL;
 			if(!Toolbox.equalsOne(args[1], "trash", "sell")) {
-				Messaging.send(sender, "&cInvalid economy-take method (must be trash or sell).");
+				Messaging.send(sender, "{rose}Invalid economy-take method (must be trash or sell).");
 				return true;
 			}
 			value = args[1];
 		} else if(args[0].equalsIgnoreCase("economy-clear")) {
 			node = Option.ECONOMY_CLEAR_SELL;
 			if(!Toolbox.equalsOne(args[1], "trash", "sell")) {
-				Messaging.send(sender, "&cInvalid economy-clear method (must be trash or sell).");
+				Messaging.send(sender, "{rose}Invalid economy-clear method (must be trash or sell).");
 				return true;
 			}
 			value = args[1];
 		} else if(args[0].equalsIgnoreCase("economy-kits")) {
 			node = Option.KIT_METHOD;
 			if(!Toolbox.equalsOne(args[1], "individual", "cumulative", "discount")) {
-				Messaging.send(sender, "&cInvalid economy-kits method (must be individual, cumulative, or discount).");
+				Messaging.send(sender, "{rose}Invalid economy-kits method (must be individual, cumulative, or discount).");
 				return true;
 			}
 			value = args[1];
@@ -603,7 +603,7 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Double.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "&cMust be a number.");
+				Messaging.send(sender, "{rose}Must be a number.");
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("kits-discount")) {
@@ -611,7 +611,7 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Double.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "&cMust be a number.");
+				Messaging.send(sender, "{rose}Must be a number.");
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("chat-tag")) {
@@ -620,14 +620,14 @@ public class generalCommand extends CommandBase {
 		} else if(args[0].equalsIgnoreCase("log-commands")) {
 			node = Option.LOG_COMMANDS;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "&cMust be a boolean.");
+				Messaging.send(sender, "{rose}Must be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("auto-save")) {
 			node = Option.AUTO_SAVE;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "&cMust be a boolean.");
+				Messaging.send(sender, "{rose}Must be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
@@ -636,7 +636,7 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "&cMust be an integer.");
+				Messaging.send(sender, "{rose}Must be an integer.");
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("teleport-warmup")) {
@@ -644,7 +644,7 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "&cMust be an integer.");
+				Messaging.send(sender, "{rose}Must be an integer.");
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("time-cooldown")) {
@@ -652,7 +652,7 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "&cMust be an integer.");
+				Messaging.send(sender, "{rose}Must be an integer.");
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("storm-cooldown")) {
@@ -660,7 +660,7 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "&cMust be an integer.");
+				Messaging.send(sender, "{rose}Must be an integer.");
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("thunder-cooldown")) {
@@ -668,7 +668,7 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "&cMust be an integer.");
+				Messaging.send(sender, "{rose}Must be an integer.");
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("lighting-cooldown")) {
@@ -676,17 +676,17 @@ public class generalCommand extends CommandBase {
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
-				Messaging.send(sender, "&cMust be an integer.");
+				Messaging.send(sender, "{rose}Must be an integer.");
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("show-usage")) {
 			node = Option.SHOW_USAGE;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
-				Messaging.send(sender, "&cMust be a boolean.");
+				Messaging.send(sender, "{rose}Must be a boolean.");
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
-		} else Messaging.send(sender, "&cUnknown variable: " + args[0]);
+		} else Messaging.send(sender, "{rose}Unknown variable: " + args[0]);
 		if(node != null && value != null) {
 			node.set(value);
 			Messaging.send(sender, "Variable " + args[0] + " set to " + value + ".");
@@ -717,7 +717,7 @@ public class generalCommand extends CommandBase {
 		} else if(args[0].equalsIgnoreCase("variant")) {
 			ItemID id = Items.validate(args[1]);
 			if(id == null) {
-				Messaging.send(sender, "&cNo such item.");
+				Messaging.send(sender, "{rose}No such item.");
 				return true;
 			}
 			switch(args.length) {

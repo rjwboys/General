@@ -43,14 +43,6 @@ public class whoCommand extends CommandBase {
 	}
 	
 	private String getHealthBar(double health) {
-//		String healthBar = "[";
-//		String colour = health < 3 ? "&c" : (health < 7 ? "&e" : "&2");
-//		healthBar += colour;
-//		healthBar += Toolbox.repeat('|', (int) health);
-//		healthBar += "&7";
-//		healthBar += Toolbox.repeat('|', 10 - (int) health);
-//		healthBar += "&f] ";
-//		return healthBar;
 		String full = Toolbox.repeat('|', (int) health);
 		String empty = Toolbox.repeat('|', 10 - (int) health);
 		return LanguageText.INFO_HEALTHBAR.value("value", health, "health", full, "filler", empty);

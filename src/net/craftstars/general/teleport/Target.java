@@ -205,7 +205,7 @@ public class Target {
 			if(Toolbox.equalsOne(targ, "self", "$self", "me")) return fromPlayer(teleporter);
 		}
 		// No more ideas, so just give up.
-		Messaging.send(notify, "&cInvalid target.");
+		Messaging.send(notify, LanguageText.TARGET_BAD.value());
 		return null;
 	}
 	
