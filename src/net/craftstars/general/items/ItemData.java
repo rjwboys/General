@@ -12,6 +12,8 @@ public abstract class ItemData {
 	public final static ItemData STONE_BRICK = new StoneBrickData();
 	public final static ItemData SPAWNER = new MobSpawnerData();
 	public final static ItemData BOOK = new BookWormData();
+	public final static ItemData SHRUB = new LongGrassData();
+	public final static ItemData MUSHROOM = new BigShroomData();
 	public abstract boolean validate(ItemID id, Material check);
 	
 	public static ItemData getData(Material data) {

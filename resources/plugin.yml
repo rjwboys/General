@@ -23,6 +23,10 @@ commands:
     #permission: general.away
     description: Sets your away message
     usage: /<command> [message]
+  info.iteminfo:
+    #permission: general.iteminfo
+    description: Shows info about the item you're holding
+    usage: /<command> [slot] [player]
   info.playerlist:
     description: Displays all players that are online.
     #permission: general.playerlist
@@ -187,6 +191,8 @@ permissions:
             description: Allows you to view who's online.
           general.tell:
             description: Allows you to private message players.
+          general.iteminfo:
+            description: Allows you to see information about the item you're holding.
           general.time:
             description: Allows you to view and set the time.
             children:

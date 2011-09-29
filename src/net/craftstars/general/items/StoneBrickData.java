@@ -5,7 +5,8 @@ import org.bukkit.Material;
 public class StoneBrickData extends ItemData {
 	@Override
 	public boolean validate(ItemID id, Material check) {
-		// TODO Auto-generated method stub
+		if(id.getData() == null) return true;
+		if(id.getData() <= 2) return true;
 		return false;
 	}
 	

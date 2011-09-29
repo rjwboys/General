@@ -25,7 +25,7 @@ public class modeCommand extends CommandBase {
 		GameMode mode;
 		switch(args.length) {
 		case 0: // /mode
-			if(!(sender instanceof Player)) return null;
+			if(!isPlayer) return null;
 			setCommand("view");
 			params.put("who", sender);
 			break;
@@ -33,7 +33,7 @@ public class modeCommand extends CommandBase {
 			try {
 				mode = GameMode.getByValue(Integer.parseInt(args[0]));
 				if(mode == null) mode = GameMode.valueOf(args[0].toUpperCase());
-				if(!(sender instanceof Player)) return null;
+				if(!isPlayer) return null;
 				setCommand("set");
 				params.put("who", sender);
 				params.put("mode", mode);

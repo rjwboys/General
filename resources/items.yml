@@ -7,9 +7,10 @@ names:
   item4: Cobblestone
   item5: Wooden Plank
   item6:
-   - Oak Sapling
-   - Spruce Sapling
-   - Birch Sapling
+    data0: Oak Sapling
+    data1: Spruce Sapling
+    data2: Birch Sapling
+    generic: Sapling
   item7: Bedrock
   item8: Flowing Water
   item9: Stationary Water
@@ -21,9 +22,10 @@ names:
   item15: Iron Ore
   item16: Coal Ore
   item17:
-   - Oak Log
-   - Spruce Log
-   - Birch Log
+    data0: Oak Log
+    data1: Spruce Log
+    data2: Birch Log
+    generic: Log
   item18: Leaves
   item19: Sponge
   item20: Glass
@@ -37,27 +39,32 @@ names:
   item28: Detector Rail
   item29: Sticky Piston
   item30: Spiderweb
-  item31: Tall Grass
+  item31:
+    data0: Dying Shrub
+    data1: Tall Grass
+    data2: Shrub
+    generic: Tall Grass
   item32: Dead Shrub
   item33: Piston
   item34: Piston Head
   item35:
-   - White Wool
-   - Orange Wool
-   - Magenta Wool
-   - Light Blue Wool
-   - Yellow Wool
-   - Lime Wool
-   - Pink Wool
-   - Gray Wool
-   - Light Gray Wool
-   - Cyan Wool
-   - Purple Wool
-   - Blue Wool
-   - Brown Wool
-   - Green Wool
-   - Red Wool
-   - Black Wool
+    data0: White Wool
+    data1: Orange Wool
+    data2: Magenta Wool
+    data3: Light Blue Wool
+    data4: Yellow Wool
+    data5: Lime Wool
+    data6: Pink Wool
+    data7: Gray Wool
+    data8: Light Gray Wool
+    data9: Cyan Wool
+    data10: Purple Wool
+    data11: Blue Wool
+    data12: Brown Wool
+    data13: Green Wool
+    data14: Red Wool
+    data15: Black Wool
+    generic: Wool
   item37: Dandelion
   item38: Rose
   item39: Mushroom
@@ -65,19 +72,21 @@ names:
   item41: Gold Block
   item42: Iron Block
   item43:
-   - Double Stone Slab
-   - Double Sandstone Slab
-   - Double Wood Slab
-   - Double Cobblestone Slab
+    data0: Double Stone Slab
+    data1: Double Sandstone Slab
+    data2: Double Wood Slab
+    data3: Double Cobblestone Slab
+    data4: Double Brick Slab
+    data5: Double Stone Brick Slab
+    generic: Double Slab
   item44:
-   - Stone Slab
-   - Sandstone Slab
-   - Wood Slab
-   - Cobblestone Slab
-   - Brick Slab
-   - Stone Brick Slab
-   - null
-   - Slab
+    data0: Stone Slab
+    data1: Sandstone Slab
+    data2: Wood Slab
+    data3: Cobblestone Slab
+    data4: Brick Slab
+    data5: Stone Brick Slab
+    generic: Slab
   item45: Brick Block
   item46: TNT
   item47: Bookshelf
@@ -87,23 +96,31 @@ names:
   item51: Fire
   item52: Monster Spawner
   item52:
-   - Pig Spawner
-   - Chicken Spawner
-   - Cow Spawner
-   - Sheep Spawner
-   - Squid Spawner
-   - Creeper Spawner
-   - Ghast Spawner
-   - Zombie Pigman Spawner
-   - Skeleton Spawner
-   - Spider Spawner
-   - Zombie Spawner
-   - Slime Spawner
-   - Human Spawner
-   - Giant Spawner
-   - Wolf Spawner
-   - null
-   - Mob Spawner
+    data2: Experience Orb Spawner
+    data9: Painting Spawner
+    data10: Arrow Spawner
+    data11: Snowball Spawner
+    data20: TNT Spawner
+    data40: Minecart Spawner
+    data41: Boat Spawner
+    data50: Creeper Spawner
+    data51: Skeleton Spawner
+    data52: Spider Spawner
+    data53: Giant Spawner
+    data54: Zombie Spawner
+    data55: Slime Spawner
+    data56: Ghast Spawner
+    data57: Zombie Pigman Spawner
+    data58: Enderman Spawner
+    data59: Cave Spider Spawner
+    data60: Silverfish Spawner
+    data90: Pig Spawner
+    data91: Sheep Spawner
+    data92: Cow Spawner
+    data93: Chicken Spawner
+    data94: Squid Spawner
+    data95: Wolf Spawner
+    generic: Spawner
   item53: Wooden Stairs
   item54: Chest
   item55: Redstone Wire
@@ -148,18 +165,47 @@ names:
   item94: Redstone Repeater Block
   item95: Locked Chest
   item96: Trapdoor
-  item97: Monster Eggs
+  item97:
+    data0: Stone Silverfish Eggs
+    data1: Cobblestone Silverfish Eggs
+    data2: Stone Brick Silverfish Eggs
+    generic: Silverfish Eggs
   item98:
-  - Stone Brick
-  - Mossy Stone Brick
-  - Crumbling Stone Brick
-  item99: Huge Red Mushroom
-  item100: Huge Brown Mushroom
+    data0: Stone Brick
+    data1: Mossy Stone Brick
+    data2: Crumbling Stone Brick
+    generic: Stone Brick
+  item99:
+    data0: Huge Brown Mushroom Interior
+    data1: Huge Brown Mushroom Corner
+    data2: Huge Brown Mushroom Side
+    data3: Huge Brown Mushroom Corner
+    data4: Huge Brown Mushroom Side
+    data5: Huge Brown Mushroom Top
+    data6: Huge Brown Mushroom Side
+    data7: Huge Brown Mushroom Corner
+    data8: Huge Brown Mushroom Side
+    data9: Huge Brown Mushroom Corner
+    data10: Huge Brown Mushroom Stem
+    generic: Huge Brown Mushroom
+  item100:
+    data0: Huge Red Mushroom Interior
+    data1: Huge Red Mushroom Corner
+    data2: Huge Red Mushroom Side
+    data3: Huge Red Mushroom Corner
+    data4: Huge Red Mushroom Side
+    data5: Huge Red Mushroom Top
+    data6: Huge Red Mushroom Side
+    data7: Huge Red Mushroom Corner
+    data8: Huge Red Mushroom Side
+    data9: Huge Red Mushroom Corner
+    data10: Huge Red Mushroom Stem
+    generic: Huge Red Mushroom
   item101: Iron Fence
   item102: Glass Pane
   item103: Melon
-  item104: Pumpkin_Stem
-  item105: Melon_Stem
+  item104: Pumpkin Stem
+  item105: Melon Stem
   item106: Vine
   item107: Fence Gate
   item108: Brick Stairs
@@ -172,8 +218,9 @@ names:
   item261: Bow
   item262: Arrow
   item263: 
-   - Coal
-   - Charcoal
+    data0: Coal
+    data1: Charcoal
+    generic: Coal
   item264: Diamond
   item265: Iron Ingot
   item266: Gold Ingot
@@ -262,22 +309,23 @@ names:
   item349: Raw Fish
   item350: Cooked Fish
   item351:
-   - Ink Sac
-   - Rose Red
-   - Cactus Green
-   - Cocoa Beans
-   - Lapis Lazuli
-   - Purple Dye
-   - Cyan Dye
-   - Light Gray Dye
-   - Gray Dye
-   - Pink Dye
-   - Lime Dye
-   - Dandelion Yellow
-   - Light Blue Dye
-   - Magenta Dye
-   - Orange Dye
-   - Bone Meal
+    data0: Ink Sac
+    data1: Rose Red
+    data2: Cactus Green
+    data3: Cocoa Beans
+    data4: Lapis Lazuli
+    data5: Purple Dye
+    data6: Cyan Dye
+    data7: Light Gray Dye
+    data8: Gray Dye
+    data9: Pink Dye
+    data10: Lime Dye
+    data11: Dandelion Yellow
+    data12: Light Blue Dye
+    data13: Magenta Dye
+    data14: Orange Dye
+    data15: Bone Meal
+    generic: Dye
   item352: Bone
   item353: Sugar
   item354: Cake

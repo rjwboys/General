@@ -49,19 +49,14 @@ public final class Items {
 			if(tmpList.get(id).size() == 1)
 				config.setProperty(key, names.get(tmpList.get(id).first()));
 			else {
-				ArrayList<String> theseNames = new ArrayList<String>();
+				HashMap<String,String> theseNames = new HashMap<String,String>();
 				for(ItemID item : tmpList.get(id)) {
 					if(item.getData() == null) {
-						theseNames.add(null);
-						theseNames.add(names.get(item));
+						theseNames.put("generic",names.get(item));
 						break; // even if there are further entries, they are anomalies and we don't care about them
 						// Actually, having further entries at this point would be a bug since IDs with null data
 						// compare higher than IDs with non-null data.
-					} else {
-						while(theseNames.size() <= item.getData())
-							theseNames.add("");
-						theseNames.set(item.getData(), names.get(item));
-					}
+					} else theseNames.put("data" + item.getData(), names.get(item));
 				}
 				config.setProperty(key, theseNames);
 			}
@@ -196,12 +191,14 @@ public final class Items {
 					invalids++;
 					continue;
 				}
-				List<String> list = config.getStringList("names." + id, null);
-				if(list.isEmpty()) {
-					name = config.getString("names." + id);
+				String path = "names." + id;
+				Object node = config.getProperty(path);
+				if(node instanceof String) {
+					name = config.getString(path);
 					key = new ItemID(num, null);
 					names.put(key, name);
-				} else {
+				} else if(node instanceof List) { // TODO: for backwards compatibility; remove eventually
+					List<String> list = config.getStringList(path, null);
 					boolean atEnd = false;
 					for(int i = 0; i < list.size(); i++) {
 						name = list.get(i);
@@ -216,6 +213,19 @@ public final class Items {
 								continue;
 							}
 							key = new ItemID(num, i);
+							names.put(key, name);
+						}
+					}
+				} else {
+					List<String> list = config.getKeys(path);
+					for(String data : list) {
+						name = config.getString(path + "." + data);
+						if(data.matches("data[0-9][0-9]?")) {
+							int d = Integer.parseInt(data.substring(4));
+							key = new ItemID(num, d);
+							names.put(key, name);
+						} else if(data.equals("generic")) {
+							key = new ItemID(num, null);
 							names.put(key, name);
 						}
 					}
