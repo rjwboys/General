@@ -49,7 +49,6 @@ public class General extends JavaPlugin {
 	
 	private HashMap<String, String> playersAway = new HashMap<String, String>();
 	private HashMap<String,String> lastMessager = new HashMap<String, String>();
-	private String tagFormat;
 	
 	public boolean isAway(Player who) {
 		return playersAway.containsKey(who.getName());
@@ -91,7 +90,7 @@ public class General extends JavaPlugin {
 		public void onPlayerChat(PlayerChatEvent event) {
 			String tag = event.getMessage().split("\\s+")[0];
 			for(String who : playersAway.keySet()) {
-				if(tag.equalsIgnoreCase(tagFormat.replace("name", who))) {
+				if(tag.equalsIgnoreCase(Option.TAG_FORMAT.get().replace("name", who))) {
 					Messaging.send(event.getPlayer(), LanguageText.AWAY_BRIEF.value("name", who,
 						"reason", playersAway.get(who)));
 					break;
