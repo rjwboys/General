@@ -18,6 +18,7 @@ public abstract class Option {
 	public static OptionString LANGUAGE = new OptionString("language", "en");
 	public static OptionBoolean EXPORT_PERMISSIONS = new OptionBoolean("export-permissions", false);
 	public static OptionString BAN_KICK = new OptionString("ban-kick-msg", "You have been banned from this server!");
+	public static OptionBoolean HEAL_HUNGER = new OptionBoolean("heal-hunger", true);
 	// Playerlist settings
 	public static OptionBoolean SHOW_WORLD = new OptionBoolean("playerlist.show-world", false);
 	public static OptionBoolean SHOW_HEALTH = new OptionBoolean("playerlist.show-health", true);

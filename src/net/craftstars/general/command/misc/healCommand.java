@@ -8,6 +8,7 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
@@ -88,6 +89,11 @@ public class healCommand extends CommandBase {
 		amount = hp - who.getHealth();
 		amount /= 2.0;
 		who.setHealth(hp);
+		if(Option.HEAL_HUNGER.get()) {
+			// TODO: What's the range of these?
+			who.setFoodLevel(100);
+			who.setSaturation(100);
+		}
 		Messaging.send(who, LanguageText.HEAL_YOU.value("name", who.getName(), "health", amount,
 			"hurt", LanguageText.HEAL_HURT.value(), "healed", LanguageText.HEAL_HEALED.value()));
 		return amount;
