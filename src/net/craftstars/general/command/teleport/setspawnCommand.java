@@ -100,6 +100,8 @@ public class setspawnCommand extends CommandBase {
 		EntityPlayer ep = cp.getHandle();
 		ChunkCoordinates coords = new ChunkCoordinates(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 		ep.a(coords);
+		ep.spawnWorld = loc.getWorld().getName();
+		// End accessing Minecraft internals
 		Messaging.send(sender, LanguageText.SETHOME.value("player", who.getName(), "x", loc.getBlockX(),
 			"y", loc.getBlockY(), "z", loc.getBlockZ()));
 	}
