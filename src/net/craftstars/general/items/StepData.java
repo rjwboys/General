@@ -20,10 +20,6 @@ final class StepData extends ItemData {
 	public Integer fromName(String name) {
 		ItemID data = Items.validate(name + "/0");
 		if(data == null) return null;
-		// TODO: Hacky workaround for missing support
-		if(data.getMaterial() == Material.BRICK) return 4;
-		if(data.getMaterial() == Material.SMOOTH_BRICK) return 5;
-		// End hacky workaround
 		Step step = new Step(data.getMaterial());
 		if(step.getMaterial() != data.getMaterial()) return null;
 		return (int) step.getData();

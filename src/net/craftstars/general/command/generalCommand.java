@@ -263,7 +263,6 @@ public class generalCommand extends CommandBase {
 	}
 
 	private boolean setEconomy(CommandSender sender, String[] args) {
-		// TODO: Update this to use the messaging framework
 		args = Toolbox.join(args, 0).split("\\s*=\\s*");
 		if(args.length == 2) {
 			double value;
@@ -504,7 +503,6 @@ public class generalCommand extends CommandBase {
 	}
 
 	private boolean setVar(CommandSender sender, String[] args) {
-		// TODO: Update this to use the messaging framework
 		Option node = null;
 		Object value = null;
 		if(args.length != 2) return false;
@@ -690,7 +688,6 @@ public class generalCommand extends CommandBase {
 	}
 	
 	private boolean itemEdit(CommandSender sender, String[] args) {
-		// TODO: Update this to use the messaging framework
 		if(args.length < 2 || args.length > 3) {
 			return false;
 		} else if(args[0].equalsIgnoreCase("alias")) {

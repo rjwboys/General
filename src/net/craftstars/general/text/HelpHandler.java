@@ -347,5 +347,4 @@ public final class HelpHandler {
 		+ "{rose}trash : Delete a kit.\n"
 		+ "{rose}list : List the contents of a kit.\n";
 	// TODO: A way to account for permissions?
-	
 }

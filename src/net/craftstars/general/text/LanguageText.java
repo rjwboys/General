@@ -216,6 +216,9 @@ public enum LanguageText {
 	MOTD_UNKNOWN("motd.unknown", "unknown"),
 	MOTD_UNAVAILABLE("motd.unavail", "{rose}No message of the day available."),
 	MOTD_NOONE("motd.no-one", "(no-one)"),
+	// Messages relating to item info
+	ITEMINFO_BAD_SLOT("iteminfo.badslot", "Slot {slot} does not exist!"),
+	ITEMINFO_INFO("iteminfo.info", "{item}@{data} x {amount} ({name})"),
 	// Messages relating to the /general subcommands
 	ECONOMY_NO_PLAYER("econ.no-player", "Please specify the player you would like to dry-run the command as."),
 	PERMISSIONS_RESTRICT("permissions.restrict", "Permission '{node}' has been added to the " +
@@ -322,6 +325,8 @@ public enum LanguageText {
 	LACK_GAMEMODE_SET("permissions.gamemode_set","set your game mode"),
 	LACK_GAMEMODE_SET_OTHER("permissions.gamemode_set_other","set people's game mode"),
 	LACK_INSTANT("permissions.instant", "{action} so soon after the last time"),
+	LACK_ITEMINFO("permissions.iteminfo", "View info for your items."),
+	LACK_ITEMINFO_OTHER("permissions.iteminfo_other", "View info for other people's items."),
 	LACK_ADMIN_RELOAD("permissions.admin_reload", "reload the General configuration"),
 	LACK_ADMIN_ITEM("permissions.admin_item", "edit the item aliases"),
 	LACK_ADMIN_SAVE("permissions.admin_save", "save the General configuration"),

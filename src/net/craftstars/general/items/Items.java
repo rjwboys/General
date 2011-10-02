@@ -15,6 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.material.MaterialData;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -234,6 +235,18 @@ public final class Items {
 		}
 		if(invalids > 0)
 			General.logger.warn(LanguageText.LOG_ITEM_BAD_NAME.value("name", lastInvalid));
+	}
+	
+	public static String name(Material item) {
+		return name(new ItemID(item.getId()));
+	}
+	
+	public static String name(MaterialData item) {
+		return name(new ItemID(item.getItemTypeId(), (int)item.getData()));
+	}
+	
+	public static String name(ItemStack item) {
+		return name(new ItemID(item.getTypeId(), (int)item.getDurability()));
 	}
 	
 	/**

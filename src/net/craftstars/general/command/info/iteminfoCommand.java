@@ -10,6 +10,8 @@ import org.bukkit.inventory.ItemStack;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
+import net.craftstars.general.items.Items;
+import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Toolbox;
 
@@ -25,16 +27,18 @@ public class iteminfoCommand extends CommandBase {
 		case 0:
 			if(!isPlayer) return null;
 			params.put("item", ((Player)sender).getItemInHand());
+			params.put("player", sender);
 			break;
 		case 1:
 			try {
 				int slot = Integer.parseInt(args[0]);
 				if(!isPlayer) return null;
 				if(slot < 0 || slot >= 40) {
-					// TODO: Print error
+					Messaging.send(sender, LanguageText.ITEMINFO_BAD_SLOT.value("slot", slot));
 					return null;
 				}
 				params.put("item", ((Player)sender).getInventory().getItem(slot));
+				params.put("player", sender);
 			} catch(NumberFormatException e) {
 				Player player = Toolbox.matchPlayer(args[0]);
 				if(player == null) {
@@ -42,6 +46,7 @@ public class iteminfoCommand extends CommandBase {
 					return null;
 				}
 				params.put("item", player.getItemInHand());
+				params.put("player", player);
 			}
 			break;
 		case 2:
@@ -49,7 +54,7 @@ public class iteminfoCommand extends CommandBase {
 				int slot = Integer.parseInt(args[0]);
 				if(!isPlayer) return null;
 				if(slot < 0 || slot >= 40) {
-					// TODO: Print error
+					Messaging.send(sender, LanguageText.ITEMINFO_BAD_SLOT.value("slot", slot));
 					return null;
 				}
 				Player player = Toolbox.matchPlayer(args[1]);
@@ -58,6 +63,7 @@ public class iteminfoCommand extends CommandBase {
 					return null;
 				}
 				params.put("item", player.getInventory().getItem(slot));
+				params.put("player", player);
 			} catch(NumberFormatException e) {
 				Messaging.invalidNumber(sender, args[0]);
 				return null;
@@ -71,10 +77,14 @@ public class iteminfoCommand extends CommandBase {
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String,Object> args) {
-		if(!sender.hasPermission("general.iteminfo"))
-			return Messaging.lacksPermission(sender, "general.iteminfo");
+		Player inspected = (Player)args.get("player");
+		String permission = "general.iteminfo";
+		if(!sender.equals(inspected)) permission = "general.iteminfo.other";
+		if(!sender.hasPermission(permission))
+			return Messaging.lacksPermission(sender, permission);
 		ItemStack item = (ItemStack)args.get("item");
-		Messaging.send(sender, item.getType().toString() + "@" + item.getDurability() + " x " + item.getAmount());
+		Messaging.send(sender, LanguageText.ITEMINFO_INFO.value("item", Items.name(item.getType()),
+			"data", item.getDurability(), "amount", item.getAmount(), "name", Items.name(item)));
 		return true;
 	}
 	

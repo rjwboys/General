@@ -300,11 +300,14 @@ public final class Toolbox {
 		else if(entity instanceof Squid) return CreatureType.SQUID;
 		else if(entity instanceof Skeleton) return CreatureType.SKELETON;
 		else if(entity instanceof Slime) return CreatureType.SLIME;
+		else if(entity instanceof CaveSpider) return CreatureType.CAVE_SPIDER;
 		else if(entity instanceof Spider) return CreatureType.SPIDER;
 		else if(entity instanceof Ghast) return CreatureType.GHAST;
 		else if(entity instanceof Giant) return CreatureType.GIANT;
 		else if(entity instanceof PigZombie) return CreatureType.PIG_ZOMBIE;
 		else if(entity instanceof Zombie) return CreatureType.ZOMBIE;
+		else if(entity instanceof Enderman) return CreatureType.ENDERMAN;
+		else if(entity instanceof Silverfish) return CreatureType.SILVERFISH;
 		else if(entity instanceof Monster) return CreatureType.MONSTER;
 		return null;
 	}
@@ -321,7 +324,6 @@ public final class Toolbox {
 
 	public static void giveMoney(Player who, double revenue) {
 		if(General.economy == null) return;
-		// TODO: AllPay has no "give" function yet, so pay the inverse
-		General.economy.pay(who, -revenue, -1);
+		General.economy.give(who, revenue, -1);
 	}
 }

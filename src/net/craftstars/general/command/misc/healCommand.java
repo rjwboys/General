@@ -90,9 +90,8 @@ public class healCommand extends CommandBase {
 		amount /= 2.0;
 		who.setHealth(hp);
 		if(Option.HEAL_HUNGER.get()) {
-			// TODO: What's the range of these?
-			who.setFoodLevel(100);
-			who.setSaturation(100);
+			who.setFoodLevel(20);
+			who.setSaturation(20);
 		}
 		Messaging.send(who, LanguageText.HEAL_YOU.value("name", who.getName(), "health", amount,
 			"hurt", LanguageText.HEAL_HURT.value(), "healed", LanguageText.HEAL_HEALED.value()));

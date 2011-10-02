@@ -191,8 +191,11 @@ permissions:
             description: Allows you to view who's online.
           general.tell:
             description: Allows you to private message players.
-          general.iteminfo:
-            description: Allows you to see information about the item you're holding.
+          general.iteminfo.other:
+            description: Allows you to see information about the items anyone is carrying.
+            children:
+              general.iteminfo:
+                description: Allows you to see information about the item you're holding.
           general.time:
             description: Allows you to view and set the time.
             children:
