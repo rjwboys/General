@@ -6,6 +6,8 @@ import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Toolbox;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -40,7 +42,7 @@ public class WolfAttitude extends MobData {
 		}
 	}
 	private Attitude attitude = Attitude.WILD;
-	private Player player;
+	private OfflinePlayer player;
 	
 	public static void setup() {
 		Attitude.setup();
@@ -81,11 +83,7 @@ public class WolfAttitude extends MobData {
 		if(attitude == null) {
 			attitude = Attitude.TAMED;
 			player = Toolbox.matchPlayer(data);
-			if(player == null) {
-				if(setter != null)
-					Messaging.invalidPlayer(setter, data);
-				invalidate();
-			}
+			if(player == null) player = Bukkit.getOfflinePlayer(data);
 		} else if(attitude == Attitude.TAMED && player == null && setter instanceof Player) {
 			player = (Player) setter;
 		}
