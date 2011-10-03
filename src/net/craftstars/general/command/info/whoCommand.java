@@ -81,8 +81,8 @@ public class whoCommand extends CommandBase {
 		}
 		if((mask & STATUS) > 0) {
 			String status;
-			if(General.plugin.isAway(ofWhom))
-				status = LanguageText.INFO_STATUS_AWAY.value("away", General.plugin.whyAway(ofWhom));
+			if(General.players.isAway(ofWhom))
+				status = LanguageText.INFO_STATUS_AWAY.value("away", General.players.whyAway(ofWhom));
 			else status = LanguageText.INFO_STATUS_AROUND.value();
 			Messaging.send(toWhom, LanguageText.INFO_STATUS.value("status", status));
 		}

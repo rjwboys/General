@@ -31,9 +31,9 @@ public class tellCommand extends CommandBase {
 		else fromFmt = LanguageText.WHISPER_FROM_UNKNOWN;
 		Messaging.send(from, toFmt.value("name", to.getName(), "message", message));
 		Messaging.send(to, fromFmt.value("name", from.getName(), "message", message));
-		if(General.plugin.isAway(to)) {
+		if(General.players.isAway(to)) {
 			Messaging.send(from, LanguageText.AWAY_IS.value("name", to.getDisplayName()));
-			Messaging.send(from, LanguageText.AWAY_REASON.value("reason", General.plugin.whyAway(to)));
+			Messaging.send(from, LanguageText.AWAY_REASON.value("reason", General.players.whyAway(to)));
 		}
 	}
 
@@ -44,7 +44,7 @@ public class tellCommand extends CommandBase {
 		params.put("message", Toolbox.join(args, 1));
 		Player recipient;
 		if(isPlayer && args[0].equals("@")){
-			String name = plugin.lastMessaged(((Player) sender).getName());
+			String name = General.players.lastMessaged(((Player) sender).getName());
 			if(name == null) {
 				Messaging.send(sender, LanguageText.NO_REPLY);
 				return null;
@@ -70,7 +70,7 @@ public class tellCommand extends CommandBase {
 				Messaging.send(sender, LanguageText.WHISPER_SELF);
 				return true;
 			}
-			plugin.hasMessaged(who.getName(), player.getName());
+			General.players.hasMessaged(who.getName(), player.getName());
 		}
 		sendMessage(sender, who, args.get("message").toString());
 		return true;

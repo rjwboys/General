@@ -27,19 +27,19 @@ public class awayCommand extends CommandBase {
 		Player who = (Player) sender;
 		String reason = args.get("reason").toString();
 		if(reason.isEmpty()) {
-			if(General.plugin.isAway(who)) {
-				General.plugin.unAway(who);
+			if(General.players.isAway(who)) {
+				General.players.unAway(who);
 				Messaging.send(sender, LanguageText.AWAY_BACK);
 			} else {
 				Messaging.send(sender, LanguageText.AWAY_HERE);
 			}
 		} else {
-			if(General.plugin.isAway(who)) {
+			if(General.players.isAway(who)) {
 				Messaging.send(sender, LanguageText.AWAY_CHANGE);
 			} else {
 				Messaging.send(sender, LanguageText.AWAY_SET);
 			}
-			General.plugin.goAway(who, reason);
+			General.players.goAway(who, reason);
 		}
 		return true;
 	}
