@@ -89,7 +89,7 @@ public class whoCommand extends CommandBase {
 		if(title) Messaging.send(toWhom, divider);
 	}
 	
-	private void showInfo(@SuppressWarnings("unused") ConsoleCommandSender ofWhom, CommandSender toWhom, int mask) {
+	private void showInfo(ConsoleCommandSender ofWhom, CommandSender toWhom, int mask) {
 		LanguageText divider = LanguageText.INFO_DIVIDER;
 		boolean title = (mask & TITLE) > 0;
 		Server server = plugin.getServer();
@@ -99,7 +99,7 @@ public class whoCommand extends CommandBase {
 			Messaging.send(toWhom, divider);
 		}
 		if((mask & UNAME) > 0)
-			Messaging.send(toWhom, LanguageText.INFO_USERNAME.value("name", "CONSOLE"));
+			Messaging.send(toWhom, LanguageText.INFO_USERNAME.value("name", ofWhom.getName()));
 		if((mask & DNAME) > 0)
 			Messaging.send(toWhom, LanguageText.INFO_DISPLAYNAME.value("name", "Server"));
 		int healthloc = HEALTH | LOC | HOME;
@@ -126,7 +126,7 @@ public class whoCommand extends CommandBase {
 			Messaging.send(toWhom, LanguageText.INFO_TITLE_UNKNOWN);
 			Messaging.send(toWhom, divider);
 		}
-		if((mask &~ TITLE) > 0) Messaging.send(toWhom, LanguageText.INFO_NAME.value("name", getName(ofWhom)));
+		if((mask &~ TITLE) > 0) Messaging.send(toWhom, LanguageText.INFO_NAME.value("name", ofWhom.getName()));
 		if(title) Messaging.send(toWhom, divider);
 	}
 	

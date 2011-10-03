@@ -30,7 +30,7 @@ public class tellCommand extends CommandBase {
 		if(from instanceof Player) fromFmt = LanguageText.WHISPER_FROM_PLAYER;
 		else fromFmt = LanguageText.WHISPER_FROM_UNKNOWN;
 		Messaging.send(from, toFmt.value("name", to.getName(), "message", message));
-		Messaging.send(to, fromFmt.value("name", getName(from), "message", message));
+		Messaging.send(to, fromFmt.value("name", from.getName(), "message", message));
 		if(General.plugin.isAway(to)) {
 			Messaging.send(from, LanguageText.AWAY_IS.value("name", to.getDisplayName()));
 			Messaging.send(from, LanguageText.AWAY_REASON.value("reason", General.plugin.whyAway(to)));

@@ -40,6 +40,11 @@ public abstract class ItemData {
 			return BOOK;
 		case SMOOTH_BRICK:
 			return STONE_BRICK;
+		case HUGE_MUSHROOM_1:
+		case HUGE_MUSHROOM_2:
+			return MUSHROOM;
+		case LONG_GRASS:
+			return SHRUB;
 		}
 	}
 

@@ -1,8 +1,6 @@
 
 package net.craftstars.general.command;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +15,6 @@ import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
@@ -43,7 +40,7 @@ public abstract class CommandBase implements CommandExecutor {
 	@Override
 	public synchronized boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String cmdStr = commandLabel + " " + Toolbox.join(args);
-		String senderName = getName(sender);
+		String senderName = sender.getName();
 		boolean commandResult = Option.SHOW_USAGE.get();
 		FailurePlace error = FailurePlace.NONE, at = FailurePlace.INIT;
 		if(Option.LOG_COMMANDS.get())
@@ -78,23 +75,6 @@ public abstract class CommandBase implements CommandExecutor {
 	public abstract Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer);
 	
 	public abstract boolean execute(CommandSender sender, String command, Map<String, Object> args);
-
-	protected String getName(CommandSender sender) {
-		if(sender instanceof ConsoleCommandSender) return "CONSOLE";
-		Class<? extends CommandSender> clazz = sender.getClass();
-		try {
-			Method getName = clazz.getMethod("getName");
-			return getName.invoke(sender).toString();
-		} catch(NoSuchMethodException e) {
-			return clazz.getSimpleName();
-		} catch(IllegalArgumentException e) {
-			return clazz.getSimpleName();
-		} catch(IllegalAccessException e) {
-			return clazz.getSimpleName();
-		} catch(InvocationTargetException e) {
-			return clazz.getSimpleName();
-		}
-	}
 	
 	@SuppressWarnings("unused")
 	protected boolean isHelpCommand(Command command, String commandLabel, String[] args) {
