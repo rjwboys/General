@@ -34,7 +34,12 @@ time:
   show-ticks: true
 
 # Set the costs of various actions, and other miscellaneous economy-related things
+# If you don't have an economy system, you can use an item-based economy by setting item
+# to be the ID of your money item (eg 266 for gold bar or 371 for gold nugget)
+# You must set disable to false before General will attempt to use any kind of economy
 economy:
+  disable: true
+  item: -1
   heal: 0
   hurt: 0
   time:

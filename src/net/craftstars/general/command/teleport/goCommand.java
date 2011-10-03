@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -75,7 +76,7 @@ public class goCommand extends CommandBase {
 					teleport.run();
 				else {
 					Messaging.send(sender, LanguageText.TELEPORT_WARMUP.value("time", warmup));
-					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, teleport, warmup);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, teleport, warmup);
 					inWarmup.add(player);
 				}
 			} else {

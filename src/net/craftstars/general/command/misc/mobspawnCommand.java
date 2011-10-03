@@ -18,6 +18,7 @@ import net.craftstars.general.mobs.MobType;
 import net.craftstars.general.teleport.Destination;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class mobspawnCommand extends CommandBase {
@@ -145,7 +146,7 @@ public class mobspawnCommand extends CommandBase {
 		int numMobs = (Integer) args.get("num");
 		if(numMobs > 5 && !sender.hasPermission("general.mobspawn.mass"))
 			return Messaging.lacksPermission(sender, "general.mobspawn.mass");
-		boolean canPay = General.economy == null;
+		boolean canPay = Option.NO_ECONOMY.get();
 		if(!canPay) canPay = Toolbox.canPay(sender, numMobs, economyNodes);
 		if(canPay) {
 			while(numMobs-- > 0) doSpawn(sender, spawn, dest.getLoc());

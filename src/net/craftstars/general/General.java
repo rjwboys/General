@@ -26,20 +26,17 @@ import org.bukkit.util.config.Configuration;
 
 import com.fernferret.allpay.AllPay;
 import com.fernferret.allpay.GenericBank;
+import com.fernferret.allpay.ItemBank;
 
 public class General extends JavaPlugin {
 	public static General plugin = null;
-	
 	public static final boolean DEBUG = true;
 	public static final String codename = "Webern";
-	
 	public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG);
-	
-	public static Configuration config;
+	private Configuration config;
 	public static GenericBank economy;
-	private AllPay allpay;
-	
 	public static PlayerManager players = new PlayerManager();
+	private AllPay allpay;
 	
 	@Override
 	public void onEnable() {
@@ -73,6 +70,9 @@ public class General extends JavaPlugin {
 		Kits.load();
 		allpay = new AllPay(this, "General [" + codename + "] ");
 		economy = allpay.loadEconPlugin();
+		if(Option.NO_ECONOMY.get()) logger.info(LanguageText.LOG_NO_ECONOMY.value());
+		else if(economy instanceof ItemBank && Option.ECONOMY_ITEM.get() <= 0)
+			logger.warn(LanguageText.LOG_MISSING_ECONOMY.value());
 	}
 
 	private void registerEvents() {
@@ -109,9 +109,9 @@ public class General extends JavaPlugin {
 		config.load();
 	}
 
-	public void createDefaultConfig(File configFile) throws IOException {
+	public static void createDefaultConfig(File configFile) throws IOException {
 		General.logger.info(LanguageText.LOG_CONFIG_DEFAULT.value("file", configFile.getName()));
-		InputStream defaultConfig = this.getClass().getResourceAsStream(File.separator + configFile.getName());
+		InputStream defaultConfig = General.class.getResourceAsStream(File.separator + configFile.getName());
 		FileWriter out = new FileWriter(configFile);
 		Scanner lines = new Scanner(defaultConfig);
 		while(lines.hasNextLine())

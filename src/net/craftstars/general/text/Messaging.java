@@ -16,7 +16,6 @@ import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
@@ -56,8 +55,7 @@ public final class Messaging {
 	}
 	
 	public static void broadcast(String string) {
-		Server mc = General.plugin.getServer();
-		for(Player p : mc.getOnlinePlayers())
+		for(Player p : Bukkit.getOnlinePlayers())
 			send(p, string);
 		send(Bukkit.getConsoleSender(), string);
 	}
@@ -180,13 +178,13 @@ public final class Messaging {
 	}
 
 	public static void showCost(Player sender) {
-		String cost = General.economy.getFormattedAmount(sender, AccountStatus.price, -1);
+		String cost = General.economy.getFormattedAmount(sender, AccountStatus.price, Option.ECONOMY_ITEM.get());
 		send(sender, LanguageText.ECONOMY_SHOW_COST.value("cost", cost));
 	}
 	
 	public static void showPayment(Player sender) {
 		if(AccountStatus.price > 0) {
-			String cost = General.economy.getFormattedAmount(sender, AccountStatus.price, -1);
+			String cost = General.economy.getFormattedAmount(sender, AccountStatus.price, Option.ECONOMY_ITEM.get());
 			send(sender, LanguageText.ECONOMY_PAY.value("cost", cost));
 		}
 	}

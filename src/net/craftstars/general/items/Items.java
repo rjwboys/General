@@ -81,7 +81,7 @@ public final class Items {
 			if(!dataFolder.exists()) dataFolder.mkdirs();
 			File configFile = new File(dataFolder, "items.yml");
 			
-			if(!configFile.exists()) General.plugin.createDefaultConfig(configFile);
+			if(!configFile.exists()) General.createDefaultConfig(configFile);
 			config = new Configuration(configFile);
 			config.load();
 		} catch(Exception ex) {

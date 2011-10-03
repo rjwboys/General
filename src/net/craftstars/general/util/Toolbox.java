@@ -14,6 +14,7 @@ import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.MessageOfTheDay;
 import net.craftstars.general.text.Messaging;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -24,14 +25,13 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.*;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.util.BlockIterator;
-import org.bukkit.util.config.Configuration;
 
 public final class Toolbox {
 	private static Map<Permissible,Map<String,CooldownInfo>> cooldowns = new HashMap<Permissible,Map<String,CooldownInfo>>();
 	private Toolbox() {}
 	
 	public static Player matchPlayer(String pat) {
-		Player[] players = General.plugin.getServer().getOnlinePlayers();
+		Player[] players = Bukkit.getOnlinePlayers();
 		if(players.length == 0) return null;
 		HashMap<Player,Integer> closeness = new HashMap<Player,Integer>();
 		for(Player p : players) {
@@ -61,7 +61,7 @@ public final class Toolbox {
 	}
 	
 	public static World matchWorld(String pat) {
-		List<World> worlds = General.plugin.getServer().getWorlds();
+		List<World> worlds = Bukkit.getWorlds();
 		if(worlds.size() == 0) return null;
 		HashMap<World,Integer> closeness = new HashMap<World,Integer>();
 		for(World w : worlds) {
@@ -143,13 +143,13 @@ public final class Toolbox {
 				AccountStatus.price *= Double.parseDouble(permission.substring(1)) / 100.0;
 			else AccountStatus.price += Option.ECONOMY_COST(permission).get() * quantity;
 		if(CommandBase.isFrozen(player)) return AccountStatus.FROZEN;
-		if(General.economy.hasEnough(player, AccountStatus.price, -1))
+		if(General.economy.hasEnough(player, AccountStatus.price, Option.ECONOMY_ITEM.get()))
 			return AccountStatus.SUFFICIENT;
 		return AccountStatus.INSUFFICIENT;
 	}
 	
 	public static boolean canPay(CommandSender sender, int quantity, String... permissions) {
-		if(General.economy == null) return true;
+		if(Option.NO_ECONOMY.get()) return true;
 		if(sender instanceof ConsoleCommandSender) return true;
 		if(!(sender instanceof Player)) return false;
 		Player player = (Player) sender;
@@ -166,7 +166,7 @@ public final class Toolbox {
 				return false;
 			case SUFFICIENT: // TODO: I think pay() prints its own message, so this may cause double messages
 				Messaging.showPayment(player);
-				General.economy.pay(player, AccountStatus.price, -1);
+				General.economy.pay(player, AccountStatus.price, Option.ECONOMY_ITEM.get());
 			}
 			return true;
 		}
@@ -194,8 +194,8 @@ public final class Toolbox {
 		return join(args, " ");
 	}
 	
-	public static List<String> getPlayerList(General plugin, World world) {
-		Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
+	public static List<String> getPlayerList(World world) {
+		Player[] onlinePlayers = Bukkit.getOnlinePlayers();
 		List<String> players = new ArrayList<String>();
 		
 		for(Player who : onlinePlayers) {
@@ -274,11 +274,6 @@ public final class Toolbox {
 		return LanguageText.MISC_LOCATION.value("x", loc.getX(), "y", loc.getY(), "z", loc.getZ(), 
 			"yaw", loc.getYaw(), "pitch", loc.getPitch());
 	}
-
-	public static boolean nodeExists(Configuration config, String node) {
-		Object prop = config.getProperty(node);
-		return prop != null;
-	}
 	
 	public static <T> T[] arrayCopy(T[] src, int srcPos, T[] dest, int destPos, int len) {
 		System.arraycopy(src, srcPos, dest, destPos, len);
@@ -286,7 +281,7 @@ public final class Toolbox {
 	}
 
 	public static double sellItem(ItemID item, int amount) {
-		if(General.economy == null) return 0;
+		if(Option.NO_ECONOMY.get()) return 0;
 		String node = "economy.give.item" + item.toString();
 		double percent = Option.ECONOMY_SELL.get() / 100.0;
 		return Option.ECONOMY_COST(node).get() * amount * percent;
@@ -316,8 +311,8 @@ public final class Toolbox {
 	}
 
 	public static void giveMoney(Player who, double revenue) {
-		if(General.economy == null) return;
-		General.economy.give(who, revenue, -1);
+		if(Option.NO_ECONOMY.get()) return;
+		General.economy.give(who, revenue, Option.ECONOMY_ITEM.get());
 	}
 	
 	private static class CooldownInfo {

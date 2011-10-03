@@ -37,7 +37,7 @@ public final class CommandHandler {
 		if(register == null && !getRegisterMethod()) return;
 		if(!config.getKeys(null).contains("aliases"))
 			General.logger.warn(LanguageText.LOG_COMMAND_NO_ALIASES.value());
-		Plugin chat = General.plugin.getServer().getPluginManager().getPlugin("CraftIRC");
+		Plugin chat = Bukkit.getPluginManager().getPlugin("CraftIRC");
 		boolean foundIRC = isCraftIRC3(chat);
 		PluginDescriptionFile plug = General.plugin.getDescription();
 		try {
@@ -51,7 +51,7 @@ public final class CommandHandler {
 				for(String alias : config.getStringList("aliases." + key, null))
 					register(alias, generalCommand);
 				try {
-					Class<? extends CommandBase> clazz = General.plugin.getClass().getClassLoader()
+					Class<? extends CommandBase> clazz = General.class.getClassLoader()
 						.loadClass("net.craftstars.general.command." + generalCommand.getName() + "Command")
 						.asSubclass(CommandBase.class);
 					CommandBase commandInstance = clazz.getConstructor(General.class).newInstance(General.plugin);

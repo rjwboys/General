@@ -11,6 +11,7 @@ import me.taylorkelly.help.Help;
 import net.craftstars.general.General;
 import net.craftstars.general.util.Toolbox;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
@@ -20,7 +21,7 @@ public final class HelpHandler {
 	private HelpHandler() {}
 	
 	public static void setup() {
-		Plugin test = General.plugin.getServer().getPluginManager().getPlugin("Help");
+		Plugin test = Bukkit.getPluginManager().getPlugin("Help");
 		if(test != null) {
 			Help help = ((Help) test);
 			help.registerCommand("playerlist ([world])",

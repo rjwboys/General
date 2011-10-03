@@ -10,9 +10,11 @@ import java.util.Scanner;
 import java.util.Set;
 
 import net.craftstars.general.General;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,7 +27,7 @@ public final class MessageOfTheDay {
 		String displayName = getDisplayName(sender), name = getName(sender), location = getLocation(sender);
 		double health = getHealth(sender);
 		String address = getAddress(sender), balance = getBalance(sender), currency = getCurrency(sender);
-		int numPlayers = General.plugin.getServer().getOnlinePlayers().length;
+		int numPlayers = Bukkit.getOnlinePlayers().length;
 		String online = getOnline(), world = getWorld(sender), time = getTime(sender);
 		return Messaging.format(original, 
 			"dname", displayName, "name", name, "location", location, "health", health,
@@ -35,10 +37,9 @@ public final class MessageOfTheDay {
 	}
 	
 	private static String getOnline() {
-		List<String> lines = formatPlayerList(Toolbox.getPlayerList(General.plugin, null));
+		List<String> lines = formatPlayerList(Toolbox.getPlayerList(null));
 		StringBuilder stuff = new StringBuilder();
-		for(String line : lines)
-			stuff.append(line + " ");
+		for(String line : lines) stuff.append(line + " ");
 		return stuff.toString();
 	}
 	
@@ -64,9 +65,9 @@ public final class MessageOfTheDay {
 	}
 	
 	private static String getCurrency(CommandSender sender) {
-		if(General.economy == null) return "none";
+		if(Option.NO_ECONOMY.get()) return "none";
 		Player player = sender instanceof Player ? (Player)sender : null;
-		String zero = General.economy.getFormattedAmount(player, 0, -1);
+		String zero = General.economy.getFormattedAmount(player, 0, Option.ECONOMY_ITEM.get());
 		String currency = zero.replaceAll("\\d+(\\.\\d+)?", "");
 		return currency;
 	}
@@ -77,8 +78,8 @@ public final class MessageOfTheDay {
 	}
 	
 	private static String getBalance(CommandSender sender) {
-		if(General.economy == null || ! (sender instanceof Player)) return "0";
-		return Double.toString(General.economy.getBalance((Player) sender, -1));
+		if(Option.NO_ECONOMY.get() || !(sender instanceof Player)) return "0";
+		return Double.toString(General.economy.getBalance((Player) sender, Option.ECONOMY_ITEM.get()));
 	}
 	
 	private static double getHealth(CommandSender sender) {

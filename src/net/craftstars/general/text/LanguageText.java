@@ -278,6 +278,9 @@ public enum LanguageText {
 		"Use /general reload if you actually want to reload General."),
 	LOG_SUCCESS("log.success", "Plugin successfully loaded!"),
 	LOG_DISABLED("log.disabled", "Plugin disabled!"),
+	LOG_NO_ECONOMY("log.economy.none", "Economy is disabled in the config file; no economy will be used."),
+	LOG_MISSING_ECONOMY("log.economy.missing", "You've enabled economy, but have no economy system installed! " +
+			"You must either install an economy plugin or choose a currency item in order to use economy."),
 	// Messages relating to missing permissions
 	PERMISSION_LACK("permissions.lacking", "{rose}You don't have permission to {action}. ({permission})"),
 	PERMISSION_ERROR("permissions.error", "{rose}Error checking permissions."),

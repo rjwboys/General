@@ -12,6 +12,7 @@ import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.command.Command;
@@ -73,7 +74,7 @@ public class timeCommand extends CommandBase {
 
 	private World getWorld(CommandSender sender, boolean isPlayer) {
 		if(isPlayer) return ((Player)sender).getWorld();
-		else return plugin.getServer().getWorlds().get(0);
+		else return Bukkit.getWorlds().get(0);
 	}
 
 	@Override

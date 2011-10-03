@@ -11,6 +11,7 @@ import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -200,7 +201,7 @@ public abstract class CommandBase implements CommandExecutor {
 
 			@Override
 			public void sendMessage(String message) {
-				CraftIRC irc = (CraftIRC) plugin.getServer().getPluginManager().getPlugin("CraftIRC");
+				CraftIRC irc = (CraftIRC) Bukkit.getPluginManager().getPlugin("CraftIRC");
 				RelayedMessage msg = irc.newMsgToTag(CraftIRCForwarder.this, channel, "generalReply");
 				msg.setField("command", command);
 				msg.setField("message", message);
@@ -209,7 +210,7 @@ public abstract class CommandBase implements CommandExecutor {
 
 			@Override
 			public Server getServer() {
-				return plugin.getServer();
+				return Bukkit.getServer();
 			}
 
 			@Override

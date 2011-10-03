@@ -5,8 +5,8 @@ package net.craftstars.general.command.info;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -92,7 +92,6 @@ public class whoCommand extends CommandBase {
 	private void showInfo(ConsoleCommandSender ofWhom, CommandSender toWhom, int mask) {
 		LanguageText divider = LanguageText.INFO_DIVIDER;
 		boolean title = (mask & TITLE) > 0;
-		Server server = plugin.getServer();
 		if(title) {
 			Messaging.send(toWhom, divider);
 			Messaging.send(toWhom, LanguageText.INFO_TITLE_CONSOLE);
@@ -104,12 +103,12 @@ public class whoCommand extends CommandBase {
 			Messaging.send(toWhom, LanguageText.INFO_DISPLAYNAME.value("name", "Server"));
 		int healthloc = HEALTH | LOC | HOME;
 		if((mask & healthloc) > 0)
-			Messaging.send(toWhom, LanguageText.INFO_VERSION.value("version", server.getVersion()));
+			Messaging.send(toWhom, LanguageText.INFO_VERSION.value("version", Bukkit.getVersion()));
 		if((mask & WORLD) > 0)
-			Messaging.send(toWhom, LanguageText.INFO_PRIMARY.value("world", server.getWorlds().get(0).getName()));
+			Messaging.send(toWhom, LanguageText.INFO_PRIMARY.value("world", Bukkit.getWorlds().get(0).getName()));
 		if((mask & IP) > 0) {
-			String ip = server.getIp();
-			int port = server.getPort();
+			String ip = Bukkit.getIp();
+			int port = Bukkit.getPort();
 			if(ip.isEmpty()) ip = "<???>";
 			Messaging.send(toWhom, LanguageText.INFO_IP.value("ip", ip + ":" + port));
 		}

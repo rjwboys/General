@@ -3,6 +3,7 @@ package net.craftstars.general.command.info;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -43,7 +44,7 @@ public class worldinfoCommand extends CommandBase {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		if(args.length == 0) {
 			if(isPlayer) params.put("world", ((Player)sender).getWorld());
-			else params.put("world", plugin.getServer().getWorlds().get(0));
+			else params.put("world", Bukkit.getWorlds().get(0));
 		} else if(args.length == 1) {
 			World who = Toolbox.matchWorld(args[0]);
 			if(who == null) {

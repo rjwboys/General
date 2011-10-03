@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import net.craftstars.general.General;
 import net.craftstars.general.mobs.MobType;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
@@ -15,7 +14,6 @@ import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -120,7 +118,6 @@ public class Target {
 	}
 	
 	public static Target get(String targ, Player teleporter) {
-		Server mc = General.plugin.getServer();
 		CommandSender notify;
 		if(teleporter == null)
 			notify = Bukkit.getConsoleSender();
@@ -141,7 +138,7 @@ public class Target {
 		// Is it a wildcard?
 		if(targ.equals("*")) {
 			ArrayList<LivingEntity> players = new ArrayList<LivingEntity>();
-			for(World flat : mc.getWorlds())
+			for(World flat : Bukkit.getWorlds())
 				players.addAll(flat.getPlayers());
 			return new Target(players, null, TargetType.OTHER);
 		}

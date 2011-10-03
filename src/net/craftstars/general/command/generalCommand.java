@@ -165,7 +165,7 @@ public class generalCommand extends CommandBase {
 	}
 	
 	private void doSave(CommandSender sender) {
-		General.config.save();
+		Option.save();
 		Items.save();
 		Kits.save();
 		Messaging.save();
@@ -244,7 +244,8 @@ public class generalCommand extends CommandBase {
 			kit.setSavedCost(cost);
 			String displayCost = Double.toString(cost);
 			Player player = sender instanceof Player ? (Player)sender : null;
-			if(General.economy != null) displayCost = General.economy.getFormattedAmount(player, cost, -1);
+			if(!Option.NO_ECONOMY.get())
+				displayCost = General.economy.getFormattedAmount(player, cost, Option.ECONOMY_ITEM.get());
 			Messaging.send(sender, LanguageText.KIT_COST.value("kit", kitName, "cost", displayCost));
 			return true;
 		} else if(args[1].equalsIgnoreCase("trash")) {
@@ -391,15 +392,15 @@ public class generalCommand extends CommandBase {
 						if(mountData != null) path += mountData.getCostNode(path);
 					}
 					// Rewrite existing nodes to allow for the new path.
-					if(!Toolbox.nodeExists(General.config, path)) {
+					if(!Option.nodeExists(path)) {
 						String checkPath = path;
 						do {
 							int lastDot = checkPath.lastIndexOf('.');
 							checkPath = checkPath.substring(0, lastDot);
 							if(checkPath.endsWith("mobspawn")) break;
 							if(checkPath.endsWith("riding")) continue;
-							if(!Toolbox.nodeExists(General.config, checkPath)) continue;
-							Object node = General.config.getProperty(checkPath);
+							if(!Option.nodeExists(checkPath)) continue;
+							Object node = Option.getProperty(checkPath);
 							if(node instanceof Number) {
 								Map<String, Object> map = new HashMap<String,Object>();
 								// Okay, we found a leaf, but where is it?
@@ -410,7 +411,7 @@ public class generalCommand extends CommandBase {
 									if(checkPath.lastIndexOf(".") == checkPath.indexOf("riding") + "riding".length()) {
 										if(mount != null && path.replace(checkPath + ".", "").contains(".")) {
 											map.put(mount.getNewData().getCostNode("").replace(".", ""), node);
-											General.config.setProperty(checkPath, map);
+											Option.setProperty(checkPath, map);
 										}
 									}
 								} else if(path.contains("riding")) { // but checkPath doesn't contain "riding"
@@ -418,13 +419,13 @@ public class generalCommand extends CommandBase {
 									//  ->Put the value in a "free" subnode.
 									if(checkPath.replace("economy.mobspawn.", "").contains(".")) {
 										map.put("free", node);
-										General.config.setProperty(checkPath, map);
+										Option.setProperty(checkPath, map);
 									}
 									// 3. This may or may not be a riding node, and it's the mob name of the rider.
 									//  ->If our path specifies a datavalue, we need to rearrange.
 									else {
 										map.put(mob.getNewData().getCostNode("").replace(".", ""), node);
-										General.config.setProperty(checkPath, map);
+										Option.setProperty(checkPath, map);
 									}
 								}
 								break;
@@ -495,7 +496,7 @@ public class generalCommand extends CommandBase {
 					}
 				}
 			}
-			General.config.setProperty(path, value);
+			Option.ECONOMY_COST(path).set(value);
 			Messaging.send(sender, LanguageText.ADMIN_ECON_SET.value("path", path, "value", value));
 			return true;
 		}
@@ -780,12 +781,10 @@ public class generalCommand extends CommandBase {
 				return true;
 			case 3:
 				if(args[2].equalsIgnoreCase("delete")) {
-					Map<String, Object> allGroups = General.config.getNode("give.groups").getAll();
-					if(!allGroups.containsKey(groupName))
+					if(!Option.nodeExists("give.groups." + groupName))
 						Messaging.send(sender, LanguageText.ADMIN_ITEM_GROUP_EMPTY.value("group", groupName));
 					else {
-						allGroups.remove(groupName);
-						General.config.setProperty("general.groups", allGroups);
+						Option.GROUP(groupName).remove();
 						Messaging.send(sender, LanguageText.ADMIN_ITEM_GROUP_REMOVE.value("group", groupName));
 					}
 				} else switch(args[2].charAt(0)) {

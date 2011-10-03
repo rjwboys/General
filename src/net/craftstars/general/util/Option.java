@@ -26,6 +26,8 @@ public abstract class Option {
 	public static OptionBoolean SHOW_IP = new OptionBoolean("playerlist.show-ip", false);
 	public static OptionBoolean ALLOW_OVERRIDE = new OptionBoolean("playerlist.allow-all", false);
 	// Economy settings
+	public static OptionBoolean NO_ECONOMY = new OptionBoolean("economy.disable", true);
+	public static OptionInteger ECONOMY_ITEM = new OptionInteger("economy.item", -1);
 	public static OptionDouble ECONOMY_SELL = new OptionDouble("economy.give.sell", 100);
 	public static OptionString ECONOMY_TAKE_SELL = new OptionString("economy.give.take", "sell");
 	public static OptionString ECONOMY_CLEAR_SELL = new OptionString("economy.give.clear", "sell");
@@ -71,16 +73,33 @@ public abstract class Option {
 		config.setProperty(node, value);
 	}
 	
+	public void remove() {
+		config.removeProperty(node);
+	}
+	
 	public void reset() {
 		set(def);
 	}
 
 	public static boolean nodeExists(String node) {
-		return Toolbox.nodeExists(config, node);
+		Object prop = config.getProperty(node);
+		return prop != null;
 	}
 	
 	public static void setConfiguration(Configuration c) {
 		config = c;
+	}
+	
+	public static void setProperty(String path, Object value) {
+		config.setProperty(path, value);
+	}
+	
+	public static Object getProperty(String path) {
+		return config.getProperty(path);
+	}
+	
+	public static void save() {
+		config.save();
 	}
 	
 	public static class OptionBoolean extends Option {

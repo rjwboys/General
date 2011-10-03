@@ -56,7 +56,7 @@ public enum MobType {
 			if(!dataFolder.exists()) dataFolder.mkdirs();
 			File configFile = new File(dataFolder, "mobs.yml");
 			
-			if(!configFile.exists()) General.plugin.createDefaultConfig(configFile);
+			if(!configFile.exists()) General.createDefaultConfig(configFile);
 			yml = new Configuration(configFile);
 			yml.load();
 		} catch(Exception ex) {
@@ -189,14 +189,14 @@ public enum MobType {
 		// Case 1: There's no entry for it, thus it costs nothing.
 		if(!Option.nodeExists(baseNode)) return "";
 		// Case 2: There's an entry for it, and it's a number. Then that's the cost.
-		if(General.config.getProperty(baseNode) instanceof Number) return baseNode;
+		if(Option.getProperty(baseNode) instanceof Number) return baseNode;
 		// Case 3: This entry has sub-entries for when the mob is riding something.
 		if(Option.nodeExists(baseNode + ".free")) return baseNode + ".free";
 		// Case 4: This entry has sub-entries for various data values.
 		baseNode = info.getCostNode(baseNode);
 		if(!Option.nodeExists(baseNode)) return "";
 		// Case 5: There's an entry for it, and it's a number. Then that's the cost.
-		if(General.config.getProperty(baseNode) instanceof Number) return baseNode;
+		if(Option.getProperty(baseNode) instanceof Number) return baseNode;
 		// Case 6: A combination of cases 3 and 4.
 		if(Option.nodeExists(baseNode + ".free")) return baseNode + ".free";
 		// Case 7: There's no entry for it after all, thus it costs nothing.
