@@ -32,22 +32,28 @@ public class modeCommand extends CommandBase {
 		case 1: // /mode <mode> OR /mode <player>
 			try {
 				mode = GameMode.getByValue(Integer.parseInt(args[0]));
-				if(mode == null) mode = GameMode.valueOf(args[0].toUpperCase());
-				if(!isPlayer) return null;
-				setCommand("set");
-				params.put("who", sender);
-				params.put("mode", mode);
-			} catch(RuntimeException e) {
-				if(!(e instanceof IllegalArgumentException || e instanceof NumberFormatException)) throw e;
-				Player player = Toolbox.matchPlayer(args[0]);
-				if(player == null) {
-					Messaging.send(sender, LanguageText.MISC_BAD_MODE);
-					Messaging.invalidPlayer(sender, args[0]);
-					return null;
-				}
-				setCommand("view");
-				params.put("who", player);
+			} catch(NumberFormatException e) {
+				mode = null;
 			}
+			if(mode == null) {
+				try {
+					mode = GameMode.valueOf(args[0].toUpperCase());
+				} catch(IllegalArgumentException e) {
+					Player player = Toolbox.matchPlayer(args[0]);
+					if(player == null) {
+						Messaging.send(sender, LanguageText.MISC_BAD_MODE);
+						Messaging.invalidPlayer(sender, args[0]);
+						return null;
+					}
+					setCommand("view");
+					params.put("who", player);
+					break;
+				}
+			}
+			if(!isPlayer) return null;
+			setCommand("set");
+			params.put("who", sender);
+			params.put("mode", mode);
 			break;
 		case 2: // /mode <player> <mode>
 			try {
