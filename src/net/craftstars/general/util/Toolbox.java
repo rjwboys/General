@@ -4,6 +4,7 @@ package net.craftstars.general.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import net.craftstars.general.General;
@@ -26,6 +27,7 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.config.Configuration;
 
 public final class Toolbox {
+	private static Map<Permissible,Map<String,CooldownInfo>> cooldowns = new HashMap<Permissible,Map<String,CooldownInfo>>();
 	private Toolbox() {}
 	
 	public static Player matchPlayer(String pat) {
@@ -291,17 +293,39 @@ public final class Toolbox {
 	}
 	
 	public static void cooldown(Permissible sender, String cooldown, String instant, int delay) {
-		if(delay > 0 && !sender.hasPermission(instant))
+		if(delay > 0 && !sender.hasPermission(instant)) {
 			sender.addAttachment(General.plugin, cooldown, false, delay);
+			if(!cooldowns.containsKey(sender)) cooldowns.put(sender, new HashMap<String,CooldownInfo>());
+			cooldowns.get(sender).put(cooldown, new CooldownInfo(System.currentTimeMillis(),delay*50));
+		}
 	}
 	
 	public static boolean inCooldown(Permissible sender, String cooldown) {
 		if(!sender.isPermissionSet(cooldown)) return false;
 		return !sender.hasPermission(cooldown);
 	}
+	
+	public static long getCooldown(Permissible sender, String cooldown) {
+		long time = System.currentTimeMillis();
+		if(!cooldowns.containsKey(sender)) return 0;
+		CooldownInfo info = cooldowns.get(sender).get(cooldown);
+		if(info == null) return 0;
+		long elapsed = time - info.start;
+		long remaining = info.duration - elapsed;
+		return remaining / 50;
+	}
 
 	public static void giveMoney(Player who, double revenue) {
 		if(General.economy == null) return;
 		General.economy.give(who, revenue, -1);
+	}
+	
+	private static class CooldownInfo {
+		public long start, duration;
+		
+		CooldownInfo(long begin, long cooldown) {
+			start = begin;
+			duration = cooldown;
+		}
 	}
 }

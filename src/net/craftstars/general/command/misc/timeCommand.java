@@ -97,7 +97,8 @@ public class timeCommand extends CommandBase {
 		if(!sender.hasPermission(permission))
 			return Messaging.lacksPermission(sender, permission);
 		String cooldownPerm = permission + "." + world.getName();
-		if(Toolbox.inCooldown(sender, cooldownPerm)) return true;
+		if(Toolbox.inCooldown(sender, cooldownPerm))
+			return Messaging.inCooldown(sender, cooldownPerm, LanguageText.COOLDOWN_TIME, "world", world.getName());
 		Toolbox.cooldown(sender, cooldownPerm, permission + ".instant", Option.COOLDOWN("time").get());
 		LanguageText timeName;
 		int timeTicks;

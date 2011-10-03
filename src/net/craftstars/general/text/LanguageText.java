@@ -341,6 +341,14 @@ public enum LanguageText {
 	LACK_KICK("permissions.kick", "kick players"),
 	LACK_BAN("permissions.ban", "ban players"),
 	LACK_PARDON("permissions.pardon", "pardon banned players"),
+	// Cooldown-related messages
+	IN_COOLDOWN("misc.cooldown.in", "{rose}Please wait {duration} before trying to {action} again."),
+	COOLDOWN_WEATHER("misc.cooldown.weather", "change the weather in {world}"),
+	COOLDOWN_THUNDER("misc.cooldown.thunder", "change the weather in {world}"),
+	COOLDOWN_LIGHTNING("misc.cooldown.lightning", "summon lightning in {world}"),
+	COOLDOWN_TIME("misc.cooldown.time", "change the time in {world}"),
+	COOLDOWN_TELEPORT("misc.cooldown.teleport", "teleport"),
+	COOLDOWN_KIT("misc.cooldown.kit", "use the {kit} kit"),
 	// Miscellaneous common messages
 	MISC_BAD_PLAYER("misc.bad-player", "{rose}There is no player named {white}{name}{rose}."),
 	MISC_BAD_WORLD("misc.bad-world", "{rose}There is no world named {white}{name}{rose}."),

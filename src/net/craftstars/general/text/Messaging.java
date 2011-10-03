@@ -11,6 +11,8 @@ import java.util.Map;
 import net.craftstars.general.General;
 import net.craftstars.general.util.AccountStatus;
 import net.craftstars.general.util.Option;
+import net.craftstars.general.util.Time;
+import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -162,6 +164,13 @@ public final class Messaging {
 	public static boolean lacksPermission(CommandSender from, String node) {
 		LanguageText action = LanguageText.byNode(node.replace('.', '_').replace("general_", "permissions."));
 		return lacksPermission(from, node, action);
+	}
+	
+	public static boolean inCooldown(CommandSender from, String perm, LanguageText node, Object... params) {
+		long ticks = Toolbox.getCooldown(from, perm);
+		String time = Time.formatDuration(ticks), action = node.value(params);
+		send(from, LanguageText.IN_COOLDOWN.value("action", action, "ticks", ticks, "duration", time));
+		return true;
 	}
 	
 	public static boolean lacksPermission(CommandSender from, String node, LanguageText action, Object... args) {

@@ -46,7 +46,8 @@ public class goCommand extends CommandBase {
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		int warmup = Option.TELEPORT_WARMUP.get();
 		if(warmup > 0) {
-			if(Toolbox.inCooldown(sender, "general.teleport")) return true;
+			if(Toolbox.inCooldown(sender, "general.teleport"))
+				return Messaging.inCooldown(sender, "general.teleport", LanguageText.COOLDOWN_TELEPORT);
 			Toolbox.cooldown(sender, "general.teleport", "general.teleport.instant", warmup);
 		}
 		final Target target = (Target) args.get("target");
