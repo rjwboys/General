@@ -158,7 +158,7 @@ public class whoCommand extends CommandBase {
 				if(Toolbox.equalsOne(args[0], "all", "status", "away")) mask |= STATUS;
 			} else mask = defaultMask;
 			// If they're not allowed to override, mask out disabled values
-			if(!Option.ALLOW_OVERRIDE.get()) mask &= ~defaultMask;
+			if(!Option.ALLOW_OVERRIDE.get()) mask &= defaultMask;
 			General.logger.debug(Integer.toString(mask));
 			params.put("mask", mask);
 			params.put("who", sender);
