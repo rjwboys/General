@@ -290,28 +290,6 @@ public final class Toolbox {
 		return Option.ECONOMY_COST(node).get() * amount * percent;
 	}
 	
-	public static CreatureType getCreatureType(LivingEntity entity) {
-		if(entity instanceof Pig) return CreatureType.PIG;
-		else if(entity instanceof Sheep) return CreatureType.SHEEP;
-		else if(entity instanceof Cow) return CreatureType.COW;
-		else if(entity instanceof Chicken) return CreatureType.CHICKEN;
-		else if(entity instanceof Creeper) return CreatureType.CREEPER;
-		else if(entity instanceof Wolf) return CreatureType.WOLF;
-		else if(entity instanceof Squid) return CreatureType.SQUID;
-		else if(entity instanceof Skeleton) return CreatureType.SKELETON;
-		else if(entity instanceof Slime) return CreatureType.SLIME;
-		else if(entity instanceof CaveSpider) return CreatureType.CAVE_SPIDER;
-		else if(entity instanceof Spider) return CreatureType.SPIDER;
-		else if(entity instanceof Ghast) return CreatureType.GHAST;
-		else if(entity instanceof Giant) return CreatureType.GIANT;
-		else if(entity instanceof PigZombie) return CreatureType.PIG_ZOMBIE;
-		else if(entity instanceof Zombie) return CreatureType.ZOMBIE;
-		else if(entity instanceof Enderman) return CreatureType.ENDERMAN;
-		else if(entity instanceof Silverfish) return CreatureType.SILVERFISH;
-		else if(entity instanceof Monster) return CreatureType.MONSTER;
-		return null;
-	}
-	
 	public static void cooldown(Permissible sender, String cooldown, String instant, int delay) {
 		if(delay > 0 && !sender.hasPermission(instant))
 			sender.addAttachment(General.plugin, cooldown, false, delay);

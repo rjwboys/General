@@ -5,6 +5,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,7 @@ import net.craftstars.general.util.Toolbox;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.*;
 import org.bukkit.util.config.Configuration;
 
 public enum MobType {
@@ -46,6 +46,7 @@ public enum MobType {
 	private String singular, plural;
 	private static HashMap<String, MobType> namesToEnumMapping = new HashMap<String, MobType>();
 	private static HashMap<Integer, MobType> idToEnumMapping = new HashMap<Integer, MobType>();
+	private static EnumMap<CreatureType, MobType> ctToEnumMapping = new EnumMap<CreatureType, MobType>(CreatureType.class);
 	private Class<? extends MobData> data;
 	private static Configuration yml;
 	
@@ -118,6 +119,7 @@ public enum MobType {
 				namesToEnumMapping.put(name.toLowerCase(), mob);
 			}
 			idToEnumMapping.put(mob.id, mob);
+			ctToEnumMapping.put(mob.ctype, mob);
 			namesToEnumMapping.put(mob.singular.toLowerCase(), mob);
 			namesToEnumMapping.put(mob.plural.toLowerCase(), mob);
 		}
@@ -157,6 +159,14 @@ public enum MobType {
 	
 	public static MobType byId(int id) {
 		return idToEnumMapping.get(id);
+	}
+	
+	public static MobType fromBukkitType(CreatureType type) {
+		return ctToEnumMapping.get(type);
+	}
+	
+	public static MobType fromEntity(LivingEntity entity) {
+		return fromBukkitType(getCreatureType(entity));
 	}
 	
 	public static MobType getMob(String string) {
@@ -236,6 +246,28 @@ public enum MobType {
 		return yml.getStringList(node, null).toArray(new String[0]);
 	}
 	
+	private static CreatureType getCreatureType(LivingEntity entity) {
+		if(entity instanceof Pig) return CreatureType.PIG;
+		else if(entity instanceof Sheep) return CreatureType.SHEEP;
+		else if(entity instanceof Cow) return CreatureType.COW;
+		else if(entity instanceof Chicken) return CreatureType.CHICKEN;
+		else if(entity instanceof Creeper) return CreatureType.CREEPER;
+		else if(entity instanceof Wolf) return CreatureType.WOLF;
+		else if(entity instanceof Squid) return CreatureType.SQUID;
+		else if(entity instanceof Skeleton) return CreatureType.SKELETON;
+		else if(entity instanceof Slime) return CreatureType.SLIME;
+		else if(entity instanceof CaveSpider) return CreatureType.CAVE_SPIDER;
+		else if(entity instanceof Spider) return CreatureType.SPIDER;
+		else if(entity instanceof Ghast) return CreatureType.GHAST;
+		else if(entity instanceof Giant) return CreatureType.GIANT;
+		else if(entity instanceof PigZombie) return CreatureType.PIG_ZOMBIE;
+		else if(entity instanceof Zombie) return CreatureType.ZOMBIE;
+		else if(entity instanceof Enderman) return CreatureType.ENDERMAN;
+		else if(entity instanceof Silverfish) return CreatureType.SILVERFISH;
+		else if(entity instanceof Monster) return CreatureType.MONSTER;
+		return null;
+	}
+
 	public static List<MobType> byAlignment(MobAlignment align) {
 		List<MobType> list = new ArrayList<MobType>();
 		for(MobType mob : values()) {

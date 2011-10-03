@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.craftstars.general.General;
+import net.craftstars.general.mobs.MobType;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Option;
@@ -54,7 +55,7 @@ public class Target {
 			if(l.size() > 1)
 				title = LanguageText.TARGET_NEARBY.value();
 			else {
-				String entity = Toolbox.formatItemName(Toolbox.getCreatureType(l.get(0)).toString());
+				String entity = MobType.fromEntity(l.get(0)).getName();
 				if(entity.isEmpty()) entity = LanguageText.TARGET_MOB.value();
 				title = LanguageText.TARGET_ONE_MOB.value("mob", entity);
 			}
