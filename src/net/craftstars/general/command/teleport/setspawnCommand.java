@@ -37,7 +37,7 @@ public class setspawnCommand extends CommandBase {
 			params.put("world", ((Player) sender).getWorld());
 		break;
 		case 1: // /setspawn <destination>
-			dest = Destination.get(args[1], isPlayer ? (Player) sender : null);
+			dest = Destination.get(args[0], isPlayer ? (Player) sender : null);
 			if(dest == null) return null;
 			setSpawn(sender, dest, isPlayer ? ((Player) sender).getWorld() : null);
 		break;
