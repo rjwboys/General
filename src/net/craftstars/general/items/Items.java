@@ -29,6 +29,7 @@ public final class Items {
 	private static HashMap<String, ItemID> aliases;
 	private static HashMap<ItemID, String> names;
 	private static HashMap<String, ItemID> hooks;
+	private Items() {}
 	
 	public static void save() {
 		for(String alias : aliases.keySet()) {

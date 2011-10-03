@@ -43,7 +43,6 @@ public class General extends JavaPlugin {
 	public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG);
 	
 	public static Configuration config;
-	public static PermissionsHandler permissions;
 	public static GenericBank economy;
 	private AllPay allpay;
 	
@@ -132,8 +131,8 @@ public class General extends JavaPlugin {
 		
 		Items.setup();
 		MobType.setup();
-		permissions = new PermissionsHandler();
-		Kits.loadKits();
+		PermissionsHandler.setup();
+		Kits.load();
 		allpay = new AllPay(this, "General [" + codename + "] ");
 		economy = allpay.loadEconPlugin();
 	}

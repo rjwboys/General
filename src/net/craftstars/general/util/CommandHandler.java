@@ -29,6 +29,7 @@ public final class CommandHandler {
 	public static String[] compassAliases;
 	public static String[] posAliases;
 	public static HashMap<CommandEndPoint, String> cmdTags = null;
+	private CommandHandler() {}
 	
 	public static void setup(Configuration config) {
 		if(setAliases) return;

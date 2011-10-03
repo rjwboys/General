@@ -12,6 +12,7 @@ public final class Time {
 	public enum TimeFormat {
 		TWENTY_FOUR_HOUR, TWELVE_HOUR
 	};
+	private Time() {}
 	
 	public static String formatTime(long time) {
 		TimeFormat currentFormat = TimeFormat.TWELVE_HOUR;

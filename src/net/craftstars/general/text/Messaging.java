@@ -28,6 +28,7 @@ public final class Messaging {
 		"black", "navy", "green", "teal", "red", "purple", "gold", "silver",
 		"grey", "blue", "lime", "aqua", "rose", "pink", "yellow", "white", "gray"
 	};
+	private Messaging() {}
 	
 	public static void load() {
 		File dataFolder = General.plugin.getDataFolder();

@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,13 +38,16 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 
 public class PermissionsHandler extends WorldListener {
-	public PermissionsHandler() {
+	private static PermissionsHandler me = new PermissionsHandler();
+	private PermissionsHandler() {}
+	
+	public static void setup() {
 		// Here we set up the complicated container permissions
 		PermissionSet.init();
 		for(PermissionSet set : PermissionSet.values()) set.build();
 		PermissionSet.finish();
-		Bukkit.getPluginManager().registerEvent(Type.WORLD_LOAD, this, Priority.Monitor, General.plugin);
-		Bukkit.getPluginManager().registerEvent(Type.WORLD_UNLOAD, this, Priority.Monitor, General.plugin);
+		Bukkit.getPluginManager().registerEvent(Type.WORLD_LOAD, me, Priority.Monitor, General.plugin);
+		Bukkit.getPluginManager().registerEvent(Type.WORLD_UNLOAD, me, Priority.Monitor, General.plugin);
 	}
 	
 	public static void refreshItemGroups() {
@@ -338,7 +344,12 @@ public class PermissionsHandler extends WorldListener {
 			}
 		}
 		public static void finish() {
-			if(file != null) file.close();
+			if(file != null) {
+				List<Permission> ymlPerms = new ArrayList<Permission>(General.plugin.getDescription().getPermissions());
+				Collections.sort(ymlPerms, new PermissionsCompare());
+				for(Permission perm : ymlPerms) file.println(perm.getName());
+				file.close();
+			}
 		}
 		protected void register(String name) {
 			register(name, null, null, null);
@@ -378,6 +389,12 @@ public class PermissionsHandler extends WorldListener {
 			Permission perm = new Permission(name, desc, def, children);
 			Bukkit.getPluginManager().addPermission(perm);
 			if(file != null) file.println(name);
+		}
+	}
+	private static class PermissionsCompare implements Comparator<Permission> {
+		@Override
+		public int compare(Permission lhs, Permission rhs) {
+			return lhs.getName().compareTo(rhs.getName());
 		}
 	}
 }

@@ -17,6 +17,7 @@ import org.bukkit.plugin.Plugin;
 
 public final class HelpHandler {
 	public static boolean gotHelp;
+	private HelpHandler() {}
 	
 	public static void setup() {
 		Plugin test = General.plugin.getServer().getPluginManager().getPlugin("Help");

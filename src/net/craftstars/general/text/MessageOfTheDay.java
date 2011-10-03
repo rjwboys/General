@@ -19,6 +19,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
 public final class MessageOfTheDay {
+	private MessageOfTheDay() {}
+	
 	public static String parseMotD(CommandSender sender, String original) {
 		String displayName = getDisplayName(sender), name = getName(sender), location = getLocation(sender);
 		double health = getHealth(sender);

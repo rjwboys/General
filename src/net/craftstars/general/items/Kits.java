@@ -17,12 +17,13 @@ import net.craftstars.general.text.LanguageText;
 
 public final class Kits {
 	static HashMap<String, Kit> kits = new HashMap<String, Kit>();
+	private Kits() {}
 	
-	public static boolean loadKits() {
+	public static void load() {
 		kits.clear();
 		File folder = General.plugin.getDataFolder();
 		File kitsFile = new File(folder, "kits.yml");
-		if(!kitsFile.exists()) return !kits.isEmpty();
+		if(!kitsFile.exists()) return;
 		Configuration kitsYml = new Configuration(kitsFile);
 		kitsYml.load();
 		for(String key : kitsYml.getKeys()) {
@@ -73,7 +74,6 @@ public final class Kits {
 			}
 			kits.put(key, kit);
 		}
-		return true;
 	}
 
 	private static void warnMalformed(String kit, Object id) {
