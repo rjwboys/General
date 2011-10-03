@@ -13,7 +13,7 @@ public class BookWormData extends ItemData {
 	@Override
 	public boolean validate(ItemID id, Material check) {
 		Plugin bookworm = Bukkit.getPluginManager().getPlugin("BookWorm");
-		if(bookworm == null) return id.getData() == 0;
+		if(bookworm == null) return id.getData() == null || id.getData() == 0;
 		if(id.getData() == null) id.setData(0);
 		if(id.getData() > 0) {
 			File bookFile = new File(bookworm.getDataFolder(), id.getData() + ".txt");
