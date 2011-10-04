@@ -45,10 +45,10 @@ public class General extends JavaPlugin {
 			General.logger.warn(LanguageText.LOG_TWICE.value());
 			alreadyLoaded = true;
 		}
-		plugin = this;
 		logger.setPluginVersion(this.getDescription().getVersion());
 		loadAllConfigs();
 		logger.info("[Codename: " + General.codename + "] " + LanguageText.LOG_SUCCESS.value());
+		plugin = this;
 		if(alreadyLoaded) return;
 		CommandHandler.setup(config);
 		HelpHandler.setup();
@@ -66,8 +66,9 @@ public class General extends JavaPlugin {
 		
 		Items.setup();
 		MobType.setup();
-		PermissionsHandler.setup();
 		Kits.load();
+		if(plugin == null) PermissionsHandler.setup();
+		else PermissionsHandler.refreshItemGroups();
 		allpay = new AllPay(this, "General [" + codename + "] ");
 		economy = allpay.loadEconPlugin();
 		if(Option.NO_ECONOMY.get()) logger.info(LanguageText.LOG_NO_ECONOMY.value());
