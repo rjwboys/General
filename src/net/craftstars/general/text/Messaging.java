@@ -178,11 +178,13 @@ public final class Messaging {
 	}
 
 	public static void showCost(Player sender) {
+		if(Option.NO_ECONOMY.get()) return;
 		String cost = General.economy.getFormattedAmount(sender, AccountStatus.price, Option.ECONOMY_ITEM.get());
 		send(sender, LanguageText.ECONOMY_SHOW_COST.value("cost", cost));
 	}
 	
 	public static void showPayment(Player sender) {
+		if(Option.NO_ECONOMY.get()) return;
 		if(AccountStatus.price > 0) {
 			String cost = General.economy.getFormattedAmount(sender, AccountStatus.price, Option.ECONOMY_ITEM.get());
 			send(sender, LanguageText.ECONOMY_PAY.value("cost", cost));
@@ -190,6 +192,7 @@ public final class Messaging {
 	}
 
 	public static void earned(Player who, double revenue) {
+		if(Option.NO_ECONOMY.get()) return;
 		send(who, LanguageText.ECONOMY_EARN.value("income", revenue));
 	}
 }
