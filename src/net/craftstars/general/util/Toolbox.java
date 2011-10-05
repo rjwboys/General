@@ -2,14 +2,13 @@
 package net.craftstars.general.util;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 import net.craftstars.general.General;
-import net.craftstars.general.command.CommandBase;
-import net.craftstars.general.items.ItemID;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.MessageOfTheDay;
 import net.craftstars.general.text.Messaging;
@@ -21,13 +20,28 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.*;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.util.BlockIterator;
 
 public final class Toolbox {
-	private static Map<Permissible,Map<String,CooldownInfo>> cooldowns = new HashMap<Permissible,Map<String,CooldownInfo>>();
+	private static Map<Permissible,Map<String,CooldownInfo>> cooldowns;
+	private static EnumSet<Material> nonSolidBlocks;
+	
+	static {
+		cooldowns = new HashMap<Permissible,Map<String,CooldownInfo>>();
+		nonSolidBlocks = EnumSet.of(Material.AIR, Material.SAPLING, Material.WATER, Material.STATIONARY_WATER,
+			Material.LAVA, Material.STATIONARY_LAVA, Material.POWERED_RAIL, Material.DETECTOR_RAIL,
+			Material.WEB, Material.YELLOW_FLOWER, Material.RED_ROSE, Material.BROWN_MUSHROOM,
+			Material.RED_MUSHROOM, Material.FIRE, Material.REDSTONE_WIRE, Material.CROPS, Material.SIGN_POST,
+			Material.WOODEN_DOOR, Material.LADDER, Material.RAILS, Material.WALL_SIGN, Material.LEVER,
+			Material.STONE_PLATE, Material.IRON_DOOR_BLOCK, Material.WOOD_PLATE, Material.REDSTONE_TORCH_OFF,
+			Material.REDSTONE_TORCH_ON, Material.STONE_BUTTON, Material.SNOW, Material.SUGAR_CANE_BLOCK,
+			Material.PORTAL, Material.DIODE_BLOCK_ON, Material.DIODE_BLOCK_OFF, Material.TRAP_DOOR,
+			Material.PUMPKIN_STEM, Material.MELON_STEM, Material.VINE
+		);
+	}
+	
 	private Toolbox() {}
 	
 	public static Player matchPlayer(String pat) {
@@ -93,12 +107,11 @@ public final class Toolbox {
 	}
 	
 	public static String repeat(char c, int i) {
-		String tst = "";
+		StringBuilder tst = new StringBuilder();
 		for(int j = 0; j < i; j++) {
-			tst = tst + c;
+			tst.append(c);
 		}
-		
-		return tst;
+		return tst.toString();
 	}
 	
 	/**
@@ -129,47 +142,6 @@ public final class Toolbox {
 		}
 		
 		return newStr.trim();
-	}
-	
-	private static AccountStatus hasFunds(CommandSender sender, int quantity, String... permissions) {
-		if(sender.hasPermission("general.no-money") || sender instanceof ConsoleCommandSender)
-			return AccountStatus.BYPASS;
-		Player player = (Player) sender;
-		AccountStatus.price = 0;
-		for(String permission : permissions)
-			if(permission.startsWith("$"))
-				AccountStatus.price += Double.parseDouble(permission.substring(1));
-			else if(permission.startsWith("%"))
-				AccountStatus.price *= Double.parseDouble(permission.substring(1)) / 100.0;
-			else AccountStatus.price += Option.ECONOMY_COST(permission).get() * quantity;
-		if(CommandBase.isFrozen(player)) return AccountStatus.FROZEN;
-		if(General.economy.hasEnough(player, AccountStatus.price, Option.ECONOMY_ITEM.get()))
-			return AccountStatus.SUFFICIENT;
-		return AccountStatus.INSUFFICIENT;
-	}
-	
-	public static boolean canPay(CommandSender sender, int quantity, String... permissions) {
-		if(Option.NO_ECONOMY.get()) return true;
-		if(sender instanceof ConsoleCommandSender) return true;
-		if(!(sender instanceof Player)) return false;
-		Player player = (Player) sender;
-		// Don't want the price to change between checking for funds and removing them!
-		synchronized(AccountStatus.class) {
-			AccountStatus canPay = Toolbox.hasFunds(player, quantity, permissions);
-			switch(canPay) {
-			case BYPASS:
-				break;
-			case FROZEN:
-				Messaging.showCost(player);
-			case INSUFFICIENT:
-				Messaging.send(sender, LanguageText.ECONOMY_INSUFFICIENT);
-				return false;
-			case SUFFICIENT: // TODO: I think pay() prints its own message, so this may cause double messages
-				Messaging.showPayment(player);
-				General.economy.pay(player, AccountStatus.price, Option.ECONOMY_ITEM.get());
-			}
-			return true;
-		}
 	}
 	
 	public static String join(String[] args, String with, int startAt) {
@@ -230,44 +202,8 @@ public final class Toolbox {
 		if(block == null) return false;
 		Material mat = block.getType();
 		if(mat.getId() >= 256) return true; // should never happen, but just in case...
-		switch(mat) {
-		case AIR:
-		case SAPLING:
-		case WATER:
-		case STATIONARY_WATER:
-		case LAVA:
-		case STATIONARY_LAVA:
-		case POWERED_RAIL:
-		case DETECTOR_RAIL:
-		case WEB:
-		case YELLOW_FLOWER:
-		case RED_ROSE:
-		case BROWN_MUSHROOM:
-		case RED_MUSHROOM:
-		case FIRE:
-		case REDSTONE_WIRE:
-		case CROPS:
-		case SIGN_POST:
-		case WOODEN_DOOR:
-		case LADDER:
-		case RAILS:
-		case WALL_SIGN:
-		case LEVER:
-		case STONE_PLATE:
-		case IRON_DOOR_BLOCK:
-		case WOOD_PLATE:
-		case REDSTONE_TORCH_OFF:
-		case REDSTONE_TORCH_ON:
-		case STONE_BUTTON:
-		case SNOW:
-		case SUGAR_CANE_BLOCK:
-		case PORTAL:
-		case DIODE_BLOCK_ON:
-		case DIODE_BLOCK_OFF:
-			return false;
-		default:
-			return true;
-		}
+		if(nonSolidBlocks.contains(mat)) return false;
+		return true;
 	}
 
 	public static String formatLocation(Location loc) {
@@ -278,13 +214,6 @@ public final class Toolbox {
 	public static <T> T[] arrayCopy(T[] src, int srcPos, T[] dest, int destPos, int len) {
 		System.arraycopy(src, srcPos, dest, destPos, len);
 		return dest;
-	}
-
-	public static double sellItem(ItemID item, int amount) {
-		if(Option.NO_ECONOMY.get()) return 0;
-		String node = "economy.give.item" + item.toString();
-		double percent = Option.ECONOMY_SELL.get() / 100.0;
-		return Option.ECONOMY_COST(node).get() * amount * percent;
 	}
 	
 	public static void cooldown(Permissible sender, String cooldown, String instant, int delay) {
@@ -308,11 +237,6 @@ public final class Toolbox {
 		long elapsed = time - info.start;
 		long remaining = info.duration - elapsed;
 		return remaining / 50;
-	}
-
-	public static void giveMoney(Player who, double revenue) {
-		if(Option.NO_ECONOMY.get()) return;
-		General.economy.give(who, revenue, Option.ECONOMY_ITEM.get());
 	}
 	
 	private static class CooldownInfo {

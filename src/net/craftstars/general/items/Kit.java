@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
@@ -58,7 +59,7 @@ public class Kit implements Iterable<ItemID> {
 	}
 	
 	public boolean canAfford(CommandSender who) {
-		if(Toolbox.canPay(who, 1, cost)) return true;
+		if(EconomyManager.canPay(who, 1, cost)) return true;
 		return false;
 	}
 	

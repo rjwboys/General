@@ -37,9 +37,9 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 
-public class PermissionsHandler extends WorldListener {
-	private static PermissionsHandler me = new PermissionsHandler();
-	private PermissionsHandler() {}
+public class PermissionManager extends WorldListener {
+	private static PermissionManager me = new PermissionManager();
+	private PermissionManager() {}
 	
 	public static void setup() {
 		// Here we set up the complicated container permissions

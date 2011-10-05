@@ -11,6 +11,7 @@ import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
@@ -83,7 +84,7 @@ public class masstakeCommand extends CommandBase {
 				if(id.getId() == invenItems[j].getTypeId() && Items.dataEquiv(id, d)) {
 					int amount = i.getItem(j).getAmount();
 					removed += amount;
-					if(sell) revenue += Toolbox.sellItem(id, amount);
+					if(sell) revenue += EconomyManager.sellItem(id, amount);
 					i.setItem(j, null);
 				}
 		}
@@ -92,7 +93,7 @@ public class masstakeCommand extends CommandBase {
 		itemsText.append(Toolbox.join(display.toArray(new String[0]), LanguageText.ITEMS_JOINER.value()));
 		Messaging.send(who, LanguageText.MASSTAKE_TOOK.value("items", itemsText.toString(), "amount", removed));
 		if(sell) {
-			Toolbox.giveMoney(who, revenue);
+			EconomyManager.giveMoney(who, revenue);
 			Messaging.earned(who, revenue);
 		}
 		return removed;

@@ -14,6 +14,7 @@ import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
@@ -113,7 +114,7 @@ public class giveCommand extends CommandBase {
 		// Make sure this player is allowed this particular item
 		if(!item.canGive(sender)) return true;
 		// Make sure the player has enough money for this item
-		if(!Toolbox.canPay(sender, amount, "economy.give.item" + item.toString())) return true;
+		if(!EconomyManager.canPay(sender, amount, "economy.give.item" + item.toString())) return true;
 		
 		boolean isGift = !who.equals(sender);
 		doGive(who, item, amount, isGift);

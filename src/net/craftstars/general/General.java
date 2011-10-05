@@ -13,9 +13,10 @@ import net.craftstars.general.mobs.MobType;
 import net.craftstars.general.text.HelpHandler;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
-import net.craftstars.general.util.CommandHandler;
+import net.craftstars.general.util.CommandManager;
+import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Option;
-import net.craftstars.general.util.PermissionsHandler;
+import net.craftstars.general.util.PermissionManager;
 import net.craftstars.general.util.PluginLogger;
 
 import org.bukkit.event.Event.Priority;
@@ -24,19 +25,13 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
-import com.fernferret.allpay.AllPay;
-import com.fernferret.allpay.GenericBank;
-import com.fernferret.allpay.ItemBank;
-
 public class General extends JavaPlugin {
 	public static General plugin = null;
 	public static final boolean DEBUG = true;
 	public static final String codename = "Webern";
 	public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG);
 	private Configuration config;
-	public static GenericBank economy;
 	public static PlayerManager players = new PlayerManager();
-	private AllPay allpay;
 	
 	@Override
 	public void onEnable() {
@@ -50,11 +45,11 @@ public class General extends JavaPlugin {
 		loadAllConfigs();
 		logger.info("[Codename: " + General.codename + "] " + LanguageText.LOG_SUCCESS.value());
 		if(alreadyLoaded) {
-			PermissionsHandler.refreshItemGroups();
+			PermissionManager.refreshItemGroups();
 			return;
 		}
-		PermissionsHandler.setup();
-		CommandHandler.setup(config);
+		PermissionManager.setup();
+		CommandManager.setup(config);
 		HelpHandler.setup();
 		registerEvents();
 	}
@@ -71,11 +66,7 @@ public class General extends JavaPlugin {
 		Items.setup();
 		MobType.setup();
 		Kits.load();
-		allpay = new AllPay(this, "General [" + codename + "] ");
-		economy = allpay.loadEconPlugin();
-		if(Option.NO_ECONOMY.get()) logger.info(LanguageText.LOG_NO_ECONOMY.value());
-		else if(economy instanceof ItemBank && Option.ECONOMY_ITEM.get() <= 0)
-			logger.warn(LanguageText.LOG_MISSING_ECONOMY.value());
+		EconomyManager.setup();
 	}
 
 	private void registerEvents() {

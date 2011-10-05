@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.craftstars.general.General;
-import net.craftstars.general.util.AccountStatus;
+import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
@@ -179,14 +179,14 @@ public final class Messaging {
 
 	public static void showCost(Player sender) {
 		if(Option.NO_ECONOMY.get()) return;
-		String cost = General.economy.getFormattedAmount(sender, AccountStatus.price, Option.ECONOMY_ITEM.get());
+		String cost = EconomyManager.formatCost(sender, EconomyManager.getLastPrice());
 		send(sender, LanguageText.ECONOMY_SHOW_COST.value("cost", cost));
 	}
 	
 	public static void showPayment(Player sender) {
 		if(Option.NO_ECONOMY.get()) return;
-		if(AccountStatus.price > 0) {
-			String cost = General.economy.getFormattedAmount(sender, AccountStatus.price, Option.ECONOMY_ITEM.get());
+		if(EconomyManager.getLastPrice() > 0) {
+			String cost = EconomyManager.formatCost(sender, EconomyManager.getLastPrice());
 			send(sender, LanguageText.ECONOMY_PAY.value("cost", cost));
 		}
 	}

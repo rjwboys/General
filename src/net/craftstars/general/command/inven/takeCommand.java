@@ -10,6 +10,7 @@ import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
@@ -126,8 +127,8 @@ public class takeCommand extends CommandBase {
 		Messaging.send(who, LanguageText.TAKE_TOOK.value("item", item.getName(),
 			"amount", removed <= amount ? removed : 0));
 		if(sell) {
-			double revenue = Toolbox.sellItem(item, removed);
-			Toolbox.giveMoney(who, revenue);
+			double revenue = EconomyManager.sellItem(item, removed);
+			EconomyManager.giveMoney(who, revenue);
 			Messaging.earned(who, revenue);
 		}
 		return removed;

@@ -22,14 +22,14 @@ import org.bukkit.util.config.Configuration;
 import com.ensifera.animosity.craftirc.CraftIRC;
 import com.ensifera.animosity.craftirc.CommandEndPoint;
 
-public final class CommandHandler {
+public final class CommandManager {
 	public static boolean setAliases = false;
 	private static SimpleCommandMap commandMap = null;
 	private static Method register = null;
 	public static String[] compassAliases;
 	public static String[] posAliases;
 	public static HashMap<CommandEndPoint, String> cmdTags = null;
-	private CommandHandler() {}
+	private CommandManager() {}
 	
 	public static void setup(Configuration config) {
 		if(setAliases) return;

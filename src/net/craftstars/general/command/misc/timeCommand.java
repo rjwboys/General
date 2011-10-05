@@ -8,6 +8,7 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
@@ -104,31 +105,31 @@ public class timeCommand extends CommandBase {
 		LanguageText timeName;
 		int timeTicks;
 		if(timeStr.equalsIgnoreCase("day")) { // 6am
-			if(!Toolbox.canPay(sender, 1, "economy.time.day")) return true;
+			if(!EconomyManager.canPay(sender, 1, "economy.time.day")) return true;
 			timeName = LanguageText.TIME_DAY;
 			timeTicks = 0;
 		} else if(timeStr.equalsIgnoreCase("night")) { // 7:48pm
-			if(!Toolbox.canPay(sender, 1, "economy.time.night")) return true;
+			if(!EconomyManager.canPay(sender, 1, "economy.time.night")) return true;
 			timeName = LanguageText.TIME_NIGHT;
 			timeTicks = 13800;
 		} else if(Toolbox.equalsOne(timeStr, "dusk", "sunset", "evening")) { // 6pm
-			if(!Toolbox.canPay(sender, 1, "economy.time.dusk")) return true;
+			if(!EconomyManager.canPay(sender, 1, "economy.time.dusk")) return true;
 			timeName = LanguageText.TIME_DUSK;
 			timeTicks = 12000;
 		} else if(Toolbox.equalsOne(timeStr, "dawn", "sunrise", "morning")) { // 4:12am
-			if(!Toolbox.canPay(sender, 1, "economy.time.dawn")) return true;
+			if(!EconomyManager.canPay(sender, 1, "economy.time.dawn")) return true;
 			timeName = LanguageText.TIME_DAWN;
 			timeTicks = 22200;
 		} else if(Toolbox.equalsOne(timeStr, "midday", "noon")) { // 12am
-			if(!Toolbox.canPay(sender, 1, "economy.time.noon")) return true;
+			if(!EconomyManager.canPay(sender, 1, "economy.time.noon")) return true;
 			timeName = LanguageText.TIME_NOON;
 			timeTicks = 6000;
 		} else if(Toolbox.equalsOne(timeStr, "midnight")) { // 12pm
-			if(!Toolbox.canPay(sender, 1, "economy.time.midnight")) return true;
+			if(!EconomyManager.canPay(sender, 1, "economy.time.midnight")) return true;
 			timeName = LanguageText.TIME_WITCH;
 			timeTicks = 18000;
 		} else if(timeStr.startsWith("+")) {
-			if(!Toolbox.canPay(sender, 1, "economy.time.set")) return true;
+			if(!EconomyManager.canPay(sender, 1, "economy.time.set")) return true;
 			try {
 				long now = world.getTime();
 				long ticks = Time.extractDuration(timeStr.substring(1));
@@ -142,7 +143,7 @@ public class timeCommand extends CommandBase {
 			}
 			return true;
 		} else if(timeStr.startsWith("-")) {
-			if(!Toolbox.canPay(sender, 1, "economy.time.set")) return true;
+			if(!EconomyManager.canPay(sender, 1, "economy.time.set")) return true;
 			try {
 				long now = world.getTime();
 				long ticks = Time.extractDuration(timeStr.substring(1));
@@ -156,7 +157,7 @@ public class timeCommand extends CommandBase {
 			}
 			return true;
 		} else {
-			if(!Toolbox.canPay(sender, 1, "economy.time.set")) return true;
+			if(!EconomyManager.canPay(sender, 1, "economy.time.set")) return true;
 			if(timeStr.startsWith("=")) timeStr = timeStr.substring(1);
 			try {
 				long ticks = Time.extractTime(timeStr);

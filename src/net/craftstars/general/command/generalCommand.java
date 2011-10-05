@@ -27,8 +27,9 @@ import net.craftstars.general.text.HelpHandler;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.MessageOfTheDay;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Option;
-import net.craftstars.general.util.PermissionsHandler;
+import net.craftstars.general.util.PermissionManager;
 import net.craftstars.general.util.Toolbox;
 
 public class generalCommand extends CommandBase {
@@ -160,7 +161,7 @@ public class generalCommand extends CommandBase {
 
 	private void doReload(CommandSender sender) {
 		plugin.loadAllConfigs();
-		PermissionsHandler.refreshItemGroups();
+		PermissionManager.refreshItemGroups();
 		Messaging.send(sender, LanguageText.GENERAL_RELOAD);
 	}
 	
@@ -245,7 +246,7 @@ public class generalCommand extends CommandBase {
 			String displayCost = Double.toString(cost);
 			Player player = sender instanceof Player ? (Player)sender : null;
 			if(!Option.NO_ECONOMY.get())
-				displayCost = General.economy.getFormattedAmount(player, cost, Option.ECONOMY_ITEM.get());
+				displayCost = EconomyManager.formatCost(player, cost);
 			Messaging.send(sender, LanguageText.KIT_COST.value("kit", kitName, "cost", displayCost));
 			return true;
 		} else if(args[1].equalsIgnoreCase("trash")) {

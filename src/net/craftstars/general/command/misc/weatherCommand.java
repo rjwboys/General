@@ -19,6 +19,7 @@ import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
@@ -248,7 +249,7 @@ public class weatherCommand extends CommandBase {
 			return;
 		}
 		Toolbox.cooldown(sender, cooldownPerm, permission + ".instant", Option.COOLDOWN("thunder").get());
-		if(!Toolbox.canPay(sender, 1, "economy.weather.thunder")) return;
+		if(!EconomyManager.canPay(sender, 1, "economy.weather.thunder")) return;
 		boolean state = duration != 0;
 		boolean hasThunder = world.isThundering();
 		world.setThundering(state);
@@ -276,7 +277,7 @@ public class weatherCommand extends CommandBase {
 			return;
 		}
 		Toolbox.cooldown(sender, cooldownPerm, permission + ".instant", Option.COOLDOWN("storm").get());
-		if(!Toolbox.canPay(sender, 1, "economy.weather.storm")) return;
+		if(!EconomyManager.canPay(sender, 1, "economy.weather.storm")) return;
 		boolean state = duration != 0;
 		boolean hasStorm = world.hasStorm();
 		world.setStorm(state);
@@ -301,7 +302,7 @@ public class weatherCommand extends CommandBase {
 			return;
 		}
 		Toolbox.cooldown(sender, cooldownPerm, permission + ".instant", Option.COOLDOWN("lightning").get());
-		if(!Toolbox.canPay(sender, 1, "economy.weather.zap")) return;
+		if(!EconomyManager.canPay(sender, 1, "economy.weather.zap")) return;
 		else {
 			int x, y, z;
 			x = centre.getBlockX();

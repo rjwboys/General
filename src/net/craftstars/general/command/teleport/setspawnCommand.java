@@ -10,6 +10,7 @@ import net.craftstars.general.teleport.Destination;
 import net.craftstars.general.teleport.Target;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Toolbox;
 import net.minecraft.server.ChunkCoordinates;
 import net.minecraft.server.EntityPlayer;
@@ -110,7 +111,7 @@ public class setspawnCommand extends CommandBase {
 		String[] costs = dest.getCostClasses(setter, "economy.setspawn");
 		costs = Toolbox.arrayCopy(costs, 0, new String[costs.length+1], 1, costs.length);
 		costs[0] = targetCost;
-		if(!Toolbox.canPay(setter, 1, costs)) return true;
+		if(!EconomyManager.canPay(setter, 1, costs)) return true;
 		return false;
 	}
 	

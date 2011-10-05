@@ -15,6 +15,7 @@ import net.craftstars.general.General;
 import net.craftstars.general.teleport.*;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
@@ -59,7 +60,7 @@ public class goCommand extends CommandBase {
 				String[] costs = dest.getCostClasses(player, "general.teleport");
 				costs = Toolbox.arrayCopy(costs, 0, new String[costs.length+1], 1, costs.length);
 				costs[0] = target.getCostClass();
-				if(!Toolbox.canPay(sender, target.count(), costs)) return true;
+				if(!EconomyManager.canPay(sender, target.count(), costs)) return true;
 				Runnable teleport = new Runnable() {
 					@Override
 					public void run() {

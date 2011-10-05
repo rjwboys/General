@@ -8,6 +8,7 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
@@ -72,7 +73,7 @@ public class healCommand extends CommandBase {
 			health = -health;
 		} else if(!sender.hasPermission("general.heal"))
 			return Messaging.lacksPermission(sender, "general.heal");
-		if(!Toolbox.canPay(sender, 1, "economy." + command)) return true;
+		if(!EconomyManager.canPay(sender, 1, "economy." + command)) return true;
 		health = doHeal(who, health);
 		if(!sender.equals(who)) Messaging.send(sender, LanguageText.HEAL_THEM.value("name", who.getName(),
 			"health", health, "hurt", LanguageText.HEAL_HURT.value(), "healed", LanguageText.HEAL_HEALED.value()));

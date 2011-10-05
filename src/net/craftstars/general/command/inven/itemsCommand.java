@@ -15,6 +15,7 @@ import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Toolbox;
 
 public class itemsCommand extends CommandBase {
@@ -33,7 +34,7 @@ public class itemsCommand extends CommandBase {
 			ItemID what = Items.validate(item);
 			if(what == null || !what.isValid()) continue;
 			if(!what.canGive(sender)) continue;
-			if(!Toolbox.canPay(sender, 1, "economy.give.item" + item.toString())) continue;
+			if(!EconomyManager.canPay(sender, 1, "economy.give.item" + item.toString())) continue;
 			display.add(what.getName());
 			Items.giveItem(toWhom, what, 1);
 		}
