@@ -16,8 +16,8 @@
 /tphere $who = /teleport $who here
 /teleporthere $who = /teleport $who here
 # Variants of /getpos
-/compass [$who=player()] = /getpos $who dir
-/where [$who=player()] = /getpos $who brief
+/compass [$who=''] = /getpos if(equals($who, ''), player(), $who) dir
+/where [$who=''] = /getpos if(equals($who, ''), player(), $who) brief
 # Miscellaneous
 /motd = /general motd
 /creative = /gamemode creative
