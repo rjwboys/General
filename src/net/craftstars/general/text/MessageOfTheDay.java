@@ -139,7 +139,7 @@ public final class MessageOfTheDay {
 		Set<PermissionAttachmentInfo> perms = sender.getEffectivePermissions();
 		for(PermissionAttachmentInfo attachment : perms) {
 			String permission = attachment.getPermission();
-			if(permission.startsWith("general.motd.")) {
+			if(permission.startsWith("general.motd.") && attachment.getValue()) {
 				permission = permission.replace("general.motd.", "");
 				return permission + ".motd";
 			}
