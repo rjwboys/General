@@ -28,7 +28,7 @@ import org.bukkit.util.config.Configuration;
 public class General extends JavaPlugin {
 	public static General plugin = null;
 	public static final boolean DEBUG = true;
-	public static final String codename = "Webern";
+	public static final String codename = "Vivaldi";
 	public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG);
 	private Configuration config;
 	public static PlayerManager players = new PlayerManager();
