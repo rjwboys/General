@@ -188,7 +188,7 @@ permissions:
           general.teleport.all:
             description: Gives full access to the teleport command, including bypassing warm-up
             children:
-              general.teleport.instant: true # Defined dynamically
+              general.teleport: true # Defined dynamically
               general.teleport.mass:
                 description: Allows you to teleport several entities at a time.
           general.setspawn: true # Defined dynamically
