@@ -97,8 +97,8 @@ public class MappedMessageFormat extends Format {
 		return map;
 	}
 	
-	public static StringBuffer format(String format, Map<String,Object> args) {
-		return new MappedMessageFormat(format).format(args);
+	public static String format(String format, Map<String,Object> args) {
+		return new MappedMessageFormat(format).format(args).toString();
 	}
 	
 	// And now all the methods that defer directly to the internal MessageFormat object

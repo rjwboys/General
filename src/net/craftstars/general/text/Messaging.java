@@ -2,7 +2,6 @@
 package net.craftstars.general.text;
 
 import java.io.File;
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +48,7 @@ public final class Messaging {
 	}
 	
 	public static void send(CommandSender who, String string) {
-		String coloured = MessageFormat.format(string, colours);
+		String coloured = MappedMessageFormat.format(string, colours);
 		for(String line : splitLines(coloured).split("[\\n\\r][\\n\\r]?"))
 			who.sendMessage(line);
 	}
