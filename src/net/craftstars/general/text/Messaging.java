@@ -1,7 +1,9 @@
 
 package net.craftstars.general.text;
 
+import static java.lang.Math.max;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +18,7 @@ import net.craftstars.general.util.Toolbox;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.TextWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 
@@ -49,7 +52,7 @@ public final class Messaging {
 	
 	public static void send(CommandSender who, String string) {
 		String coloured = MappedMessageFormat.format(string, colours);
-		for(String line : splitLines(coloured).split("[\\n\\r][\\n\\r]?"))
+		for(String line : splitLines(coloured))
 			who.sendMessage(line);
 	}
 	
@@ -84,7 +87,7 @@ public final class Messaging {
 	}
 	
 	/**
-	 * Splits a message into lines of no more than 54 characters. Colour codes, as indicated by §[0-9a-f], are not
+	 * Splits a message into lines that will fit in the chat window. Colour codes, as indicated by §[0-9a-f], are not
 	 * counted in the line length. Make sure you pass through colourize() first to convert the colour codes to the §
 	 * syntax.
 	 * 
@@ -93,53 +96,38 @@ public final class Messaging {
 	 * 
 	 * @author Celtic Minstrel
 	 * @param original The string to split into lines.
-	 * @return The string with newlines inserted as required.
+	 * @return A list of the lines.
 	 */
-	public static String splitLines(String original) {
-		if(original.contains("\r") || original.contains("\n")) {
-			String[] lines = original.split("\n|\r|\n\r|\r\n");
-			String joined = "";
-			for(String line : lines)
-				joined += splitLines(line) + '\n';
-			return joined.substring(0, joined.length() - 2);
-		}
-		StringBuilder splitter = new StringBuilder(original);
-		int splitAt = 0;
-		int effectiveLen = 0;
-		char lastColourCode = ' ';
-		for(int i = 0; i < splitter.length(); i++) {
-			if(splitter.charAt(i) == '\u00A7') { // §
-				try {
-					char c = splitter.charAt(i + 1);
-					if( (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')) {
-						lastColourCode = c;
-						i++;
-						continue;
+	public static List<String> splitLines(String original) {
+		List<String> lines = new ArrayList<String>();
+		for(String line : original.split("[\\n\\r][\\n\\r]?")) {
+			while(!line.isEmpty()) {
+				String[] split = TextWrapper.wrapText(line);
+				if(split.length > 1) {
+					String quotient, remainder;
+					int i = split[0].lastIndexOf(' '), j = split[0].lastIndexOf('-');
+					if(i > -1 || j > -1) {
+						quotient = split[0].substring(0, max(i,j) + 1);
+						remainder = split[0].substring(max(i,j) + 1);
+						int c = split[0].lastIndexOf('\u00A7'); // §
+						if(c > -1) {
+							char clr = split[0].charAt(c + 1);
+							if(clr != 'f' && clr != 'F')
+								remainder = "\u00A7" + clr + remainder;
+						}
+					} else {
+						quotient = split[0];
+						remainder = Toolbox.join(split, "", 1);
 					}
-				} catch(IndexOutOfBoundsException x) {
-
+					line = remainder + line.replaceFirst(quotient, "");
+					lines.add(quotient);
+				} else if(split.length > 0) {
+					lines.add(split[0]);
+					line = "";
 				}
-			}
-			effectiveLen++;
-			char c = splitter.charAt(i);
-			if(c == ' ' || c == '-') splitAt = i;
-			if(effectiveLen > 60) {
-				if(splitAt == 0) splitAt = i; // as a last resort, just split at the limit
-				effectiveLen = i - splitAt;
-				String toAdd = "\n";
-				if(lastColourCode != ' ') {
-					toAdd += '\u00A7';
-					toAdd += lastColourCode;
-					i += 2;
-				}
-				splitter.insert(splitAt + 1, toAdd);
-				if(splitter.charAt(splitAt) == ' ')
-					splitter.deleteCharAt(splitAt);
-				else i++;
-				splitAt = 0;
 			}
 		}
-		return splitter.toString();
+		return lines;
 	}
 	
 	public static boolean invalidPlayer(CommandSender from, String name) {
