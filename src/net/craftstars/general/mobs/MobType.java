@@ -71,6 +71,7 @@ public enum MobType {
 		idToEnumMapping.clear();
 		namesToEnumMapping.clear();
 		for(MobType mob : values()) {
+			namesToEnumMapping.put(mob.name().toLowerCase(), mob);
 			@SuppressWarnings("unchecked")
 			List<Object> names = (List<Object>) yml.getProperty("mobs.mob" + mob.id);
 			if(names == null) continue;

@@ -1,11 +1,17 @@
 package net.craftstars.general.mobs;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.LivingEntity;
+import java.lang.reflect.Field;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.entity.CraftVillager;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Villager;
+
+import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Toolbox;
+import net.minecraft.server.EntityVillager;
 
 public class VillagerRole extends MobData {
 	enum Role {
@@ -21,6 +27,7 @@ public class VillagerRole extends MobData {
 	
 	VillagerRole() {
 		super(MobType.VILLAGER);
+		role = Role.FARMER;
 	}
 
 	@Override
@@ -34,7 +41,30 @@ public class VillagerRole extends MobData {
 	
 	@Override
 	public void setForMob(LivingEntity entity) {
-		//TODO
+		if(!(entity instanceof Villager)) return;
+		// Begin accessing Minecraft code
+		// TODO: Remove access of Minecraft code
+		CraftVillager testificate = (CraftVillager) entity;
+		EntityVillager who = testificate.getHandle();
+		try {
+			Field profession = EntityVillager.class.getDeclaredField("profession");
+			profession.setAccessible(true);
+			profession.set(who, role.ordinal());
+			General.logger.info("Set profession to " + profession.get(who));
+		} catch(SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(NoSuchFieldException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// End accessing Minecraft code
 	}
 	
 	@Override
