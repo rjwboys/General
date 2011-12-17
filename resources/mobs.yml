@@ -49,6 +49,24 @@ mobs:
    - Enderman: Endermen
   mob60:
    - Silverfish
+  mob61:
+   - Blaze: Blazes
+  mob63:
+   - Ender Dragon: Ender Dragons
+   - End Dragon: End Dragons
+  mob62:
+   - Magma Cube: Magma Cubes
+   - Lava Slime: Lava Slimes
+   - Lava Cube: Lava Cubes
+   - Magma Slime: Magma Slimes
+  mob96:
+   - Mushroom Cow: Mushroom Cows
+   - Mooshroom: Mooshrooms
+  mob97:
+   - Snowman: Snowmen
+   - Snow Golem: Snow Golems
+  mob120:
+   - Villager: Villagers
 
 data:
   mob90:
@@ -64,13 +82,14 @@ data:
   mob57:
     calm: [calm, passive]
     angry: [angry, mad, aggressive, hostile]
-  mob55: 
+  mob55: &slimesizes
     colossal: [colossal]
     huge: [huge]
     large: [large]
     medium: [medium]
     small: [small]
     tiny: [tiny]
+  mob62: *slimesizes
   mob95:
     wild: [wild, calm, passive, friendly, free]
     angry: [angry, mad, hostile, aggressive]

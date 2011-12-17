@@ -210,6 +210,19 @@ names:
   item107: Fence Gate
   item108: Brick Stairs
   item109: Stone Brick Stairs
+  item110: Mycelium
+  item111: Lily Pad
+  item112: Nether Brick
+  item113: Nether Brick Fence
+  item114: Nether Brick Stairs
+  item115: Nether Wart Block
+  item116: Enchantment Table
+  item117: Brewing Stand Block
+  item118: Cauldron Block
+  item119: End Portal
+  item120: End Portal Frame
+  item121: End Stone
+  item122: Dragon Egg
   item256: Iron Shovel
   item257: Iron Pickaxe
   item258: Iron Axe
@@ -343,8 +356,32 @@ names:
   item366: Cooked Chicken
   item367: Rotten Flesh
   item368: Ender Pearl
-  item2256: Gold Music Disc
-  item2257: Green Music Disc
+  item369: Blaze Rod
+  item370: Ghast Tear
+  item371: Gold Nugget
+  item372: Nether Wart
+  item373: Potion
+  item374: Glass Bottle
+  item375: Spider Eye
+  item376: Fermented Spider Eye
+  item377: Blaze Powder
+  item378: Magma Cream
+  item379: Brewing Stand
+  item380: Cauldron
+  item381: Ender Eye
+  item382: Glistering Melon
+  item383: Spawner Egg
+  item2256: 13 Disc
+  item2257: Cats Disc
+  item2258: Blocks Disc
+  item2259: Chirp Disc
+  item2260: Far Disc
+  item2261:	Mall Disc
+  item2262:	Mellohi Disc
+  item2263:	Stal Disc
+  item2264:	Strad Disc
+  item2265:	Ward Disc
+  item2266:	11 Disc
 
 variants:
   item6:
