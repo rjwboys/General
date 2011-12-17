@@ -31,7 +31,7 @@ public enum MobType {
 	ENDERMAN(EnderBlock.class, MobAlignment.NEUTRAL, CreatureType.ENDERMAN, 58),
 	GHAST(null, MobAlignment.ENEMY, CreatureType.GHAST, 56),
 	GIANT_ZOMBIE(null, MobAlignment.ENEMY, CreatureType.GIANT, 53),
-	MAGMA_CUBE(null, MobAlignment.ENEMY, CreatureType.MAGMA_CUBE, 62),
+	MAGMA_CUBE(SlimeSize.class, MobAlignment.ENEMY, CreatureType.MAGMA_CUBE, 62),
 	MUSHROOM_COW(null, MobAlignment.FRIENDLY, CreatureType.MUSHROOM_COW, 96),
 	PIG(PigState.class, MobAlignment.FRIENDLY, CreatureType.PIG, 90),
 	PIG_ZOMBIE(PigZombieAttitude.class, MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 57),
