@@ -222,11 +222,12 @@ public class weatherCommand extends CommandBase {
 			Messaging.send(sender, LanguageText.WEATHER_NETHER);
 			return;
 		}
+		// TODO: Probably no weather in The End!
 		String storm = Time.formatDuration(where.getWeatherDuration());
 		if(where.hasStorm()) Messaging.send(sender,
 			LanguageText.WEATHER_ACTIVE.value("world", where.getName(),	"duration", storm));
 		else Messaging.send(sender, LanguageText.WEATHER_INACTIVE.value("world", where.getName()));
-		if(where.getEnvironment() == Environment.SKYLANDS) return; // no thunder in sky
+		if(where.getEnvironment() == Environment.THE_END) return; // no thunder in sky
 		String thunder = Time.formatDuration(where.getThunderDuration());
 		if(where.isThundering()) Messaging.send(sender,
 			LanguageText.THUNDER_ACTIVE.value("world", where.getName(), "duration", thunder));
