@@ -22,21 +22,27 @@ import org.bukkit.entity.*;
 import org.bukkit.util.config.Configuration;
 
 public enum MobType {
+	BLAZE(null, MobAlignment.ENEMY, CreatureType.BLAZE, 61),
 	CAVE_SPIDER(null, MobAlignment.ENEMY, CreatureType.CAVE_SPIDER, 59),
 	CHICKEN(null, MobAlignment.FRIENDLY, CreatureType.CHICKEN, 93),
 	COW(null, MobAlignment.FRIENDLY, CreatureType.COW, 92),
 	CREEPER(CreeperState.class, MobAlignment.ENEMY, CreatureType.CREEPER, 50),
+	ENDER_DRAGON(null, MobAlignment.ENEMY, CreatureType.ENDER_DRAGON, 63),
 	ENDERMAN(EnderBlock.class, MobAlignment.NEUTRAL, CreatureType.ENDERMAN, 58),
 	GHAST(null, MobAlignment.ENEMY, CreatureType.GHAST, 56),
 	GIANT_ZOMBIE(null, MobAlignment.ENEMY, CreatureType.GIANT, 53),
+	MAGMA_CUBE(null, MobAlignment.ENEMY, CreatureType.MAGMA_CUBE, 62),
+	MUSHROOM_COW(null, MobAlignment.FRIENDLY, CreatureType.MUSHROOM_COW, 96),
 	PIG(PigState.class, MobAlignment.FRIENDLY, CreatureType.PIG, 90),
 	PIG_ZOMBIE(PigZombieAttitude.class, MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 57),
 	SHEEP(SheepState.class, MobAlignment.FRIENDLY, CreatureType.SHEEP, 91),
 	SILVERFISH(null, MobAlignment.ENEMY, CreatureType.SILVERFISH, 60),
 	SKELETON(null, MobAlignment.ENEMY, CreatureType.SKELETON, 51),
 	SLIME(SlimeSize.class, MobAlignment.ENEMY, CreatureType.SLIME, 55),
+	SNOWMAN(null, MobAlignment.FRIENDLY, CreatureType.SNOWMAN, 97),
 	SPIDER(null, MobAlignment.ENEMY, CreatureType.SPIDER, 52),
 	SQUID(null, MobAlignment.FRIENDLY, CreatureType.SQUID, 94),
+	VILLAGER(VillagerRole.class, MobAlignment.FRIENDLY, CreatureType.VILLAGER, 120),
 	WOLF(WolfAttitude.class, MobAlignment.NEUTRAL, CreatureType.WOLF, 95),
 	ZOMBIE(null, MobAlignment.ENEMY, CreatureType.ZOMBIE, 54);
 	private MobAlignment alignment;

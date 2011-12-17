@@ -315,6 +315,7 @@ public enum LanguageText {
 	LACK_MOBSPAWN_WOLF("permissions.mobspawn_wolf","spawn {attitude} wolves"),
 	LACK_MOBSPAWN_ENDERMAN("permissions.mobspawn_enderman","spawn endermen carrying {block}"),
 	LACK_MOBSPAWN_MOB("permissions.mobspawn_mob", "spawn {mobs}"),
+	LACK_MOBSPAWN_VILLAGER("permissions.mobspawn_villager", "spawn {role} villagers"),
 	LACK_TIME_VIEW("permissions.time","see the time"),
 	LACK_TIME_SET("permissions.time_set","set the time"),
 	LACK_WEATHER_VIEW("permissions.weather","see the weather report"),
