@@ -3,7 +3,7 @@ package net.craftstars.general.items;
 import org.bukkit.Material;
 import org.bukkit.material.Step;
 
-final class StepData extends ItemData {
+public class StepData extends ItemData {
 	@Override
 	public boolean validate(ItemID id, Material check) {
 		if(id.getData() == null) return true;

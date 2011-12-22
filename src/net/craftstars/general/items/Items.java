@@ -268,6 +268,11 @@ public final class Items {
 		if(names.containsKey(shortKey)) {
 			return names.get(shortKey);
 		}
+
+		Material material = Material.getMaterial(longKey.getId());
+		ItemData data = ItemData.getData(material);
+		String dataName = data.getName(longKey.getData());
+		if(!data.equals("0")) return dataName;
 		
 		for(Material item : Material.values()) {
 			if(item.getId() == longKey.getId()) {
@@ -525,5 +530,9 @@ public final class Items {
 		ItemID thisItem = validate(item);
 		if(thisItem.isValid()) group.remove(thisItem.getId());
 		Option.GROUP(groupName).set(group);
+	}
+
+	public static List<String> getPotions(String key) {
+		return config.getStringList("variants." + key, null);
 	}
 }

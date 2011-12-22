@@ -14,6 +14,7 @@ public abstract class ItemData {
 	public final static ItemData BOOK = new BookWormData();
 	public final static ItemData SHRUB = new LongGrassData();
 	public final static ItemData MUSHROOM = new BigShroomData();
+	public final static ItemData POTION = new PotionData();
 	public abstract boolean validate(ItemID id, Material check);
 	
 	public static ItemData getData(Material data) {
@@ -36,6 +37,8 @@ public abstract class ItemData {
 			return SPAWNER;
 		case MAP:
 			return MAP;
+		case POTION:
+			return POTION;
 		case BOOK: // BookWorm support
 			return BOOK;
 		case SMOOTH_BRICK:
