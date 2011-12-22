@@ -3,7 +3,7 @@ main: net.craftstars.general.General
 authors:
   - Celtic Minstrel
   - Plutonium239
-version: 4.0.1
+version: 4.0.2
 softdepend:
   - BOSEconomy
   - iConomy
