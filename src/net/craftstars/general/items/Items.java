@@ -269,10 +269,10 @@ public final class Items {
 			return names.get(shortKey);
 		}
 
-		Material material = Material.getMaterial(longKey.getId());
-		ItemData data = ItemData.getData(material);
-		String dataName = data.getName(longKey.getData());
-		if(!data.equals("0")) return Toolbox.formatItemName(dataName);
+		//Material material = Material.getMaterial(longKey.getId());
+		//ItemData data = ItemData.getData(material);
+		//String dataName = data.getName(longKey.getData());
+		//if(!data.equals("0")) return Toolbox.formatItemName(dataName);
 		
 		for(Material item : Material.values()) {
 			if(item.getId() == longKey.getId()) {
