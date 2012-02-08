@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.craftstars.general.util.Toolbox;
+
 /**
  * This class provides formatting similar to that of MessageFormat, with the following two differences:
  * <ul>
@@ -34,6 +36,10 @@ public class MappedMessageFormat extends Format {
 	private static final long serialVersionUID = 8986672595156092199L;
 	private MessageFormat format;
 	private LinkedHashSet<String> keys;
+	
+	MessageFormat getInternal() {
+		return format;
+	}
 	
 	public MappedMessageFormat(String pattern) {
 		this(pattern, Locale.getDefault());
@@ -51,26 +57,34 @@ public class MappedMessageFormat extends Format {
 	private String namedToIndexed(String pattern) {
 		keys = new LinkedHashSet<String>();
 		Pattern regex = Pattern.compile("\\{([a-zA-Z][a-zA-Z0-9-]*)[,\\}]");
-		Matcher mat = regex.matcher(pattern);
-		while(mat.find()) keys.add(mat.group(1));
+		String[] split = pattern.split("`",pattern.length());
+		for(int i = 0; i < split.length; i += 2) {
+			Matcher mat = regex.matcher(split[i]);
+			while(mat.find()) keys.add(mat.group(1));
+		}
 		String[] keyArray = keys.toArray(new String[0]);
-		for(int i = 0; i < keyArray.length; i++)
-			pattern = pattern.replaceAll("\\{" + keyArray[i] + "([,\\}])", "\\{" + i + "$1");
-		// To make things easier, we use ` instead of ' for the escape character; thus we need to
-		// convert escapes and apostrophes.
-		pattern = pattern.replace("'", "{" + keys.size() + "}").replace('`', '\'');
-		return pattern;
+		String apostrophe = "{" + keys.size() + "}";
+		for(int i = 0; i < split.length; i++) {
+			if(i % 2 == 0) {
+				for(int j = 0; j < keyArray.length; j++)
+					split[i] = split[i].replaceAll("\\{" + keyArray[j] + "([,\\}])", "\\{" + j + "$1");
+				split[i] = split[i].replace("'", apostrophe);
+			} else split[i] = split[i].replace("'", "'" + apostrophe + "'");
+		}
+		return Toolbox.join(split, "'");
 	}
 	
 	private String indexedToNamed(String pattern) {
 		String[] keyArray = keys.toArray(new String[0]);
-		for(int i = 0; i < keyArray.length; i++)
-			pattern = pattern.replace("{" + i, "{" + keyArray[i]);
-		// To make things easier, we use ` instead of ' for the escape character; thus we need to
-		// convert escapes and apostrophes.
-		String apostrophe = "{" + keys.size() + "}";
-		pattern = pattern.replace('\'', '`').replace(apostrophe, "'");
-		return pattern;
+		String[] split = pattern.split("'",pattern.length());
+		for(int i = 0; i < split.length; i++) {
+			if(i % 2 == 0) {
+				for(int j = 0; j < keyArray.length; j++)
+					split[i] = split[i].replace("{" + j, "{" + keyArray[j]);
+				split[i] = split[i].replace("{" + keys.size() + "}", "'");
+			} else split[i] = split[i].replace("'{" + keys.size() + "}'", "'");
+		}
+		return Toolbox.join(split, "`");
 	}
 	
 	public StringBuffer format(Map<String,Object> formatKeys) {
@@ -87,6 +101,7 @@ public class MappedMessageFormat extends Format {
 	
 	public Map<String, Object> parse(String source, ParsePosition pos) {
 		Object[] results = format.parse(source, pos);
+		if(results == null) return null;
 		Map<String, Object> map = new LinkedHashMap<String,Object>();
 		int i = 0;
 		for(String key : keys) {
@@ -129,7 +144,7 @@ public class MappedMessageFormat extends Format {
 		Object[] values = new Object[keyArray.length+1];
 		for(int i = 0; i < keyArray.length; i++)
 			values[i] = (formatKeys.containsKey(keyArray[i]) ? formatKeys.get(keyArray[i]) : defaultVal);
-		values[keyArray.length] = "''";
+		values[keyArray.length] = "'";
 		return format.format(values, dest, pos);
 	}
 	
@@ -188,7 +203,7 @@ public class MappedMessageFormat extends Format {
 		format.setLocale(locale);
 	}
 	
-	String toPattern() {
+	public String toPattern() {
 		String pattern = format.toPattern();
 		return indexedToNamed(pattern);
 	}
