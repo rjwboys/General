@@ -8,7 +8,7 @@
 	<property name="classes" location="${target}/classes"/>
 	<property name="artifacts" location="${target}/artifacts"/>
 	<property name="dist" location="${target}/dist"/>
-	<property name="deploy" location="../../plugins"/>
+	<property name="reports" location="junit"/>
 	
 	<taskdef resource="checkstyletask.properties" classpath="${lib}/checkstyle-5.3-all.jar"/>
 	<property name="CraftBukkit"  value="craftbukkit.jar"/>
@@ -114,7 +114,7 @@
 		<delete dir="${classes}"/>
 	</target>
 	
-	<target name="dist" depends="clean,build">
+	<target name="dist" depends="clean,junit,build">
 		<property name="zip" value="${dist}/zip.tmp"/>
 		<mkdir dir="${dist}"/>
 		<mkdir dir="${zip}"/>
@@ -128,7 +128,25 @@
 		<delete dir="${zip}"/>
 	</target>
 	
-	<target name="test" depends="build">
+	<target name="junit" depends="build">
+		<delete dir="${reports}"/>
+		<mkdir dir="${reports}"/>
+		<junit printsummary="yes" haltonfailure="yes" showoutput="yes"> 
+		        <classpath> 
+		            <pathelement path="${build}"/> 
+		        	<pathelement path="/usr/share/java/junit.jar"/>
+		        </classpath>                   
+
+		        <batchtest fork="no" todir="${reports}"> 
+		                <formatter type="xml"/> 
+		                <fileset dir="${src}"> 
+		                        <include name="**/*Test.java"/> 
+		                </fileset> 
+		        </batchtest> 
+		</junit>
+	</target>
+	
+	<target name="test" depends="build" if="deploy">
 		<copy file="${artifacts}/${ant.project.name}.jar" tofile="${deploy}/${ant.project.name}.jar"/>
 	</target>
 	
