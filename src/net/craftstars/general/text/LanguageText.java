@@ -109,6 +109,7 @@ public enum LanguageText {
 	// Messages relating to /masstake
 	MASSTAKE_THEFT("take.mass.theft", "{green}Took {white}{amount}{green} of {white}{items}{green} from " +
 		"{white}{player}{green}."),
+	MASSTAKE_SKIPPED("take.mass.skipped", "{red}Skipped the following unrecognized items: {white}{items}"),
 	MASSTAKE_TOOK("take.mass.took", "{white}{amount,choice,0#All|1#{amount}}{green} of {white}{items}{green} " +
 		"was taken from you."),
 	// Messages relating to /heal

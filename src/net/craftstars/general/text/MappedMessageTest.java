@@ -13,7 +13,6 @@ import java.text.Format;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

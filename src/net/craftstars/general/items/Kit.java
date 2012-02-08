@@ -14,8 +14,8 @@ import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
-public class Kit implements Iterable<ItemID> {
-	private Map<ItemID, Integer> items;
+public class Kit implements Iterable<Item> {
+	private Map<Item, Integer> items;
 	public int delay;
 	private double savedCost;
 	private String[] cost;
@@ -24,7 +24,7 @@ public class Kit implements Iterable<ItemID> {
 	@SuppressWarnings("hiding")
 	public Kit(String name, int delay, double cost) {
 		this.name = name;
-		this.items = new LinkedHashMap<ItemID, Integer>();
+		this.items = new LinkedHashMap<Item, Integer>();
 		this.delay = delay;
 		this.savedCost = cost;
 		calculateCost();
@@ -69,7 +69,7 @@ public class Kit implements Iterable<ItemID> {
 		if(Toolbox.equalsOne(method, "cumulative", "discount")) {
 			// Linked-list for constant-time add
 			LinkedList<String> econNodes = new LinkedList<String>();
-			for(ItemID item : items.keySet()) {
+			for(Item item : items.keySet()) {
 				int quantity = items.get(item);
 				while(quantity-- > 0) econNodes.add("general.economy.give.item" + item.toString());
 			}
@@ -93,11 +93,11 @@ public class Kit implements Iterable<ItemID> {
 	}
 
 	@Override
-	public Iterator<ItemID> iterator() {
+	public Iterator<Item> iterator() {
 		return items.keySet().iterator();
 	}
 
-	public void add(ItemID item, int amount) {
+	public void add(Item item, int amount) {
 		int current = 0;
 		if(items.containsKey(item)) current = items.get(item);
 		amount += current;
@@ -105,11 +105,11 @@ public class Kit implements Iterable<ItemID> {
 		else items.put(item, amount);
 	}
 
-	public int get(ItemID item) {
+	public int get(Item item) {
 		return items.get(item);
 	}
 
-	public boolean contains(ItemID item) {
+	public boolean contains(Item item) {
 		return items.containsKey(item);
 	}
 }

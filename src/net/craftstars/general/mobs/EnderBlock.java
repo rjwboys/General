@@ -9,8 +9,7 @@ import org.bukkit.entity.Enderman;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.material.MaterialData;
 
-import net.craftstars.general.items.ItemID;
-import net.craftstars.general.items.Items;
+import net.craftstars.general.items.Item;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Toolbox;
@@ -25,8 +24,8 @@ public class EnderBlock extends MobData {
 		}
 	}
 	private Material block;
-	private int data;
-	private ItemID id;
+	private long data;
+	private Item id;
 	
 	public EnderBlock() {
 		super(MobType.ENDERMAN);
@@ -50,18 +49,15 @@ public class EnderBlock extends MobData {
 		if(Toolbox.equalsOne(carry, MobType.ENDERMAN.getDataList("empty"))) {
 			block = null;
 			data = 0;
-			id = new ItemID(0,0);
+			id = Item.create();
 			return;
 		}
-		ItemID item = Items.validate(carry);
+		Item item = Item.find(carry);
 		if(item == null) invalidate();
-		else if(!item.isValid()) invalidate();
 		else if(!item.getMaterial().isBlock()) invalidate();
 		else {
 			block = item.getMaterial();
-			if(item.getData() != null)
-				data = item.getData();
-			else data = 0;
+			data = item.getData();
 		}
 		id = item;
 	}

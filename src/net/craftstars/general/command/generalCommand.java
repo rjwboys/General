@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
-import net.craftstars.general.items.ItemID;
+import net.craftstars.general.items.Item;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.items.Kit;
 import net.craftstars.general.items.Kits;
@@ -191,7 +191,7 @@ public class generalCommand extends CommandBase {
 				if(args.length < 3) return true;
 			}
 			if(args.length < 3) return false;
-			ItemID item = Items.validate(args[2]);
+			Item item = Item.find(args[2]);
 			int amount = 1;
 			if(args.length >= 4) try {
 				amount = Integer.parseInt(args[3]);
@@ -205,7 +205,7 @@ public class generalCommand extends CommandBase {
 		} else if(args[1].equalsIgnoreCase("remove")) {
 			Kit kit = Kits.get(kitName);
 			if(args.length < 3) return false;
-			ItemID item = Items.validate(args[2]);
+			Item item = Item.find(args[2]);
 			if(!kit.contains(item)) {
 				Messaging.send(sender, LanguageText.KIT_NOT_IN.value("kit", kitName, "item", item.getName()));
 				return true;
@@ -256,7 +256,7 @@ public class generalCommand extends CommandBase {
 		} else if(args[1].equalsIgnoreCase("list")) {
 			Kit kit = Kits.get(kitName);
 			ArrayList<String> names = new ArrayList<String>();
-			for(ItemID item : kit) names.add(kit.get(item) + "x " + item.getName());
+			for(Item item : kit) names.add(kit.get(item) + "x " + item.getName());
 			String items = Toolbox.join(names.toArray(new String[0]), LanguageText.ITEMS_JOINER.value());
 			Messaging.send(sender, LanguageText.KIT_CONTAINS.value("kit", kitName, "items", items));
 			Messaging.send(sender, LanguageText.KIT_INFO.value("kit",kitName,"delay",kit.delay,"cost",kit.getCost()));
@@ -444,7 +444,7 @@ public class generalCommand extends CommandBase {
 					Messaging.send(sender, "{rose}Which item?");
 					return true;
 				} else {
-					ItemID item = Items.validate(args[1]);
+					Item item = Item.find(args[1]);
 					if(!item.isValid()) {
 						Messaging.send(sender, "{rose}Invalid item.");
 						return true;
@@ -703,20 +703,20 @@ public class generalCommand extends CommandBase {
 				}
 				return true;
 			case 3:
-				ItemID id = Items.validate(args[2]);
+				Item id = Item.find(args[2]);
 				Items.addAlias(args[1], id);
 				Messaging.send(sender, LanguageText.ADMIN_ITEM_ALIAS_ADD.value("alias", args[1], "item", id.toString()));
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("variant")) {
-			ItemID id = Items.validate(args[1]);
+			Item id = Item.find(args[1]);
 			if(id == null) {
 				Messaging.send(sender, LanguageText.ADMIN_ITEM_BAD);
 				return true;
 			}
 			switch(args.length) {
 			case 2:
-				Messaging.send(sender, LanguageText.ADMIN_ITEM_VARIANT_SHOW.value("item", id.toString(), "variants", Items.variantNames(id).toString()));
+				Messaging.send(sender, LanguageText.ADMIN_ITEM_VARIANT_SHOW.value("item", id.toString(), "variants", Items.getVariantNames(id).toString()));
 				return true;
 			case 3:
 				switch(args[2].charAt(0)) {
@@ -734,14 +734,14 @@ public class generalCommand extends CommandBase {
 					Items.setVariantNames(id, Arrays.asList(args[2].substring(1).split(",")));
 				break;
 				}
-				Messaging.send(sender, LanguageText.ADMIN_ITEM_VARIANT_CHANGE.value("item", id.toString(), "variants", Items.variantNames(id).toString()));
+				Messaging.send(sender, LanguageText.ADMIN_ITEM_VARIANT_CHANGE.value("item", id.toString(), "variants", Items.getVariantNames(id).toString()));
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("name")) {
-			ItemID id = Items.validate(args[1]);
+			Item id = Item.find(args[1]);
 			switch(args.length) {
 			case 2:
-				String name = Items.name(id);
+				String name = id.getName();
 				Messaging.send(sender, LanguageText.ADMIN_ITEM_NAME_SHOW.value("item", id.toString(), "name", name));
 				return true;
 			case 3:
@@ -749,30 +749,18 @@ public class generalCommand extends CommandBase {
 				Messaging.send(sender, LanguageText.ADMIN_ITEM_NAME_CHANGE.value("item", id.toString(), "name", args[2].replace("_", " ")));
 				return true;
 			}
-		} else if(args[0].equalsIgnoreCase("hook")) {
-			String hook[] = args[1].split("[:/,.|]");
-			switch(args.length) {
-			case 2:
-				Messaging.send(sender, LanguageText.ADMIN_ITEM_HOOK_SHOW.value("hook", hook[0] + "/" + hook[1], "item", Items.getHook(hook[0], hook[1]).toString()));
-				return true;
-			case 3:
-				ItemID id = Items.validate(args[2]);
-				Items.setHook(hook[0], hook[1], id);
-				Messaging.send(sender, LanguageText.ADMIN_ITEM_HOOK_SHOW.value("hook", hook[0] + "/" + hook[1], "item", id.toString()));
-				return true;
-			}
 		} else if(args[0].equalsIgnoreCase("group")) {
 			String groupName = args[1];
 			//List<Integer> group = plugin.config.getIntList("give.groups." + groupName, null);
 			switch(args.length) {
 			case 2:
-				List<Integer> group = Items.groupItems(groupName);
+				List<Integer> group = Items.getGroupItems(groupName);
 				if(group.isEmpty())
 					Messaging.send(sender, LanguageText.ADMIN_ITEM_GROUP_EMPTY.value("group", groupName));
 				else {
 					StringBuilder items = new StringBuilder();
 					for(int id : group) {
-						items.append(Items.name(new ItemID(id)));
+						items.append(Item.getName(id));
 						items.append(", ");
 					}
 					int lastComma = items.lastIndexOf(", ");
@@ -803,7 +791,7 @@ public class generalCommand extends CommandBase {
 					Items.setGroupItems(groupName, Arrays.asList(args[2].substring(1).split(",")));
 				break;
 				}
-				Messaging.send(sender, LanguageText.ADMIN_ITEM_GROUP_CHANGE.value("group", groupName, "items", Items.groupItems(groupName).toString()));
+				Messaging.send(sender, LanguageText.ADMIN_ITEM_GROUP_CHANGE.value("group", groupName, "items", Items.getGroupItems(groupName).toString()));
 				return true;
 			}
 		}

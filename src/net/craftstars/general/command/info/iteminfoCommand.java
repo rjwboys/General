@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
-import net.craftstars.general.items.Items;
+import net.craftstars.general.items.Item;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Toolbox;
@@ -83,8 +83,8 @@ public class iteminfoCommand extends CommandBase {
 		if(!sender.hasPermission(permission))
 			return Messaging.lacksPermission(sender, permission);
 		ItemStack item = (ItemStack)args.get("item");
-		Messaging.send(sender, LanguageText.ITEMINFO_INFO.value("item", Items.name(item.getType()),
-			"data", item.getDurability(), "amount", item.getAmount(), "name", Items.name(item)));
+		Messaging.send(sender, LanguageText.ITEMINFO_INFO.value("item", Item.getName(item.getType()),
+			"data", item.getDurability(), "amount", item.getAmount(), "name", Item.getName(item)));
 		return true;
 	}
 	

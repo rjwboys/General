@@ -6,8 +6,7 @@ import java.util.Map;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
-import net.craftstars.general.items.ItemID;
-import net.craftstars.general.items.Items;
+import net.craftstars.general.items.Item;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.EconomyManager;
@@ -29,16 +28,16 @@ public class takeCommand extends CommandBase {
 	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		Player who = null;
-		ItemID item = null;
+		Item item = null;
 		int amount = 0;
 		switch(args.length) {
 		case 1: // /take <item>[:<data>]
 			if(!isPlayer) return null;
 			who = (Player) sender;
-			item = Items.validate(args[0]);
+			item = Item.find(args[0]);
 		break;
 		case 2: // /take <item>[:<data>] <amount> OR /take <item>[:<data>] <player>
-			item = Items.validate(args[0]);
+			item = Item.find(args[0]);
 			who = Toolbox.matchPlayer(args[1]);
 			if(isPlayer) try {
 				amount = Integer.valueOf(args[1]);
@@ -57,7 +56,7 @@ public class takeCommand extends CommandBase {
 				Messaging.invalidPlayer(sender, args[2]);
 				return null;
 			}
-			item = Items.validate(args[0]);
+			item = Item.find(args[0]);
 			try {
 				amount = Integer.valueOf(args[1]);
 			} catch(NumberFormatException x) {
@@ -69,15 +68,6 @@ public class takeCommand extends CommandBase {
 			return null;
 		}
 		
-		if(item == null || !item.isIdValid()) {
-			Messaging.send(sender, LanguageText.GIVE_BAD_ID);
-			return null;
-		}
-		
-		if(!item.isDataValid()) {
-			Messaging.send(sender, LanguageText.GIVE_BAD_DATA.value("data", item.getVariant(), "item", item.getName()));
-			return null;
-		}
 		// Fill in params and go!
 		params.put("player", who);
 		params.put("item", item);
@@ -90,7 +80,7 @@ public class takeCommand extends CommandBase {
 		if(!sender.hasPermission("general.take"))
 			return Messaging.lacksPermission(sender, "general.take");
 		Player who = (Player) args.get("player");
-		ItemID item = (ItemID) args.get("item");
+		Item item = (Item)args.get("item");
 		int amount = (Integer) args.get("amount");
 		boolean sell = who.equals(sender);
 		if(!sell && !sender.hasPermission("general.take.other"))
@@ -103,16 +93,15 @@ public class takeCommand extends CommandBase {
 		return true;
 	}
 	
-	private int doTake(Player who, ItemID item, int amount, boolean sell) {
+	private int doTake(Player who, Item item, int amount, boolean sell) {
 		int removed = 0;
 		PlayerInventory i = who.getInventory();
 		Map<Integer, ? extends ItemStack> items = i.all(item.getId());
 		for(int x : items.keySet()) {
 			ItemStack stk = items.get(x);
-			int n, d;
+			int n;
 			n = stk.getAmount();
-			d = stk.getDurability();
-			if(!Items.dataEquiv(item, d)) continue;
+			if(!item.matches(stk)) continue;
 			if(amount > 0 && n > amount) {
 				stk.setAmount(n - amount);
 				removed += amount;

@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
-import net.craftstars.general.items.ItemID;
+import net.craftstars.general.items.Item;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
@@ -31,8 +31,7 @@ public class itemsCommand extends CommandBase {
 		String[] items = (String[]) args.get("items");
 		ArrayList<String> display = new ArrayList<String>();
 		for(String item : items) {
-			ItemID what = Items.validate(item);
-			if(what == null || !what.isValid()) continue;
+			Item what = Item.find(item);
 			if(!what.canGive(sender)) continue;
 			if(!EconomyManager.canPay(sender, 1, "economy.give.item" + item.toString())) continue;
 			display.add(what.getName());

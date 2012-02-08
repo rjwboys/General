@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.craftstars.general.command.CommandBase;
-import net.craftstars.general.items.ItemID;
+import net.craftstars.general.items.Item;
 import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
@@ -122,23 +122,23 @@ public class clearCommand extends CommandBase {
 		case FULL:
 		case EXCEPTARMOUR:
 			if(sell) for(ItemStack item : i.getContents())
-				if(item != null) revenue += EconomyManager.sellItem(new ItemID(item), item.getAmount());
+				if(item != null) revenue += EconomyManager.sellItem(Item.create(item), item.getAmount());
 			i.clear();
 			if(howMuch == CleanType.EXCEPTARMOUR) break;
 			// Case fallthrough intentional
 		case ARMOUR:
 			if(sell) for(ItemStack item : i.getArmorContents())
-				if(item != null) revenue += EconomyManager.sellItem(new ItemID(item), item.getAmount());
+				if(item != null) revenue += EconomyManager.sellItem(Item.create(item), item.getAmount());
 			clearArmour(i);
 		break;
 		case QUICKBAR:
 			if(sell) for(int j = 0; j < 9; j++)
-				if(i.getItem(j) != null) revenue += EconomyManager.sellItem(new ItemID(i.getItem(j)), i.getItem(j).getAmount());
+				if(i.getItem(j) != null) revenue += EconomyManager.sellItem(Item.create(i.getItem(j)), i.getItem(j).getAmount());
 			clearQuickbar(i);
 		break;
 		case PACK:
 			if(sell) for(int j = 9; j < i.getSize(); j++)
-				if(i.getItem(j) != null) revenue += EconomyManager.sellItem(new ItemID(i.getItem(j)), i.getItem(j).getAmount());
+				if(i.getItem(j) != null) revenue += EconomyManager.sellItem(Item.create(i.getItem(j)), i.getItem(j).getAmount());
 			clearPack(i);
 		break;
 		}

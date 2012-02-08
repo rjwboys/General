@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
-import net.craftstars.general.items.ItemID;
+import net.craftstars.general.items.Item;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 
@@ -72,7 +72,7 @@ public class EconomyManager {
 		}
 	}
 
-	public static double sellItem(ItemID item, int amount) {
+	public static double sellItem(Item item, int amount) {
 		if(Option.NO_ECONOMY.get()) return 0;
 		String node = "economy.give.item" + item.toString();
 		double percent = Option.ECONOMY_SELL.get() / 100.0;

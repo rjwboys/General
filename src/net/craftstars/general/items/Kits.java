@@ -2,6 +2,8 @@
 package net.craftstars.general.items;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -65,7 +67,7 @@ public final class Kits {
 					warnMalformed(key, id);
 					continue;
 				}
-				ItemID item = Items.validate(itemName);
+				Item item = Item.find(itemName);
 				if(!item.isValid()) {
 					General.logger.warn(LanguageText.LOG_KIT_BAD_ITEM.value("kit", key, "item", id));
 					continue;
@@ -89,8 +91,8 @@ public final class Kits {
 			yaml.put("delay", kit.delay);
 			yaml.put("cost", kit.getCost());
 			ArrayList<Object> items = new ArrayList<Object>();
-			for(ItemID item : kit) {
-				String itemName = Items.getPersistentName(item);
+			for(Item item : kit) {
+				String itemName = item.getPersistentName();
 				if(kit.get(item) != 1)
 					items.add(Collections.singletonMap(itemName, kit.get(item)));
 				else items.add(itemName);
@@ -100,7 +102,7 @@ public final class Kits {
 		}
 		kitsYml.save();
 	}
-
+	
 	public static Kit get(String name) {
 		return kits.get(name);
 	}

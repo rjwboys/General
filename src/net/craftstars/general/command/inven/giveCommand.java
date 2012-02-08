@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
-import net.craftstars.general.items.ItemID;
+import net.craftstars.general.items.Item;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
@@ -27,17 +27,17 @@ public class giveCommand extends CommandBase {
 	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		Player who = null;
-		ItemID item = null;
+		Item item = null;
 		int amount = 1;
 		
 		switch(args.length) {
 		case 1: // /give <item>[:<data>]
 			if(!isPlayer) return null;
-			item = Items.validate(args[0]);
+			item = Item.find(args[0]);
 			who = (Player) sender;
 		break;
 		case 2: // /give <item>[:<data>] <amount> OR /give <item>[:<data>] <player>
-			item = Items.validate(args[0]);
+			item = Item.find(args[0]);
 			if(isPlayer) try {
 				amount = Integer.valueOf(args[1]);
 				who = (Player) sender;
@@ -60,14 +60,14 @@ public class giveCommand extends CommandBase {
 					Messaging.invalidPlayer(sender, args[0]);
 					return null;
 				}
-				item = Items.validate(args[1]);
+				item = Item.find(args[1]);
 			} catch(NumberFormatException ex) {
 				who = Toolbox.matchPlayer(args[2]);
 				if(who == null) {
 					Messaging.invalidPlayer(sender, args[2]);
 					return null;
 				}
-				item = Items.validate(args[0]);
+				item = Item.find(args[0]);
 				try {
 					amount = Integer.valueOf(args[1]);
 				} catch(NumberFormatException x) {
@@ -77,16 +77,6 @@ public class giveCommand extends CommandBase {
 			}
 		break;
 		default:
-			return null;
-		}
-		
-		if(item == null || !item.isIdValid()) {
-			Messaging.send(sender, LanguageText.GIVE_BAD_ID);
-			return null;
-		}
-		
-		if(!item.isDataValid()) {
-			Messaging.send(sender, LanguageText.GIVE_BAD_DATA.value("data", item.getVariant(), "item", item.getName()));
 			return null;
 		}
 		
@@ -110,7 +100,7 @@ public class giveCommand extends CommandBase {
 		int maxAmount = Option.GIVE_MASS.get();
 		if(amount > maxAmount && !sender.hasPermission("general.give.mass"))
 			return Messaging.lacksPermission(sender, "general.give.mass");
-		ItemID item = (ItemID) args.get("item");
+		Item item = (Item) args.get("item");
 		// Make sure this player is allowed this particular item
 		if(!item.canGive(sender)) return true;
 		// Make sure the player has enough money for this item
@@ -125,11 +115,7 @@ public class giveCommand extends CommandBase {
 		return true;
 	}
 	
-	private void doGive(Player who, ItemID item, int amount, boolean isGift) {
-		if(amount == 0) { // give one stack
-			amount = Items.maxStackSize(item.getId());
-		}
-		
+	private void doGive(Player who, Item item, int amount, boolean isGift) {
 		Items.giveItem(who, item, amount);
 		LanguageText format = isGift ? LanguageText.GIVE_GIFTED : LanguageText.GIVE_ENJOY;
 		Messaging.send(who, format.value("item", item.getName(), "amount", amount));

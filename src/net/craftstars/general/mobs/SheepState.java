@@ -3,14 +3,15 @@ package net.craftstars.general.mobs;
 import java.util.EnumSet;
 import java.util.Random;
 
-import net.craftstars.general.items.ItemID;
-import net.craftstars.general.items.Items;
+import net.craftstars.general.items.InvalidItemException;
+import net.craftstars.general.items.Item;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.DyeColor;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Sheep;
@@ -53,9 +54,15 @@ public class SheepState extends MobData {
 			clr = DyeColor.getByData((byte) generator.nextInt(16));
 		} else {
 			sheared = false;
-			ItemID wool = Items.validate("35:" + data);
-			if(wool == null || !wool.isValid()) invalidate();
-			else clr = DyeColor.getByData((byte) (int) wool.getData());
+			Item wool;
+			try {
+				wool = Item.create(Material.WOOL);
+				wool.parse_Data(new String[] {data});
+			} catch(InvalidItemException e) {
+				invalidate();
+				return;
+			}
+			clr = DyeColor.getByData((byte) (int) wool.getData());
 		}
 	}
 	
