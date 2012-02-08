@@ -4,6 +4,7 @@ package net.craftstars.general.text;
 import static java.lang.Math.max;
 import java.io.File;
 import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -19,12 +20,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.TextWrapper;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.Configuration;
 
 public final class Messaging {
 	private static HashMap<String, Object> colours = new HashMap<String, Object>();
-	private static Configuration config;
+	private static FileConfiguration config;
+	private static String langFile;
 	static final String[] defaultColours = {
 		"black", "navy", "green", "teal", "red", "purple", "gold", "silver",
 		"grey", "blue", "lime", "aqua", "rose", "pink", "yellow", "white", "gray"
@@ -35,15 +37,22 @@ public final class Messaging {
 		File dataFolder = General.plugin.getDataFolder();
 		if(!dataFolder.exists()) dataFolder.mkdirs();
 		String lang = Option.LANGUAGE.get();
-		config = LanguageText.setLanguage(lang, dataFolder, "messages_" + lang + ".yml");
-		List<String> names = config.getStringList("colours", Arrays.asList(defaultColours));
+		langFile = "messages_" + lang + ".yml";
+		config = LanguageText.setLanguage(lang, dataFolder, langFile);
+		@SuppressWarnings("unchecked")
+		List<String> names = config.getStringList("colours");
+		if(names == null) names = Arrays.asList(defaultColours);
 		for(int i = 0; i < 16; i++)
 			colours.put(names.get(i), ChatColor.getByCode(i));
 		colours.put(names.get(16), ChatColor.GRAY);
 	}
 	
 	public static void save() {
-		config.save();
+		try {
+			config.save(new File(General.plugin.getDataFolder(), langFile));
+		} catch(IOException e) { // TODO: LanguageText
+			General.logger.warn("Error saving config.yml: " + e.getMessage());
+		}
 	}
 	
 	public static void send(CommandSender who, LanguageText simple) {

@@ -1,11 +1,15 @@
 package net.craftstars.general.util;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import net.craftstars.general.General;
 
 public abstract class Option {
 	// Misc settings
@@ -59,7 +63,7 @@ public abstract class Option {
 	}
 	protected String node;
 	protected Object def;
-	protected static Configuration config;
+	protected static FileConfiguration config;
 	
 	@SuppressWarnings("hiding")
 	protected Option(String node, Object def) {
@@ -70,11 +74,12 @@ public abstract class Option {
 	public abstract Object get();
 	
 	public void set(Object value) {
-		config.setProperty(node, value);
+		config.set(node, value);
 	}
 	
 	public void remove() {
-		config.removeProperty(node);
+		// TODO: Is this really identical to removing it?
+		config.set(node, null);
 	}
 	
 	public void reset() {
@@ -82,24 +87,28 @@ public abstract class Option {
 	}
 
 	public static boolean nodeExists(String node) {
-		Object prop = config.getProperty(node);
+		Object prop = config.get(node);
 		return prop != null;
 	}
 	
-	public static void setConfiguration(Configuration c) {
+	public static void setConfiguration(FileConfiguration c) {
 		config = c;
 	}
 	
 	public static void setProperty(String path, Object value) {
-		config.setProperty(path, value);
+		config.set(path, value);
 	}
 	
 	public static Object getProperty(String path) {
-		return config.getProperty(path);
+		return config.get(path);
 	}
 	
 	public static void save() {
-		config.save();
+		try {
+			config.save(General.plugin.configFile);
+		} catch(IOException e) { // TODO: LanguageText
+			General.logger.warn("Error saving config.yml: " + e.getMessage());
+		}
 	}
 	
 	public static class OptionBoolean extends Option {
@@ -153,7 +162,9 @@ public abstract class Option {
 
 		@Override@SuppressWarnings("unchecked")
 		public List<String> get() {
-			return config.getStringList(node, (List<String>) def);
+			List<String> list = config.getStringList(node);
+			if(list == null) return (List<String>) def;
+			return list;
 		}
 	}
 
@@ -164,7 +175,9 @@ public abstract class Option {
 
 		@Override@SuppressWarnings("unchecked")
 		public List<Integer> get() {
-			return config.getIntList(node, (List<Integer>) def);
+			List<Integer> list = config.getIntegerList(node);
+			if(list == null) return (List<Integer>) def;
+			return list;
 		}
 	}
 
@@ -174,9 +187,9 @@ public abstract class Option {
 		}
 
 		@Override
-		public List<String> get() {
-			List<String> keys = config.getKeys(node);
-			if(keys == null) return new ArrayList<String>();
+		public Set<String> get() {
+			Set<String> keys = config.getConfigurationSection(node).getKeys(false);
+			if(keys == null) return new HashSet<String>();
 			return keys;
 		}
 	}

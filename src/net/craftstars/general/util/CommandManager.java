@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.craftstars.general.General;
@@ -14,10 +15,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.util.config.Configuration;
 
 import com.ensifera.animosity.craftirc.CraftIRC;
 import com.ensifera.animosity.craftirc.CommandEndPoint;
@@ -35,7 +36,7 @@ public final class CommandManager {
 		if(setAliases) return;
 		if(commandMap == null && !getCommandMap()) return;
 		if(register == null && !getRegisterMethod()) return;
-		if(!config.getKeys(null).contains("aliases"))
+		if(!config.getKeys(false).contains("aliases"))
 			General.logger.warn(LanguageText.LOG_COMMAND_NO_ALIASES.value());
 		Plugin chat = Bukkit.getPluginManager().getPlugin("CraftIRC");
 		boolean foundIRC = isCraftIRC3(chat);
@@ -48,7 +49,9 @@ public final class CommandManager {
 				//General.logger.debug("Registering aliases for command: " + key);
 				if(key.contains("."))
 					register(key.split("\\.")[1], generalCommand);
-				for(String alias : config.getStringList("aliases." + key, null))
+				@SuppressWarnings("unchecked")
+				List<String> aliases = config.getList("aliases." + key, null);
+				for(String alias : aliases)
 					register(alias, generalCommand);
 				try {
 					Class<? extends CommandBase> clazz = General.class.getClassLoader()

@@ -19,18 +19,19 @@ import net.craftstars.general.util.Option;
 import net.craftstars.general.util.PermissionManager;
 import net.craftstars.general.util.PluginLogger;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Event.Priority;
 import static org.bukkit.event.Event.Type.*;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.config.Configuration;
 
 public class General extends JavaPlugin {
 	public static General plugin = null;
 	public static final boolean DEBUG = true;
 	public static final String codename = "Vivaldi";
 	public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG);
-	private Configuration config;
+	private FileConfiguration config;
+	public File configFile;
 	public static PlayerManager players = new PlayerManager();
 	
 	@Override
@@ -57,8 +58,10 @@ public class General extends JavaPlugin {
 	public void loadAllConfigs() {
 		// The load order here is very delicate, as LanguageText is used nearly everywhere
 		// and Messaging.load uses Option.
+		File dataFolder = this.getDataFolder();
+		if(!dataFolder.exists()) dataFolder.mkdirs();
 		LanguageText.setLanguage("en", getDataFolder(), "messages_en.yml"); // Make sure we have a default language!
-		config = getConfiguration();
+		config = getConfig();
 		loadConfiguration();
 		Option.setConfiguration(config);
 		Messaging.load();
@@ -82,30 +85,31 @@ public class General extends JavaPlugin {
 		Messaging.save();
 		if(Option.AUTO_SAVE.get()) {
 			Kits.save();
-			config.save();
+			try {
+				config.save(configFile);
+			} catch(IOException e) { // TODO: LanguageText
+				logger.warn("Error saving config.yml: " + e.getMessage());
+			}
 		}
 		General.logger.info(LanguageText.LOG_DISABLED.value());
 	}
 	
 	private void loadConfiguration() {
+		configFile = new File(getDataFolder(), "config.yml");
 		try {
-			File dataFolder = this.getDataFolder();
-			if(!dataFolder.exists()) dataFolder.mkdirs();
-			File configFile = new File(dataFolder, "config.yml");
-			
 			if(!configFile.exists()) {
 				createDefaultConfig(configFile);
 				General.logger.info(LanguageText.LOG_CONFIG_SUCCESS.value());
 			}
+			config.load(configFile);
 		} catch(Exception ex) {
 			General.logger.warn(LanguageText.LOG_CONFIG_ERROR.value("file", "config.yml"), ex);
 		}
-		config.load();
 	}
 
 	public static void createDefaultConfig(File configFile) throws IOException {
 		General.logger.info(LanguageText.LOG_CONFIG_DEFAULT.value("file", configFile.getName()));
-		InputStream defaultConfig = General.class.getResourceAsStream(File.separator + configFile.getName());
+		InputStream defaultConfig = General.plugin.getResource(configFile.getName());
 		FileWriter out = new FileWriter(configFile);
 		Scanner lines = new Scanner(defaultConfig);
 		while(lines.hasNextLine())

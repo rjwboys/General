@@ -87,7 +87,7 @@ public class PermissionManager extends WorldListener {
 				// general.give.groupless
 				Map<String,Boolean> groupless = new HashMap<String,Boolean>();
 				// Two nested loops; first Material, then groups
-				List<String> groupNames = Option.ITEM_GROUPS.get();
+				Set<String> groupNames = Option.ITEM_GROUPS.get();
 				for(Material material : Material.values()) {
 					String itemName = material.toString().toLowerCase().replace('_', '-');
 					String itemPerm = "general.give.item." + itemName;

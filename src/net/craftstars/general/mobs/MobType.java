@@ -18,8 +18,9 @@ import net.craftstars.general.util.Toolbox;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
-import org.bukkit.util.config.Configuration;
 
 public enum MobType {
 	BLAZE(null, MobAlignment.ENEMY, CreatureType.BLAZE, 61),
@@ -54,17 +55,15 @@ public enum MobType {
 	private static HashMap<Integer, MobType> idToEnumMapping = new HashMap<Integer, MobType>();
 	private static EnumMap<CreatureType, MobType> ctToEnumMapping = new EnumMap<CreatureType, MobType>(CreatureType.class);
 	private Class<? extends MobData> data;
-	private static Configuration yml;
+	private static FileConfiguration yml;
+	private static File configFile;
 	
 	public static void setup() {
 		try {
-			File dataFolder = General.plugin.getDataFolder();
-			if(!dataFolder.exists()) dataFolder.mkdirs();
-			File configFile = new File(dataFolder, "mobs.yml");
-			
+			configFile = new File(General.plugin.getDataFolder(), "mobs.yml");
 			if(!configFile.exists()) General.createDefaultConfig(configFile);
-			yml = new Configuration(configFile);
-			yml.load();
+			yml = new YamlConfiguration();
+			yml.load(configFile);
 		} catch(Exception ex) {
 			General.logger.warn(LanguageText.LOG_CONFIG_ERROR.value("file", "mobs.yml"), ex);
 		}
@@ -73,7 +72,7 @@ public enum MobType {
 		for(MobType mob : values()) {
 			namesToEnumMapping.put(mob.name().toLowerCase(), mob);
 			@SuppressWarnings("unchecked")
-			List<Object> names = (List<Object>) yml.getProperty("mobs.mob" + mob.id);
+			List<Object> names = yml.getList("mobs.mob" + mob.id);
 			if(names == null) continue;
 			boolean gotBase = false;
 			ArrayList<String> aliases = new ArrayList<String>();
@@ -250,7 +249,9 @@ public enum MobType {
 	public String[] getDataList(String key) {
 		String node = "data.mob" + id;
 		if(!key.isEmpty()) node += "." + key;
-		return yml.getStringList(node, null).toArray(new String[0]);
+		List<String> list = yml.getStringList(node);
+		if(list == null) return new String[0];
+		return list.toArray(new String[0]);
 	}
 	
 	private static CreatureType getCreatureType(LivingEntity entity) {
