@@ -39,7 +39,6 @@ public final class Messaging {
 		String lang = Option.LANGUAGE.get();
 		langFile = "messages_" + lang + ".yml";
 		config = LanguageText.setLanguage(lang, dataFolder, langFile);
-		@SuppressWarnings("unchecked")
 		List<String> names = config.getStringList("colours");
 		if(names == null) names = Arrays.asList(defaultColours);
 		for(int i = 0; i < 16; i++)

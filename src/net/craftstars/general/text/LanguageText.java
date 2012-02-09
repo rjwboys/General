@@ -1,16 +1,19 @@
 package net.craftstars.general.text;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.file.YamlConstructor;
+import org.bukkit.configuration.file.YamlRepresenter;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.DumperOptions.ScalarStyle;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.SafeConstructor;
-import org.yaml.snakeyaml.representer.Representer;
 
 public enum LanguageText {
 	// Server log messages
@@ -415,7 +418,7 @@ public enum LanguageText {
 	ADMIN_ITEM_BAD("admin.item.bad", "{rose}No such item."),
 	;
 	
-	private static Configuration config;
+	private static YamlConfiguration config;
 	private static String language;
 	private String fmt;
 	private String node;
@@ -434,22 +437,29 @@ public enum LanguageText {
 		return config.getString(language + "." + node, fmt);
 	}
 	
-	public static Configuration setLanguage(String lang, File folder, String file) {
+	public static YamlConfiguration setLanguage(String lang, File folder, String file) {
 		language = lang;
-		config = new Configuration(new File(folder, file));
+		config = new YamlConfiguration();
 		DumperOptions options = new DumperOptions();
         options.setIndent(4);
         options.setDefaultFlowStyle(FlowStyle.BLOCK);
 		options.setDefaultScalarStyle(ScalarStyle.DOUBLE_QUOTED);
 		try {
-			Field yamlField = Configuration.class.getDeclaredField("yaml");
+			Field yamlField = YamlConfiguration.class.getDeclaredField("yaml");
 			yamlField.setAccessible(true);
-			yamlField.set(config, new Yaml(new SafeConstructor(), new Representer(), options));
+			yamlField.set(config, new Yaml(new YamlConstructor(), new YamlRepresenter(), options));
 		} catch(SecurityException e) {}
 		catch(IllegalArgumentException e) {}
 		catch(NoSuchFieldException e) {}
 		catch(IllegalAccessException e) {}
-		config.load();
+		try {
+			config.load(new File(folder, file));
+		} catch(FileNotFoundException e) {
+		} catch(IOException e) {
+			e.printStackTrace();
+		} catch(InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
 		return config;
 	}
 	
