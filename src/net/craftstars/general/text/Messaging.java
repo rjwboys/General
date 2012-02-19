@@ -29,7 +29,7 @@ public final class Messaging {
 	private static String langFile;
 	static final String[] defaultColours = {
 		"black", "navy", "green", "teal", "red", "purple", "gold", "silver",
-		"grey", "blue", "lime", "aqua", "rose", "pink", "yellow", "white", "gray"
+		"grey", "blue", "lime", "aqua", "rose", "pink", "yellow", "white", "gray", "magic"
 	};
 	private Messaging() {}
 	
@@ -42,8 +42,9 @@ public final class Messaging {
 		List<String> names = config.getStringList("colours");
 		if(names == null) names = Arrays.asList(defaultColours);
 		for(int i = 0; i < 16; i++)
-			colours.put(names.get(i), ChatColor.getByCode(i));
+			colours.put(names.get(i), ChatColor.getByChar(Integer.toHexString(i)));
 		colours.put(names.get(16), ChatColor.GRAY);
+		colours.put(names.get(17), ChatColor.MAGIC);
 	}
 	
 	public static void save() {

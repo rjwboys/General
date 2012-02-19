@@ -28,16 +28,17 @@ import net.craftstars.general.util.Option;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
-import org.bukkit.event.world.WorldListener;
+import static org.bukkit.event.EventPriority.MONITOR;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 
-public class PermissionManager extends WorldListener {
+public class PermissionManager implements Listener {
 	private static PermissionManager me = new PermissionManager();
 	private PermissionManager() {}
 	
@@ -46,8 +47,7 @@ public class PermissionManager extends WorldListener {
 		PermissionSet.init();
 		for(PermissionSet set : PermissionSet.values()) set.build();
 		PermissionSet.finish();
-		Bukkit.getPluginManager().registerEvent(Type.WORLD_LOAD, me, Priority.Monitor, General.plugin);
-		Bukkit.getPluginManager().registerEvent(Type.WORLD_UNLOAD, me, Priority.Monitor, General.plugin);
+		Bukkit.getPluginManager().registerEvents(me, General.plugin);
 	}
 	
 	public static void refreshItemGroups() {
@@ -55,15 +55,15 @@ public class PermissionManager extends WorldListener {
 		perm.setDefault(Option.OTHERS4ALL.get() ? PermissionDefault.TRUE : PermissionDefault.FALSE);
 	}
 	
-	@Override
-	public void onWorldLoad(WorldLoadEvent event) {
+	@EventHandler(priority=MONITOR)
+	public void onWorldLoad(@SuppressWarnings("unused") WorldLoadEvent event) {
 		// TODO: Is there a more graceful way?
 		nukeTeleportPermissions();
 		PermissionSet.TARGET_DEST.build();
 	}
 	
-	@Override
-	public void onWorldUnload(WorldUnloadEvent event) {
+	@EventHandler(priority=MONITOR)
+	public void onWorldUnload(@SuppressWarnings("unused") WorldUnloadEvent event) {
 		// TODO: There is a more graceful way. Do it.
 		nukeTeleportPermissions();
 		PermissionSet.TARGET_DEST.build();

@@ -3,9 +3,12 @@ package net.craftstars.general;
 import java.util.HashMap;
 
 import org.bukkit.entity.Player;
+import static org.bukkit.event.EventPriority.MONITOR;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 import net.craftstars.general.text.LanguageText;
@@ -13,7 +16,7 @@ import net.craftstars.general.text.MessageOfTheDay;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Option;
 
-public final class PlayerManager extends PlayerListener {
+public final class PlayerManager implements Listener {
 	private HashMap<String, String> playersAway = new HashMap<String, String>();
 	private HashMap<String,String> lastMessager = new HashMap<String, String>();
 
@@ -46,13 +49,13 @@ public final class PlayerManager extends PlayerListener {
 		return lastMessager.get(to);
 	}
 	
-	@Override
+	@EventHandler(priority=MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		if(!Option.SHOW_MOTD.get()) return;
 		MessageOfTheDay.showMotD(event.getPlayer());
 	}
 	
-	@Override
+	@EventHandler(priority=MONITOR)
 	public void onPlayerChat(PlayerChatEvent event) {
 		String tag = event.getMessage().split("\\s+")[0];
 		for(String who : playersAway.keySet()) {
@@ -64,7 +67,7 @@ public final class PlayerManager extends PlayerListener {
 		}
 	}
 	
-	@Override
+	@EventHandler(priority=MONITOR)
 	public void onPlayerLogin(PlayerLoginEvent event) {
 		lastMessager.remove(event.getPlayer().getName());
 	}

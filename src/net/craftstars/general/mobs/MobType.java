@@ -71,7 +71,6 @@ public enum MobType {
 		namesToEnumMapping.clear();
 		for(MobType mob : values()) {
 			namesToEnumMapping.put(mob.name().toLowerCase(), mob);
-			@SuppressWarnings("unchecked")
 			List<Object> names = yml.getList("mobs.mob" + mob.id);
 			if(names == null) continue;
 			boolean gotBase = false;

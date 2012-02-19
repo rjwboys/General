@@ -2,6 +2,7 @@
 package net.craftstars.general.items;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
@@ -24,10 +25,9 @@ public final class Kits {
 		File folder = General.plugin.getDataFolder();
 		File kitsFile = new File(folder, "kits.yml");
 		if(!kitsFile.exists()) return;
-		Configuration kitsYml = new Configuration(kitsFile);
-		kitsYml.load();
-		for(String key : kitsYml.getKeys()) {
-			ConfigurationNode kitNode = kitsYml.getNode(key);
+		YamlConfiguration kitsYml = YamlConfiguration.loadConfiguration(kitsFile);
+		for(String key : kitsYml.getKeys(false)) {
+			ConfigurationSection kitNode = kitsYml.getConfigurationSection(key);
 			List<?> itemsNode = kitNode.getList("items");
 			if(itemsNode == null) {
 				General.logger.warn(LanguageText.LOG_KIT_NO_ITEMS.value("kit", key));
@@ -84,7 +84,7 @@ public final class Kits {
 	
 	public static void save() {
 		File kitsFile = new File(General.plugin.getDataFolder(), "kits.yml");
-		Configuration kitsYml = new Configuration(kitsFile);
+		YamlConfiguration kitsYml = new YamlConfiguration();
 		for(String key : kits.keySet()) {
 			HashMap<String, Object> yaml = new HashMap<String, Object>();
 			Kit kit = kits.get(key);
@@ -98,9 +98,14 @@ public final class Kits {
 				else items.add(itemName);
 			}
 			yaml.put("items", items);
-			kitsYml.setProperty(key, yaml);
+			kitsYml.set(key, yaml);
 		}
-		kitsYml.save();
+		try {
+			kitsYml.save(kitsFile);
+		} catch(IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static Kit get(String name) {

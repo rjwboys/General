@@ -1,7 +1,6 @@
 package net.craftstars.general.items;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.apache.commons.lang.math.IntRange;
 
@@ -27,7 +26,6 @@ public class BigShroomData extends ItemData {
 
 	@Override
 	public int fromName(String name) {
-		List<String> list;
 		name = name.toLowerCase();
 		// First check stem/interior
 		if(listContains("shroom.stem", name, Arrays.asList("stem"))) return 10;

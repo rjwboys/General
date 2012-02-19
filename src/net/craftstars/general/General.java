@@ -20,8 +20,6 @@ import net.craftstars.general.util.PermissionManager;
 import net.craftstars.general.util.PluginLogger;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.Event.Priority;
-import static org.bukkit.event.Event.Type.*;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -74,9 +72,7 @@ public class General extends JavaPlugin {
 
 	private void registerEvents() {
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvent(PLAYER_JOIN, players, Priority.Monitor, this);
-		pm.registerEvent(PLAYER_CHAT, players, Priority.Monitor, this);
-		pm.registerEvent(PLAYER_LOGIN, players, Priority.Monitor, this);
+		pm.registerEvents(players, this);
 	}
 	
 	@Override

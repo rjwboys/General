@@ -2,22 +2,22 @@
 package net.craftstars.general.items;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
@@ -27,7 +27,8 @@ import net.craftstars.general.util.range.IntRange;
 import net.craftstars.general.util.range.Range;
 
 public final class Items {
-	private static Configuration config;
+	private static FileConfiguration config;
+	private static File configFile;
 	private static HashMap<String, ItemID> aliases;
 	private static HashMap<ItemID, String> names;
 	private static HashMap<String, ItemID> hooks;
@@ -38,7 +39,7 @@ public final class Items {
 			ItemID item = aliases.get(alias);
 			String code = Integer.toString(item.getId());
 			if(item.getData() != null) code += "/" + item.getData();
-			config.setProperty("aliases." + alias, code);
+			config.set("aliases." + alias, code);
 		}
 		HashMap<Integer, TreeSet<ItemID>> tmpList = new HashMap<Integer, TreeSet<ItemID>>();
 		for(ItemID item : names.keySet()) {
@@ -51,7 +52,7 @@ public final class Items {
 		for(int id : tmpList.keySet()) {
 			String key = "names.item" + id;
 			if(tmpList.get(id).size() == 1)
-				config.setProperty(key, names.get(tmpList.get(id).first()));
+				config.set(key, names.get(tmpList.get(id).first()));
 			else {
 				HashMap<String,String> theseNames = new HashMap<String,String>();
 				for(ItemID item : tmpList.get(id)) {
@@ -62,7 +63,7 @@ public final class Items {
 						// compare higher than IDs with non-null data.
 					} else theseNames.put("data" + item.getData(), names.get(item));
 				}
-				config.setProperty(key, theseNames);
+				config.set(key, theseNames);
 			}
 		}
 		final int NAME = 0, TYPE = 1;
@@ -72,20 +73,22 @@ public final class Items {
 			ItemID item = hooks.get(hook);
 			String code = Integer.toString(item.getId());
 			if(item.getData() != null) code += "/" + item.getData();
-			config.setProperty(key, code);
+			config.set(key, code);
 		}
-		config.save();
+		try {
+			config.save(configFile);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private static void loadConfig() {
 		try {
 			File dataFolder = General.plugin.getDataFolder();
 			if(!dataFolder.exists()) dataFolder.mkdirs();
-			File configFile = new File(dataFolder, "items.yml");
-			
+			configFile = new File(dataFolder, "items.yml");
 			if(!configFile.exists()) General.createDefaultConfig(configFile);
-			config = new Configuration(configFile);
-			config.load();
+			config = YamlConfiguration.loadConfiguration(configFile);
 		} catch(Exception ex) {
 			General.logger.warn(LanguageText.LOG_CONFIG_ERROR.value("file", "items.yml"), ex);
 		}
@@ -107,14 +110,33 @@ public final class Items {
 		
 		// Load the "hooks" as well.
 		loadHooks();
+		
+		// Check if classes have been overridden.
+		for(Material mat : Material.values()) {
+			int id = mat.getId();
+			String clsName = config.getString("variants.item" + id + ".class");
+			if(clsName != null) {
+				try {
+					Class<?> cls = Class.forName(clsName);
+					if(cls != null && ItemData.class.isAssignableFrom(cls)) {
+						@SuppressWarnings("unchecked")
+						Class<? extends ItemData> dataClass = (Class<? extends ItemData>)cls;
+						ItemData.register(mat, dataClass);
+					}
+				} catch(ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	private static void loadHooks() {
 		hooks = new HashMap<String, ItemID>();
 		try {
-			for(String key : config.getKeys("hooks")) {
-				for(String val : config.getNode("hooks").getKeys(key)) {
-					String x = config.getNode("hooks").getNode(key).getString(val);
+			for(String key : config.getConfigurationSection("hooks").getKeys(false)) {
+				for(String val : config.getConfigurationSection("hooks." + key).getKeys(false)) {
+					String x = config.getConfigurationSection("hooks." + key).getString(val);
 					ItemID thisItem = Items.validate(x);
 					if(thisItem == null) {
 						General.logger.warn(LanguageText.LOG_ITEM_BAD_HOOK.value("hook", x));
@@ -130,7 +152,7 @@ public final class Items {
 	
 	private static Pattern itemPat = Pattern.compile("([0-9]+)(?:[.,:/|]([0-9]+))?");
 	private static void loadItemAliases() {
-		List<String> ymlAliases = config.getKeys("aliases");
+		Set<String> ymlAliases = config.getConfigurationSection("aliases").getKeys(false);
 		if(ymlAliases == null) {
 			General.logger.warn(LanguageText.LOG_ITEM_NO_ALIASES.value());
 			return;
@@ -170,9 +192,9 @@ public final class Items {
 	private static void loadItemNames() {
 		int invalids = 0;
 		String lastInvalid = null;
-		List<String> keys;
+		Set<String> keys;
 		try {
-			keys = config.getKeys("names");
+			keys = config.getConfigurationSection("names").getKeys(false);
 		} catch(NullPointerException x) {
 			General.logger.warn(LanguageText.LOG_ITEM_NO_NAMES.value());
 			return;
@@ -192,32 +214,13 @@ public final class Items {
 					continue;
 				}
 				String path = "names." + id;
-				Object node = config.getProperty(path);
+				Object node = config.get(path);
 				if(node instanceof String) {
 					name = config.getString(path);
 					key = new ItemID(num, null);
 					names.put(key, name);
-				} else if(node instanceof List) { // TODO: for backwards compatibility; remove eventually
-					List<String> list = config.getStringList(path, null);
-					boolean atEnd = false;
-					for(int i = 0; i < list.size(); i++) {
-						name = list.get(i);
-						if(atEnd) {
-							key = new ItemID(num, null);
-							names.put(key, name);
-							break; // Even if there are additional items, they are meaningless at this point; skip
-									// them.
-						} else {
-							if(name == null) {
-								atEnd = true;
-								continue;
-							}
-							key = new ItemID(num, i);
-							names.put(key, name);
-						}
-					}
 				} else {
-					List<String> list = config.getKeys(path);
+					Set<String> list = config.getConfigurationSection(path).getKeys(false);
 					for(String data : list) {
 						name = config.getString(path + "." + data);
 						if(data.matches("data[0-9][0-9]?")) {
@@ -428,17 +431,17 @@ public final class Items {
 	
 	public static List<String> variantNames(ItemID id) {
 		if(id != null && id.getData() != null)
-			return config.getStringList("variants.item" + id.getId() + ".type" + id.getData(), null);
+			return config.getStringList("variants.item" + id.getId() + ".type" + id.getData());
 		return null;
 	}
 	
 	public static List<String> variantNames(String key) {
 		if(key == null) return null;
-		return config.getStringList("special." + key, null);
+		return config.getStringList("special." + key);
 	}
 	
 	public static List<String> variantNames(String key, int data) {
-		if(key != null) return config.getStringList("special." + key + ".type" + data, null);
+		if(key != null) return config.getStringList("special." + key + ".type" + data);
 		return null;
 	}
 	
@@ -459,7 +462,7 @@ public final class Items {
 	}
 	
 	public static void setVariantNames(ItemID id, List<String> variants) {
-		config.setProperty("variants.item" + id.getId() + ".type" + id.getData(), variants);
+		config.set("variants.item" + id.getId() + ".type" + id.getData(), variants);
 	}
 	
 	public static void addAlias(String name, ItemID id) {
@@ -545,7 +548,7 @@ public final class Items {
 	}
 
 	public static List<String> getPotions(String key) {
-		return config.getStringList("variants." + key, null);
+		return config.getStringList("variants." + key);
 	}
 
 	public static int getMaxData(Material mat) {
@@ -561,7 +564,7 @@ public final class Items {
 	}
 
 	public static List<Range<Integer>> getDataRanges(Material mat) {
-		List<String> list = config.getStringList("variants.item" + mat.getId() + ".range", null);
+		List<String> list = config.getStringList("variants.item" + mat.getId() + ".range");
 		if(list == null || list.isEmpty()) return null;
 		List<Range<Integer>> ranges = new ArrayList<Range<Integer>>();
 		for(String range : list) {

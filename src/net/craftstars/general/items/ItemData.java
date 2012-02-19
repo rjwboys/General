@@ -16,24 +16,24 @@ public class ItemData implements Cloneable {
 		map = new HashMap<Material,Class<? extends ItemData>>();
 		for(Material item : Material.values()) {
 			if(item.getMaxDurability() > 0) {
-				map.put(item, ToolDamage.class);
+				register(item, ToolDamage.class);
 			}
 		}
-		map.put(Material.WOOL, ColourData.class);
-		map.put(Material.INK_SACK, ColourData.class);
-		map.put(Material.LOG, TreeData.class);
-		map.put(Material.LEAVES, TreeData.class);
-		map.put(Material.SAPLING, TreeData.class);
-		map.put(Material.COAL, CoalData.class);
-		map.put(Material.STEP, StepData.class);
-		map.put(Material.MAP, MapData.class);
-		map.put(Material.SMOOTH_BRICK, StoneBrickData.class);
-		map.put(Material.MONSTER_EGG, MobSpawnerData.class);
-		map.put(Material.BOOK, BookWormData.class); // BookWorm support
-		map.put(Material.LONG_GRASS, LongGrassData.class);
-		map.put(Material.HUGE_MUSHROOM_1, BigShroomData.class);
-		map.put(Material.HUGE_MUSHROOM_2, BigShroomData.class);
-		map.put(Material.POTION, PotionData.class);
+		register(Material.WOOL, ColourData.class);
+		register(Material.INK_SACK, ColourData.class);
+		register(Material.LOG, TreeData.class);
+		register(Material.LEAVES, TreeData.class);
+		register(Material.SAPLING, TreeData.class);
+		register(Material.COAL, CoalData.class);
+		register(Material.STEP, StepData.class);
+		register(Material.MAP, MapData.class);
+		register(Material.SMOOTH_BRICK, StoneBrickData.class);
+		register(Material.MONSTER_EGG, MobSpawnerData.class);
+		register(Material.BOOK, BookWormData.class); // BookWorm support
+		register(Material.LONG_GRASS, LongGrassData.class);
+		register(Material.HUGE_MUSHROOM_1, BigShroomData.class);
+		register(Material.HUGE_MUSHROOM_2, BigShroomData.class);
+		register(Material.POTION, PotionData.class);
 	}
 	protected Material material;
 	private String name;
@@ -45,6 +45,10 @@ public class ItemData implements Cloneable {
 		return this;
 	}
 	
+	protected static void register(Material item, Class<? extends ItemData> cls) {
+		map.put(item, cls);
+	}
+
 	public void setDisplayName(String newName) {
 		name = newName;
 		defaultName = false;

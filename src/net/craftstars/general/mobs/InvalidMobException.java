@@ -6,6 +6,8 @@ import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 
 public class InvalidMobException extends RuntimeException {
+	private static final long serialVersionUID = 9072496179873948959L;
+
 	public InvalidMobException(LanguageText msg, Object... params) {
 		super(msg.value(params));
 	}
