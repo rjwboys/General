@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import net.craftstars.general.General;
+import net.craftstars.general.items.InvalidItemException;
 import net.craftstars.general.text.HelpHandler;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.util.Option;
@@ -62,6 +63,8 @@ public abstract class CommandBase implements CommandExecutor {
 					if(!commandResult) error = at;
 				} else error = at;
 			}
+		} catch(InvalidItemException it) {
+			it.feedbackTo(sender);
 		} catch(Exception e) {
 			error = at;
 			General.logger.error(LanguageText.LOG_COMMAND_ERROR.value("command", command.getName(), "errorPlace", error));

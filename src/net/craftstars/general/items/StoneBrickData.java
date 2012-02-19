@@ -1,13 +1,12 @@
 package net.craftstars.general.items;
 
-import org.bukkit.Material;
+import java.util.List;
 
 public class StoneBrickData extends ItemData {
 	@Override
-	public boolean validate(ItemID id, Material check) {
-		if(id.getData() == null) return true;
-		if(id.getData() <= 2) return true;
-		return false;
+	public boolean validate(int data) {
+		if(data <= 2) return true;
+		return super.validate(data);
 	}
 	
 	@Override
@@ -21,10 +20,15 @@ public class StoneBrickData extends ItemData {
 	}
 	
 	@Override
-	public Integer fromName(String name) {
-		if(name == null || name.isEmpty()) return null;
-		else if(name.equalsIgnoreCase("mossy")) return 1;
-		else if(name.equalsIgnoreCase("crumbling")) return 2;
-		else return 0;
+	public int fromName(String name) {
+		if(name == null || name.isEmpty()) return 0;
+		name = name.toLowerCase();
+		for(int i = 0; i <= 2; i++) {
+			List<String> list = Items.variantNames("brick", i);
+			if(list == null || list.isEmpty()) continue;
+			list = allToLower(list);
+			if(list.contains(name)) return i;
+		}
+		return super.fromName(name);
 	}
 }

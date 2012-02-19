@@ -1,14 +1,12 @@
 package net.craftstars.general.items;
 
-import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
 
-final class TreeData extends ItemData {
+final public class TreeData extends ItemData {
 	@Override
-	public boolean validate(ItemID id, Material check) {
-		if(id.getData() == null) return true;
-		if(id.getData() > 2 || id.getData() < 0) return false;
-		return true;
+	public boolean validate(int data) {
+		if(data > 2 || data < 0) return false;
+		return super.validate(data);
 	}
 	
 	@Override
@@ -17,9 +15,9 @@ final class TreeData extends ItemData {
 	}
 	
 	@Override
-	public Integer fromName(String name) {
+	public int fromName(String name) {
 		TreeSpecies data = TreeSpecies.valueOf(name.toUpperCase());
-		if(data == null) return null;
-		return (int) data.getData();
+		if(data == null) return 0;
+		return data.getData();
 	}
 }

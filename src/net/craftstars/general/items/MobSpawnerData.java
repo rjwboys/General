@@ -1,18 +1,30 @@
 package net.craftstars.general.items;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.Material;
+import org.bukkit.entity.CreatureType;
 
 import net.craftstars.general.mobs.MobType;
 
 public class MobSpawnerData extends ItemData {
-	private static List<Integer> nonmobs = Arrays.asList(2,9,10,11,20,40,41);
 	@Override
-	public boolean validate(ItemID id, Material check) {
-		MobType mob = MobType.byId(id.getData());
+	public boolean validate(int data) {
+		MobType mob = MobType.byId(data);
 		if(mob != null) return true;
-		return nonmobs.contains(id.getData());
+		return super.validate(data);
+	}
+
+	@Override
+	public String getName(int data) {
+		MobType mob = MobType.byId(data);
+		if(mob != null) return mob.getName();
+		return super.getName(data);
+	}
+
+	@Override
+	public int fromName(String data) {
+		MobType mob = MobType.byName(data);
+		if(mob != null) return mob.getId();
+		CreatureType creature = CreatureType.fromName(data);
+		if(creature != null) return MobType.fromBukkitType(creature).getId();
+		return super.fromName(data);
 	}
 }

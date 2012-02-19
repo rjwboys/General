@@ -79,17 +79,6 @@ public class giveCommand extends CommandBase {
 		default:
 			return null;
 		}
-		
-		if(item == null || !item.isIdValid()) {
-			Messaging.send(sender, LanguageText.GIVE_BAD_ID);
-			return null;
-		}
-		
-		if(!item.isDataValid()) {
-			Messaging.send(sender, LanguageText.GIVE_BAD_DATA.value("data", item.getVariant(), "item", item.getName()));
-			return null;
-		}
-		
 		// Fill params and go!
 		params.put("player", who);
 		params.put("item", item);

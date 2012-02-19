@@ -95,32 +95,6 @@ names:
   item50: Torch
   item51: Fire
   item52: Monster Spawner
-  item52:
-    data2: Experience Orb Spawner
-    data9: Painting Spawner
-    data10: Arrow Spawner
-    data11: Snowball Spawner
-    data20: TNT Spawner
-    data40: Minecart Spawner
-    data41: Boat Spawner
-    data50: Creeper Spawner
-    data51: Skeleton Spawner
-    data52: Spider Spawner
-    data53: Giant Spawner
-    data54: Zombie Spawner
-    data55: Slime Spawner
-    data56: Ghast Spawner
-    data57: Zombie Pigman Spawner
-    data58: Enderman Spawner
-    data59: Cave Spider Spawner
-    data60: Silverfish Spawner
-    data90: Pig Spawner
-    data91: Sheep Spawner
-    data92: Cow Spawner
-    data93: Chicken Spawner
-    data94: Squid Spawner
-    data95: Wolf Spawner
-    generic: Spawner
   item53: Wooden Stairs
   item54: Chest
   item55: Redstone Wire
@@ -223,6 +197,8 @@ names:
   item120: End Portal Frame
   item121: End Stone
   item122: Dragon Egg
+  item123: Redstone Lamp
+  item124: Lit Redstone Lamp
   item256: Iron Shovel
   item257: Iron Pickaxe
   item258: Iron Axe
@@ -438,7 +414,34 @@ names:
   item380: Cauldron
   item381: Ender Eye
   item382: Glistering Melon
-  item383: Spawner Egg
+  item383:
+    data2: Experience Orb Spawner Egg
+    data9: Painting Spawner Egg
+    data10: Arrow Spawner Egg
+    data11: Snowball Spawner Egg
+    data20: TNT Spawner Egg
+    data40: Minecart Spawner Egg
+    data41: Boat Spawner Egg
+    data50: Creeper Spawner Egg
+    data51: Skeleton Spawner Egg
+    data52: Spider Spawner Egg
+    data53: Giant Spawner Egg
+    data54: Zombie Spawner Egg
+    data55: Slime Spawner Egg
+    data56: Ghast Spawner Egg
+    data57: Zombie Pigman Spawner Egg
+    data58: Enderman Spawner Egg
+    data59: Cave Spider Spawner Egg
+    data60: Silverfish Spawner Egg
+    data90: Pig Spawner Egg
+    data91: Sheep Spawner Egg
+    data92: Cow Spawner Egg
+    data93: Chicken Spawner Egg
+    data94: Squid Spawner Egg
+    data95: Wolf Spawner Egg
+    generic: Spawner Egg
+  item384: Bottle o' Enchanting
+  item385: Fire Charge
   item2256: 13 Disc
   item2257: Cats Disc
   item2258: Blocks Disc
@@ -453,18 +456,33 @@ names:
 
 variants:
   item6:
-    type0: [oak]
-    type1: [pine, red, redwood, spruce]
-    type2: [birch, white]
+    max: 3
   item17:
-    type0: [oak]
-    type1: [pine, red, redwood, spruce]
-    type2: [birch, white]
+    max: 3
   item18:
+    max: 3
+  item35:
+    max: 15
+  item43: 
+    class: net.craftstars.general.items.StepData
+    max: 5
+  item44:
+    max: 5
+  item98:
+    max: 2
+  item351:
+    max: 15
+  item373:
+  item383:
+    ranges: [2, 10-17, 20, 40-41, 50-63, 90-98, 120, 200]
+
+special:
+  tree:
     type0: [oak]
     type1: [pine, red, redwood, spruce]
     type2: [birch, white]
-  item35:
+    type3: [jungle, palm]
+  colour:
     type0: [white]
     type1: [orange]
     type2: [magenta, lightpurple]
@@ -481,21 +499,14 @@ variants:
     type13: [green, darkgreen, cactus]
     type14: [red, darkred, rose]
     type15: [black]
-  item43:
+  step:
     type0: [stone]
     type1: [sandstone]
     type2: [wood, wooden]
     type3: [cobble, cobblestone]
     type4: [brick, claybrick, redbrick]
     type5: [stonebrick, smoothbrick, graybrick, greybrick]
-  item44:
-    type0: [stone]
-    type1: [sandstone]
-    type2: [wood, wooden]
-    type3: [cobble, cobblestone]
-    type4: [brick, claybrick, redbrick]
-    type5: [stonebrick, smoothbrick, graybrick, greybrick]
-  item52:
+  spawn:
     type0: [pig]
     type1: [chicken, duck]
     type2: [cow]
@@ -510,125 +521,67 @@ variants:
     type11: [slime]
     type12: [giant, giantzombie, zombiegiant, bigzombie]
     type13: [human, monster]
-  item98:
+  brick:
     type0: [normal, regular, intact]
     type1: [mossy]
     type2: [cracked, crumbling]
-  item351:
-    type0: [black, ink]
-    type1: [rose, red, darkred]
-    type2: [cactus, green, darkgreen]
-    type3: [brown, cocoa, chocolate]
-    type4: [navy, darkblue, lapis, lazuli, lapislazuli]
-    type5: [purple, darkpurple]
-    type6: [cyan]
-    type7: [silver, lightgray, lightgrey]
-    type8: [gray, grey, darkgrey, darkgray]
-    type9: [pink, lightred]
-    type10: [lime, lightgreen]
-    type11: [dandelion, yellow]
-    type12: [lightblue, blue]
-    type13: [magenta, lightpurple]
-    type14: [orange]
-    type15: [white]
-  item373:
-    type0: [water]
-    # Potions with no effect
-    type6: [clear]
-    type11: [diffuse]
-    type13: [artless]
-    type14: [thin]
-    type16: [awkward]
-    type22: [bungling]
-    type27: [smooth]
-    type29: [suave]
-    type30: [debonair]
-    type32: [thick]
-    type38: [charming]
-    type43: [refined]
-    type54: [rank]
-    type59: [acrid]
-    type61: [gross]
-    type62: [stinky]
-    type64: [mundane+, mundanex]
-    type8192: [mundane]
-    # Normal potions
-    type8193: [regeneration, regen]
-    type8257: [regeneration+, regenerationx, regen+, regenx]
-    type8225: [regenerationii, regeneration2, regenii, regen2]
-    type8194: [swiftness, swift, speed]
-    type8258: [swiftness+, swiftnessx, swift+, swiftx, speed+, speedx]
-    type8226: [swiftnessii, swiftness2, swiftii, swift2]
-    type8195: [fireresistance, fireres, fireproof]
-    type8259: [fireresistance+, fireresistancex, fireres+, fireresx, fireproof+, fireproofx]
-    type8197: [healing, heal]
-    type8229: [healing+, healingx, heal+, healx]
-    type8201: [strength, strong, str]
-    type8265: [strength+, strengthx, strong+, strongx, str+, strx]
-    type8233: [strengthii, strength2, strongii, strong2, strii, str2]
-    type8196: [poison]
-    type8260: [poison+, poisonx]
-    type8228: [poisonii, poison2]
-    type8200: [weakness, weak]
-    type8264: [weakness+, weaknessx, weak+, weakx]
-    type8202: [slowness, slow]
-    type8266: [slowness+, slownessx, slow+, slowx]
-    type8204: [harming, harm]
-    type8236: [harmingii, harming2, harmii, harm2]
-    # Splash Potions
-    type16384: [splashmundane, mundanesplash, mundane!]
-    type16385: [splashregeneration, regenerationsplash, regeneration!, splashregen, regensplash, regen!]
-    type16449: [splashregeneration+, regenerationsplash+, regeneration+splash, regeneration!+, regeneration+!,
-                splashregenerationx, regenerationxsplash, regenerationx!, splashregen+, regensplash+, regen+splash,
-                regen!+, regen+!, splashregenx, regenxsplash, regenx!]
-    type16417: [splashregenerationii, regenerationiisplash, regenerationii!, splashregeneration2, regenerationsplash2,
-                regeneration2splash, regeneration!2, regeneration2!, splashregenii, regeniisplash, regenii!,
-                splashregen2, regensplash2, regen2splash, regen!2, regen2!]
-    type16386: [splashswiftness, swiftnesssplash, swiftness!, splashswift, swiftsplash, swift!, splashspeed,
-                speedsplash, speed!]
-    type16450: [splashswiftness+, swiftnesssplash+, swiftness+splash, swiftness!+, swiftness+!, splashswiftnessx,
-                swiftnessxsplash, swiftnessx!, splashswift+, swiftsplash+, swift+splash, swift!+, swift+!, splashswiftx,
-                swiftxsplash, swiftx!, splashspeed+, speedsplash+, speed+splash, speed!+, speed+!, splashspeedx,
-                speedxsplash, speedx!]
-    type16418: [splashswiftnessii, swiftnessiisplash, swiftnessii!, splashswiftness2, swiftnesssplash2,
-                swiftness2splash, swiftness!2, swiftness2!, splashswiftii, swiftiisplash, swiftii!, splashswift2,
-                swiftsplash2, swift2splash, swift!2, swift2!]
-    type16387: [splashfireresistance, fireresistancesplash, fireresistance!, splashfireres, fireressplash, fireres!,
-                splashfireproof, fireproofsplash, fireproof!]
-    type16451: [splashfireresistance+, fireresistancesplash+, fireresistance+splash, fireresistance!+,
-                fireresistance+!, splashfireresistancex, fireresistancexsplash, fireresistancex!, splashfireres+,
-                fireressplash+, fireres+splash, fireres!+, fireres+!, splashfireresx, fireresxsplash, fireresx!,
-                splashfireproof+, fireproofsplash+, fireproof+splash, fireproof!+, fireproof+!, splashfireproofx,
-                fireproofxsplash, fireproofx!]
-    type16389: [splashhealing, healingsplash, healing!, splashheal, healsplash, heal!]
-    type16421: [splashhealing+, healingsplash+, healing+splash, healing!+, healing+!, splashhealingx, healingxsplash,
-                healingx!, splashheal+, healsplash+, heal+splash, heal!+, heal+!, splashhealx, healxsplash, healx!]
-    type16393: [splashstrength, strengthsplash, strength!, splashstrong, strongsplash, strong!, splashstr, strsplash,
-                str!]
-    type16457: [splashstrength+, strengthsplash+, strength+splash, strength!+, strength+!, splashstrengthx,
-                strengthxsplash, strengthx!, splashstrong+, strongsplash+, strong+splash, strong!+, strong+!,
-                splashstrongx, strongxsplash, strongx!, splashstr+, strsplash+, str+splash, str!+, str+!, splashstrx,
-                strxsplash, strx!]
-    type16425: [splashstrengthii, strengthiisplash, strengthii!, splashstrength2, strengthsplash2, strength2splash,
-                strength!2, strength2!, splashstrongii, strongiisplash, strongii!, splashstrong2, strongsplash2,
-                strong2splash, strong!2, strong2!, splashstrii, striisplash, strii!, splashstr2, strsplash2,
-                str2splash, str!2, str2!]
-    type16388: [splashpoison, poisonsplash, poison!]
-    type16452: [splashpoison+, poisonsplash+, poison+splash, poison!+, poison+!, splashpoisonx, poisonxsplash, poisonx!]
-    type16420: [splashpoisonii, poisoniisplash, poisonii!, splashpoison2, poisonsplash2, poison2splash, poison!2,
-                poison2!]
-    type16392: [splashweakness, weaknesssplash, weakness!, splashweak, weaksplash, weak!]
-    type16456: [splashweakness+, weaknesssplash+, weakness+splash, weakness!+, weakness+!, splashweaknessx,
-                weaknessxsplash, weaknessx!, splashweak+, weaksplash+, weak+splash, weak!+, weak+!, splashweakx,
-                weakxsplash, weakx!]
-    type16394: [splashslowness, slownesssplash, slowness!, splashslow, slowsplash, slow!]
-    type16458: [splashslowness+, slownesssplash+, slowness+splash, slowness!+, slowness+!, splashslownessx,
-                slownessxsplash, slownessx!, splashslow+, slowsplash+, slow+splash, slow!+, slow+!, splashslowx,
-                slowxsplash, slowx!]
-    type16396: [splashharming, harmingsplash, harming!, splashharm, harmsplash, harm!]
-    type16428: [splashharmingii, harmingiisplash, harmingii!, splashharming2, harmingsplash2, harming2splash,
-                harming!2, harming2!, splashharmii, harmiisplash, harmii!, splashharm2, harmsplash2, harm2splash,
-                harm!2, harm2!]
+  shroom:
+    north: [north, n]
+    south: [south, s]
+    east: [east, e]
+    west: [west, w]
+    top: [top]
+    stem: [stem]
+    interior: [interior, pores, inside, flesh, fleshy]
+  potion:
+  	zero: [water, waterbottle, bottleofwater]
+    mundane:
+      type0: [mundane]
+      # Potions with no effect
+      type6: [clear]
+      type7: [clear]
+      type11: [diffuse]
+      type13: [artless]
+      type14: [thin]
+      type15: [thin]
+      type16: [awkward]
+      type22: [bungling]
+      type23: [bungling]
+      type27: [smooth]
+      type29: [suave]
+      type30: [debonair]
+      type31: [debonair]
+      type32: [thick]
+      type38: [charming]
+      type39: [charming]
+      type43: [refined]
+      type45: [cordial]
+      type46: [sparkling]
+      type47: [sparkling]
+      type48: [potent]
+      type54: [rank]
+      type55: [rank]
+      type59: [acrid]
+      type61: [gross]
+      type62: [stinky]
+      type63: [stinky]
+#      type64: [mundane+, mundanex]
+#      type8192: [mundane]
+#      type16384: [splashmundane, mundanesplash, mundane!, '!mundane']
+    basic:
+      type1: [regeneration, regen]
+      type2: [swiftness, swift, speed]
+      type3: [fireresistance, fireres, fireproof]
+      type4: [poison]
+      type5: [healing, heal]
+      type8: [weakness, weak]
+      type9: [strength, strong, str]
+      type10: [slowness, slow]
+      type12: [harming, harm]
+    mod:
+      time: ['+', x]
+      strength: ['2', ii]
+      splash: ['!', splash]
 
 hooks:
   block: {gold: 41, iron: 42, diamond: 57, lapis: 22, lazuli: 22, lapislazuli: 22, snow: 80, clay: 82, glowstone: 89, glow: 89}

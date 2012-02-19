@@ -1,14 +1,14 @@
 package net.craftstars.general.items;
 
-import org.bukkit.Material;
 import org.bukkit.material.Step;
+
+import net.craftstars.general.util.range.IntRange;
 
 public class StepData extends ItemData {
 	@Override
-	public boolean validate(ItemID id, Material check) {
-		if(id.getData() == null) return true;
-		if(id.getData() > 5 || id.getData() < 0) return false;
-		return true;
+	public boolean validate(int data) {
+		if(new IntRange(0, 5).contains(data)) return true;
+		return super.validate(data);
 	}
 	
 	@Override
@@ -17,11 +17,11 @@ public class StepData extends ItemData {
 	}
 	
 	@Override
-	public Integer fromName(String name) {
+	public int fromName(String name) {
 		ItemID data = Items.validate(name + "/0");
-		if(data == null) return null;
+		if(data == null) return 0;
 		Step step = new Step(data.getMaterial());
-		if(step.getMaterial() != data.getMaterial()) return null;
-		return (int) step.getData();
+		if(step.getMaterial() != data.getMaterial()) return 0;
+		return step.getData();
 	}
 }

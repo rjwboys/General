@@ -445,10 +445,6 @@ public class generalCommand extends CommandBase {
 					return true;
 				} else {
 					ItemID item = Items.validate(args[1]);
-					if(!item.isValid()) {
-						Messaging.send(sender, "{rose}Invalid item.");
-						return true;
-					}
 					path += "item" + item.toString();
 				}
 			} else if(Toolbox.equalsOne(args[0], "teleport", "setspawn")) {
@@ -794,13 +790,16 @@ public class generalCommand extends CommandBase {
 					else Items.addGroupItem(groupName, args[2]);
 				break;
 				case '+':
-					Items.addGroupItem(groupName, args[2].substring(1));
+					if(!Items.addGroupItem(groupName, args[2].substring(1)))
+						Messaging.send(sender, LanguageText.GIVE_BAD_ID);
 				break;
 				case '-':
-					Items.removeGroupItem(groupName, args[2].substring(1));
+					if(!Items.removeGroupItem(groupName, args[2].substring(1)))
+						Messaging.send(sender, LanguageText.GIVE_BAD_ID);
 				break;
 				case '=':
-					Items.setGroupItems(groupName, Arrays.asList(args[2].substring(1).split(",")));
+					List<String> bad = Items.setGroupItems(groupName, Arrays.asList(args[2].substring(1).split(",")));
+					if(!bad.isEmpty()) Messaging.send(sender, LanguageText.LIST_BAD_ITEMS.value("items", bad.toString()));
 				break;
 				}
 				Messaging.send(sender, LanguageText.ADMIN_ITEM_GROUP_CHANGE.value("group", groupName, "items", Items.groupItems(groupName).toString()));

@@ -3,23 +3,25 @@ package net.craftstars.general.items;
 import org.bukkit.Material;
 import org.bukkit.DyeColor;
 
-final class ColourData extends ItemData {
+import net.craftstars.general.util.range.IntRange;
+
+final public class ColourData extends ItemData {
 	@Override
-	public boolean validate(ItemID id, Material check) {
-		if(id.getData() == null) return true;
-		if(id.getData() > 15 || id.getData() < 0) return false;
-		return true;
+	public boolean validate(int data) {
+		if(new IntRange(0,15).contains(data)) return true;
+		return super.validate(data);
 	}
 	
 	@Override
 	public String getName(int data) {
-		return DyeColor.getByData((byte) data).toString();
+		byte data2 = (byte) (material == Material.INK_SACK ? 15 - data : data);
+		return DyeColor.getByData(data2).toString();
 	}
 	
 	@Override
-	public Integer fromName(String name) {
+	public int fromName(String name) {
 		DyeColor data = DyeColor.valueOf(name.toUpperCase());
-		if(data == null) return null;
-		return (int) data.getData();
+		if(data == null) return 0;
+		return material == Material.INK_SACK ? 15 - data.getData() : data.getData();
 	}
 }

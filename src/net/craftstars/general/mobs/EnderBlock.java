@@ -9,6 +9,7 @@ import org.bukkit.entity.Enderman;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.material.MaterialData;
 
+import net.craftstars.general.items.InvalidItemException;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.text.LanguageText;
@@ -53,15 +54,18 @@ public class EnderBlock extends MobData {
 			id = new ItemID(0,0);
 			return;
 		}
-		ItemID item = Items.validate(carry);
-		if(item == null) invalidate();
-		else if(!item.isValid()) invalidate();
-		else if(!item.getMaterial().isBlock()) invalidate();
-		else {
-			block = item.getMaterial();
-			if(item.getData() != null)
-				data = item.getData();
-			else data = 0;
+		ItemID item = null;
+		try {
+			item = Items.validate(carry);
+			if(!item.getMaterial().isBlock()) invalidate();
+			else {
+				block = item.getMaterial();
+				if(item.getData() != null)
+					data = item.getData();
+				else data = 0;
+			}
+		} catch(InvalidItemException e) {
+			invalidate();
 		}
 		id = item;
 	}

@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
+import net.craftstars.general.items.InvalidItemException;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.text.LanguageText;
@@ -30,9 +31,15 @@ public class itemsCommand extends CommandBase {
 		Player toWhom = (Player) args.get("player");
 		String[] items = (String[]) args.get("items");
 		ArrayList<String> display = new ArrayList<String>();
+		ArrayList<String> bad = new ArrayList<String>();
 		for(String item : items) {
-			ItemID what = Items.validate(item);
-			if(what == null || !what.isValid()) continue;
+			ItemID what;
+			try {
+				what = Items.validate(item);
+			} catch(InvalidItemException e) {
+				bad.add(item);
+				continue;
+			}
 			if(!what.canGive(sender)) continue;
 			if(!EconomyManager.canPay(sender, 1, "economy.give.item" + item.toString())) continue;
 			display.add(what.getName());
@@ -45,6 +52,7 @@ public class itemsCommand extends CommandBase {
 			Messaging.send(toWhom, LanguageText.ITEMS_GIFTED.value("items", text));
 			Messaging.send(sender, LanguageText.ITEMS_GIFT.value("items", text, "player", toWhom.getName()));
 		}
+		if(!bad.isEmpty()) Messaging.send(sender, LanguageText.LIST_BAD_ITEMS.value("items", bad.toString()));
 		return true;
 	}
 

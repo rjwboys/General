@@ -1,21 +1,15 @@
 package net.craftstars.general.items;
 
+import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.Material;
-import org.bukkit.util.config.ConfigurationNode;
-
-import net.craftstars.general.General;
+import org.bukkit.entity.Player;
 
 public class PotionData extends ItemData {
-	private static final String[] potions = {
-		"Nothing","Regeneration","Swiftness","Fire Resistance","Poison","Healing","Nothing","Nothing",
-		"Weakness","Strength","Slowness","Nothing","Harming","Nothing","Nothing","Nothing"
-	};
 	private static final int SPLASH = 0x4000, EXTEND = 0x40, IMPROVE = 0x20;
 	
 	@Override
-	public boolean validate(ItemID id, Material check) {
+	public boolean validate(int data) {
 		// TODO Auto-generated method stub
 		return true;
 	}
@@ -32,29 +26,117 @@ public class PotionData extends ItemData {
 		return data & IMPROVE;
 	}
 	
+	@Override
 	public String getName(int data) {
+//		if(data <= 64 || data == 8192 || data == 16384) {
+//			List<String> list = Items.variantNames("potion.mundane", data);
+//			if(list != null && !list.isEmpty()) return list.get(0);
+//		}
+		boolean mundane = false;
+		List<String> list = Items.variantNames("potion.basic", data & 0xF);
+		if(list == null || list.isEmpty()) {
+			list = Items.variantNames("potion.mundane", data & 0x3F);
+			mundane = true;
+		}
+		if(list == null || list.isEmpty()) return super.getName(data);
 		StringBuilder name = new StringBuilder();
-		if(isSplash(data) > 0) name.append("Splash ");
-		name.append("Potion of ");
-		name.append(potions[data & 0xF]);
-		if(isExtended(data) > 0) name.append(" (X)");
-		else if(isImproved(data) > 0) name.append("(II)");
+		name.append(list.get(0));
+		if(isExtended(data) > 0) name.append("x");
+		else if(!mundane && isImproved(data) > 0) name.append("2");
+		if(isSplash(data) > 0) name.append("!");
+//		if(isSplash(data) > 0) name.append("Splash ");
+//		name.append("Potion of ");
+//		name.append(potions[data & 0xF]);
+//		if(isExtended(data) > 0) name.append(" (X)");
+//		else if(isImproved(data) > 0) name.append("(II)");
 		return name.toString();
 	}
 	
-	public Integer fromName(String name) {
+	@Override
+	public int fromName(String name) {
 		int data = 0x2000;
 		name = name.toLowerCase();
-		if(name.startsWith("splash")) data |= SPLASH;
-		if(name.endsWith("+") || name.endsWith("(X)")) data |= EXTEND;
-		else if(name.endsWith("2") || name.endsWith("(II)")) data |= IMPROVE;
-		name = name.replaceAll("splash|\\+|\\d|\\((X|II)\\)", "");
-		General.logger.info("Trying to give potion: " + name);
-		for(int i = 0; i < 16; i++) {
-			String key = potions[i].toLowerCase().replace(" ", "");
-			List<String> thisItem = Items.getPotions(key);
-			if(thisItem.contains(name) || key.equals(name)) data |= i;
+		List<String> splash = Items.variantNames("potion.mod.splash");
+		if(splash == null) splash = Arrays.asList("splash","!");
+		splash = allToLower(splash);
+		List<String> extend = Items.variantNames("potion.mod.time");
+		if(extend == null) extend = Arrays.asList("+","X","(X)");
+		extend = allToLower(extend);
+		List<String> improve = Items.variantNames("potion.mod.strength");
+		if(improve == null) improve = Arrays.asList("2","II","(II)");
+		improve = allToLower(improve);
+		// Try splash suffix first
+		for(String suffix : splash) {
+			if(name.endsWith(suffix)) {
+				data |= SPLASH;
+				name = name.replace(suffix, "");
+				break;
+			}
 		}
+		// Then improve/extend suffixes
+		for(String suffix : improve) {
+			if(name.endsWith(suffix)) {
+				data |= IMPROVE;
+				name = name.replace(suffix, "");
+				break;
+			}
+		}
+		for(String suffix : extend) {
+			if(name.endsWith(suffix)) {
+				data |= EXTEND;
+				name = name.replace(suffix, "");
+				break;
+			}
+		}
+		// Then splash suffix again
+		for(String suffix : splash) {
+			if(name.endsWith(suffix)) {
+				data |= SPLASH;
+				name = name.replace(suffix, "");
+				break;
+			}
+		}
+		// And finally splash prefix
+		for(String prefix : splash) {
+			if(name.startsWith(prefix)) {
+				data |= SPLASH;
+				name = name.replace(prefix, "");
+				break;
+			}
+		}
+		// Now the potion name itself
+		for(int i = 0; i < 16; i++) {
+			List<String> list = Items.variantNames("potion.basic", i);
+			if(list == null || list.isEmpty()) continue;
+			list = allToLower(list);
+			if(list.contains(name)) {
+				data |= i;
+				return data;
+			}
+		}
+		// Try basic names if we didn't find an actually valid potion
+		for(int i = 0; i < 64; i++) {
+			List<String> list = Items.variantNames("potion.mundane", i);
+			if(list == null || list.isEmpty()) continue;
+			list = allToLower(list);
+			if(list.contains(name)) data |= i;
+		}
+//		if(name.startsWith("splash")) data |= SPLASH;
+//		if(name.endsWith("+") || name.endsWith("(X)")) data |= EXTEND;
+//		else if(name.endsWith("2") || name.endsWith("(II)")) data |= IMPROVE;
+//		name = name.replaceAll("splash|\\+|\\d|\\((X|II)\\)", "");
+//		General.logger.info("Trying to give potion: " + name);
+//		for(int i = 0; i < 16; i++) {
+//			String key = potions[i].toLowerCase().replace(" ", "");
+//			List<String> thisItem = Items.getPotions(key);
+//			if(thisItem.contains(name) || key.equals(name)) data |= i;
+//		}
 		return data;
+	}
+	
+	@Override
+	public int init(int data, Player who) {
+		if(data == 0) return 0;
+		return data | 0x2000;
 	}
 }

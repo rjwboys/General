@@ -4,19 +4,30 @@ import org.bukkit.Material;
 
 public class ToolDamage extends ItemData {
 	@Override
-	public boolean validate(ItemID id, Material check) {
-		if(id.getData() != null && id.getData() != 0) {
-			boolean isInvalid = true;
-			if(isDamageable(id.getId())) isInvalid = false;
-			if(check.getData() != null) isInvalid = false;
-			if(isInvalid)
-				return false;
-			else if(id.getData() > check.getMaxDurability()) return false;
+	public boolean validate(int damage) {
+		if(damage != 0) {
+			if(!isDamageable(material.getId())) return super.validate(damage);
+			else if(damage > material.getMaxDurability()) return super.validate(damage);
 		}
 		return true;
 	}
 	
 	public static boolean isDamageable(int id) {
 		return Material.getMaterial(id).getMaxDurability() != -1;
+	}
+
+	@Override
+	public int fromName(String data) {
+		if(data.endsWith("%")) {
+			try {
+				int n = Integer.parseInt(data.substring(0, data.length() - 1));
+				if(n > 100) return n;
+				double percent = n;
+				percent /= 100;
+				return (int)(percent * material.getMaxDurability());
+			} catch(NumberFormatException e) {
+				return 0;
+			}
+		} else return super.fromName(data);
 	}
 }

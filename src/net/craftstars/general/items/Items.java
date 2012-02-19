@@ -23,6 +23,8 @@ import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
+import net.craftstars.general.util.range.IntRange;
+import net.craftstars.general.util.range.Range;
 
 public final class Items {
 	private static Configuration config;
@@ -90,11 +92,7 @@ public final class Items {
 	}
 	
 	public static void setup() {
-		Properties itemsdb = new Properties();
 		loadConfig();
-		try {
-			itemsdb.load(new FileInputStream("items.db"));
-		} catch(Exception ex) {}
 		aliases = new HashMap<String, ItemID>();
 		names = new HashMap<ItemID, String>();
 		
@@ -334,18 +332,11 @@ public final class Items {
 			}
 		}
 		
-		// Was a valid data/id obtained? If not, we're done; it's invalid.
-		if(ret == null || !ret.isValid()) return ret;
-		
 		// Make sure it's the ID of a valid item.
-		Material check = Material.getMaterial(ret.getId());
-		if(check == null) return ret.invalidate(false);
+		ret.validateId();
 		
 		// Make sure the damage value is valid.
-		ItemData data = ItemData.getData(check);
-		if(!data.validate(ret, check)) ret.invalidate(true);
-		
-		ret.setName();
+		ret.validateData();
 		
 		return ret;
 	}
@@ -359,13 +350,8 @@ public final class Items {
 			}
 		} else if(ret.getData() != null) { // This means a "richalias" was used, which includes the data value.
 			ret.invalidate(true); // No data value is valid with a "richalias".
-		} else {
-			try {
-				ret.setData(Integer.valueOf(data));
-			} catch(NumberFormatException x) {
-				ret.setData(findVariant(ret.getId(), data)).setVariant(data);
-			}
-		}
+		} else ret.setData(ret.getDataType().fromName(data));
+		if(ret == null) throw new InvalidItemException(LanguageText.GIVE_BAD_ID);
 		return ret;
 	}
 	
@@ -378,15 +364,14 @@ public final class Items {
 				General.logger.error("aliases is null");
 			else for(String alias : aliases.keySet()) {
 				if(!alias.equalsIgnoreCase(item)) continue;
-				ret = new ItemID(aliases.get(alias));
-				ret.setName(alias, true);
+				ret = aliases.get(alias).clone();
 			}
 			if(ret == null) {
 				for(Material material : Material.values()) {
 					String mat = material.toString();
 					if(mat.equalsIgnoreCase(item) || mat.replace("_", "-").equalsIgnoreCase(item)
 							|| mat.replace("_", "").equalsIgnoreCase(item)) {
-						ret = new ItemID(material).setName(material.toString(), true);
+						ret = new ItemID(material);
 					}
 				}
 			}
@@ -394,27 +379,27 @@ public final class Items {
 		return ret;
 	}
 	
-	private static Integer findVariant(int id, String data) {
-		// Special case for maps
-		if(id == Material.MAP.getId() && data.startsWith("z")) {
-			int zoom = 90000;
-			try {
-				zoom += Integer.parseInt(data.substring(1));
-				return zoom;
-			} catch(NumberFormatException e) {}
-		}
-		ConfigurationNode thisItem = config.getNode("variants.item" + Integer.toString(id));
-		if(thisItem == null) return null;
-		int i = 0;
-		List<String> thisVariant;
-		do {
-			thisVariant = thisItem.getStringList("type" + Integer.toString(i), null);
-			if(thisVariant.contains(data)) return i;
-			i++;
-		} while(!thisVariant.isEmpty());
-		ItemData dataType = ItemData.getData(Material.getMaterial(id));
-		return dataType.fromName(data);
-	}
+//	private static Integer findVariant(int id, String data) {
+//		// Special case for maps
+//		if(id == Material.MAP.getId() && data.startsWith("z")) {
+//			int zoom = 90000;
+//			try {
+//				zoom += Integer.parseInt(data.substring(1));
+//				return zoom;
+//			} catch(NumberFormatException e) {}
+//		}
+//		ConfigurationNode thisItem = config.getNode("variants.item" + Integer.toString(id));
+//		if(thisItem == null) return null;
+//		int i = 0;
+//		List<String> thisVariant;
+//		do {
+//			thisVariant = thisItem.getStringList("type" + Integer.toString(i), null);
+//			if(thisVariant.contains(data)) return i;
+//			i++;
+//		} while(!thisVariant.isEmpty());
+//		ItemData dataType = ItemData.getData(Material.getMaterial(id));
+//		return dataType.fromName(data);
+//	}
 	
 	public static boolean checkID(int id) {
 		for(Material item : Material.values()) {
@@ -443,6 +428,16 @@ public final class Items {
 	public static List<String> variantNames(ItemID id) {
 		if(id != null && id.getData() != null)
 			return config.getStringList("variants.item" + id.getId() + ".type" + id.getData(), null);
+		return null;
+	}
+	
+	public static List<String> variantNames(String key) {
+		if(key == null) return null;
+		return config.getStringList("special." + key, null);
+	}
+	
+	public static List<String> variantNames(String key, int data) {
+		if(key != null) return config.getStringList("special." + key + ".type" + data, null);
 		return null;
 	}
 	
@@ -505,34 +500,77 @@ public final class Items {
 		return itemName + '/' + dataName;
 	}
 
-	public static void setGroupItems(String groupName, List<String> groupItems) {
+	public static List<String> setGroupItems(String groupName, List<String> groupItems) {
 		ArrayList<Integer> items = new ArrayList<Integer>();
+		ArrayList<String> bad = new ArrayList<String>();
 		for(String item : groupItems) {
-			ItemID thisItem = validate(item);
-			if(thisItem.isValid()) items.add(thisItem.getId());
+			try {
+				ItemID thisItem = validate(item);
+				items.add(thisItem.getId());
+			} catch(InvalidItemException e) {
+				bad.add(item);
+			}
 		}
 		Option.GROUP(groupName).set(items);
+		return bad;
 	}
 
 	public static List<Integer> groupItems(String groupName) {
 		return Option.GROUP(groupName).get();
 	}
 
-	public static void addGroupItem(String groupName, String item) {
+	public static boolean addGroupItem(String groupName, String item) {
 		List<Integer> group = groupItems(groupName);
 		ItemID thisItem = validate(item);
-		if(thisItem.isValid()) group.add(thisItem.getId());
+		try {
+			group.add(thisItem.getId());
+		} catch(InvalidItemException e) {
+			return false;
+		}
 		Option.GROUP(groupName).set(group);
+		return true;
 	}
 
-	public static void removeGroupItem(String groupName, String item) {
+	public static boolean removeGroupItem(String groupName, String item) {
 		List<Integer> group = groupItems(groupName);
 		ItemID thisItem = validate(item);
-		if(thisItem.isValid()) group.remove(thisItem.getId());
+		try {
+			group.remove(thisItem.getId());
+		} catch(InvalidItemException e) {
+			return false;
+		}
 		Option.GROUP(groupName).set(group);
+		return true;
 	}
 
 	public static List<String> getPotions(String key) {
 		return config.getStringList("variants." + key, null);
+	}
+
+	public static int getMaxData(Material mat) {
+		int data = config.getInt("variants.item" + mat.getId() + ".max", -1);
+		if(data == -1) return mat.getMaxDurability();
+		return 0;
+	}
+
+	public static Range<Integer> getDataRange(Material mat) {
+		String range = config.getString("variants.item" + mat.getId() + ".range");
+		if(range == null) return null;
+		return IntRange.parse(range);
+	}
+
+	public static List<Range<Integer>> getDataRanges(Material mat) {
+		List<String> list = config.getStringList("variants.item" + mat.getId() + ".range", null);
+		if(list == null || list.isEmpty()) return null;
+		List<Range<Integer>> ranges = new ArrayList<Range<Integer>>();
+		for(String range : list) {
+			try {
+				int n = Integer.parseInt(range);
+				ranges.add(new IntRange(n));
+			} catch(NumberFormatException e) {
+				ranges.add(IntRange.parse(range));
+			}
+		}
+		return ranges;
 	}
 }

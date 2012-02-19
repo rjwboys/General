@@ -1,25 +1,25 @@
 package net.craftstars.general.items;
 
 import org.bukkit.CoalType;
-import org.bukkit.Material;
 
-final class CoalData extends ItemData {
+final public class CoalData extends ItemData {
 	@Override
-	public boolean validate(ItemID id, Material check) {
-		if(id.getData() == null) return true;
-		if(id.getData() > 1 || id.getData() < 0) return false;
-		return true;
+	public boolean validate(int data) {
+		if(data == 0 || data == 1) return true;
+		return super.validate(data);
 	}
 	
 	@Override
 	public String getName(int data) {
-		return CoalType.getByData((byte) data).toString();
+		CoalType coal = CoalType.getByData((byte) data);
+		if(coal == null) return super.getName(data);
+		return coal.toString();
 	}
 	
 	@Override
-	public Integer fromName(String name) {
+	public int fromName(String name) {
 		CoalType data = CoalType.valueOf(name.toUpperCase());
-		if(data == null) return null;
-		return (int) data.getData();
+		if(data == null) return super.fromName(name);
+		return data.getData();
 	}
 }

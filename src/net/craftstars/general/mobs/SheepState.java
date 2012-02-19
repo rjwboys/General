@@ -3,6 +3,7 @@ package net.craftstars.general.mobs;
 import java.util.EnumSet;
 import java.util.Random;
 
+import net.craftstars.general.items.InvalidItemException;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.text.LanguageText;
@@ -53,9 +54,13 @@ public class SheepState extends MobData {
 			clr = DyeColor.getByData((byte) generator.nextInt(16));
 		} else {
 			sheared = false;
-			ItemID wool = Items.validate("35:" + data);
-			if(wool == null || !wool.isValid()) invalidate();
-			else clr = DyeColor.getByData((byte) (int) wool.getData());
+			ItemID wool;
+			try {
+				wool = Items.validate("35/" + data);
+				clr = DyeColor.getByData((byte) (int) wool.getData());
+			} catch(InvalidItemException e) {
+				invalidate();
+			}
 		}
 	}
 	

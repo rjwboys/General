@@ -416,6 +416,7 @@ public enum LanguageText {
 	ADMIN_ITEM_GROUP_REMOVE("admin.item.group.remove", "Group '{group}' has been deleted (if it existed)."),
 	ADMIN_ITEM_GROUP_CHANGE("admin.item.group.change", "Group '{group}' now contains: {items}"),
 	ADMIN_ITEM_BAD("admin.item.bad", "{rose}No such item."),
+	LIST_BAD_ITEMS("give.badlist", "The following invalid items were ignored: {items}"),
 	;
 	
 	private static YamlConfiguration config;

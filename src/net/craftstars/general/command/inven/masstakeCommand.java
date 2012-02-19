@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
+import net.craftstars.general.items.InvalidItemException;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.text.LanguageText;
@@ -39,16 +40,21 @@ public class masstakeCommand extends CommandBase {
 			}
 		} else args = dropLastArg(args);
 		ArrayList<ItemID> items = new ArrayList<ItemID>();
+		ArrayList<String> bad = new ArrayList<String>();
 		for(String item : args) {
 			if(item != null){
-				ItemID itemid = Items.validate(item);
-				if(itemid != null && itemid.isIdValid() && itemid.isDataValid()) {
+				ItemID itemid;
+				try {
+					itemid = Items.validate(item);
 					items.add(itemid);
+				} catch(InvalidItemException e) {
+					bad.add(item);
 				}
 			}
 		}
 		params.put("player", who);
 		params.put("items", items);
+		params.put("bad", bad);
 		return params;
 	}
 
@@ -69,6 +75,9 @@ public class masstakeCommand extends CommandBase {
 		if(!sender.equals(who))
 			Messaging.send(sender, LanguageText.MASSTAKE_THEFT.value("items", itemsText.toString(),
 				"player", who.getName(), "amount", amount));
+		@SuppressWarnings("unchecked")
+		ArrayList<String> bad = (ArrayList<String>)args.get("bad");
+		if(!bad.isEmpty()) Messaging.send(sender, LanguageText.LIST_BAD_ITEMS.value("items", bad.toString()));
 		return true;
 	}
 	

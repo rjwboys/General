@@ -65,8 +65,10 @@ public final class Kits {
 					warnMalformed(key, id);
 					continue;
 				}
-				ItemID item = Items.validate(itemName);
-				if(!item.isValid()) {
+				ItemID item;
+				try {
+					item = Items.validate(itemName);
+				} catch(InvalidItemException e) {
 					General.logger.warn(LanguageText.LOG_KIT_BAD_ITEM.value("kit", key, "item", id));
 					continue;
 				}

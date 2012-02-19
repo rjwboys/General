@@ -3,19 +3,16 @@ package net.craftstars.general.items;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.map.MapView;
-import org.bukkit.map.MapView.Scale;
 
 public class ItemID implements Cloneable, Comparable<ItemID> {
 	private int ID;
+	private ItemData dataType;
 	private int data;
-	private boolean dataMatters, isValid, nameDefaulted;
-	private String itemName = null, dataName = null;
+	private boolean dataMatters;
 	
 	public ItemID() {
 		this(0);
@@ -27,6 +24,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 	
 	public ItemID(int id, Integer d) {
 		this.ID = id;
+		dataType = ItemData.getData(Material.getMaterial(id));
 		if(d == null) {
 			this.data = 0;
 			this.dataMatters = false;
@@ -34,18 +32,6 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 			this.data = d;
 			this.dataMatters = true;
 		}
-		this.isValid = true;
-		this.nameDefaulted = true;
-	}
-	
-	public ItemID(ItemID item) {
-		this.ID = item.ID;
-		this.data = item.data;
-		this.dataMatters = item.dataMatters;
-		this.isValid = item.isValid;
-		this.itemName = item.itemName;
-		this.dataName = item.dataName;
-		this.nameDefaulted = item.nameDefaulted;
 	}
 	
 	public ItemID(Material m) {
@@ -58,10 +44,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 			this.ID = item.getTypeId();
 			this.data = item.getDurability();
 			this.dataMatters = true;
-			this.isValid = true;
-			this.itemName = Items.name(this);
-			this.dataName = "";
-			this.nameDefaulted = true;
+			dataType = ItemData.getData(Material.getMaterial(ID));
 		}
 	}
 	
@@ -91,84 +74,40 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		return this;
 	}
 	
-	public boolean isValid() {
-		return isIdValid() && isDataValid();
-	}
-	
-	public boolean isIdValid() {
-		if(!isValid) return dataMatters;
-		return true;
-	}
-	
-	public boolean isDataValid() {
-		if(!isValid) return !dataMatters;
-		return true;
-	}
-	
-	public ItemID invalidate(boolean dataOnly) {
-		isValid = false;
-		dataMatters = dataOnly;
-		return this;
+	public void invalidate(boolean dataOnly) {
+		if(dataOnly) throw new InvalidItemException(LanguageText.GIVE_BAD_DATA,
+			"data", getVariant(), "item", getName());
+		else throw new InvalidItemException(LanguageText.GIVE_BAD_ID);
 	}
 	
 	public String getName() {
-		if(itemName == null) return Integer.toString(ID);
-		return itemName;
-	}
-	
-	public ItemID setName() {
-		return setName(false);
-	}
-	
-	public ItemID setName(boolean isDefault) {
-		if(nameDefaulted || itemName == null) {
-			itemName = Items.name(this);
-			nameDefaulted = isDefault;
-		}
-		return this;
+		if(dataType.isNameCustom()) return dataType.getDisplayName();
+		return Items.name(this);
 	}
 	
 	public ItemID setName(String newName) {
-		return setName(newName, false);
-	}
-	
-	public ItemID setName(String newName, boolean isDefault) {
-		itemName = newName;
-		nameDefaulted = isDefault;
+		dataType.setDisplayName(newName);
 		return this;
 	}
 	
 	public String getVariant() {
-		if(dataName == null) return Integer.toString(data);
-		return dataName;
-	}
-	
-	public ItemID setVariant(String newVar) {
-		dataName = newVar;
-		return this;
+		return dataType.getName(data);
 	}
 	
 	@Override
 	public ItemID clone() {
-		return new ItemID(this);
+		ItemID clone;
+		try {
+			clone = (ItemID)super.clone();
+		} catch(CloneNotSupportedException e) {
+			return null;
+		}
+		clone.dataType = clone.dataType.clone();
+		return clone;
 	}
 	
 	public ItemStack getStack(int amount, Player who) {
-		if(!isValid) return null;
-		if(ID == Material.MAP.getId() && data > 90000) {
-			// Create a new map with the given zoom scale!
-			MapView map = Bukkit.createMap(who.getWorld());
-			map.setCenterX(who.getLocation().getBlockX());
-			map.setCenterZ(who.getLocation().getBlockZ());
-			switch(data) {
-			case 90001: map.setScale(Scale.CLOSEST); break;
-			case 90002: map.setScale(Scale.CLOSE); break;
-			case 90003: map.setScale(Scale.NORMAL); break;
-			case 90004: map.setScale(Scale.FAR); break;
-			case 90005: map.setScale(Scale.FARTHEST); break;
-			}
-			data = map.getId();
-		}
+		data = dataType.init(data, who);
 		if(dataMatters) return new ItemStack(ID, amount, (short) data);
 		return new ItemStack(ID, amount);
 	}
@@ -217,5 +156,18 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		if(!hasPermission)
 			Messaging.lacksPermission(who, itemNode, LanguageText.LACK_GIVE_ITEM, "item", getName());
 		return hasPermission;
+	}
+
+	public void validateId() {
+		Material check = Material.getMaterial(getId());
+		if(check == null) invalidate(false);
+	}
+
+	public void validateData() {
+		if(!dataType.validate(data)) invalidate(true);
+	}
+	
+	public ItemData getDataType() {
+		return dataType;
 	}
 }
