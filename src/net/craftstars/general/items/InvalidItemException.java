@@ -6,7 +6,7 @@ import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 
 public class InvalidItemException extends RuntimeException {
-	InvalidItemException(LanguageText msg, Object... params) {
+	public InvalidItemException(LanguageText msg, Object... params) {
 		super(msg.value(params));
 	}
 

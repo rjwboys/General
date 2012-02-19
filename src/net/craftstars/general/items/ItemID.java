@@ -74,12 +74,6 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		return this;
 	}
 	
-	public void invalidate(boolean dataOnly) {
-		if(dataOnly) throw new InvalidItemException(LanguageText.GIVE_BAD_DATA,
-			"data", getVariant(), "item", getName());
-		else throw new InvalidItemException(LanguageText.GIVE_BAD_ID);
-	}
-	
 	public String getName() {
 		if(dataType.isNameCustom()) return dataType.getDisplayName();
 		return Items.name(this);
@@ -160,11 +154,12 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 
 	public void validateId() {
 		Material check = Material.getMaterial(getId());
-		if(check == null) invalidate(false);
+		if(check == null) throw new InvalidItemException(LanguageText.GIVE_BAD_ID);
 	}
 
 	public void validateData() {
-		if(!dataType.validate(data)) invalidate(true);
+		if(!dataType.validate(data))
+			throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data", getVariant(), "item", getName());
 	}
 	
 	public ItemData getDataType() {

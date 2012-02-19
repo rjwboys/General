@@ -20,8 +20,12 @@ final public class ColourData extends ItemData {
 	
 	@Override
 	public int fromName(String name) {
-		DyeColor data = DyeColor.valueOf(name.toUpperCase());
-		if(data == null) return 0;
-		return material == Material.INK_SACK ? 15 - data.getData() : data.getData();
+		int id = listContainsId("colour", name, new IntRange(0,15));
+		if(id < 0) {
+			DyeColor data = DyeColor.valueOf(name.toUpperCase());
+			if(data == null) id = 0;
+			else id = data.getData();
+		}
+		return material == Material.INK_SACK ? 15 - id : id;
 	}
 }

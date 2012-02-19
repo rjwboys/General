@@ -13,6 +13,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
+import net.craftstars.general.mobs.InvalidMobException;
 import net.craftstars.general.mobs.MobData;
 import net.craftstars.general.mobs.MobType;
 import net.craftstars.general.teleport.Destination;
@@ -119,22 +120,11 @@ public class mobspawnCommand extends CommandBase {
 		String[] split;
 		split = mobName.split("[.,:/\\|]", 2);
 		MobType mob = MobType.getMob(split[0]);
-		if(mob == null) {
-			Messaging.send(sender, LanguageText.MOB_BAD_TYPE.value("mob", LanguageText.MOB_MOB.value(),
-				"type", split[0]));
-			return null;
-		}
+		if(mob == null) throw new InvalidMobException(LanguageText.MOB_BAD_TYPE,
+			"mob", LanguageText.MOB_MOB.value(), "type", split[0]);
 		MobData data;
-		if(split.length == 2) {
-			data = MobData.parse(mob, sender, split[1]);
-			if(data == null) {
-				Messaging.send(sender, LanguageText.MOB_BAD_TYPE.value("mob", mob.getName(),
-					"type", split[1]));
-				return null;
-			}
-		} else {
-			data = mob.getNewData();
-		}
+		if(split.length == 2) data = MobData.parse(mob, sender, split[1]);
+		else data = mob.getNewData();
 		return new SpawnResult(mob, data);
 	}
 

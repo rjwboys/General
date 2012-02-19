@@ -34,7 +34,7 @@ public class PigState extends MobData {
 			saddled = true;
 		else if(Toolbox.equalsOne(data, MobType.PIG.getDataList("free")))
 			saddled = false;
-		else invalidate();
+		else invalidate(data);
 	}
 	
 	@Override

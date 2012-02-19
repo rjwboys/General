@@ -57,7 +57,7 @@ public class EnderBlock extends MobData {
 		ItemID item = null;
 		try {
 			item = Items.validate(carry);
-			if(!item.getMaterial().isBlock()) invalidate();
+			if(!item.getMaterial().isBlock()) invalidate(carry);
 			else {
 				block = item.getMaterial();
 				if(item.getData() != null)
@@ -65,7 +65,7 @@ public class EnderBlock extends MobData {
 				else data = 0;
 			}
 		} catch(InvalidItemException e) {
-			invalidate();
+			invalidate(e, carry);
 		}
 		id = item;
 	}

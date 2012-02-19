@@ -247,4 +247,12 @@ public final class Toolbox {
 			duration = cooldown;
 		}
 	}
+	
+	public static <T extends Enum<T>> T enumValue(Class<T> cls, String val) {
+		try {
+			return Enum.valueOf(cls, val);
+		} catch(IllegalArgumentException e) {
+			return null;
+		}
+	}
 }

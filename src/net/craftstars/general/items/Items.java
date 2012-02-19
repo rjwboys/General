@@ -349,7 +349,8 @@ public final class Items {
 				return hooks.get(key);
 			}
 		} else if(ret.getData() != null) { // This means a "richalias" was used, which includes the data value.
-			ret.invalidate(true); // No data value is valid with a "richalias".
+			// No data value is valid with a "richalias".
+			throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data", ret.getVariant(), "item", ret.getName());
 		} else ret.setData(ret.getDataType().fromName(data));
 		if(ret == null) throw new InvalidItemException(LanguageText.GIVE_BAD_ID);
 		return ret;

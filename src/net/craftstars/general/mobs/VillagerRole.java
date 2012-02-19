@@ -76,7 +76,7 @@ public class VillagerRole extends MobData {
 				break;
 			}
 		}
-		if(role == null) invalidate();
+		if(role == null) invalidate(data);
 	}
 	
 	@Override

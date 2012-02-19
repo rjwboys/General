@@ -96,7 +96,7 @@ public class SlimeSize extends MobData {
 				sz = Integer.parseInt(data);
 				size = NamedSize.closestMatch(sz);
 			} catch(NumberFormatException e) {
-				invalidate();
+				invalidate(e, data);
 				size = NamedSize.MEDIUM;
 			}
 		} else sz = size.getSize();

@@ -24,19 +24,19 @@ public abstract class MobData {
 		MobData instance = mob.getNewData();
 		try {
 			instance.parse(setter, data);
-			if(instance.isValid()) return instance;
+			return instance;
 		} catch(IllegalArgumentException e) {
 		} catch(SecurityException e) {
 		}
 		return null;
 	}
 	
-	protected void invalidate() {
-		valid = false;
+	protected void invalidate(String data) {
+		throw new InvalidMobException(LanguageText.MOB_BAD_TYPE, "mob", mob.getName(), "type", data);
 	}
 	
-	protected boolean isValid() {
-		return valid;
+	protected void invalidate(Throwable cause, String data) {
+		throw new InvalidMobException(cause, LanguageText.MOB_BAD_TYPE, "mob", mob.getName(), "type", data);
 	}
 	
 	public String getBasic() {

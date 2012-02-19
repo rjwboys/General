@@ -16,9 +16,10 @@
 
 package net.craftstars.general.util.range;
 
+import java.util.Iterator;
 import java.util.Random;
 
-public abstract class Range<T extends Number & Comparable<T>> {
+public abstract class Range<T extends Number & Comparable<T>> implements Iterable<T> {
 	protected T min, max;
 	
 	public Range(T val) {
@@ -58,6 +59,7 @@ public abstract class Range<T extends Number & Comparable<T>> {
 	}
 	
 	protected abstract T negate(T num);
+	protected abstract T increment(T num);
 	
 	public Range<T> negate() {
 		T tmp = negate(min);
@@ -132,6 +134,36 @@ public abstract class Range<T extends Number & Comparable<T>> {
 			return template;
 		} catch(NumberFormatException e) {
 			throw new IllegalArgumentException(e);
+		}
+	}
+	
+	@Override
+	public Iterator<T> iterator() {
+		return new RangeIterator();
+	}
+	
+	private class RangeIterator implements Iterator<T> {
+		T next;
+		
+		RangeIterator() {
+			next = min;
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return next.compareTo(max) <= 0;
+		}
+
+		@Override
+		public T next() {
+			T ret = next;
+			next = increment(next);
+			return ret;
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
 		}
 	}
 }

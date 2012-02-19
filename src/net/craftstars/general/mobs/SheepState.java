@@ -59,7 +59,7 @@ public class SheepState extends MobData {
 				wool = Items.validate("35/" + data);
 				clr = DyeColor.getByData((byte) (int) wool.getData());
 			} catch(InvalidItemException e) {
-				invalidate();
+				invalidate(e, data);
 			}
 		}
 	}

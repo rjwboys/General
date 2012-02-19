@@ -34,6 +34,11 @@ public class IntRange extends Range<Integer> {
 	public static IntRange parse(String val) {
 		return (IntRange) Range.parse(val, new IntRange());
 	}
+
+	@Override
+	protected Integer increment(Integer num) {
+		return num + 1;
+	}
 	
 //	public DoubleRange toDoubleRange() {
 //		return new DoubleRange(getMin().doubleValue(), getMax().doubleValue());

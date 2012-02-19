@@ -1,5 +1,6 @@
 package net.craftstars.general.items;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,42 @@ public class ItemData implements Cloneable {
 	protected List<String> allToLower(List<String> list) {
 		for(int j = 0; j < list.size(); j++) list.set(j, list.get(j).toLowerCase());
 		return list;
+	}
+	
+	protected boolean listContains(String key, String val, List<String> dflt) {
+		List<String> list = Items.variantNames(key);
+		if(list == null || list.isEmpty()) list = dflt;
+		list = allToLower(list);
+		return list.contains(val);
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected int listContainsId(String key, String val, Range<Integer> range) {
+		for(int i : range) {
+			if(listContains(key + ".type" + i, val, Collections.EMPTY_LIST))
+				return i;
+		}
+		return -1;
+	}
+	
+	protected String listContainsPrefix(String key, String val, List<String> dflt) {
+		List<String> list = Items.variantNames(key);
+		if(list == null || list.isEmpty()) list = dflt;
+		list = allToLower(list);
+		for(String prefix : list) {
+			if(val.startsWith(prefix)) return prefix;
+		}
+		return "";
+	}
+	
+	protected String listContainsSuffix(String key, String val, List<String> dflt) {
+		List<String> list = Items.variantNames(key);
+		if(list == null || list.isEmpty()) list = dflt;
+		list = allToLower(list);
+		for(String suffix : list) {
+			if(val.endsWith(suffix)) return suffix;
+		}
+		return "";
 	}
 	
 	public boolean validate(int data) {

@@ -30,68 +30,38 @@ public class BigShroomData extends ItemData {
 		List<String> list;
 		name = name.toLowerCase();
 		// First check stem/interior
-		list = Items.variantNames("shroom.stem");
-		if(list == null || list.isEmpty()) list = Arrays.asList("stem");
-		list = allToLower(list);
-		if(list.contains(name)) return 10;
-		list = Items.variantNames("shroom.interior");
-		if(list == null || list.isEmpty()) list = Arrays.asList("west");
-		list = allToLower(list);
-		if(list.contains(name)) return 0;
+		if(listContains("shroom.stem", name, Arrays.asList("stem"))) return 10;
+		if(listContains("shroom.interior", name, Arrays.asList("west"))) return 0;
+		String prefix;
 		// Next check top, since it's invalid without it
-		list = Items.variantNames("shroom.top");
-		if(list == null || list.isEmpty()) list = Arrays.asList("top");
-		list = allToLower(list);
 		int data = 0;
-		for(String prefix : list) {
-			if(name.startsWith(prefix)) {
-				data = 5;
-				name = name.replace(prefix, "");
-				break;
-			}
+		prefix = listContainsPrefix("shroom.top", name, Arrays.asList("top"));
+		if(!prefix.isEmpty()) {
+			data = 5;
+			name = name.replace(prefix, "");
 		}
 		if(data != 5) return super.fromName(name);
 		// Then check north/south
-		list = Items.variantNames("shroom.north");
-		if(list == null || list.isEmpty()) list = Arrays.asList("north");
-		list = allToLower(list);
-		for(String prefix : list) {
-			if(name.startsWith(prefix)) {
-				data -= 3;
-				name = name.replace(prefix, "");
-				break;
-			}
+		prefix = listContainsPrefix("shroom.north", name, Arrays.asList("north"));
+		if(!prefix.isEmpty()) {
+			data -= 3;
+			name = name.replace(prefix, "");
 		}
-		list = Items.variantNames("shroom.south");
-		if(list == null || list.isEmpty()) list = Arrays.asList("south");
-		list = allToLower(list);
-		for(String prefix : list) {
-			if(name.startsWith(prefix)) {
-				data += 3;
-				name = name.replace(prefix, "");
-				break;
-			}
+		prefix = listContainsPrefix("shroom.south", name, Arrays.asList("south"));
+		if(!prefix.isEmpty()) {
+			data += 3;
+			name = name.replace(prefix, "");
 		}
 		// And finally east/west
-		list = Items.variantNames("shroom.west");
-		if(list == null || list.isEmpty()) list = Arrays.asList("west");
-		list = allToLower(list);
-		for(String prefix : list) {
-			if(name.startsWith(prefix)) {
-				data--;
-				name = name.replace(prefix, "");
-				break;
-			}
+		prefix = listContainsPrefix("shroom.west", name, Arrays.asList("west"));
+		if(!prefix.isEmpty()) {
+			data--;
+			name = name.replace(prefix, "");
 		}
-		list = Items.variantNames("shroom.east");
-		if(list == null || list.isEmpty()) list = Arrays.asList("east");
-		list = allToLower(list);
-		for(String prefix : list) {
-			if(name.startsWith(prefix)) {
-				data++;
-				name = name.replace(prefix, "");
-				break;
-			}
+		prefix = listContainsPrefix("shroom.east", name, Arrays.asList("east"));
+		if(!prefix.isEmpty()) {
+			data++;
+			name = name.replace(prefix, "");
 		}
 		return data;
 	}

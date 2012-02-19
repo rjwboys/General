@@ -19,6 +19,7 @@ import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.items.Kit;
 import net.craftstars.general.items.Kits;
+import net.craftstars.general.mobs.InvalidMobException;
 import net.craftstars.general.mobs.MobData;
 import net.craftstars.general.mobs.MobType;
 import net.craftstars.general.teleport.DestinationType;
@@ -362,8 +363,9 @@ public class generalCommand extends CommandBase {
 					// Validate basic data, if present
 					MobData mobData = null, mountData = null;
 					if(data != null) {
-						mobData = MobData.parse(mob, null, data);
-						if(mobData == null) {
+						try {
+							mobData = MobData.parse(mob, null, data);
+						} catch(InvalidMobException e) {
 							Messaging.send(sender, LanguageText.ADMIN_ECON_BAD_MOBDATA);
 							return true;
 						}

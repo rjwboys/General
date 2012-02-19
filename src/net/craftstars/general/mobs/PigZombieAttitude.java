@@ -37,7 +37,7 @@ public class PigZombieAttitude extends MobData {
 			try {
 				anger = Integer.parseInt(data);
 			} catch(NumberFormatException e) {
-				invalidate();
+				invalidate(data);
 			}
 		}
 	}

@@ -1,6 +1,11 @@
 package net.craftstars.general.items;
 
+import org.bukkit.DyeColor;
 import org.bukkit.GrassSpecies;
+import org.bukkit.Material;
+
+import net.craftstars.general.util.Toolbox;
+import net.craftstars.general.util.range.IntRange;
 
 public class LongGrassData extends ItemData {
 	@Override
@@ -16,8 +21,12 @@ public class LongGrassData extends ItemData {
 	
 	@Override
 	public int fromName(String name) {
-		GrassSpecies data = GrassSpecies.valueOf(name.toUpperCase());
-		if(data == null) return 0;
-		return data.getData();
+		int id = listContainsId("grass", name, new IntRange(0,2));
+		if(id < 0) {
+			GrassSpecies data = Toolbox.enumValue(GrassSpecies.class, name.toUpperCase());
+			if(data == null) return 0;
+			else return data.getData();
+		}
+		return id;
 	}
 }

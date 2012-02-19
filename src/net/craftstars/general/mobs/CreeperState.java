@@ -34,7 +34,7 @@ public class CreeperState extends MobData {
 			powered = true;
 		else if(Toolbox.equalsOne(data, MobType.CREEPER.getDataList("unpowered")))
 			powered = false;
-		else invalidate();
+		else invalidate(data);
 	}
 	
 	@Override
