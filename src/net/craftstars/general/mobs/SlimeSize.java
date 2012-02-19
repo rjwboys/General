@@ -4,7 +4,6 @@ package net.craftstars.general.mobs;
 import java.util.HashMap;
 
 import net.craftstars.general.text.LanguageText;
-import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Option;
 
 import org.bukkit.command.CommandSender;
@@ -44,8 +43,8 @@ public class SlimeSize extends MobData {
 			return match;
 		}
 
-		public String getPermission() {
-			return "general.mobspawn.slime." + toString().toLowerCase();
+		public String getPermission(String base) {
+			return base + "." + toString().toLowerCase();
 		}
 		
 		public String getName() {
@@ -76,8 +75,8 @@ public class SlimeSize extends MobData {
 	}
 	
 	@Override
-	public boolean hasPermission(CommandSender byWhom) {
-		return byWhom.hasPermission(size.getPermission());
+	public String getPermission(String base) {
+		return size.getPermission(base);
 	}
 
 	@Override
@@ -108,11 +107,15 @@ public class SlimeSize extends MobData {
 		if(Option.nodeExists(node)) return node;
 		else return base + ".default";
 	}
-
+	
 	@Override
-	public void lacksPermission(CommandSender fromWhom) {
-		Messaging.lacksPermission(fromWhom, size.getPermission(), LanguageText.LACK_MOBSPAWN_SLIME,
-			"size", size.getName());
+	protected LanguageText getLangKey() {
+		return LanguageText.LACK_MOBSPAWN_SLIME;
+	}
+	
+	@Override
+	protected Object[] getLangParams() {
+		return new Object[] {"size", size.getName()};
 	}
 
 	@Override

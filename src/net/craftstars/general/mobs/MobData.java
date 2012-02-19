@@ -7,11 +7,11 @@ import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 
 public abstract class MobData {
-	public abstract boolean hasPermission(CommandSender sender);
 	public abstract void setForMob(LivingEntity entity);
 	public abstract void parse(CommandSender setter, String data);
 	public abstract String getCostNode(String baseNode);
 	public abstract String[] getValues();
+	protected abstract String getPermission(String base);
 	
 	protected boolean valid = true;
 	private MobType mob;
@@ -39,12 +39,29 @@ public abstract class MobData {
 		throw new InvalidMobException(cause, LanguageText.MOB_BAD_TYPE, "mob", mob.getName(), "type", data);
 	}
 	
+	public final boolean hasPermission(CommandSender sender) {
+		return sender.hasPermission(getMobPerm());
+	}
+	
 	public String getBasic() {
 		return getValues()[0];
 	}
 	
-	public void lacksPermission(CommandSender sender) {
-		Messaging.lacksPermission(sender, mob.getPermission(), LanguageText.LACK_MOBSPAWN_MOB,
-			"mob", mob.getName(), "mobs", mob.getPluralName());
+	protected String getMobPerm() {
+		return mob.getPermission();
+	}
+	
+	protected LanguageText getLangKey() {
+		return LanguageText.LACK_MOBSPAWN_MOB;
+	}
+	
+	protected Object[] getLangParams() {
+		return new Object[] {"mob", mob.getName(), "mobs", mob.getPluralName()};
+	}
+	
+	public final void lacksPermission(CommandSender sender) {
+		LanguageText lang = getLangKey();
+		if(lang == null) Messaging.lacksPermission(sender, getPermission(getMobPerm()));
+		else Messaging.lacksPermission(sender, getPermission(getMobPerm()), lang, getLangParams());
 	}
 }

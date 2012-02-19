@@ -255,4 +255,15 @@ public final class Toolbox {
 			return null;
 		}
 	}
+
+	public static String[] cartesianProduct(String[] left, String[] right, char joiner) {
+		String[] result = new String[left.length * right.length];
+		int i = 0;
+		for(String first : left) {
+			for(String second : right) {
+				result[i++] = first + joiner + second;
+			}
+		}
+		return result;
+	}
 }

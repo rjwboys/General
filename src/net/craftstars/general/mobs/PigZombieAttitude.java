@@ -1,6 +1,6 @@
 package net.craftstars.general.mobs;
 
-import net.craftstars.general.text.Messaging;
+import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.CommandSender;
@@ -16,9 +16,9 @@ public class PigZombieAttitude extends MobData {
 	}
 	
 	@Override
-	public boolean hasPermission(CommandSender byWhom) {
-		if(anger > 0) return byWhom.hasPermission("general.mobspawn.pig-zombie.angry");
-		return byWhom.hasPermission("general.mobspawn.pig-zombie.regular");
+	public String getPermission(String base) {
+		if(anger > 0) return base + ".angry";
+		return base + ".regular";
 	}
 	
 	@Override
@@ -49,9 +49,9 @@ public class PigZombieAttitude extends MobData {
 	}
 	
 	@Override
-	public void lacksPermission(CommandSender fromWhom) {
-		if(anger > 0) Messaging.lacksPermission(fromWhom, "general.mobspawn.pig-zombie.angry");
-		else super.lacksPermission(fromWhom);
+	protected LanguageText getLangKey() {
+		if(anger > 0) return null;
+		return super.getLangKey();
 	}
 
 	@Override

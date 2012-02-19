@@ -13,7 +13,6 @@ import net.craftstars.general.items.InvalidItemException;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.text.LanguageText;
-import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 public class EnderBlock extends MobData {
@@ -31,11 +30,6 @@ public class EnderBlock extends MobData {
 	
 	public EnderBlock() {
 		super(MobType.ENDERMAN);
-	}
-	
-	@Override
-	public boolean hasPermission(CommandSender sender) {
-		return sender.hasPermission(getPermission());
 	}
 	
 	@Override
@@ -77,15 +71,19 @@ public class EnderBlock extends MobData {
 	}
 	
 	@Override
-	public void lacksPermission(CommandSender sender) {
-		if(block != null) Messaging.lacksPermission(sender, getPermission(), LanguageText.LACK_MOBSPAWN_ENDERMAN,
-			"block", id.getName());
-		else super.lacksPermission(sender);
+	protected LanguageText getLangKey() {
+		return LanguageText.LACK_MOBSPAWN_ENDERMAN;
+	}
+	
+	@Override
+	protected Object[] getLangParams() {
+		return new Object[] {"block", id.getName()};
 	}
 
-	private String getPermission() {
-		if(block == null) return "general.mobspawn.enderman.nothing";
-		return "general.mobspawn.enderman." + block.toString().toLowerCase().replace('_', '-');
+	@Override
+	protected String getPermission(String base) {
+		if(block == null) return base + ".nothing";
+		return base + "." + block.toString().toLowerCase().replace('_', '-');
 	}
 	
 	@Override

@@ -9,7 +9,6 @@ import org.bukkit.entity.Villager;
 
 import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
-import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Toolbox;
 import net.minecraft.server.EntityVillager;
 
@@ -22,6 +21,10 @@ public class VillagerRole extends MobData {
 				return true;
 			return me.equals(test);
 		}
+
+		public String getName() {
+			return toString().toLowerCase();
+		}
 	}
 	Role role;
 	
@@ -31,12 +34,8 @@ public class VillagerRole extends MobData {
 	}
 
 	@Override
-	public boolean hasPermission(CommandSender sender) {
-		return sender.hasPermission(getNode());
-	}
-
-	private String getNode() {
-		return "general.mobspawn.villager." + role.toString().toLowerCase();
+	public String getPermission(String base) {
+		return base + "." + role.getName();
 	}
 	
 	@Override
@@ -81,7 +80,7 @@ public class VillagerRole extends MobData {
 	
 	@Override
 	public String getCostNode(String baseNode) {
-		return baseNode + '.' + role.toString().toLowerCase();
+		return baseNode + '.' + role.getName();
 	}
 	
 	@Override
@@ -94,8 +93,12 @@ public class VillagerRole extends MobData {
 	}
 	
 	@Override
-	public void lacksPermission(CommandSender fromWhom) {
-		Messaging.lacksPermission(fromWhom, getNode(),
-			LanguageText.LACK_MOBSPAWN_VILLAGER, "role", role.toString().toLowerCase());
+	protected LanguageText getLangKey() {
+		return LanguageText.LACK_MOBSPAWN_VILLAGER;
+	}
+	
+	@Override
+	protected Object[] getLangParams() {
+		return new Object[] {"role", role.getName()};
 	}
 }

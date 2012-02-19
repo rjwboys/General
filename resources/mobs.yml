@@ -96,3 +96,5 @@ data:
     tame: [tame, pet, tamed]
   mob58:
     empty: [empty, empty-handed, nothing, air]
+  baby: [baby, young]
+  adult: [adult, old]

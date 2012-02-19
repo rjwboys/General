@@ -7,7 +7,6 @@ import net.craftstars.general.items.InvalidItemException;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.text.LanguageText;
-import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
@@ -16,7 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Sheep;
 
-public class SheepState extends MobData {
+public class SheepState extends AnimalData {
 	private boolean sheared = false;
 	private DyeColor clr = DyeColor.WHITE;
 	private Random generator = new Random();
@@ -31,13 +30,13 @@ public class SheepState extends MobData {
 	}
 	
 	@Override
-	public boolean hasPermission(CommandSender byWhom) {
-		if(sheared) return byWhom.hasPermission("general.mobspawn.sheep.sheared");
-		else return byWhom.hasPermission("general.mobspawn.sheep." + getColourName());
+	public String getPermission(String base) {
+		return super.getPermission(base) + (sheared? ".sheared." : ".") + getColourName();
 	}
 	
 	@Override
 	public void setForMob(LivingEntity mob) {
+		super.setForMob(mob);
 		if(!(mob instanceof Sheep)) return;
 		Sheep sheep = (Sheep) mob;
 		if(sheared) sheep.setSheared(true);
@@ -46,26 +45,33 @@ public class SheepState extends MobData {
 	
 	@Override
 	public void parse(CommandSender setter, String data) {
-		if(Toolbox.equalsOne(data, MobType.SHEEP.getDataList("bald"))) {
-			sheared = true;
-		} else if(Toolbox.equalsOne(data, MobType.SHEEP.getDataList("natural"))) {
-			clr = natural.toArray(new DyeColor[0])[generator.nextInt(natural.size())];
-		} else if(Toolbox.equalsOne(data, MobType.SHEEP.getDataList("random"))) {
-			clr = DyeColor.getByData((byte) generator.nextInt(16));
-		} else {
-			sheared = false;
-			ItemID wool;
-			try {
-				wool = Items.validate("35/" + data);
-				clr = DyeColor.getByData((byte) (int) wool.getData());
-			} catch(InvalidItemException e) {
-				invalidate(e, data);
+		for(String component : data.split("[.,:/\\|]", 2)) {
+			if(Toolbox.equalsOne(component, MobType.SHEEP.getDataList("bald"))) {
+				sheared = true;
+			} else if(Toolbox.equalsOne(component, MobType.SHEEP.getDataList("natural"))) {
+				clr = natural.toArray(new DyeColor[0])[generator.nextInt(natural.size())];
+			} else if(Toolbox.equalsOne(component, MobType.SHEEP.getDataList("random"))) {
+				clr = DyeColor.getByData((byte) generator.nextInt(16));
+			} else {
+				sheared = false;
+				ItemID wool;
+				try {
+					wool = Items.validate("35/" + component);
+					clr = DyeColor.getByData((byte) (int) wool.getData());
+				} catch(InvalidItemException e) {
+					try {
+						super.parse(setter, component);
+					} catch(InvalidMobException x) {
+						invalidate(e, component);
+					}
+				}
 			}
 		}
 	}
 	
 	@Override
 	public String getCostNode(String base) {
+		base = super.getCostNode(base);
 		if(sheared) return base + ".sheared";
 		String node = base + "." + getColourName();
 		if(Option.nodeExists(node)) return node;
@@ -81,13 +87,13 @@ public class SheepState extends MobData {
 	}
 	
 	@Override
-	public void lacksPermission(CommandSender fromWhom) {
-		if(sheared) Messaging.lacksPermission(fromWhom, "general.mobspawn.sheep.sheared");
-		else {
-			String colour = getColourName();
-			String node = "general.mobspawn.sheep." + colour;
-			Messaging.lacksPermission(fromWhom, node, LanguageText.LACK_MOBSPAWN_SHEEP_COLOURED, "colour", colour);
-		}
+	protected LanguageText getLangKey() {
+		return LanguageText.LACK_MOBSPAWN_SHEEP_COLOURED;
+	}
+	
+	@Override
+	protected Object[] getLangParams() {
+		return new Object[] {"colour", getColourName()};
 	}
 
 	@Override
@@ -99,7 +105,7 @@ public class SheepState extends MobData {
 			values[i] = thisColour.toString().toLowerCase().replace('_', '-');
 		}
 		values[nColours] = "sheared";
-		return values;
+		return Toolbox.cartesianProduct(super.getValues(), values, '.');
 	}
 	
 }

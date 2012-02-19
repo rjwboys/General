@@ -11,11 +11,6 @@ public final class NoData extends MobData {
 	}
 	
 	@Override
-	public boolean hasPermission(CommandSender byWhom) {
-		return true;
-	}
-	
-	@Override
 	public void setForMob(LivingEntity mob) {}
 	
 	@Override
@@ -29,5 +24,10 @@ public final class NoData extends MobData {
 	@Override
 	public String[] getValues() {
 		return noneValues.clone();
+	}
+
+	@Override
+	protected String getPermission(String base) {
+		return base;
 	}
 }

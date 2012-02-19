@@ -1,6 +1,6 @@
 package net.craftstars.general.mobs;
 
-import net.craftstars.general.text.Messaging;
+import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.CommandSender;
@@ -16,9 +16,8 @@ public class CreeperState extends MobData {
 	}
 	
 	@Override
-	public boolean hasPermission(CommandSender byWhom) {
-		if(powered) return byWhom.hasPermission("general.mobspawn.creeper.powered");
-		return byWhom.hasPermission("general.mobspawn.creeper.regular");
+	public String getPermission(String base) {
+		return base + (powered ? "powered" : "regular");
 	}
 	
 	@Override
@@ -44,9 +43,9 @@ public class CreeperState extends MobData {
 	}
 	
 	@Override
-	public void lacksPermission(CommandSender fromWhom) {
-		if(powered) Messaging.lacksPermission(fromWhom, "general.mobspawn.creeper.powered");
-		else super.lacksPermission(fromWhom);
+	protected LanguageText getLangKey() {
+		if(powered) return null;
+		return super.getLangKey();
 	}
 
 	@Override

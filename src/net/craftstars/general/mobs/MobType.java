@@ -25,8 +25,8 @@ import org.bukkit.entity.*;
 public enum MobType {
 	BLAZE(null, MobAlignment.ENEMY, CreatureType.BLAZE, 61),
 	CAVE_SPIDER(null, MobAlignment.ENEMY, CreatureType.CAVE_SPIDER, 59),
-	CHICKEN(null, MobAlignment.FRIENDLY, CreatureType.CHICKEN, 93),
-	COW(null, MobAlignment.FRIENDLY, CreatureType.COW, 92),
+	CHICKEN(AnimalData.class, MobAlignment.FRIENDLY, CreatureType.CHICKEN, 93),
+	COW(AnimalData.class, MobAlignment.FRIENDLY, CreatureType.COW, 92),
 	CREEPER(CreeperState.class, MobAlignment.ENEMY, CreatureType.CREEPER, 50),
 	ENDER_DRAGON(null, MobAlignment.ENEMY, CreatureType.ENDER_DRAGON, 63),
 	ENDERMAN(EnderBlock.class, MobAlignment.NEUTRAL, CreatureType.ENDERMAN, 58),
@@ -246,10 +246,14 @@ public enum MobType {
 	}
 	
 	public String[] getDataList(String key) {
-		String node = "data.mob" + id;
-		if(!key.isEmpty()) node += "." + key;
+		if(key.isEmpty()) return getDataList("mob" + id, key);
+		else return getDataList("mob" + id + "." + key, key);
+	}
+	
+	public static String[] getDataList(String key, String dflt) {
+		String node = "data." + key;
 		List<String> list = yml.getStringList(node);
-		if(list == null) return new String[0];
+		if(list == null) return new String[]{dflt};
 		return list.toArray(new String[0]);
 	}
 	

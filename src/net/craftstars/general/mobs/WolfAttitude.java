@@ -3,7 +3,6 @@ package net.craftstars.general.mobs;
 import java.util.HashMap;
 
 import net.craftstars.general.text.LanguageText;
-import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Bukkit;
@@ -13,7 +12,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 
-public class WolfAttitude extends MobData {
+public class WolfAttitude extends AnimalData {
 	enum Attitude {
 		WILD, ANGRY, TAMED;
 		private static HashMap<String, Attitude> mapping = new HashMap<String, Attitude>();
@@ -56,12 +55,13 @@ public class WolfAttitude extends MobData {
 	}
 	
 	@Override
-	public boolean hasPermission(CommandSender byWhom) {
-		return byWhom.hasPermission("general.mobspawn.wolf." + attitude.toString().toLowerCase());
+	public String getPermission(String base) {
+		return super.getPermission(base) + "." + attitude.toString().toLowerCase();
 	}
 	
 	@Override
 	public void setForMob(LivingEntity mob) {
+		super.setForMob(mob);
 		if(!(mob instanceof Wolf)) return;
 		Wolf dog = (Wolf) mob;
 		switch(attitude) {
@@ -79,25 +79,35 @@ public class WolfAttitude extends MobData {
 
 	@Override
 	public void parse(CommandSender setter, String data) {
-		attitude = Attitude.match(data);
-		if(attitude == null) {
-			attitude = Attitude.TAMED;
-			player = Toolbox.matchPlayer(data);
-			if(player == null) player = Bukkit.getOfflinePlayer(data);
-		} else if(attitude == Attitude.TAMED && player == null && setter instanceof Player) {
-			player = (Player) setter;
+		for(String component : data.split("[.,:/\\|]", 2)) {
+			attitude = Attitude.match(component);
+			if(attitude == null) {
+				try {
+					super.parse(setter, component);
+				} catch(InvalidMobException e) {
+					attitude = Attitude.TAMED;
+					player = Toolbox.matchPlayer(component);
+					if(player == null) player = Bukkit.getOfflinePlayer(component);
+				}
+			} else if(attitude == Attitude.TAMED && player == null && setter instanceof Player) {
+				player = (Player) setter;
+			}
 		}
 	}
 
 	@Override
 	public String getCostNode(String base) {
-		return base + "." + attitude.toString().toLowerCase();
+		return super.getCostNode(base) + "." + attitude.toString().toLowerCase();
 	}
-
+	
 	@Override
-	public void lacksPermission(CommandSender fromWhom) {
-		String node = "general.mobspawn.wolf." + attitude.toString().toLowerCase();
-		Messaging.lacksPermission(fromWhom, node, LanguageText.LACK_MOBSPAWN_WOLF, "attitude", attitude.getName());
+	protected LanguageText getLangKey() {
+		return LanguageText.LACK_MOBSPAWN_WOLF;
+	}
+	
+	@Override
+	protected Object[] getLangParams() {
+		return new Object[] {"attitude", attitude.getName()};
 	}
 
 	@Override
@@ -106,7 +116,7 @@ public class WolfAttitude extends MobData {
 		String[] values = new String[nAttitudes];
 		for(int i = 0; i < nAttitudes; i++)
 			values[i] = Attitude.values()[i].toString().toLowerCase();
-		return values;
+		return Toolbox.cartesianProduct(super.getValues(), values, '.');
 	}
 	
 }
