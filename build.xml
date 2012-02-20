@@ -9,6 +9,8 @@
 	<property name="artifacts" location="${target}/artifacts"/>
 	<property name="dist" location="${target}/dist"/>
 	<property name="reports" location="junit"/>
+	<property name="junit-home" location="/usr/share/java/junit-4.10/"/>
+	<property name="tests" value="**/*Test.java"/>
 	
 	<taskdef resource="checkstyletask.properties" classpath="${lib}/checkstyle-5.3-all.jar"/>
 	<property name="CraftBukkit"  value="craftbukkit.jar"/>
@@ -86,7 +88,8 @@
 	</target>
 	
 	<target name="compile" depends="allpay">
-		<javac srcdir="${src}" destdir="${classes}" includeantruntime="false" debug="on" deprecation="on">
+		<javac srcdir="${src}" excludes="${tests}" destdir="${classes}"
+				includeantruntime="false" debug="on" deprecation="on">
 			<classpath>
 				<pathelement location="${lib}/${CraftBukkit}"/>
 				<pathelement location="${lib}/${YetiPerms}"/>
@@ -104,7 +107,7 @@
 	<target name="build" depends="compile">
 		<mkdir dir="${artifacts}"/>
 		<jar jarfile="${artifacts}/${ant.project.name}.jar" update="false">
-			<fileset dir="${classes}/"/>
+			<fileset dir="${classes}/" excludes="${tests}"/>
 			<fileset dir="${rsrc}/"/>
 		</jar>
 	</target>
@@ -129,20 +132,28 @@
 	</target>
 	
 	<target name="junit" depends="build">
+		<javac srcdir="${src}" includes="${tests}" destdir="${classes}"
+				includeantruntime="false" debug="on" deprecation="on">
+			<classpath>
+				<pathelement location="${lib}/${CraftBukkit}"/>
+				<pathelement location="${junit-home}/junit.jar"/>
+				<pathelement path="${src}"/>
+			</classpath>
+		</javac>
 		<delete dir="${reports}"/>
 		<mkdir dir="${reports}"/>
-		<junit printsummary="yes" haltonfailure="yes" showoutput="yes"> 
-		        <classpath> 
-		            <pathelement path="${build}"/> 
-		        	<pathelement path="/usr/share/java/junit.jar"/>
-		        </classpath>                   
-
-		        <batchtest fork="no" todir="${reports}"> 
-		                <formatter type="xml"/> 
-		                <fileset dir="${src}"> 
-		                        <include name="**/*Test.java"/> 
-		                </fileset> 
-		        </batchtest> 
+		<junit printsummary="yes" showoutput="yes">
+			<formatter type="brief" usefile="false"/>
+			<classpath>
+				<pathelement path="${classes}"/>
+				<pathelement location="${lib}/${CraftBukkit}"/>
+				<pathelement location="${junit-home}/junit.jar"/>
+			</classpath>
+			<batchtest fork="no" haltonfailure="yes" todir="${reports}">
+				<fileset dir="${src}">
+					<include name="${tests}"/>
+				</fileset>
+			</batchtest>
 		</junit>
 	</target>
 	
