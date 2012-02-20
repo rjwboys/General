@@ -20,7 +20,6 @@ import net.craftstars.general.util.PermissionManager;
 import net.craftstars.general.util.PluginLogger;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class General extends JavaPlugin {
@@ -50,7 +49,7 @@ public class General extends JavaPlugin {
 		PermissionManager.setup();
 		CommandManager.setup(config);
 		HelpHandler.setup();
-		registerEvents();
+		getServer().getPluginManager().registerEvents(players, this);
 	}
 
 	public void loadAllConfigs() {
@@ -70,11 +69,6 @@ public class General extends JavaPlugin {
 		EconomyManager.setup();
 	}
 
-	private void registerEvents() {
-		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvents(players, this);
-	}
-	
 	@Override
 	public void onDisable() {
 		Items.save();
