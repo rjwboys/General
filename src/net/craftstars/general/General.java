@@ -25,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class General extends JavaPlugin {
 	public static General plugin = null;
 	public static final boolean DEBUG = true;
-	public static final String codename = "Vivaldi";
+	public static final String codename = "Dowland";
 	public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG);
 	private FileConfiguration config;
 	public File configFile;
