@@ -26,7 +26,7 @@ public class General extends JavaPlugin {
 	public static General plugin = null;
 	public static final boolean DEBUG = true;
 	public static final String codename = "Dowland";
-	public static final PluginLogger logger = PluginLogger.getLogger("General", DEBUG);
+	public static PluginLogger logger;
 	private FileConfiguration config;
 	public File configFile;
 	public static PlayerManager players = new PlayerManager();
@@ -39,7 +39,7 @@ public class General extends JavaPlugin {
 			alreadyLoaded = true;
 		}
 		plugin = this;
-		logger.setPluginVersion(this.getDescription().getVersion());
+		logger = PluginLogger.getLogger(this, codename, DEBUG);
 		loadAllConfigs();
 		logger.info("[Codename: " + General.codename + "] " + LanguageText.LOG_SUCCESS.value());
 		if(alreadyLoaded) {

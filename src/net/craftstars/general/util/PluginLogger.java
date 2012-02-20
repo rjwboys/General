@@ -4,25 +4,28 @@ package net.craftstars.general.util;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.plugin.Plugin;
+
 public class PluginLogger {
-	private final Logger logger = Logger.getLogger("Minecraft.General");
-	private final String pluginName;
-	private String pluginVersion;
+	private static PluginLogger instance;
+	private final Logger logger;
+	private final String codename;
 	private final boolean debugMode;
 	
 	@SuppressWarnings("hiding")
-	private PluginLogger(String pluginName, boolean debugMode) {
-		this.pluginName = pluginName;
-		this.pluginVersion = "0.0";
+	private PluginLogger(Plugin plugin, String codename, boolean debugMode) {
+		this.logger = plugin.getLogger();
+		this.codename = codename;
 		this.debugMode = debugMode;
 	}
 	
-	public static PluginLogger getLogger(String pluginName) {
-		return new PluginLogger(pluginName, false);
+	public static PluginLogger getLogger(Plugin plugin, String codename) {
+		return getLogger(plugin, codename, false);
 	}
 	
-	public static PluginLogger getLogger(String pluginName, boolean debugMode) {
-		return new PluginLogger(pluginName, debugMode);
+	public static PluginLogger getLogger(Plugin plugin, String codename, boolean debugMode) {
+		if(instance == null) instance = new PluginLogger(plugin, codename, debugMode);
+		return instance;
 	}
 	
 	public void debug(String msg, Throwable thrown) {
@@ -58,23 +61,15 @@ public class PluginLogger {
 	}
 	
 	public void log(Level level, String msg, Throwable thrown) {
-		this.logger.log(level, this.formatMessage(msg), thrown);
+		this.logger.log(level, msg, thrown);
 	}
 	
 	public void log(Level level, String msg) {
-		this.logger.log(level, this.formatMessage(msg));
-	}
-	
-	private String formatMessage(String msg) {
-		return "[" + this.pluginName + "-" + this.pluginVersion + "] " + msg;
+		this.logger.log(level, msg);
 	}
 	
 	private String formatDebugMessage(String msg) {
-		return this.formatMessage("") + "[DEBUG] " + msg;
-	}
-	
-	public void setPluginVersion(@SuppressWarnings("hiding") String pluginVersion) {
-		this.pluginVersion = pluginVersion;
+		return "[" + codename + "-DEBUG] " + msg;
 	}
 	
 	public Logger getInternal() {
