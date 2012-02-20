@@ -129,8 +129,7 @@ public final class Messaging {
 						quotient = split[0];
 						remainder = Toolbox.join(split, "", 1);
 					}
-					//throw new RuntimeException(quotient);
-					line = remainder + line.replaceFirst(Pattern.quote(quotient), "");
+					line = remainder + line.replaceFirst(Pattern.quote(split[0]), "");
 					lines.add(quotient);
 				} else if(split.length > 0) {
 					lines.add(split[0]);
