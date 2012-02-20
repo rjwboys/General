@@ -64,9 +64,9 @@ public class EconomyManager {
 			case INSUFFICIENT:
 				Messaging.send(sender, LanguageText.ECONOMY_INSUFFICIENT);
 				return false;
-			case SUFFICIENT: // TODO: I think pay() prints its own message, so this may cause double messages
+			case SUFFICIENT: // TODO: I think take() prints its own message, so this may cause double messages
 				Messaging.showPayment(player);
-				economy.pay(player, lastPrice, Option.ECONOMY_ITEM.get());
+				economy.take(player, lastPrice, Option.ECONOMY_ITEM.get());
 			}
 			return true;
 		}

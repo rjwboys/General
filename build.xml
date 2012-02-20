@@ -49,25 +49,22 @@
 	
 	<target name="update" depends="init">
 		<!-- Economies for AllPay -->
-		<get src="http://repo.onarandombox.com/artifactory/libs-release-local/cosine/boseconomy/BOSEconomy/0.6.2/BOSEconomy-0.6.2.jar"
+		<get src="http://repo.onarandombox.com/content/repositories/bukkit-econ/ca/agnate/EconXP/1.0.0/EconXP-1.0.0.jar"
+			dest="${lib}/economy/EconXP.jar" usetimestamp="true"/>
+		<get src="http://repo.onarandombox.com/content/repositories/bukkit-econ/cosine/boseconomy/BOSEconomy/0.6.2/BOSEconomy-0.6.2.jar"
 			dest="${lib}/economy/BOSEconomy.jar" usetimestamp="true"/>
-		<get src="http://repo.onarandombox.com/artifactory/libs-release-local/com/earth2me/essentials/Essentials/2.4.2/Essentials-2.4.2.jar"
+		<get src="http://repo.onarandombox.com/content/repositories/bukkit-econ/com/earth2me/essentials/Essentials/2.4.2/Essentials-2.4.2.jar"
 			dest="${lib}/economy/Essentials.jar" usetimestamp="true"/>
-		<get src="http://repo.onarandombox.com/artifactory/libs-release-local/com/iCo6/iConomy/6.0/iConomy-6.0.jar"
+		<get src="http://repo.onarandombox.com/content/repositories/bukkit-econ/com/iCo6/iConomy/6.0/iConomy-6.0.jar"
 			dest="${lib}/economy/iConomy.jar" usetimestamp="true"/>
-		<get src="http://repo.onarandombox.com/artifactory/libs-release-local/com/iConomy/iConomy/5.0/iConomy-5.0.jar"
+		<get src="http://repo.onarandombox.com/content/repositories/bukkit-econ/com/iConomy/iConomy/5.0/iConomy-5.0.jar"
 			dest="${lib}/economy/iConomy5.jar" usetimestamp="true"/>
-		<get src="http://repo.onarandombox.com/artifactory/libs-release-local/com/nijiko/coelho/iConomy/iConomy/4.65/iConomy-4.65.jar"
+		<get src="http://repo.onarandombox.com/content/repositories/bukkit-econ/com/nijiko/coelho/iConomy/iConomy/4.65/iConomy-4.65.jar"
 			dest="${lib}/economy/iConomy4.jar" usetimestamp="true"/>
-		<get src="http://repo.onarandombox.com/artifactory/libs-release-local/fr/crafter/tickleman/RealShop/RealShop/0.63/RealShop-0.63.jar"
+		<get src="http://repo.onarandombox.com/content/repositories/bukkit-econ/fr/crafter/tickleman/RealShop/RealShop/0.63/RealShop-0.63.jar"
 			dest="${lib}/economy/RealShop.jar" usetimestamp="true"/>
-		<get src="http://repo.onarandombox.com/artifactory/libs-release-local/me/ashtheking/currency/MultiCurrency/0.09/MultiCurrency-0.09.jar"
+		<get src="http://repo.onarandombox.com/content/repositories/bukkit-econ/me/ashtheking/currency/MultiCurrency/0.09/MultiCurrency-0.09.jar"
 			dest="${lib}/economy/MultiCurrency.jar" usetimestamp="true"/>
-		<!-- Other dependencies -->
-		<get src="http://repo.onarandombox.com/artifactory/libs-release-local/com/nijikokun/bukkit/Permissions/3.2/Permissions-3.2.jar"
-			dest="${lib}/Permissions.jar" usetimestamp="true"/>
-		<get src="http://ci.bukkit.org/job/dev-CraftBukkit/Recommended/artifact/target/craftbukkit-0.0.1-SNAPSHOT.jar"
-			dest="${lib}/craftbukkit.jar" usetimestamp="true"/>
 		<!--<get src="http://taylorkelly.me/plugins/Help/Help.jar"
 			dest="${lib}" usetimestamp="true"/> -->
 	</target>
