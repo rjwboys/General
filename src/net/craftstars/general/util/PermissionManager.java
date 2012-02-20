@@ -28,6 +28,8 @@ import net.craftstars.general.util.Option;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
+
+import static java.lang.Math.min;
 import static org.bukkit.event.EventPriority.MONITOR;
 
 import org.bukkit.event.EventHandler;
@@ -36,6 +38,7 @@ import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import static org.bukkit.permissions.PermissionDefault.*;
 import org.bukkit.plugin.PluginManager;
 
 public class PermissionManager implements Listener {
@@ -52,7 +55,7 @@ public class PermissionManager implements Listener {
 	
 	public static void refreshItemGroups() {
 		Permission perm = Bukkit.getPluginManager().getPermission("general.give.groupless");
-		perm.setDefault(Option.OTHERS4ALL.get() ? PermissionDefault.TRUE : PermissionDefault.FALSE);
+		perm.setDefault(Option.OTHERS4ALL.get() ? TRUE : FALSE);
 	}
 	
 	@EventHandler(priority=MONITOR)
@@ -91,8 +94,8 @@ public class PermissionManager implements Listener {
 				for(Material material : Material.values()) {
 					String itemName = material.toString().toLowerCase().replace('_', '-');
 					String itemPerm = "general.give.item." + itemName;
-					// general.give.item.<item-name>
-					register(itemPerm, "Gives permission to give " + itemName);
+					// general.give.item.<item-name> (not registered, because that's just insane)
+					//register(itemPerm, "Gives permission to give " + itemName);
 					boolean gotGroup = false;
 					for(String group : groupNames) {
 						List<Integer> groupItems = Option.GROUP(group).get();
@@ -327,7 +330,7 @@ public class PermissionManager implements Listener {
 					if(filename.equals("general.motd")) continue;
 					filename = filename.replace(".motd", "");
 					register("general.motd." + filename, "Shows the " + filename + " MOTD instead of the general " +
-						"one when you join.", PermissionDefault.FALSE);
+						"one when you join.", FALSE);
 				}
 			}
 		},
@@ -347,7 +350,11 @@ public class PermissionManager implements Listener {
 			if(file != null) {
 				List<Permission> ymlPerms = new ArrayList<Permission>(General.plugin.getDescription().getPermissions());
 				Collections.sort(ymlPerms, new PermissionsCompare());
-				for(Permission perm : ymlPerms) file.println(perm.getName());
+				for(Permission perm : ymlPerms) {
+					file.println(perm.getName());
+					if(Option.EXPORT_PERMISSIONS_CHILDREN.get())
+						file.println("    " + perm.getChildren());
+				}
 				file.close();
 			}
 		}
@@ -382,7 +389,7 @@ public class PermissionManager implements Listener {
 			register(name, null, def, children);
 		}
 		protected void register(String name, String desc, boolean def, Map<String,Boolean> children) {
-			register(name, desc, def ? PermissionDefault.TRUE : PermissionDefault.FALSE, children);
+			register(name, desc, def ? TRUE : FALSE, children);
 		}
 		protected void register(String name, String desc, PermissionDefault def, Map<String,Boolean> children) {
 			// Welcome to Rome!
@@ -394,7 +401,15 @@ public class PermissionManager implements Listener {
 	private static class PermissionsCompare implements Comparator<Permission> {
 		@Override
 		public int compare(Permission lhs, Permission rhs) {
-			return lhs.getName().compareTo(rhs.getName());
+			String[] left = lhs.getName().split("\\.");
+			String[] right = rhs.getName().split("\\.");
+			for(int i = 0; i < min(left.length, right.length); i++) {
+				int cmp = left[i].compareTo(right[i]);
+				if(cmp != 0) return cmp;
+			}
+			// If we get this far, they're either exactly equal, or different lengths
+			// Thus the shorter one wins
+			return Integer.valueOf(left.length).compareTo(right.length);
 		}
 	}
 }
