@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import net.craftstars.general.General;
 import net.craftstars.general.util.EconomyManager;
@@ -128,7 +129,8 @@ public final class Messaging {
 						quotient = split[0];
 						remainder = Toolbox.join(split, "", 1);
 					}
-					line = remainder + line.replaceFirst(quotient, "");
+					//throw new RuntimeException(quotient);
+					line = remainder + line.replaceFirst(Pattern.quote(quotient), "");
 					lines.add(quotient);
 				} else if(split.length > 0) {
 					lines.add(split[0]);
