@@ -115,7 +115,7 @@ public final class Toolbox {
 	}
 	
 	/**
-	 * Turns "SomeName" into "Some Name" or "MyABC" into "My ABC". (Inserts a space before a capital letter unless it
+	 * Turns "SomeName" into "Some Name" or "MyABC" into "My Abc". (Inserts a space before a capital letter unless it
 	 * is at the beginning of the string or preceded by a capital letter.) Also turns "SOME_NAME" into "Some Name".
 	 * 
 	 * @param str The string to expand.
@@ -123,25 +123,25 @@ public final class Toolbox {
 	 */
 	public static String formatItemName(String str) {
 		if(str == null) return "";
-		String newStr = "";
-		str = str.replace("_", " ");
+		StringBuilder newStr = new StringBuilder();
+		str = str.replace("_", " ").trim();
 		
 		for(int i = 0; i < str.length(); i++) {
 			if(i > 0 && Character.isUpperCase(str.charAt(i)) && !Character.isUpperCase(str.charAt(i - 1)))
-				newStr += ' ';
-			newStr += str.charAt(i);
+				newStr.append(' ');
+			newStr.append(str.charAt(i));
 		}
 		
-		String[] words = newStr.trim().split("\\s+");
-		newStr = "";
+		String[] words = newStr.toString().trim().split("\\s+");
+		newStr = new StringBuilder();
 		for(String word : words) {
-			newStr += ' ';
-			newStr += word.substring(0, 1).toUpperCase();
+			newStr.append(' ');
+			newStr.append(word.substring(0, 1).toUpperCase());
 			if(word.length() == 1) continue;
-			newStr += word.substring(1).toLowerCase();
+			newStr.append(word.substring(1).toLowerCase());
 		}
 		
-		return newStr.trim();
+		return newStr.toString().trim();
 	}
 	
 	public static String join(String[] args, String with, int startAt) {

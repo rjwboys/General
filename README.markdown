@@ -1,5 +1,5 @@
 # General Plugin for CraftBukkit #
-## Version 3.5 [Schoenberg]
+## Version 4.0 [Vivaldi]
 ### README
 - - -
 

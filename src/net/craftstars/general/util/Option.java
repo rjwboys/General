@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import net.craftstars.general.General;
@@ -63,7 +64,7 @@ public abstract class Option {
 	}
 	protected String node;
 	protected Object def;
-	protected static FileConfiguration config;
+	protected static Configuration config;
 	
 	@SuppressWarnings("hiding")
 	protected Option(String node, Object def) {
@@ -91,7 +92,7 @@ public abstract class Option {
 		return prop != null;
 	}
 	
-	public static void setConfiguration(FileConfiguration c) {
+	public static void setConfiguration(Configuration c) {
 		config = c;
 	}
 	
@@ -105,8 +106,10 @@ public abstract class Option {
 	
 	public static void save() {
 		try {
-			config.save(General.plugin.configFile);
+			((FileConfiguration)config).save(General.plugin.configFile);
 		} catch(IOException e) { // TODO: LanguageText
+			General.logger.warn("Error saving config.yml: " + e.getMessage());
+		} catch(ClassCastException e) { // TODO: LanguageText
 			General.logger.warn("Error saving config.yml: " + e.getMessage());
 		}
 	}

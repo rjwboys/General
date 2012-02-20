@@ -437,6 +437,7 @@ public enum LanguageText {
 	}
 
 	public String getFormat() {
+		if(config == null) return fmt;
 		return config.getString(language + "." + node, fmt);
 	}
 	

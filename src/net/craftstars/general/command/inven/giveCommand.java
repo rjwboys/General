@@ -39,7 +39,7 @@ public class giveCommand extends CommandBase {
 		splitAt++;
 		int enchLen = args.length - splitAt;
 		String[] enchArgs = new String[enchLen];
-		System.arraycopy(args, splitAt, enchArgs, 0, enchLen);
+		Toolbox.arrayCopy(args, splitAt, enchArgs, 0, enchLen);
 		
 		switch(splitAt) {
 		case 1: // /give <item>[:<data>]
