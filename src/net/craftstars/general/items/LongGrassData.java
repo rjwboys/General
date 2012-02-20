@@ -6,6 +6,8 @@ import net.craftstars.general.util.Toolbox;
 import net.craftstars.general.util.range.IntRange;
 
 public class LongGrassData extends ItemData {
+	protected LongGrassData() {}
+	
 	@Override
 	public boolean validate(int data) {
 		if(data <= 2) return true;

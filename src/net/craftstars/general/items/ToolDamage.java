@@ -3,6 +3,8 @@ package net.craftstars.general.items;
 import org.bukkit.Material;
 
 public class ToolDamage extends ItemData {
+	protected ToolDamage() {}
+	
 	@Override
 	public boolean validate(int damage) {
 		if(damage != 0) {

@@ -6,6 +6,8 @@ import net.craftstars.general.util.Toolbox;
 import net.craftstars.general.util.range.IntRange;
 
 final public class TreeData extends ItemData {
+	protected TreeData() {}
+	
 	@Override
 	public boolean validate(int data) {
 		if(data > 2 || data < 0) return false;

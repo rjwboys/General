@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 
 public class PotionData extends ItemData {
 	private static final int SPLASH = 0x4000, EXTEND = 0x40, IMPROVE = 0x20;
+
+	protected PotionData() {}
 	
 	@Override
 	public boolean validate(int data) {

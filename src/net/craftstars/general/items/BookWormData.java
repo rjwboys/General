@@ -9,6 +9,8 @@ import com.nisovin.bookworm.Book;
 import com.nisovin.bookworm.BookWorm;
 
 public class BookWormData extends ItemData {
+	protected BookWormData() {}
+	
 	@Override
 	public boolean validate(int data) {
 		Plugin bookworm = Bukkit.getPluginManager().getPlugin("BookWorm");

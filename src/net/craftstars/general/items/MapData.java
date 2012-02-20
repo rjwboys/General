@@ -8,6 +8,8 @@ import org.bukkit.map.MapView.Scale;
 import net.craftstars.general.util.range.IntRange;
 
 public class MapData extends ItemData {
+	protected MapData() {}
+	
 	@Override
 	public boolean validate(int data) {
 		if(new IntRange(90000,90005).contains(data)) return true; // new maps

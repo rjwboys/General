@@ -5,6 +5,8 @@ import org.bukkit.CoalType;
 import net.craftstars.general.util.range.IntRange;
 
 final public class CoalData extends ItemData {
+	protected CoalData() {}
+	
 	@Override
 	public boolean validate(int data) {
 		if(data == 0 || data == 1) return true;

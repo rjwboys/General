@@ -12,6 +12,10 @@ public class InvalidItemException extends RuntimeException {
 		super(msg.value(params));
 	}
 
+	public InvalidItemException(Throwable cause, LanguageText msg, Object... params) {
+		super(msg.value(params), cause);
+	}
+
 	public void feedbackTo(CommandSender sender) {
 		Messaging.send(sender, getMessage());
 	}

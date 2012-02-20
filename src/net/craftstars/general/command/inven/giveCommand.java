@@ -6,10 +6,13 @@ import java.util.Map;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
+import net.craftstars.general.items.InvalidItemException;
+import net.craftstars.general.items.ItemData;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.text.LanguageText;
@@ -24,13 +27,21 @@ public class giveCommand extends CommandBase {
 	}
 	
 	@Override
-	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
+	public Map<String, Object> parse(CommandSender sender, Command cmd, String label, String[] args, boolean isPlayer) {
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		Player who = null;
 		ItemID item = null;
 		int amount = 1;
 		
-		switch(args.length) {
+		// Split the arguments into two parts based on whether they contain an equals sign.
+		int splitAt = args.length;
+		while(args[--splitAt].contains("="));
+		splitAt++;
+		int enchLen = args.length - splitAt;
+		String[] enchArgs = new String[enchLen];
+		System.arraycopy(args, splitAt, enchArgs, 0, enchLen);
+		
+		switch(splitAt) {
 		case 1: // /give <item>[:<data>]
 			if(!isPlayer) return null;
 			item = Items.validate(args[0]);
@@ -79,10 +90,29 @@ public class giveCommand extends CommandBase {
 		default:
 			return null;
 		}
+		Map<Enchantment, Integer> enchantments = new HashMap<Enchantment, Integer>();
+		ItemData data = ItemData.enchanting(item.getMaterial());
+		for(String ench : enchArgs) {
+			String[] split = ench.split("=");
+			int id = data.fromName(split[0]);
+			Enchantment magic = Enchantment.getById(id);
+			if(!data.validate(id)) throw new InvalidItemException(LanguageText.GIVE_BAD_ENCH,
+				"item", item.getName(null), "ench", magic.getName());
+			int power;
+			try {
+				power = Integer.parseInt(split[1]);
+			} catch(IndexOutOfBoundsException e) {
+				power = magic.getMaxLevel();
+			} catch(NumberFormatException e) {
+				throw new InvalidItemException(e, LanguageText.GIVE_BAD_LEVEL, "level", split[1], ench, magic.getName());
+			}
+			enchantments.put(magic, power);
+		}
 		// Fill params and go!
 		params.put("player", who);
 		params.put("item", item);
 		params.put("amount", amount);
+		params.put("ench", enchantments);
 		return params;
 	}
 
@@ -104,23 +134,25 @@ public class giveCommand extends CommandBase {
 		if(!item.canGive(sender)) return true;
 		// Make sure the player has enough money for this item
 		if(!EconomyManager.canPay(sender, amount, "economy.give.item" + item.toString())) return true;
+		@SuppressWarnings("unchecked")
+		Map<Enchantment, Integer> enchantments = (Map<Enchantment,Integer>)args.get("ench");
 		
 		boolean isGift = !who.equals(sender);
-		doGive(who, item, amount, isGift);
+		doGive(who, item, amount, isGift, enchantments);
 		if(isGift) {
-			Messaging.send(sender, LanguageText.GIVE_GIFT.value("amount", amount, "item", item.getName(),
+			Messaging.send(sender, LanguageText.GIVE_GIFT.value("amount", amount, "item", item.getName(enchantments),
 				"player", who.getName()));
 		}
 		return true;
 	}
 	
-	private void doGive(Player who, ItemID item, int amount, boolean isGift) {
+	private void doGive(Player who, ItemID item, int amount, boolean isGift, Map<Enchantment,Integer> ench) {
 		if(amount == 0) { // give one stack
 			amount = Items.maxStackSize(item.getId());
 		}
 		
 		Items.giveItem(who, item, amount);
 		LanguageText format = isGift ? LanguageText.GIVE_GIFTED : LanguageText.GIVE_ENJOY;
-		Messaging.send(who, format.value("item", item.getName(), "amount", amount));
+		Messaging.send(who, format.value("item", item.getName(ench), "amount", amount));
 	}
 }

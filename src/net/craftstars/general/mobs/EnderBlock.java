@@ -77,7 +77,7 @@ public class EnderBlock extends MobData {
 	
 	@Override
 	protected Object[] getLangParams() {
-		return new Object[] {"block", id.getName()};
+		return new Object[] {"block", id.getName(null)};
 	}
 
 	@Override

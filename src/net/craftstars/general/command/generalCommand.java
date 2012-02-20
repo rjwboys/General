@@ -201,14 +201,14 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 			kit.add(item, amount);
-			Messaging.send(sender, LanguageText.KIT_NEW.value("amount", amount, "item", item.getName(), "kit", kitName));
+			Messaging.send(sender, LanguageText.KIT_NEW.value("amount", amount, "item", item.getName(null), "kit", kitName));
 			return true;
 		} else if(args[1].equalsIgnoreCase("remove")) {
 			Kit kit = Kits.get(kitName);
 			if(args.length < 3) return false;
 			ItemID item = Items.validate(args[2]);
 			if(!kit.contains(item)) {
-				Messaging.send(sender, LanguageText.KIT_NOT_IN.value("kit", kitName, "item", item.getName()));
+				Messaging.send(sender, LanguageText.KIT_NOT_IN.value("kit", kitName, "item", item.getName(null)));
 				return true;
 			}
 			int amount = Integer.MAX_VALUE;
@@ -220,7 +220,7 @@ public class generalCommand extends CommandBase {
 			}
 			kit.add(item, -amount);
 			if(!kit.contains(item)) amount = 0;
-			Messaging.send(sender, LanguageText.KIT_REMOVE.value("kit",kitName,"item",item.getName(),"amount",amount));
+			Messaging.send(sender, LanguageText.KIT_REMOVE.value("kit",kitName,"item",item.getName(null),"amount",amount));
 			return true;
 		} else if(args[1].equalsIgnoreCase("delay")) {
 			Kit kit = Kits.get(kitName);
@@ -257,7 +257,7 @@ public class generalCommand extends CommandBase {
 		} else if(args[1].equalsIgnoreCase("list")) {
 			Kit kit = Kits.get(kitName);
 			ArrayList<String> names = new ArrayList<String>();
-			for(ItemID item : kit) names.add(kit.get(item) + "x " + item.getName());
+			for(ItemID item : kit) names.add(kit.get(item) + "x " + item.getName(null));
 			String items = Toolbox.join(names.toArray(new String[0]), LanguageText.ITEMS_JOINER.value());
 			Messaging.send(sender, LanguageText.KIT_CONTAINS.value("kit", kitName, "items", items));
 			Messaging.send(sender, LanguageText.KIT_INFO.value("kit",kitName,"delay",kit.delay,"cost",kit.getCost()));

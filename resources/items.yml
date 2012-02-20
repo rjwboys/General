@@ -453,6 +453,27 @@ names:
   item2264: Strad Disc
   item2265: Ward Disc
   item2266: 11 Disc
+  ench0: Protection
+  ench1: Fire Protection
+  ench2: Feather Falling
+  ench3: Blast Protection
+  ench4: Projectile Protection
+  ench5: Resipiration
+  ench6: Aqua Affinity
+  ench16: Sharpness
+  ench17: Smite
+  ench18: Spider Bane
+  ench19: Knockback
+  ench20: Fire Aspect
+  ench21: Looting
+  ench32: Efficiency
+  ench33: Silk Touch
+  ench34: Unbreaking
+  ench35: Fortune
+  ench48: Power
+  ench49: Punch
+  ench50: Flame
+  ench51: Infinity
 
 variants:
   item6:
@@ -582,6 +603,28 @@ special:
       time: ['+', x]
       strength: ['2', ii]
       splash: ['!', splash]
+  enchant:
+    type0: [protection]
+    type1: [fireprotection, fireproof]
+    type2: [fallprotection, featherfall, featherfalling, feather]
+    type3: [explosionprotection, blastprotection]
+    type4: [projectileprotection, arrowprotection, missileprotection]
+    type5: [respiration, oxygen]
+    type6: [aquaaffinity, waterworker]
+    type16: [sharpness]
+    type17: [smite, undeadbane]
+    type18: [spiderbane, arthropodbane]
+    type19: [knockback]
+    type20: [fireaspect]
+    type21: [looting]
+    type32: [efficiency, digspeed]
+    type33: [silktouch]
+    type34: [durability, unbreaking, unbreakable]
+    type35: [fortune]
+    type48: [power]
+    type49: [punch, punchback]
+    type50: [flame, flaming]
+    type51: [infinite, infinity]
 
 hooks:
   block: {gold: 41, iron: 42, diamond: 57, lapis: 22, lazuli: 22, lapislazuli: 22, snow: 80, clay: 82, glowstone: 89, glow: 89}

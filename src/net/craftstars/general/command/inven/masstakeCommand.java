@@ -98,7 +98,7 @@ public class masstakeCommand extends CommandBase {
 				}
 		}
 		ArrayList<String> display = new ArrayList<String>();
-		for(ItemID item : items) display.add(item.getName());
+		for(ItemID item : items) display.add(item.getName(null));
 		itemsText.append(Toolbox.join(display.toArray(new String[0]), LanguageText.ITEMS_JOINER.value()));
 		Messaging.send(who, LanguageText.MASSTAKE_TOOK.value("items", itemsText.toString(), "amount", removed));
 		if(sell) {

@@ -42,7 +42,7 @@ public class itemsCommand extends CommandBase {
 			}
 			if(!what.canGive(sender)) continue;
 			if(!EconomyManager.canPay(sender, 1, "economy.give.item" + item.toString())) continue;
-			display.add(what.getName());
+			display.add(what.getName(null));
 			Items.giveItem(toWhom, what, 1);
 		}
 		String text = Toolbox.join(display.toArray(new String[0]), LanguageText.ITEMS_JOINER.value());

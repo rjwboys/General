@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -284,6 +285,12 @@ public final class Items {
 		return longKey.toString();
 	}
 	
+	public static String name(Enchantment ench) {
+		String name = config.getString("names.ench" + ench.getId());
+		if(name == null) return ench.getName();
+		return name;
+	}
+	
 	/**
 	 * Validate the string for an item
 	 * 
@@ -353,7 +360,7 @@ public final class Items {
 			}
 		} else if(ret.getData() != null) { // This means a "richalias" was used, which includes the data value.
 			// No data value is valid with a "richalias".
-			throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data", ret.getVariant(), "item", ret.getName());
+			throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data",ret.getVariant(), "item",ret.getName(null));
 		} else ret.setData(ret.getDataType().fromName(data));
 		if(ret == null) throw new InvalidItemException(LanguageText.GIVE_BAD_ID);
 		return ret;

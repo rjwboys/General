@@ -5,6 +5,8 @@ import java.util.Arrays;
 import org.apache.commons.lang.math.IntRange;
 
 public class BigShroomData extends ItemData {
+	protected BigShroomData() {}
+	
 	@Override
 	public boolean validate(int data) {
 		if(new IntRange(0, 10).containsDouble(data)) return true;

@@ -5,11 +5,13 @@ import java.util.Map;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
+import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
@@ -83,8 +85,11 @@ public class iteminfoCommand extends CommandBase {
 		if(!sender.hasPermission(permission))
 			return Messaging.lacksPermission(sender, permission);
 		ItemStack item = (ItemStack)args.get("item");
+		Map<Enchantment, Integer> ench = item.getEnchantments();
+		ItemID itemInfo = new ItemID(item);
 		Messaging.send(sender, LanguageText.ITEMINFO_INFO.value("item", Items.name(item.getType()),
-			"data", item.getDurability(), "amount", item.getAmount(), "name", Items.name(item)));
+			"data", item.getDurability(), "amount", item.getAmount(), "name", itemInfo.getName(ench),
+			"dataname", itemInfo.getDataType().getName(item.getDurability())));
 		return true;
 	}
 	

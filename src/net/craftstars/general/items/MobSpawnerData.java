@@ -5,6 +5,8 @@ import org.bukkit.entity.CreatureType;
 import net.craftstars.general.mobs.MobType;
 
 public class MobSpawnerData extends ItemData {
+	protected MobSpawnerData() {}
+	
 	@Override
 	public boolean validate(int data) {
 		MobType mob = MobType.byId(data);

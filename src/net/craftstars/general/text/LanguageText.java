@@ -85,6 +85,8 @@ public enum LanguageText {
 	CLEAR_EXCEPTARMOUR("clear.inventory", "inventory"),
 	// Messages relating to /give
 	GIVE_BAD_AMOUNT("give.error.amount", "{rose}The amount must be an integer."),
+	GIVE_BAD_ENCH("give.error.enchant", "{white}{ench}{rose} is not a valid enchantment for {white}{item}{rose}."),
+	GIVE_BAD_LEVEL("give.error.enchant", "{white}{level}{rose} is not a valid level for {white}{ench}{rose}."),
 	GIVE_BAD_ID("give.error.id", "{rose}Invalid item."),
 	GIVE_BAD_DATA("give.error.data", "{white}{data}{rose} is not a valid data type for {white}{item}{rose}."),
 	GIVE_GIFT("give.gift", "{green}Gave {white}{amount,choice,-1#infinite|0#{amount}}{green} of " +
@@ -221,7 +223,7 @@ public enum LanguageText {
 	MOTD_NOONE("motd.no-one", "(no-one)"),
 	// Messages relating to item info
 	ITEMINFO_BAD_SLOT("iteminfo.badslot", "Slot {slot} does not exist!"),
-	ITEMINFO_INFO("iteminfo.info", "{item}@{data} x {amount} ({name})"),
+	ITEMINFO_INFO("iteminfo.info", "Name: {name}\nDetail: {amount} x {item}@{data} ({dataname})\nEnchantments: {ench}"),
 	// Messages relating to the /general subcommands
 	ECONOMY_NO_PLAYER("econ.no-player", "Please specify the player you would like to dry-run the command as."),
 	PERMISSIONS_RESTRICT("permissions.restrict", "Permission '{node}' has been added to the " +

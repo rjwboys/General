@@ -1,10 +1,13 @@
 package net.craftstars.general.items;
 
+import java.util.Map;
+
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -73,10 +76,22 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		}
 		return this;
 	}
-	
-	public String getName() {
-		if(dataType.isNameCustom()) return dataType.getDisplayName();
-		return Items.name(this);
+
+	private static final String[] romnum = new String[] {"O", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
+	public String getName(Map<Enchantment,Integer> enchantments) {
+		StringBuilder name = new StringBuilder();
+		if(dataType.isNameCustom()) name.append(dataType.getDisplayName());
+		else name.append(Items.name(this));
+		if(enchantments == null || enchantments.isEmpty()) return name.toString();
+		boolean first = true;
+		for(Enchantment ench : enchantments.keySet()) {
+			name.append(first ? " of " : " and ");
+			first = false;
+			name.append(Items.name(ench));
+			name.append(' ');
+			name.append(romnum[enchantments.get(ench)]);
+		}
+		return name.toString();
 	}
 	
 	public ItemID setName(String newName) {
@@ -148,7 +163,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		itemNode = "general.give.item." + itemNode.toLowerCase().replace('_', '-');
 		boolean hasPermission = who.hasPermission(itemNode);
 		if(!hasPermission)
-			Messaging.lacksPermission(who, itemNode, LanguageText.LACK_GIVE_ITEM, "item", getName());
+			Messaging.lacksPermission(who, itemNode, LanguageText.LACK_GIVE_ITEM, "item", getName(null));
 		return hasPermission;
 	}
 
@@ -159,7 +174,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 
 	public void validateData() {
 		if(!dataType.validate(data))
-			throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data", getVariant(), "item", getName());
+			throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data", getVariant(), "item", getName(null));
 	}
 	
 	public ItemData getDataType() {

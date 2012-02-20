@@ -39,6 +39,8 @@ public class ItemData implements Cloneable {
 	private String name;
 	private boolean defaultName = true;
 	
+	protected ItemData() {}
+	
 	private ItemData setItem(Material mat) {
 		material = mat;
 		name = Items.name(mat);
@@ -58,7 +60,10 @@ public class ItemData implements Cloneable {
 		return !defaultName;
 	}
 	
-//	public abstract boolean validate(ItemID id, Material check);
+	public static ItemData enchanting(Material item) {
+		ItemData enchant = new EnchantData();
+		return enchant.setItem(item);
+	}
 	
 	public static ItemData getData(Material item) {
 		Class<? extends ItemData> data = map.get(item);

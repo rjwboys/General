@@ -5,6 +5,8 @@ import org.bukkit.material.SmoothBrick;
 import net.craftstars.general.util.range.IntRange;
 
 public class StoneBrickData extends ItemData {
+	protected StoneBrickData() {}
+	
 	@Override
 	public boolean validate(int data) {
 		if(data <= 2) return true;
@@ -13,12 +15,7 @@ public class StoneBrickData extends ItemData {
 	
 	@Override
 	public String getName(int data) {
-		switch(data) {
-		case 0: return "normal";
-		case 1: return "mossy";
-		case 2: return "crumbling";
-		}
-		return null;
+		return new SmoothBrick(data).getMaterial().toString();
 	}
 	
 	@Override

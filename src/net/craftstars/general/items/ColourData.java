@@ -6,6 +6,8 @@ import org.bukkit.DyeColor;
 import net.craftstars.general.util.range.IntRange;
 
 final public class ColourData extends ItemData {
+	protected ColourData() {}
+	
 	@Override
 	public boolean validate(int data) {
 		if(new IntRange(0,15).contains(data)) return true;

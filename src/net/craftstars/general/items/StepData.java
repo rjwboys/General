@@ -5,6 +5,8 @@ import org.bukkit.material.Step;
 import net.craftstars.general.util.range.IntRange;
 
 public class StepData extends ItemData {
+	protected StepData() {}
+	
 	@Override
 	public boolean validate(int data) {
 		if(new IntRange(0, 5).contains(data)) return true;
