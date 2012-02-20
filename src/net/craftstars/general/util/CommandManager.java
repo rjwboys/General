@@ -49,10 +49,6 @@ public final class CommandManager {
 				//General.logger.debug("Registering aliases for command: " + key);
 				if(key.contains("."))
 					register(key.split("\\.")[1], generalCommand);
-				@SuppressWarnings("unchecked")
-				List<String> aliases = config.getList("aliases." + key, null);
-				for(String alias : aliases)
-					register(alias, generalCommand);
 				try {
 					Class<? extends CommandBase> clazz = General.class.getClassLoader()
 						.loadClass("net.craftstars.general.command." + generalCommand.getName() + "Command")
@@ -81,8 +77,17 @@ public final class CommandManager {
 				} catch(NoSuchMethodException e) {
 					General.logger.error(LanguageText.LOG_COMMAND_REG_ERROR.value("command", generalCommand.getName()),e);
 				}
+				@SuppressWarnings("unchecked")
+				List<String> aliases = config.getList("aliases." + key, null);
+				if(aliases == null) {
+					//General.logger.warn("No aliases defined for " + key + " command; skipping.");
+					continue;
+				}
+				for(String alias : aliases)
+					register(alias, generalCommand);
 			}
 		} catch(NullPointerException e) {
+			e.printStackTrace();
 			return;
 		} catch(ClassCastException e) {
 			General.logger.error("Commands are of wrong type!",e);

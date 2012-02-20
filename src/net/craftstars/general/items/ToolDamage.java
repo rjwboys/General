@@ -28,7 +28,7 @@ public class ToolDamage extends ItemData {
 				percent /= 100;
 				return (int)(percent * material.getMaxDurability());
 			} catch(NumberFormatException e) {
-				return 0;
+				return -1;
 			}
 		} else return super.fromName(data);
 	}

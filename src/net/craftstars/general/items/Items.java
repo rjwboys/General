@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -153,11 +154,12 @@ public final class Items {
 	
 	private static Pattern itemPat = Pattern.compile("([0-9]+)(?:[.,:/|]([0-9]+))?");
 	private static void loadItemAliases() {
-		Set<String> ymlAliases = config.getConfigurationSection("aliases").getKeys(false);
-		if(ymlAliases == null) {
+		ConfigurationSection aliasSection = config.getConfigurationSection("aliases");
+		if(aliasSection == null) {
 			General.logger.warn(LanguageText.LOG_ITEM_NO_ALIASES.value());
 			return;
 		}
+		Set<String> ymlAliases = aliasSection.getKeys(false);
 		for(String alias : ymlAliases) {
 			ItemID val;
 			String code = config.getString("aliases." + alias);
@@ -242,17 +244,17 @@ public final class Items {
 	
 	public static String name(Material item) {
 		if(item == null) return "";
-		return name(new ItemID(item.getId()));
+		return name(ItemID.bare(item.getId(), null));
 	}
 	
 	public static String name(MaterialData item) {
 		if(item == null) return "";
-		return name(new ItemID(item.getItemTypeId(), (int)item.getData()));
+		return name(ItemID.bare(item.getItemTypeId(), (int)item.getData()));
 	}
 	
 	public static String name(ItemStack item) {
 		if(item == null) return "";
-		return name(new ItemID(item.getTypeId(), (int)item.getDurability()));
+		return name(ItemID.bare(item.getTypeId(), (int)item.getDurability()));
 	}
 	
 	/**

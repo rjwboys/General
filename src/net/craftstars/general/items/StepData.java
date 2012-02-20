@@ -23,7 +23,7 @@ public class StepData extends ItemData {
 		int id = listContainsId("step", name, new IntRange(0,5));
 		if(id >= 0) return id;
 		ItemID data = Items.validate(name + "/0");
-		if(data == null) return 0;
+		if(data == null) return super.fromName(name);
 		Step step = new Step(data.getMaterial());
 		if(step.getMaterial() != data.getMaterial()) return super.fromName(name);
 		return step.getData();

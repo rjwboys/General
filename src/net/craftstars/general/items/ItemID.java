@@ -17,6 +17,22 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 	private int data;
 	private boolean dataMatters;
 	
+	static ItemID bare(int id, Integer data) {
+		// Returns an ItemID without its dataType set, to avoid circular dependencies
+		return new ItemID(true, id, data);
+	}
+	
+	private ItemID(@SuppressWarnings("unused") boolean dummy, int id, Integer d) {
+		this.ID = id;
+		if(d == null) {
+			this.data = 0;
+			this.dataMatters = false;
+		} else {
+			this.data = d;
+			this.dataMatters = true;
+		}
+	}
+	
 	public ItemID() {
 		this(0);
 	}
@@ -70,6 +86,8 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		if(d == null) {
 			data = 0;
 			dataMatters = false;
+		} else if(!dataType.validate(d)) {
+			throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data", getVariant(), "item", getName(null));
 		} else {
 			data = d;
 			dataMatters = true;
@@ -111,7 +129,8 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		} catch(CloneNotSupportedException e) {
 			return null;
 		}
-		clone.dataType = clone.dataType.clone();
+		if(clone.dataType != null)
+			clone.dataType = clone.dataType.clone();
 		return clone;
 	}
 	

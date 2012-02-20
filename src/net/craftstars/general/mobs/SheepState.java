@@ -53,11 +53,11 @@ public class SheepState extends AnimalData {
 			} else if(Toolbox.equalsOne(component, MobType.SHEEP.getDataList("random"))) {
 				clr = DyeColor.getByData((byte) generator.nextInt(16));
 			} else {
-				sheared = false;
 				ItemID wool;
 				try {
 					wool = Items.validate("35/" + component);
 					clr = DyeColor.getByData((byte) (int) wool.getData());
+					sheared = false;
 				} catch(InvalidItemException e) {
 					try {
 						super.parse(setter, component);

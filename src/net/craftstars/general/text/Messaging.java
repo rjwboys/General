@@ -41,7 +41,7 @@ public final class Messaging {
 		langFile = "messages_" + lang + ".yml";
 		config = LanguageText.setLanguage(lang, dataFolder, langFile);
 		List<String> names = config.getStringList("colours");
-		if(names == null) names = Arrays.asList(defaultColours);
+		if(names == null || names.isEmpty()) names = Arrays.asList(defaultColours);
 		for(int i = 0; i < 16; i++)
 			colours.put(names.get(i), ChatColor.getByChar(Integer.toHexString(i)));
 		colours.put(names.get(16), ChatColor.GRAY);

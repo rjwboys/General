@@ -79,20 +79,23 @@ public class WolfAttitude extends AnimalData {
 
 	@Override
 	public void parse(CommandSender setter, String data) {
+		Attitude att = null;
 		for(String component : data.split("[.,:/\\|]", 2)) {
-			attitude = Attitude.match(component);
-			if(attitude == null) {
+			att = Attitude.match(component);
+			if(att == null) {
 				try {
 					super.parse(setter, component);
+					
 				} catch(InvalidMobException e) {
-					attitude = Attitude.TAMED;
+					att = Attitude.TAMED;
 					player = Toolbox.matchPlayer(component);
 					if(player == null) player = Bukkit.getOfflinePlayer(component);
 				}
-			} else if(attitude == Attitude.TAMED && player == null && setter instanceof Player) {
+			} else if(att == Attitude.TAMED && player == null && setter instanceof Player) {
 				player = (Player) setter;
 			}
 		}
+		attitude = att == null ? Attitude.WILD : att;
 	}
 
 	@Override

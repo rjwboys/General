@@ -28,7 +28,7 @@ public abstract class MobData {
 		} catch(IllegalArgumentException e) {
 		} catch(SecurityException e) {
 		}
-		return null;
+		return new NoData(mob);
 	}
 	
 	protected void invalidate(String data) {

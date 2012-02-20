@@ -71,7 +71,7 @@ public class Destination {
 		String permission = what.getPermission(base);
 		permission += ".into." + player.getWorld().getName().replace('.','`');
 		for(DestinationType type : t) {
-			boolean can = type.hasPermission(player, base, what);
+			boolean can = type.hasPermission(player, permission, what);
 			perm = perm && can;
 		}
 		boolean canMass = what.hasMassPermission(sender);
@@ -234,7 +234,7 @@ public class Destination {
 		String permission = what.getPermission(base);
 		permission += ".into." + player.getWorld().getName().replace('.','`');
 		for(DestinationType type : t) {
-			boolean can = type.hasInstant(sender, base);
+			boolean can = type.hasInstant(sender, permission);
 			perm = perm && can;
 		}
 		return perm;

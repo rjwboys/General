@@ -164,7 +164,6 @@ public class PermissionManager implements Listener {
 							register(perm, "Gives permission to spawn " + mob.getPluralName() + " of the " + data +
 								" variant.");
 							variants.put(perm, true);
-							all.put(perm, true);
 							if(data.equals(basicData.getBasic())) {
 								alignBasics.put(perm, true);
 								basics.put(perm, true);
@@ -178,6 +177,7 @@ public class PermissionManager implements Listener {
 					register(alignPerm, "Gives permission to spawn any type of" + alignName + " mobs.", alignments);
 					register(alignPerm + ".basic", "Gives permission to spawn the basic type of any " + alignName +
 						" mobs.", alignBasics);
+					all.put(alignPerm, true);
 				}
 				register("general.mobspawn.basic", "Gives permission to spawn the basic type of any mob.", basics);
 				register("general.mobspawn", "Gives permission to spawn any type of mob.", all);
@@ -395,7 +395,11 @@ public class PermissionManager implements Listener {
 			// Welcome to Rome!
 			Permission perm = new Permission(name, desc, def, children);
 			Bukkit.getPluginManager().addPermission(perm);
-			if(file != null) file.println(name);
+			if(file != null) {
+				file.println(name);
+				if(Option.EXPORT_PERMISSIONS_CHILDREN.get())
+					file.println("    " + perm.getChildren());
+			}
 		}
 	}
 	private static class PermissionsCompare implements Comparator<Permission> {

@@ -149,7 +149,7 @@ public class ItemData implements Cloneable {
 		try {
 			return Integer.parseInt(data);
 		} catch(NumberFormatException e) {
-			return 0;
+			return -1;
 		}
 	}
 	

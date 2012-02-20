@@ -24,7 +24,7 @@ public class LongGrassData extends ItemData {
 		int id = listContainsId("grass", name, new IntRange(0,2));
 		if(id < 0) {
 			GrassSpecies data = Toolbox.enumValue(GrassSpecies.class, name.toUpperCase());
-			if(data == null) return 0;
+			if(data == null) return super.fromName(name);
 			else return data.getData();
 		}
 		return id;

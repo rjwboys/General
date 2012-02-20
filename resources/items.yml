@@ -555,7 +555,7 @@ special:
     stem: [stem]
     interior: [interior, pores, inside, flesh, fleshy]
   potion:
-  	zero: [water, waterbottle, bottleofwater]
+    zero: [water, waterbottle, bottleofwater]
     mundane:
       type0: [mundane]
       # Potions with no effect

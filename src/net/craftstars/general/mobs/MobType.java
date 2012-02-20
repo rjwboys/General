@@ -23,29 +23,29 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 
 public enum MobType {
-	BLAZE(null, MobAlignment.ENEMY, CreatureType.BLAZE, 61),
-	CAVE_SPIDER(null, MobAlignment.ENEMY, CreatureType.CAVE_SPIDER, 59),
+	BLAZE(NoData.class, MobAlignment.ENEMY, CreatureType.BLAZE, 61),
+	CAVE_SPIDER(NoData.class, MobAlignment.ENEMY, CreatureType.CAVE_SPIDER, 59),
 	CHICKEN(AnimalData.class, MobAlignment.FRIENDLY, CreatureType.CHICKEN, 93),
 	COW(AnimalData.class, MobAlignment.FRIENDLY, CreatureType.COW, 92),
 	CREEPER(CreeperState.class, MobAlignment.ENEMY, CreatureType.CREEPER, 50),
-	ENDER_DRAGON(null, MobAlignment.ENEMY, CreatureType.ENDER_DRAGON, 63),
+	ENDER_DRAGON(NoData.class, MobAlignment.ENEMY, CreatureType.ENDER_DRAGON, 63),
 	ENDERMAN(EnderBlock.class, MobAlignment.NEUTRAL, CreatureType.ENDERMAN, 58),
-	GHAST(null, MobAlignment.ENEMY, CreatureType.GHAST, 56),
-	GIANT_ZOMBIE(null, MobAlignment.ENEMY, CreatureType.GIANT, 53),
+	GHAST(NoData.class, MobAlignment.ENEMY, CreatureType.GHAST, 56),
+	GIANT_ZOMBIE(NoData.class, MobAlignment.ENEMY, CreatureType.GIANT, 53),
 	MAGMA_CUBE(SlimeSize.class, MobAlignment.ENEMY, CreatureType.MAGMA_CUBE, 62),
-	MUSHROOM_COW(null, MobAlignment.FRIENDLY, CreatureType.MUSHROOM_COW, 96),
+	MUSHROOM_COW(AnimalData.class, MobAlignment.FRIENDLY, CreatureType.MUSHROOM_COW, 96),
 	PIG(PigState.class, MobAlignment.FRIENDLY, CreatureType.PIG, 90),
 	PIG_ZOMBIE(PigZombieAttitude.class, MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 57),
 	SHEEP(SheepState.class, MobAlignment.FRIENDLY, CreatureType.SHEEP, 91),
-	SILVERFISH(null, MobAlignment.ENEMY, CreatureType.SILVERFISH, 60),
-	SKELETON(null, MobAlignment.ENEMY, CreatureType.SKELETON, 51),
+	SILVERFISH(NoData.class, MobAlignment.ENEMY, CreatureType.SILVERFISH, 60),
+	SKELETON(NoData.class, MobAlignment.ENEMY, CreatureType.SKELETON, 51),
 	SLIME(SlimeSize.class, MobAlignment.ENEMY, CreatureType.SLIME, 55),
-	SNOWMAN(null, MobAlignment.FRIENDLY, CreatureType.SNOWMAN, 97),
-	SPIDER(null, MobAlignment.ENEMY, CreatureType.SPIDER, 52),
-	SQUID(null, MobAlignment.FRIENDLY, CreatureType.SQUID, 94),
+	SNOWMAN(NoData.class, MobAlignment.FRIENDLY, CreatureType.SNOWMAN, 97),
+	SPIDER(NoData.class, MobAlignment.ENEMY, CreatureType.SPIDER, 52),
+	SQUID(NoData.class, MobAlignment.FRIENDLY, CreatureType.SQUID, 94),
 	VILLAGER(VillagerRole.class, MobAlignment.FRIENDLY, CreatureType.VILLAGER, 120),
 	WOLF(WolfAttitude.class, MobAlignment.NEUTRAL, CreatureType.WOLF, 95),
-	ZOMBIE(null, MobAlignment.ENEMY, CreatureType.ZOMBIE, 54);
+	ZOMBIE(NoData.class, MobAlignment.ENEMY, CreatureType.ZOMBIE, 54);
 	private MobAlignment alignment;
 	private CreatureType ctype;
 	private String[] aliases;
@@ -229,7 +229,21 @@ public enum MobType {
 		try {
 			return data.newInstance();
 		} catch(InstantiationException e) {
-			return new NoData(this);
+			try {
+				return data.getConstructor(MobType.class).newInstance(this);
+			} catch(IllegalArgumentException x) {
+				return new NoData(this);
+			} catch(SecurityException x) {
+				return new NoData(this);
+			} catch(InstantiationException x) {
+				return new NoData(this);
+			} catch(IllegalAccessException x) {
+				return new NoData(this);
+			} catch(InvocationTargetException x) {
+				return new NoData(this);
+			} catch(NoSuchMethodException x) {
+				return new NoData(this);
+			}
 		} catch(IllegalAccessException e) {
 			return new NoData(this);
 		} catch(NullPointerException e) {

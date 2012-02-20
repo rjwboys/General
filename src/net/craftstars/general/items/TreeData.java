@@ -24,7 +24,7 @@ final public class TreeData extends ItemData {
 		int id = listContainsId("tree", name, new IntRange(0,3));
 		if(id < 0) {
 			TreeSpecies data = Toolbox.enumValue(TreeSpecies.class, name.toUpperCase());
-			if(data == null) return 0;
+			if(data == null) return super.fromName(name);
 			else return data.getData();
 		}
 		return id;

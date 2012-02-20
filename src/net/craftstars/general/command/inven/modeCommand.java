@@ -37,7 +37,7 @@ public class modeCommand extends CommandBase {
 			}
 			if(mode == null) {
 				try {
-					mode = GameMode.valueOf(args[0].toUpperCase());
+					mode = Toolbox.enumValue(GameMode.class, args[0].toUpperCase());
 				} catch(IllegalArgumentException e) {
 					Player player = Toolbox.matchPlayer(args[0]);
 					if(player == null) {
@@ -58,7 +58,7 @@ public class modeCommand extends CommandBase {
 		case 2: // /mode <player> <mode>
 			try {
 				mode = GameMode.getByValue(Integer.parseInt(args[0]));
-				if(mode == null) mode = GameMode.valueOf(args[1].toUpperCase());
+				if(mode == null) mode = Toolbox.enumValue(GameMode.class, args[1].toUpperCase());
 				Player player = Toolbox.matchPlayer(args[0]);
 				if(player == null) {
 					Messaging.invalidPlayer(sender, args[0]);

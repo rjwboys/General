@@ -20,11 +20,11 @@ public class StoneBrickData extends ItemData {
 	
 	@Override
 	public int fromName(String name) {
-		if(name == null || name.isEmpty()) return 0;
+		if(name == null || name.isEmpty()) return super.fromName(name);
 		int id = listContainsId("brick", name, new IntRange(0, 2));
 		if(id >= 0) return id;
 		ItemID data = Items.validate(name + "/0");
-		if(data == null) return 0;
+		if(data == null) return super.fromName(name);
 		SmoothBrick brick = new SmoothBrick(data.getMaterial());
 		if(brick.getMaterial() != data.getMaterial()) return super.fromName(name);
 		return brick.getData();

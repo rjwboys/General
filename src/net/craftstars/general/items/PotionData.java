@@ -30,10 +30,7 @@ public class PotionData extends ItemData {
 	
 	@Override
 	public String getName(int data) {
-//		if(data <= 64 || data == 8192 || data == 16384) {
-//			List<String> list = Items.variantNames("potion.mundane", data);
-//			if(list != null && !list.isEmpty()) return list.get(0);
-//		}
+		if(data == 0) return "waterbottle";
 		boolean mundane = false;
 		List<String> list = Items.variantNames("potion.basic", data & 0xF);
 		if(list == null || list.isEmpty()) {
@@ -56,8 +53,9 @@ public class PotionData extends ItemData {
 	
 	@Override
 	public int fromName(String name) {
-		int data = 0x2000;
 		name = name.toLowerCase();
+		if(listContains("potion.zero", name, Arrays.asList("waterbottle"))) return 0;
+		int data = 0x2000;
 		List<String> splash = Items.variantNames("potion.mod.splash");
 		if(splash == null) splash = Arrays.asList("splash","!");
 		splash = allToLower(splash);

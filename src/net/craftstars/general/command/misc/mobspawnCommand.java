@@ -125,6 +125,7 @@ public class mobspawnCommand extends CommandBase {
 		MobData data;
 		if(split.length == 2) data = MobData.parse(mob, sender, split[1]);
 		else data = mob.getNewData();
+		if(data == null) return null;
 		return new SpawnResult(mob, data);
 	}
 
