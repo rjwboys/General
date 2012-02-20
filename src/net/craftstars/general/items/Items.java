@@ -241,14 +241,17 @@ public final class Items {
 	}
 	
 	public static String name(Material item) {
+		if(item == null) return "";
 		return name(new ItemID(item.getId()));
 	}
 	
 	public static String name(MaterialData item) {
+		if(item == null) return "";
 		return name(new ItemID(item.getItemTypeId(), (int)item.getData()));
 	}
 	
 	public static String name(ItemStack item) {
+		if(item == null) return "";
 		return name(new ItemID(item.getTypeId(), (int)item.getDurability()));
 	}
 	
@@ -260,6 +263,8 @@ public final class Items {
 	 * @return Canonical name
 	 */
 	public static String name(ItemID longKey) {
+		if(longKey == null) return "";
+		
 		if(names.containsKey(longKey)) {
 			return names.get(longKey);
 		}
@@ -270,11 +275,6 @@ public final class Items {
 		if(names.containsKey(shortKey)) {
 			return names.get(shortKey);
 		}
-
-		//Material material = Material.getMaterial(longKey.getId());
-		//ItemData data = ItemData.getData(material);
-		//String dataName = data.getName(longKey.getData());
-		//if(!data.equals("0")) return Toolbox.formatItemName(dataName);
 		
 		for(Material item : Material.values()) {
 			if(item.getId() == longKey.getId()) {
@@ -389,28 +389,6 @@ public final class Items {
 		}
 		return ret;
 	}
-	
-//	private static Integer findVariant(int id, String data) {
-//		// Special case for maps
-//		if(id == Material.MAP.getId() && data.startsWith("z")) {
-//			int zoom = 90000;
-//			try {
-//				zoom += Integer.parseInt(data.substring(1));
-//				return zoom;
-//			} catch(NumberFormatException e) {}
-//		}
-//		ConfigurationNode thisItem = config.getNode("variants.item" + Integer.toString(id));
-//		if(thisItem == null) return null;
-//		int i = 0;
-//		List<String> thisVariant;
-//		do {
-//			thisVariant = thisItem.getStringList("type" + Integer.toString(i), null);
-//			if(thisVariant.contains(data)) return i;
-//			i++;
-//		} while(!thisVariant.isEmpty());
-//		ItemData dataType = ItemData.getData(Material.getMaterial(id));
-//		return dataType.fromName(data);
-//	}
 	
 	public static boolean checkID(int id) {
 		for(Material item : Material.values()) {
