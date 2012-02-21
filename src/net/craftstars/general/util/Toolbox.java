@@ -266,4 +266,21 @@ public final class Toolbox {
 		}
 		return result;
 	}
+	
+	// Source: <http://www.moxlotus.alternatifs.eu/programmation-converter.html>
+	private final static String[] BASIC_ROMAN_NUMBERS
+		= {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+	private final static int[] BASIC_VALUES = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+	public static String toRoman(int n) {
+		if(n == 0) return "O";
+		StringBuilder romanString = new StringBuilder();
+		int remainder = n;
+		for (int i = 0; i < BASIC_VALUES.length; i++) {
+			while (remainder >= BASIC_VALUES[i]) {
+				romanString.append(BASIC_ROMAN_NUMBERS[i]);
+				remainder -= BASIC_VALUES[i];
+			}
+		}
+		return romanString.toString();
+	}
 }

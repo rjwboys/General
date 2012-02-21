@@ -22,6 +22,7 @@
 	<property name="EssentialsEco" value="economy/Essentials.jar"/>
 	<property name="RealShop" value="economy/RealShop.jar"/>
 	<property name="MultiCurrency" value="economy/MultiCurrency.jar"/>
+	<property name="EconXP" value="economy/EconXP.jar"/>
 	<property name="BookWorm" value="BookWorm.jar"/>
 	<property name="CraftIRC" value="CraftIRC.jar"/>
 	
@@ -80,6 +81,7 @@
 				<pathelement location="${lib}/${EssentialsEco}"/>
 				<pathelement location="${lib}/${RealShop}"/>
 				<pathelement location="${lib}/${MultiCurrency}"/>
+				<pathelement location="${lib}/${EconXP}"/>
 			</classpath>
 		</javac>
 	</target>

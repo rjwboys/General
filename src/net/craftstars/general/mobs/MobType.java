@@ -289,7 +289,6 @@ public enum MobType {
 		else if(entity instanceof Zombie) return CreatureType.ZOMBIE;
 		else if(entity instanceof Enderman) return CreatureType.ENDERMAN;
 		else if(entity instanceof Silverfish) return CreatureType.SILVERFISH;
-		else if(entity instanceof Monster) return CreatureType.MONSTER;
 		return null;
 	}
 

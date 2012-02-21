@@ -30,7 +30,7 @@ public class giveCommand extends CommandBase {
 	public Map<String, Object> parse(CommandSender sender, Command cmd, String label, String[] args, boolean isPlayer) {
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		Player who = null;
-		ItemID item = null;
+		ItemID item;
 		int amount = 1;
 		
 		// Split the arguments into two parts based on whether they contain an equals sign.
@@ -97,7 +97,7 @@ public class giveCommand extends CommandBase {
 			int id = data.fromName(split[0]);
 			Enchantment magic = Enchantment.getById(id);
 			if(!data.validate(id)) throw new InvalidItemException(LanguageText.GIVE_BAD_ENCH,
-				"item", item.getName(null), "ench", magic.getName());
+				"item", item.getName(null), "ench", Items.name(magic));
 			int power;
 			try {
 				power = Integer.parseInt(split[1]);
@@ -151,7 +151,7 @@ public class giveCommand extends CommandBase {
 			amount = Items.maxStackSize(item.getId());
 		}
 		
-		Items.giveItem(who, item, amount);
+		Items.giveItem(who, item, amount, ench);
 		LanguageText format = isGift ? LanguageText.GIVE_GIFTED : LanguageText.GIVE_ENJOY;
 		Messaging.send(who, format.value("item", item.getName(ench), "amount", amount));
 	}

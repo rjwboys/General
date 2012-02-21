@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -334,13 +335,14 @@ public final class Items {
 		// First figure out what the data and ID are.
 		if(Pattern.matches("([a-zA-Z0-9_'-]+)", item)) {
 			ret = validateShortItem(item);
-			if(ret == null) return ret;
+			if(ret == null) throw new InvalidItemException(LanguageText.GIVE_BAD_ID);
 		} else {
 			try {
 				String[] parts = item.split("[.,:/\\|]");
 				ret = validateLongItem(parts[0], parts[1]);
 			} catch(ArrayIndexOutOfBoundsException x) {
-				return null;
+				throw new InvalidItemException(LanguageText.GIVE_BAD_DATA,
+					"data", "", "item", item.substring(0, item.length() - 1));
 			}
 		}
 		
@@ -392,22 +394,13 @@ public final class Items {
 		return ret;
 	}
 	
-	public static boolean checkID(int id) {
-		for(Material item : Material.values()) {
-			if(item.getId() == id) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	public static int maxStackSize(int id) {
 		return Material.getMaterial(id).getMaxStackSize();
 	}
 	
-	public static void giveItem(Player who, ItemID x, Integer amount) {
+	public static void giveItem(Player who, ItemID x, Integer amount, Map<Enchantment,Integer> ench) {
 		PlayerInventory i = who.getInventory();
-		HashMap<Integer, ItemStack> excess = i.addItem(x.getStack(amount, who));
+		HashMap<Integer, ItemStack> excess = i.addItem(x.getStack(amount, who, ench));
 		for(ItemStack leftover : excess.values())
 			who.getWorld().dropItemNaturally(who.getLocation(), leftover);
 	}

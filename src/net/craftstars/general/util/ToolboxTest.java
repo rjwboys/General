@@ -94,4 +94,36 @@ public class ToolboxTest {
 		for(int i = 0; i < expected.length; i++) assertEquals(expected[i], actual[i]);
 	}
 	
+	@Test
+	public final void testToRoman() {
+		assertEquals("O", Toolbox.toRoman(0));
+		assertEquals("I", Toolbox.toRoman(1));
+		assertEquals("II", Toolbox.toRoman(2));
+		assertEquals("III", Toolbox.toRoman(3));
+		assertEquals("IV", Toolbox.toRoman(4));
+		assertEquals("V", Toolbox.toRoman(5));
+		assertEquals("VI", Toolbox.toRoman(6));
+		assertEquals("VII", Toolbox.toRoman(7));
+		assertEquals("VIII", Toolbox.toRoman(8));
+		assertEquals("IX", Toolbox.toRoman(9));
+		assertEquals("X", Toolbox.toRoman(10));
+		assertEquals("XIV", Toolbox.toRoman(14));
+		assertEquals("XVI", Toolbox.toRoman(16));
+		assertEquals("XXX", Toolbox.toRoman(30));
+		assertEquals("XL", Toolbox.toRoman(40));
+		assertEquals("XLIV", Toolbox.toRoman(44));
+		assertEquals("XLIX", Toolbox.toRoman(49));
+		assertEquals("L", Toolbox.toRoman(50));
+		assertEquals("XCIX", Toolbox.toRoman(99));
+		assertEquals("C", Toolbox.toRoman(100));
+		assertEquals("CCC", Toolbox.toRoman(300));
+		assertEquals("CD", Toolbox.toRoman(400));
+		assertEquals("CDIX", Toolbox.toRoman(409));
+		assertEquals("CDXCIX", Toolbox.toRoman(499));
+		assertEquals("D", Toolbox.toRoman(500));
+		assertEquals("CM", Toolbox.toRoman(900));
+		assertEquals("M", Toolbox.toRoman(1000));
+		assertEquals("MCMXLIX", Toolbox.toRoman(1949));
+		assertEquals("MMM", Toolbox.toRoman(3000));
+	}
 }

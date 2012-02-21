@@ -23,8 +23,14 @@ public class EconomyManager {
 	private EconomyManager() {}
 	
 	public static void setup() {
-		allpay = new AllPay(General.plugin, "General [" + General.codename + "] ");
-		economy = allpay.loadEconPlugin();
+		try {
+			allpay = new AllPay(General.plugin, "General [" + General.codename + "] ");
+			economy = allpay.loadEconPlugin();
+		} catch(Exception e) {
+			// TODO: LanguageText
+			General.logger.info("Error loading AllPay: " + e.getMessage());
+			return;
+		}
 		if(Option.NO_ECONOMY.get()) General.logger.info(LanguageText.LOG_NO_ECONOMY.value());
 		else if(economy instanceof ItemBank && Option.ECONOMY_ITEM.get() <= 0)
 			General.logger.warn(LanguageText.LOG_MISSING_ECONOMY.value());

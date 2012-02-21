@@ -2,6 +2,7 @@ package net.craftstars.general.command.info;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -85,11 +86,21 @@ public class iteminfoCommand extends CommandBase {
 		if(!sender.hasPermission(permission))
 			return Messaging.lacksPermission(sender, permission);
 		ItemStack item = (ItemStack)args.get("item");
-		Map<Enchantment, Integer> ench = item.getEnchantments();
+		Map<Enchantment, Integer> enchMap = item.getEnchantments();
+		StringBuilder ench = new StringBuilder();
+		boolean first = true;
+		for(Entry<Enchantment,Integer> magic : enchMap.entrySet()) {
+			if(!first) ench.append(", ");
+			first = false;
+			ench.append(Items.name(magic.getKey()));
+			ench.append(' ');
+			ench.append(Toolbox.toRoman(magic.getValue()));
+		}
+		if(first) ench.append("none");
 		ItemID itemInfo = new ItemID(item);
 		Messaging.send(sender, LanguageText.ITEMINFO_INFO.value("item", Items.name(item.getType()),
-			"data", item.getDurability(), "amount", item.getAmount(), "name", itemInfo.getName(ench),
-			"dataname", itemInfo.getDataType().getName(item.getDurability())));
+			"data", item.getDurability(), "amount", item.getAmount(), "name", itemInfo.getName(enchMap),
+			"dataname", itemInfo.getDataType().getName(item.getDurability()), "ench", ench.toString()));
 		return true;
 	}
 	

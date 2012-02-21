@@ -4,6 +4,7 @@ import java.util.Map;
 
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -95,7 +96,6 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		return this;
 	}
 
-	private static final String[] romnum = new String[] {"O", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
 	public String getName(Map<Enchantment,Integer> enchantments) {
 		StringBuilder name = new StringBuilder();
 		if(dataType.isNameCustom()) name.append(dataType.getDisplayName());
@@ -107,7 +107,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 			first = false;
 			name.append(Items.name(ench));
 			name.append(' ');
-			name.append(romnum[enchantments.get(ench)]);
+			name.append(Toolbox.toRoman(enchantments.get(ench)));
 		}
 		return name.toString();
 	}
@@ -134,10 +134,13 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 		return clone;
 	}
 	
-	public ItemStack getStack(int amount, Player who) {
+	public ItemStack getStack(int amount, Player who, Map<Enchantment,Integer> ench) {
 		data = dataType.init(data, who);
-		if(dataMatters) return new ItemStack(ID, amount, (short) data);
-		return new ItemStack(ID, amount);
+		ItemStack item;
+		if(dataMatters) item = new ItemStack(ID, amount, (short) data);
+		else item = new ItemStack(ID, amount);
+		if(ench != null) item.addEnchantments(ench);
+		return item;
 	}
 	
 	public Material getMaterial() {
