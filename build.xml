@@ -57,7 +57,7 @@
 		<get src="http://repo.onarandombox.com/content/repositories/bukkit-econ/com/earth2me/essentials/Essentials/2.4.2/Essentials-2.4.2.jar"
 			dest="${lib}/economy/Essentials.jar" usetimestamp="true"/>
 		<get src="http://repo.onarandombox.com/content/repositories/bukkit-econ/com/iCo6/iConomy/6.0/iConomy-6.0.jar"
-			dest="${lib}/economy/iConomy.jar" usetimestamp="true"/>
+			dest="${lib}/economy/iConomy6.jar" usetimestamp="true"/>
 		<get src="http://repo.onarandombox.com/content/repositories/bukkit-econ/com/iConomy/iConomy/5.0/iConomy-5.0.jar"
 			dest="${lib}/economy/iConomy5.jar" usetimestamp="true"/>
 		<get src="http://repo.onarandombox.com/content/repositories/bukkit-econ/com/nijiko/coelho/iConomy/iConomy/4.65/iConomy-4.65.jar"
