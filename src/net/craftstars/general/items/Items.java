@@ -215,14 +215,23 @@ public final class Items {
 			General.logger.warn(LanguageText.LOG_ITEM_BAD_NAMES.value());
 		} else {
 			for(String id : keys) {
+				if(!id.startsWith("item")) {
+					if(!id.startsWith("ench")) {
+						lastInvalid = id;
+						invalids++;
+					}
+					continue;
+				}
 				int num;
 				ItemID key;
 				String name;
 				try {
 					num = Integer.valueOf(id.substring(4));
 				} catch(NumberFormatException x) {
+					if(!id.equals("potions")) {
 					lastInvalid = id;
 					invalids++;
+					}
 					continue;
 				}
 				String path = "names." + id;
