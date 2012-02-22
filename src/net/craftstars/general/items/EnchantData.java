@@ -6,7 +6,6 @@ import org.bukkit.inventory.ItemStack;
 import net.craftstars.general.util.range.IntRange;
 
 public class EnchantData extends ItemData {
-	
 	protected EnchantData() {}
 	
 	@Override
@@ -27,6 +26,8 @@ public class EnchantData extends ItemData {
 	public int fromName(String data) {
 		int id = listContainsId("enchant", data, new IntRange(0, 51));
 		if(id >= 0) return id;
+		Enchantment ench = Enchantment.getByName(data);
+		if(ench != null) return ench.getId();
 		return super.fromName(data);
 	}
 }

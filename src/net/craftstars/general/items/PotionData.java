@@ -6,7 +6,7 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 public class PotionData extends ItemData {
-	private static final int SPLASH = 0x4000, EXTEND = 0x40, IMPROVE = 0x20;
+	private static final int SPLASH = 0x4000, EXTEND = 0x40, IMPROVE = 0x20, BASIC = 0x2000;
 
 	protected PotionData() {}
 	
@@ -53,9 +53,10 @@ public class PotionData extends ItemData {
 	
 	@Override
 	public int fromName(String name) {
+		if(name.matches("[0-9]+")) return super.fromName(name);
 		name = name.toLowerCase();
 		if(listContains("potion.zero", name, Arrays.asList("waterbottle"))) return 0;
-		int data = 0x2000;
+		int data = BASIC;
 		List<String> splash = Items.variantNames("potion.mod.splash");
 		if(splash == null) splash = Arrays.asList("splash","!");
 		splash = allToLower(splash);
@@ -69,6 +70,7 @@ public class PotionData extends ItemData {
 		for(String suffix : splash) {
 			if(name.endsWith(suffix)) {
 				data |= SPLASH;
+				data &= ~BASIC;
 				name = name.replace(suffix, "");
 				break;
 			}

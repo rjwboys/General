@@ -338,72 +338,40 @@ names:
   item372: Nether Wart
   item373:
     data0: Bottle of Water
+    generic: Potion
+  potions:
     # Potions with no effect
-    data6: Clear Potion
-    data11: Diffuse Potion
-    data13: Artless Potion
-    data14: Thin Potion
-    data16: Awkward Potion
-    data22: Bungling Potion
-    data27: Smooth Potion
-    data29: Suave Potion
-    data30: Debonair Potion
-    data32: Thick Potion
-    data38: Charming Potion
-    data43: Refined Potion
-    data54: Rank Potion
-    data59: Acrid Potion
-    data61: Gross Potion
-    data62: Stinky Potion
-    data64: Mundane Potion (X)
-    data8192: Mundane Potion
+    name0: Mundane {potion}
+    name6: Clear {potion}
+    name11: Diffuse {potion}
+    name13: Artless {potion}
+    name14: Thin {potion}
+    name16: Awkward {potion}
+    name22: Bungling {potion}
+    name27: Smooth {potion}
+    name29: Suave {potion}
+    name30: Debonair {potion}
+    name32: Thick {potion}
+    name38: Charming {potion}
+    name43: Refined {potion}
+    name54: Rank {potion}
+    name59: Acrid {potion}
+    name61: Gross {potion}
+    name62: Stinky {potion}
     # Normal potions
-    data8193: Potion of Regeneration
-    data8257: Potion of Regeneration (X)
-    data8225: Potion of Regeneration (II)
-    data8194: Potion of Swiftness
-    data8258: Potion of Swiftness (X)
-    data8226: Potion of Swiftness (II)
-    data8195: Potion of Fire Resistance
-    data8259: Potion of Fire Resistance (X)
-    data8197: Potion of Healing
-    data8229: Potion of Healing (II)
-    data8201: Potion of Strength
-    data8265: Potion of Strength (X)
-    data8233: Potion of Strength (II)
-    data8196: Potion of Poison
-    data8260: Potion of Poison (X)
-    data8228: Potion of Poison (II)
-    data8200: Potion of Weakness
-    data8264: Potion of Weakness (X)
-    data8202: Potion of Slowness
-    data8266: Potion of Slowness (X)
-    data8204: Potion of Harming
-    data8236: Potion of Harming (II)
-    # Splash Potions
-    data16384: Mundane Splash Potion
-    data16385: Splash Potion of Regeneration
-    data16449: Splash Potion of Regeneration (X)
-    data16417: Splash Potion of Regeneration (II)
-    data16386: Splash Potion of Swiftness
-    data16450: Splash Potion of Swiftness (X)
-    data16418: Splash Potion of Swiftness (II)
-    data16387: Splash Potion of Fire Resistance
-    data16451: Splash Potion of Fire Resistance (X)
-    data16389: Splash Potion of Healing
-    data16421: Splash Potion of Healing (II)
-    data16393: Splash Potion of Strength
-    data16457: Splash Potion of Strength (X)
-    data16425: Splash Potion of Strength (II)
-    data16388: Splash Potion of Poison
-    data16452: Splash Potion of Poison (X)
-    data16420: Splash Potion of Poison (II)
-    data16392: Splash Potion of Weakness
-    data16456: Splash Potion of Weakness (X)
-    data16394: Splash Potion of Slowness
-    data16458: Splash Potion of Slowness (X)
-    data16396: Splash Potion of Harming
-    data16428: Splash Potion of Harming (II)
+    type1: '{potion} of Regeneration'
+    type2: '{potion} of Swiftness'
+    type3: '{potion} of Fire Resistance'
+    type4: '{potion} of Poison'
+    type5: '{potion} of Healing'
+    type9: '{potion} of Strength'
+    type8: '{potion} of Weakness'
+    type10: '{potion} of Slowness'
+    type12: '{potion} of Harming'
+    # Extra bits
+    splash: Splash Potion
+    extend: ' (X)'
+    tier2: ' (II)'
     generic: Potion
   item374: Glass Bottle
   item375: Spider Eye

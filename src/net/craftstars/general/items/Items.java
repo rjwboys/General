@@ -21,9 +21,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.Potion.Tier;
+import org.bukkit.potion.PotionType;
 
 import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
+import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 import net.craftstars.general.util.range.IntRange;
@@ -35,6 +39,7 @@ public final class Items {
 	private static HashMap<String, ItemID> aliases;
 	private static HashMap<ItemID, String> names;
 	private static HashMap<String, ItemID> hooks;
+	private static ConfigurationSection potions;
 	private Items() {}
 	
 	public static void save() {
@@ -78,6 +83,7 @@ public final class Items {
 			if(item.getData() != null) code += "/" + item.getData();
 			config.set(key, code);
 		}
+		config.set("names.potions", potions);
 		try {
 			config.save(configFile);
 		} catch(IOException e) {
@@ -113,6 +119,8 @@ public final class Items {
 		
 		// Load the "hooks" as well.
 		loadHooks();
+		
+		potions = config.getConfigurationSection("names.potions");
 		
 		// Check if classes have been overridden.
 		for(Material mat : Material.values()) {
@@ -272,6 +280,10 @@ public final class Items {
 			return names.get(longKey);
 		}
 		
+		if(longKey.getMaterial() == Material.POTION && longKey.getData() != null) {
+			return potionName(longKey.getData());
+		}
+		
 		// This is a redundant lookup if longKey already has null data, but that shouldn't create significant
 		// overhead
 		ItemID shortKey = longKey.clone().setData(null);
@@ -286,6 +298,28 @@ public final class Items {
 		}
 		
 		return longKey.toString();
+	}
+	
+	public static String potionName(int data) {
+		try {
+			return name(Potion.fromDamage(data));
+		} catch(IllegalArgumentException e) {
+			String name = potions.getString("name" + (data & 63), potions.getString("generic"));
+			return formatPotionName(name, Tier.ONE, (data & 0x4000) > 0, (data & 0x40) > 0);
+		}
+	}
+	
+	public static String name(Potion potion) {
+		PotionType type = potion.getType(), match = null;
+		int i = 0;
+		while(type != match) match = PotionType.getByDamageValue(++i);
+		return formatPotionName(potions.getString("type" + i), potion.getTier(), potion.isSplash(), potion.hasExtendedDuration());
+	}
+	
+	private static String formatPotionName(String name, Tier tier, boolean splash, boolean extend) {
+		name += potions.getString("tier" + (1 + tier.ordinal()), "");
+		if(extend) name += potions.getString("extend", "");
+		return Messaging.format(name, "potion", potions.getString(splash ? "splash" : "generic", ""));
 	}
 	
 	public static String name(Enchantment ench) {
