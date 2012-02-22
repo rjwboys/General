@@ -66,45 +66,52 @@ public class PotionData extends ItemData {
 		List<String> improve = Items.variantNames("potion.mod.strength");
 		if(improve == null) improve = Arrays.asList("2","II","(II)");
 		improve = allToLower(improve);
-		// Try splash suffix first
-		for(String suffix : splash) {
-			if(name.endsWith(suffix)) {
-				data |= SPLASH;
-				data &= ~BASIC;
-				name = name.replace(suffix, "");
-				break;
-			}
-		}
-		// Then improve/extend suffixes
-		for(String suffix : improve) {
-			if(name.endsWith(suffix)) {
-				data |= IMPROVE;
-				name = name.replace(suffix, "");
-				break;
-			}
-		}
-		for(String suffix : extend) {
-			if(name.endsWith(suffix)) {
-				data |= EXTEND;
-				name = name.replace(suffix, "");
-				break;
-			}
-		}
-		// Then splash suffix again
-		for(String suffix : splash) {
-			if(name.endsWith(suffix)) {
-				data |= SPLASH;
-				name = name.replace(suffix, "");
-				break;
-			}
-		}
-		// And finally splash prefix
+		int status = 0;
+		// Try splash prefix first
 		for(String prefix : splash) {
 			if(name.startsWith(prefix)) {
 				data |= SPLASH;
+				status = 1;
 				name = name.replace(prefix, "");
 				break;
 			}
+		}
+		while((status & 8) == 0) {
+			status |= 8; // means "no suffix found"
+			// Splash suffix first
+			if((status & 1) == 0)
+				for(String suffix : splash) {
+					if(name.endsWith(suffix)) {
+						data |= SPLASH;
+						data &= ~BASIC;
+						status |= 1;
+						status &= ~8;
+						name = name.replace(suffix, "");
+						break;
+					}
+				}
+			// Improve suffix
+			if((status & 2) == 0)
+				for(String suffix : improve) {
+					if(name.endsWith(suffix)) {
+						data |= IMPROVE;
+						status |= 2;
+						status &= ~8;
+						name = name.replace(suffix, "");
+						break;
+					}
+				}
+			// Extend suffix
+			if((status & 4) == 0)
+				for(String suffix : extend) {
+					if(name.endsWith(suffix)) {
+						data |= EXTEND;
+						status |= 4;
+						status &= ~8;
+						name = name.replace(suffix, "");
+						break;
+					}
+				}
 		}
 		// Now the potion name itself
 		for(int i = 0; i < 16; i++) {
