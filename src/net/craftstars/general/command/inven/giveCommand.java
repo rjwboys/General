@@ -9,8 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 
-import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
+import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.items.InvalidItemException;
 import net.craftstars.general.items.ItemData;
 import net.craftstars.general.items.ItemID;
@@ -97,7 +97,7 @@ public class giveCommand extends CommandBase {
 			int id = data.fromName(split[0]);
 			Enchantment magic = Enchantment.getById(id);
 			if(!data.validate(id)) throw new InvalidItemException(LanguageText.GIVE_BAD_ENCH,
-				"item", item.getName(null), "ench", Items.name(magic));
+				"item", item.getName(null), "ench", split[0]);
 			int power;
 			try {
 				power = Integer.parseInt(split[1]);
