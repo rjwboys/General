@@ -2,80 +2,80 @@ package net.craftstars.general.util;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import net.craftstars.general.General;
 
-public abstract class Option {
+public abstract class Option<T> {
 	// Misc settings
-	public static OptionBoolean AWAY_SLEEP = new OptionBoolean("away-sleep", true);
-	public static OptionBoolean SHOW_USAGE = new OptionBoolean("show-usage-on-fail", true);
-	public static OptionString TAG_FORMAT = new OptionString("tag-fmt", "name:");
-	public static OptionBoolean SHOW_MOTD = new OptionBoolean("show-motd", true);
-	public static OptionBoolean AUTO_SAVE = new OptionBoolean("auto-save", false);
-	public static OptionBoolean LOG_COMMANDS = new OptionBoolean("log-commands", false);
-	public static OptionString LANGUAGE = new OptionString("language", "en");
-	public static OptionBoolean EXPORT_PERMISSIONS = new OptionBoolean("export-permissions", false);
-	public static OptionBoolean EXPORT_PERMISSIONS_CHILDREN = new OptionBoolean("export-permissions-children", false);
-	public static OptionString BAN_KICK = new OptionString("ban-kick-msg", "You have been banned from this server!");
-	public static OptionBoolean HEAL_HUNGER = new OptionBoolean("heal-hunger", true);
+	public static Option<Boolean> AWAY_SLEEP = new OptionBoolean("away-sleep", true);
+	public static Option<Boolean> SHOW_USAGE = new OptionBoolean("show-usage-on-fail", true);
+	public static Option<String> TAG_FORMAT = new OptionString("tag-fmt", "name:");
+	public static Option<Boolean> SHOW_MOTD = new OptionBoolean("show-motd", true);
+	public static Option<Boolean> AUTO_SAVE = new OptionBoolean("auto-save", false);
+	public static Option<Boolean> LOG_COMMANDS = new OptionBoolean("log-commands", false);
+	public static Option<String> LANGUAGE = new OptionString("language", "en");
+	public static Option<Boolean> EXPORT_PERMISSIONS = new OptionBoolean("export-permissions", false);
+	public static Option<Boolean> EXPORT_PERMISSIONS_CHILDREN = new OptionBoolean("export-permissions-children", false);
+	public static Option<String> BAN_KICK = new OptionString("ban-kick-msg", "You have been banned from this server!");
+	public static Option<Boolean> HEAL_HUNGER = new OptionBoolean("heal-hunger", true);
 	// Playerlist settings
-	public static OptionBoolean SHOW_WORLD = new OptionBoolean("playerlist.show-world", false);
-	public static OptionBoolean SHOW_HEALTH = new OptionBoolean("playerlist.show-health", true);
-	public static OptionBoolean SHOW_COORDS = new OptionBoolean("playerlist.show-coords", true);
-	public static OptionBoolean SHOW_IP = new OptionBoolean("playerlist.show-ip", false);
-	public static OptionBoolean ALLOW_OVERRIDE = new OptionBoolean("playerlist.allow-all", false);
+	public static Option<Boolean> SHOW_WORLD = new OptionBoolean("playerlist.show-world", false);
+	public static Option<Boolean> SHOW_HEALTH = new OptionBoolean("playerlist.show-health", true);
+	public static Option<Boolean> SHOW_COORDS = new OptionBoolean("playerlist.show-coords", true);
+	public static Option<Boolean> SHOW_IP = new OptionBoolean("playerlist.show-ip", false);
+	public static Option<Boolean> ALLOW_OVERRIDE = new OptionBoolean("playerlist.allow-all", false);
 	// Economy settings
-	public static OptionBoolean NO_ECONOMY = new OptionBoolean("economy.disable", true);
-	public static OptionInteger ECONOMY_ITEM = new OptionInteger("economy.item", -1);
-	public static OptionDouble ECONOMY_SELL = new OptionDouble("economy.give.sell", 100);
-	public static OptionString ECONOMY_TAKE_SELL = new OptionString("economy.give.take", "sell");
-	public static OptionString ECONOMY_CLEAR_SELL = new OptionString("economy.give.clear", "sell");
-	public static OptionString KIT_METHOD = new OptionString("economy.give.kits", "individual");
-	public static OptionDouble KIT_DISCOUNT = new OptionDouble("economy.give.discount", 80);
+	public static Option<Boolean> NO_ECONOMY = new OptionBoolean("economy.disable", true);
+	public static Option<Integer> ECONOMY_ITEM = new OptionInteger("economy.item", -1);
+	public static Option<Double> ECONOMY_SELL = new OptionDouble("economy.give.sell", 100);
+	public static Option<String> ECONOMY_TAKE_SELL = new OptionString("economy.give.take", "sell");
+	public static Option<String> ECONOMY_CLEAR_SELL = new OptionString("economy.give.clear", "sell");
+	public static Option<String> KIT_METHOD = new OptionString("economy.give.kits", "individual");
+	public static Option<Double> KIT_DISCOUNT = new OptionDouble("economy.give.discount", 80);
 	// Give settings
-	public static OptionInteger GIVE_MASS = new OptionInteger("give.mass", 64);
-	public static OptionBoolean OTHERS4ALL = new OptionBoolean("give.others-for-all", true);
-	public static OptionKeys ITEM_GROUPS = new OptionKeys("give.groups");
+	public static Option<Integer> GIVE_MASS = new OptionInteger("give.mass", 64);
+	public static Option<Boolean> OTHERS4ALL = new OptionBoolean("give.others-for-all", true);
+	public static Option<Set<String>> ITEM_GROUPS = new OptionKeys("give.groups");
 	// Range settings
-	public static OptionInteger LIGHTNING_RANGE = new OptionInteger("lightning-range", 20);
-	public static OptionInteger SUMMON_RANGE = new OptionInteger("summon-range", 30);
+	public static Option<Integer> LIGHTNING_RANGE = new OptionInteger("lightning-range", 20);
+	public static Option<Integer> SUMMON_RANGE = new OptionInteger("summon-range", 30);
 	// Teleport settings
-	public static OptionStringList TELEPORT_BASICS = new OptionStringList("teleport.basics",
+	public static Option<List<String>> TELEPORT_BASICS = new OptionStringList("teleport.basics",
 		Arrays.asList("world", "player", "home", "spawn"));
-	public static OptionInteger TELEPORT_WARMUP = new OptionInteger("teleport.warm-up", 0);
+	public static Option<Integer> TELEPORT_WARMUP = new OptionInteger("teleport.warm-up", 0);
 	// Time Settings
-	public static OptionBoolean SHOW_TICKS = new OptionBoolean("time.show-ticks", true);
-	public static OptionBoolean TIME_FORMAT = new OptionBoolean("time.format-24-hour", false);
+	public static Option<Boolean> SHOW_TICKS = new OptionBoolean("time.show-ticks", true);
+	public static Option<Boolean> TIME_FORMAT = new OptionBoolean("time.format-24-hour", false);
 	// Complex settings
-	public static OptionInteger COOLDOWN(String command) {
+	public static Option<Integer> COOLDOWN(String command) {
 		return new OptionInteger("cooldown." + command, 0);
 	}
-	public static OptionDouble ECONOMY_COST(String node) {
+	public static Option<Double> ECONOMY_COST(String node) {
 		return new OptionDouble(node, 0.0);
 	}
-	public static OptionIntegerList GROUP(String group) {
+	public static Option<List<Integer>> GROUP(String group) {
 		return new OptionIntegerList("give.groups." + group, null);
 	}
 	protected String node;
-	protected Object def;
-	protected static Configuration config;
+	protected T def;
+	private static Configuration config;
 	
 	@SuppressWarnings("hiding")
-	protected Option(String node, Object def) {
+	protected Option(String node, T def) {
 		this.node = node;
 		this.def = def;
 	}
 	
-	public abstract Object get();
+	public abstract T get();
 	
-	public void set(Object value) {
+	public void set(T value) {
 		config.set(node, value);
 	}
 	
@@ -105,6 +105,11 @@ public abstract class Option {
 		return config.get(path);
 	}
 	
+	protected Configuration setDefault() {
+		if(def != null && config.get(node) == null) config.set(node, def);
+		return config;
+	}
+	
 	public static void save() {
 		try {
 			((FileConfiguration)config).save(General.plugin.configFile);
@@ -114,87 +119,87 @@ public abstract class Option {
 			General.logger.warn("Error saving config.yml: " + e.getMessage());
 		}
 	}
-	
-	public static class OptionBoolean extends Option {
-		@SuppressWarnings("hiding") OptionBoolean(String node, boolean def) {
-			super(node, def);
-		}
+}
 
-		@Override
-		public Boolean get() {
-			return config.getBoolean(node, (Boolean) def);
-		}
+class OptionBoolean extends Option<Boolean> {
+	@SuppressWarnings("hiding") OptionBoolean(String node, boolean def) {
+		super(node, def);
 	}
 
-	public static class OptionString extends Option {
-		@SuppressWarnings("hiding") OptionString(String node, String def) {
-			super(node, def);
-		}
+	@Override
+	public Boolean get() {
+		return setDefault().getBoolean(node, def);
+	}
+}
 
-		@Override
-		public String get() {
-			return config.getString(node, (String) def);
-		}
+class OptionString extends Option<String> {
+	@SuppressWarnings("hiding") OptionString(String node, String def) {
+		super(node, def);
 	}
 
-	public static class OptionInteger extends Option {
-		@SuppressWarnings("hiding") OptionInteger(String node, int def) {
-			super(node, def);
-		}
+	@Override
+	public String get() {
+		return setDefault().getString(node, def);
+	}
+}
 
-		@Override
-		public Integer get() {
-			return config.getInt(node, (Integer) def);
-		}
+class OptionInteger extends Option<Integer> {
+	@SuppressWarnings("hiding") OptionInteger(String node, int def) {
+		super(node, def);
 	}
 
-	public static class OptionDouble extends Option {
-		@SuppressWarnings("hiding") OptionDouble(String node, double def) {
-			super(node, def);
-		}
+	@Override
+	public Integer get() {
+		return setDefault().getInt(node, def);
+	}
+}
 
-		@Override
-		public Double get() {
-			return config.getDouble(node, (Double) def);
-		}
+class OptionDouble extends Option<Double> {
+	@SuppressWarnings("hiding") OptionDouble(String node, double def) {
+		super(node, def);
 	}
 
-	public static class OptionStringList extends Option {
-		@SuppressWarnings("hiding") OptionStringList(String node, List<String> def) {
-			super(node, def);
-		}
+	@Override
+	public Double get() {
+		return setDefault().getDouble(node, def);
+	}
+}
 
-		@Override@SuppressWarnings("unchecked")
-		public List<String> get() {
-			List<String> list = config.getStringList(node);
-			if(list == null) return (List<String>) def;
-			return list;
-		}
+class OptionStringList extends Option<List<String>> {
+	@SuppressWarnings("hiding") OptionStringList(String node, List<String> def) {
+		super(node, def);
 	}
 
-	public static class OptionIntegerList extends Option {
-		@SuppressWarnings("hiding") OptionIntegerList(String node, List<Integer> def) {
-			super(node, def);
-		}
+	@Override
+	public List<String> get() {
+		List<String> list = setDefault().getStringList(node);
+		if(list == null) return def;
+		return list;
+	}
+}
 
-		@Override@SuppressWarnings("unchecked")
-		public List<Integer> get() {
-			List<Integer> list = config.getIntegerList(node);
-			if(list == null) return (List<Integer>) def;
-			return list;
-		}
+class OptionIntegerList extends Option<List<Integer>> {
+	@SuppressWarnings("hiding") OptionIntegerList(String node, List<Integer> def) {
+		super(node, def);
 	}
 
-	public static class OptionKeys extends Option {
-		@SuppressWarnings("hiding") OptionKeys(String node) {
-			super(node, new HashMap<String,Object>());
-		}
+	@Override
+	public List<Integer> get() {
+		List<Integer> list = setDefault().getIntegerList(node);
+		if(list == null) return def;
+		return list;
+	}
+}
 
-		@Override
-		public Set<String> get() {
-			Set<String> keys = config.getConfigurationSection(node).getKeys(false);
-			if(keys == null) return new HashSet<String>();
-			return keys;
-		}
+class OptionKeys extends Option<Set<String>> {
+	@SuppressWarnings("hiding") OptionKeys(String node) {
+		super(node, null);
+	}
+
+	@Override
+	public Set<String> get() {
+		ConfigurationSection section = setDefault().getConfigurationSection(node);
+		if(section == null) return new HashSet<String>();
+		return section.getKeys(false);
 	}
 }
