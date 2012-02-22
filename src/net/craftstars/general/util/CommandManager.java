@@ -63,8 +63,8 @@ public final class CommandManager {
 							CommandEndPoint ep = commandInstance.new CraftIRCForwarder(irc, tag);
 							cmdTags.put(ep, tag);
 						} catch(Exception e) {
-							General.logger.error(LanguageText.LOG_COMMAND_IRC_REG_ERROR.value("command",
-								generalCommand.getName()), e);
+							General.logger.warn(LanguageText.LOG_COMMAND_IRC_REG_ERROR.value("command",
+								generalCommand.getName()));
 						}
 					}
 				} catch(ClassNotFoundException e) {
