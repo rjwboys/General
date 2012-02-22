@@ -106,6 +106,7 @@ public class giveCommand extends CommandBase {
 			} catch(NumberFormatException e) {
 				throw new InvalidItemException(e, LanguageText.GIVE_BAD_LEVEL, "level", split[1], ench, magic.getName());
 			}
+			if(power == 0) power = magic.getMaxLevel();
 			enchantments.put(magic, power);
 		}
 		// Fill params and go!
