@@ -7,9 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.craftstars.general.General;
-import net.craftstars.general.command.CommandBase;
-import net.craftstars.general.text.LanguageText;
+import com.ensifera.animosity.craftirc.CommandEndPoint;
+import com.ensifera.animosity.craftirc.CraftIRC;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -20,8 +19,9 @@ import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
-import com.ensifera.animosity.craftirc.CraftIRC;
-import com.ensifera.animosity.craftirc.CommandEndPoint;
+import net.craftstars.general.General;
+import net.craftstars.general.command.CommandBase;
+import net.craftstars.general.text.LanguageText;
 
 public final class CommandManager {
 	public static boolean setAliases = false;
@@ -59,8 +59,13 @@ public final class CommandManager {
 						if(cmdTags == null) cmdTags = new HashMap<CommandEndPoint, String>();
 						CraftIRC irc = (CraftIRC) chat;
 						String tag = generalCommand.getLabel();
-						CommandEndPoint ep = commandInstance.new CraftIRCForwarder(irc, tag);
-						cmdTags.put(ep, tag);
+						try {
+							CommandEndPoint ep = commandInstance.new CraftIRCForwarder(irc, tag);
+							cmdTags.put(ep, tag);
+						} catch(Exception e) {
+							General.logger.error(LanguageText.LOG_COMMAND_IRC_REG_ERROR.value("command",
+								generalCommand.getName()), e);
+						}
 					}
 				} catch(ClassNotFoundException e) {
 					General.logger.error(LanguageText.LOG_COMMAND_REG_ERROR.value("command", generalCommand.getName()),e);

@@ -271,6 +271,7 @@ public enum LanguageText {
 	LOG_COMMAND_NO_ALIASES("log.cmd.no-aliases","No command aliases defined; did you forget to copy the aliases section " +
 		"from the example config.yml?"),
 	LOG_COMMAND_REG_ERROR("log.cmd.reg-error", "Command [{command}] could not be registered."),
+	LOG_COMMAND_IRC_REG_ERROR("log.cmd.reg-error", "Command [{command}] could not be registered with CraftIRC."),
 	LOG_COMMAND_TAKEN("log.cmd.taken", "Command alias {alias} was not registered because [{plugin}] " +
 		"claimed it."),
 	LOG_COMMAND_ERROR("log.cmd.error", "There was an error with command [{command}] during {errorPlace}!" +
