@@ -30,13 +30,20 @@ public final class MessageOfTheDay {
 		String address = getAddress(sender), balance = getBalance(sender), currency = getCurrency(sender);
 		int numPlayers = Bukkit.getOnlinePlayers().length;
 		String online = getOnline(), world = getWorld(sender), time = getTime(sender);
-		return Messaging.format(original, 
+		String server = Bukkit.getServerName();
+		int level = getLevel(sender);
+		return Messaging.format(original,
 			"dname", displayName, "name", name, "location", location, "health", health,
 			"ip", address, "balance", balance, "currency", currency, "online", numPlayers,
-			"list", online, "world", world, "time", time
+			"list", online, "world", world, "time", time, "server", server, "level", level
 		);
 	}
 	
+	private static int getLevel(CommandSender sender) {
+		if(sender instanceof Player) return ((Player)sender).getLevel();
+		return 0;
+	}
+
 	private static String getOnline() {
 		List<String> lines = formatPlayerList(Toolbox.getPlayerList(null));
 		StringBuilder stuff = new StringBuilder();

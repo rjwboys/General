@@ -69,7 +69,7 @@ public class whoCommand extends CommandBase {
 			Messaging.send(toWhom, LanguageText.INFO_XP.value("xp", ofWhom.getTotalExperience(), "percent", percent));
 		}
 		if(mask.contains(HUNGER)) {
-			int hunger = ofWhom.getFoodLevel();
+			float hunger = ofWhom.getFoodLevel() / 2.0f;
 			float saturate = ofWhom.getSaturation();
 			float exhaust = ofWhom.getExhaustion();
 			Messaging.send(toWhom, LanguageText.INFO_FOOD.value("food", hunger, "sat", saturate, "ex", exhaust));
