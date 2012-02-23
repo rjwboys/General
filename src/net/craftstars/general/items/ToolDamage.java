@@ -19,7 +19,7 @@ public class ToolDamage extends ItemData {
 	}
 
 	@Override
-	public int fromName(String data) {
+	protected int parseData(String data) {
 		if(data.endsWith("%")) {
 			try {
 				int n = Integer.parseInt(data.substring(0, data.length() - 1));
@@ -30,6 +30,6 @@ public class ToolDamage extends ItemData {
 			} catch(NumberFormatException e) {
 				return -1;
 			}
-		} else return super.fromName(data);
+		} else return super.parseData(data);
 	}
 }

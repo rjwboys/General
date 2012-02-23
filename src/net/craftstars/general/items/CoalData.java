@@ -22,11 +22,11 @@ final public class CoalData extends ItemData {
 	}
 	
 	@Override
-	public int fromName(String name) {
+	protected int parseData(String name) {
 		int id = listContainsId("coal", name, new IntRange(0, 1));
 		if(id >= 0) return id;
 		CoalType data = Toolbox.enumValue(CoalType.class, name.toUpperCase());
-		if(data == null) return super.fromName(name);
+		if(data == null) return super.parseData(name);
 		return data.getData();
 	}
 }

@@ -28,7 +28,7 @@ public class ItemData implements Cloneable {
 		register(Material.STEP, StepData.class);
 		register(Material.MAP, MapData.class);
 		register(Material.SMOOTH_BRICK, StoneBrickData.class);
-		register(Material.MONSTER_EGG, MobSpawnerData.class);
+		register(Material.MONSTER_EGG, EggData.class);
 		register(Material.BOOK, BookWormData.class); // BookWorm support
 		register(Material.LONG_GRASS, LongGrassData.class);
 		register(Material.HUGE_MUSHROOM_1, BigShroomData.class);
@@ -36,7 +36,7 @@ public class ItemData implements Cloneable {
 		register(Material.POTION, PotionData.class);
 	}
 	protected Material material;
-	private String name;
+	private String name, parsed;
 	private boolean defaultName = true;
 	
 	protected ItemData() {}
@@ -145,7 +145,12 @@ public class ItemData implements Cloneable {
 		return name;
 	}
 	
-	public int fromName(String data) {
+	public final int fromName(String data) {
+		parsed = data;
+		return parseData(data);
+	}
+	
+	protected int parseData(String data) {
 		try {
 			return Integer.parseInt(data);
 		} catch(NumberFormatException e) {
@@ -164,5 +169,9 @@ public class ItemData implements Cloneable {
 		} catch(CloneNotSupportedException e) {
 			return null;
 		}
+	}
+	
+	public String getParsed() {
+		return String.valueOf(parsed);
 	}
 }

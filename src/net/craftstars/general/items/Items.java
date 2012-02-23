@@ -404,7 +404,8 @@ public final class Items {
 			}
 		} else if(ret.getData() != null) { // This means a "richalias" was used, which includes the data value.
 			// No data value is valid with a "richalias".
-			throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data",ret.getVariant(), "item",ret.getName(null));
+			throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data", ret.getDataType().getParsed(),
+				"item", ret.getName(null));
 		} else ret.setData(ret.getDataType().fromName(data));
 		if(ret == null) throw new InvalidItemException(LanguageText.GIVE_BAD_ID);
 		return ret;

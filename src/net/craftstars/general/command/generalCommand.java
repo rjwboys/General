@@ -502,7 +502,9 @@ public class generalCommand extends CommandBase {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	private boolean setVar(CommandSender sender, String[] args) {
+		@SuppressWarnings("rawtypes")
 		Option node = null;
 		Object value = null;
 		if(args.length != 2) return false;

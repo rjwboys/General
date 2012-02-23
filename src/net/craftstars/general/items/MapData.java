@@ -18,12 +18,12 @@ public class MapData extends ItemData {
 	}
 	
 	@Override
-	public int fromName(String name) {
+	protected int parseData(String name) {
 		if(name.startsWith("z")) {
 			name = name.substring(1);
-			return super.fromName(name) + 90000;
+			return super.parseData(name) + 90000;
 		}
-		return super.fromName(name);
+		return super.parseData(name);
 	}
 	
 	@Override

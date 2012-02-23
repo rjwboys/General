@@ -23,11 +23,11 @@ public class EnchantData extends ItemData {
 	}
 	
 	@Override
-	public int fromName(String data) {
+	protected int parseData(String data) {
 		int id = listContainsId("enchant", data, new IntRange(0, 51));
 		if(id >= 0) return id;
 		Enchantment ench = Enchantment.getByName(data);
 		if(ench != null) return ench.getId();
-		return super.fromName(data);
+		return super.parseData(data);
 	}
 }

@@ -20,15 +20,15 @@ public class StepData extends ItemData {
 	}
 	
 	@Override
-	public int fromName(String name) {
-		if(name == null || name.isEmpty() || name.matches("[0-9]+")) return super.fromName(name);
+	protected int parseData(String name) {
+		if(name == null || name.isEmpty() || name.matches("[0-9]+")) return super.parseData(name);
 		int id = listContainsId("step", name, new IntRange(0,5));
 		if(id >= 0) return id;
 		ItemID data = Items.validate(name + "/0");
-		if(data == null) return super.fromName(name);
+		if(data == null) return super.parseData(name);
 		Step step = new Step(data.getMaterial());
 		General.logger.debug("Step with material " + step.getMaterial() + " and date " + step.getData());
-		if(step.getMaterial() != data.getMaterial()) return super.fromName(name);
+		if(step.getMaterial() != data.getMaterial()) return super.parseData(name);
 		return step.getData();
 	}
 }

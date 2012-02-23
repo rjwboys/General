@@ -27,7 +27,7 @@ public class BigShroomData extends ItemData {
 	}
 
 	@Override
-	public int fromName(String name) {
+	protected int parseData(String name) {
 		name = name.toLowerCase();
 		// First check stem/interior
 		if(listContains("shroom.stem", name, Arrays.asList("stem"))) return 10;
@@ -40,7 +40,7 @@ public class BigShroomData extends ItemData {
 			data = 5;
 			name = name.replace(prefix, "");
 		}
-		if(data != 5) return super.fromName(name);
+		if(data != 5) return super.parseData(name);
 		// Then check north/south
 		prefix = listContainsPrefix("shroom.north", name, Arrays.asList("north"));
 		if(!prefix.isEmpty()) {

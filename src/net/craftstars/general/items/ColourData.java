@@ -22,11 +22,11 @@ final public class ColourData extends ItemData {
 	}
 	
 	@Override
-	public int fromName(String name) {
+	protected int parseData(String name) {
 		int id = listContainsId("colour", name, new IntRange(0,15));
 		if(id < 0) {
 			DyeColor data = Toolbox.enumValue(DyeColor.class, name.toUpperCase());
-			if(data == null) return super.fromName(name);
+			if(data == null) return super.parseData(name);
 			else id = data.getData();
 		}
 		return material == Material.INK_SACK ? 15 - id : id;

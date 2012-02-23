@@ -20,11 +20,11 @@ public class LongGrassData extends ItemData {
 	}
 	
 	@Override
-	public int fromName(String name) {
+	protected int parseData(String name) {
 		int id = listContainsId("grass", name, new IntRange(0,2));
 		if(id < 0) {
 			GrassSpecies data = Toolbox.enumValue(GrassSpecies.class, name.toUpperCase());
-			if(data == null) return super.fromName(name);
+			if(data == null) return super.parseData(name);
 			else return data.getData();
 		}
 		return id;

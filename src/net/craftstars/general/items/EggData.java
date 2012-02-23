@@ -4,8 +4,8 @@ import org.bukkit.entity.CreatureType;
 
 import net.craftstars.general.mobs.MobType;
 
-public class MobSpawnerData extends ItemData {
-	protected MobSpawnerData() {}
+public class EggData extends ItemData {
+	protected EggData() {}
 	
 	@Override
 	public boolean validate(int data) {
@@ -24,11 +24,11 @@ public class MobSpawnerData extends ItemData {
 	}
 
 	@Override
-	public int fromName(String data) {
+	protected int parseData(String data) {
 		MobType mob = MobType.byName(data);
 		if(mob != null) return mob.getId();
 		CreatureType creature = CreatureType.fromName(data);
 		if(creature != null) return MobType.fromBukkitType(creature).getId();
-		return super.fromName(data);
+		return super.parseData(data);
 	}
 }

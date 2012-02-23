@@ -60,8 +60,8 @@ public class PotionData extends ItemData {
 	}
 	
 	@Override
-	public int fromName(String name) {
-		if(name.matches("[0-9]+")) return super.fromName(name);
+	protected int parseData(String name) {
+		if(name.matches("[0-9]+")) return super.parseData(name);
 		name = name.toLowerCase();
 		if(listContains("potion.zero", name, Arrays.asList("waterbottle"))) return 0;
 		int data = BASIC;

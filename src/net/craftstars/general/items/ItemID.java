@@ -2,7 +2,6 @@ package net.craftstars.general.items;
 
 import java.util.Map;
 
-import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Toolbox;
@@ -89,7 +88,8 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 			data = 0;
 			dataMatters = false;
 		} else if(!dataType.validate(d)) {
-			throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data", getVariant(), "item", getName(null));
+			throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data", dataType.getParsed(),
+				"item", getName(null));
 		} else {
 			data = d;
 			dataMatters = true;
@@ -197,7 +197,8 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 
 	public void validateData() {
 		if(!dataType.validate(data))
-			throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data", getVariant(), "item", getName(null));
+			throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data", dataType.getParsed(),
+				"item", getName(null));
 	}
 	
 	public ItemData getDataType() {
