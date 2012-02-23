@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.entity.Player;
+import org.bukkit.potion.Potion;
 
 public class PotionData extends ItemData {
 	private static final int SPLASH = 0x4000, EXTEND = 0x40, IMPROVE = 0x20, BASIC = 0x2000;
@@ -12,6 +13,14 @@ public class PotionData extends ItemData {
 	
 	@Override
 	public boolean validate(int data) {
+		Potion potion = Potion.fromDamage(data);
+		// TODO: Currently this does nothing; update it for new API
+		try {
+			potion.setHasExtendedDuration(potion.hasExtendedDuration());
+			if(potion.getType() != null) potion.setTier(potion.getTier());
+		} catch(IllegalArgumentException e) {
+			return false;
+		}
 		return true;
 	}
 	
