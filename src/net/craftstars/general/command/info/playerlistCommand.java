@@ -47,7 +47,7 @@ public class playerlistCommand extends CommandBase {
 		if(!sender.hasPermission("general.playerlist"))
 			return Messaging.lacksPermission(sender, "general.playerlist");
 		World world = (World) args.get("world");
-		List<String> players = Toolbox.getPlayerList(world);
+		List<String> players = Toolbox.getPlayerList(world, sender);
 		LanguageText format = world == null ? LanguageText.ONLINE_ALL : LanguageText.ONLINE_WORLD;
 		String worldName = world == null ? "???" : world.getName();
 		Messaging.send(sender, format.value("count", players.size(), "world", worldName));

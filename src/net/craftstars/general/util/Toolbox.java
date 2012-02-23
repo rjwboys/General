@@ -166,11 +166,13 @@ public final class Toolbox {
 		return join(args, " ");
 	}
 	
-	public static List<String> getPlayerList(World world) {
+	public static List<String> getPlayerList(World world, CommandSender sender) {
+		Player viewer = sender instanceof Player ? (Player)sender : null;
 		Player[] onlinePlayers = Bukkit.getOnlinePlayers();
 		List<String> players = new ArrayList<String>();
 		
 		for(Player who : onlinePlayers) {
+			if(viewer != null && !viewer.canSee(who)) continue;
 			if(world == null || who.getWorld().equals(world))
 				players.add(who.getName());
 		}

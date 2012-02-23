@@ -29,7 +29,7 @@ public final class MessageOfTheDay {
 		double health = getHealth(sender);
 		String address = getAddress(sender), balance = getBalance(sender), currency = getCurrency(sender);
 		int numPlayers = Bukkit.getOnlinePlayers().length;
-		String online = getOnline(), world = getWorld(sender), time = getTime(sender);
+		String online = getOnline(sender), world = getWorld(sender), time = getTime(sender);
 		String server = Bukkit.getServerName();
 		int level = getLevel(sender);
 		return Messaging.format(original,
@@ -44,8 +44,8 @@ public final class MessageOfTheDay {
 		return 0;
 	}
 
-	private static String getOnline() {
-		List<String> lines = formatPlayerList(Toolbox.getPlayerList(null));
+	private static String getOnline(CommandSender sender) {
+		List<String> lines = formatPlayerList(Toolbox.getPlayerList(null, sender));
 		StringBuilder stuff = new StringBuilder();
 		for(String line : lines) stuff.append(line + " ");
 		return stuff.toString();
