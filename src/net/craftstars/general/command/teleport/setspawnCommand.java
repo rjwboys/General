@@ -12,14 +12,11 @@ import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Toolbox;
-import net.minecraft.server.ChunkCoordinates;
-import net.minecraft.server.EntityPlayer;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class setspawnCommand extends CommandBase {
@@ -95,14 +92,7 @@ public class setspawnCommand extends CommandBase {
 			if(cannotPay(dest, setter, targetCost)) return;
 		}
 		Location loc = dest.getLoc();
-		// Begin accessing Minecraft internals
-		// TODO Rewrite to use Bukkit API
-		CraftPlayer cp = (CraftPlayer) who;
-		EntityPlayer ep = cp.getHandle();
-		ChunkCoordinates coords = new ChunkCoordinates(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-		ep.a(coords);
-		ep.spawnWorld = loc.getWorld().getName();
-		// End accessing Minecraft internals
+		who.setBedSpawnLocation(loc);
 		Messaging.send(sender, LanguageText.SETHOME.value("player", who.getName(), "x", loc.getBlockX(),
 			"y", loc.getBlockY(), "z", loc.getBlockZ()));
 	}
