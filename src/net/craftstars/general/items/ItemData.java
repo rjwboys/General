@@ -71,10 +71,8 @@ public class ItemData implements Cloneable {
 			try {
 				return data.newInstance().setItem(item);
 			} catch(InstantiationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch(IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

@@ -135,7 +135,6 @@ public final class Items {
 						ItemData.register(mat, dataClass);
 					}
 				} catch(ClassNotFoundException e) {
-					// TODO Auto-generated catch block
 					//e.printStackTrace();
 				}
 			}

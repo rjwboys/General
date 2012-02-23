@@ -51,16 +51,12 @@ public class VillagerRole extends MobData {
 			profession.set(who, role.ordinal());
 			General.logger.info("Set profession to " + profession.get(who));
 		} catch(SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch(NoSuchFieldException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch(IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch(IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// End accessing Minecraft code

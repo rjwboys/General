@@ -196,7 +196,6 @@ public class MappedMessageTest {
 	
 	@Test
 	public final void testSplit1() {
-		// TODO: Not entirely sure what the correct result is here.
 		String fmt = "``````";
 		MappedMessageFormat mmf = new MappedMessageFormat(fmt);
 		assertEquals("`````", mmf.toPattern());
@@ -204,7 +203,6 @@ public class MappedMessageTest {
 	
 	@Test
 	public final void testSplit2() {
-		// TODO: Not entirely sure what the correct result is here.
 		String fmt = "`````";
 		MappedMessageFormat mmf = new MappedMessageFormat(fmt);
 		assertEquals("`````", mmf.toPattern());

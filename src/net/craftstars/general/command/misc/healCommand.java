@@ -16,6 +16,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+// TODO: Handle hunger intuitively
 public class healCommand extends CommandBase {
 	public healCommand(General instance) {
 		super(instance);

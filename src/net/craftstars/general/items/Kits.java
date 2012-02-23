@@ -103,7 +103,6 @@ public final class Kits {
 		try {
 			kitsYml.save(kitsFile);
 		} catch(IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

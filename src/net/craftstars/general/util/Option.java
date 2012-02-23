@@ -80,7 +80,6 @@ public abstract class Option<T> {
 	}
 	
 	public void remove() {
-		// TODO: Is this really identical to removing it?
 		config.set(node, null);
 	}
 	
