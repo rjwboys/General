@@ -73,6 +73,8 @@ public enum LanguageText {
 	INFO_PVP_OFF("info.pvp.off","Disabled"),
 	INFO_SEED("info.seed","{gold} -{yellow} Seed: {white}{seed}"),
 	INFO_TIME("info.time","{gold} -{yellow} Time: {white}{time}"),
+	INFO_XP("info.xp","{gold} -{yellow} Experience: {xp} ({percent}% to next level)"),
+	INFO_LEVEL("info.lvl","{gold} -{yellow} Level: {lvl}"),
 	// Messages relating to /clear
 	CLEAR_INVALID("clear.invalid", "{rose}Invalid option."),
 	CLEAR_SELF("clear.self", "{green}You have cleared your {inventory}."),

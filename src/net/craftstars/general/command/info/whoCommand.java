@@ -2,6 +2,8 @@
 package net.craftstars.general.command.info;
 
 
+import static java.lang.Math.rint;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,11 +32,12 @@ public class whoCommand extends CommandBase {
 	private static final int IP = 1 << 6;
 	private static final int STATUS = 1 << 7;
 	private static final int TITLE = 1 << 8;
+	private static final int LEVEL = 1 << 9;
 	private final int defaultMask;
 	
 	public whoCommand(General instance) {
 		super(instance);
-		int mask = TITLE | UNAME | DNAME | STATUS;
+		int mask = TITLE | UNAME | DNAME | STATUS | LEVEL;
 		if(Option.SHOW_HEALTH.get()) mask |= HEALTH;
 		if(Option.SHOW_COORDS.get()) mask |= LOC | HOME;
 		if(Option.SHOW_WORLD.get()) mask |= WORLD;
@@ -64,6 +67,11 @@ public class whoCommand extends CommandBase {
 			double health = ofWhom.getHealth() / 2.0;
 			String bar = getHealthBar(health);
 			Messaging.send(toWhom, LanguageText.INFO_HEALTH.value("bar", bar, "value", health));
+		}
+		if((mask & LEVEL) > 0) {
+			float percent = (float)(rint(ofWhom.getExp() * 1000)) / 10.0f;
+			Messaging.send(toWhom, LanguageText.INFO_LEVEL.value("lvl", ofWhom.getLevel(), "percent", percent));
+			Messaging.send(toWhom, LanguageText.INFO_XP.value("xp", ofWhom.getTotalExperience(), "percent", percent));
 		}
 		if((mask & LOC) > 0) {
 			Location loc = ofWhom.getLocation();
