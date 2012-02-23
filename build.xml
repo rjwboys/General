@@ -12,7 +12,6 @@
 	<property name="junit-home" location="/usr/share/java/junit-4.10/"/>
 	<property name="tests" value="**/*Test.java"/>
 	
-	<taskdef resource="checkstyletask.properties" classpath="${lib}/checkstyle-5.3-all.jar"/>
 	<property name="CraftBukkit"  value="craftbukkit.jar"/>
 	<property name="Help" value="Help.jar"/>
 	<property name="iConomy4" value="economy/iConomy4.jar"/>
@@ -34,6 +33,19 @@
 			<tokenfilter>
 				<replaceregex pattern="^version:\s*(.*)$" replace="\1"/>
 			</tokenfilter>
+			<striplinebreaks/>
+		</filterchain>
+	</loadfile>
+	
+	<loadfile srcFile="${allpay}/../pom.xml" property="allpay.version">
+		<filterchain>
+			<linecontains>
+				<contains value="version"/>
+			</linecontains>
+			<tokenfilter>
+				<replaceregex pattern="\s+&lt;version&gt;([0-9.]+)&lt;/version&gt;" replace="\1"/>
+			</tokenfilter>
+			<headfilter lines="1"/>
 			<striplinebreaks/>
 		</filterchain>
 	</loadfile>
@@ -75,6 +87,7 @@
 	</target>
 	
 	<target name="allpay" depends="init">
+		<echo message="Building AllPay version ${allpay.version}..."/>
 		<javac srcdir="${allpay}" destdir="${classes}" includeantruntime="false" debug="on" deprecation="on">
 			<classpath>
 				<pathelement location="${lib}/${CraftBukkit}"/>
@@ -88,6 +101,7 @@
 				<pathelement location="${lib}/${EconXP}"/>
 			</classpath>
 		</javac>
+		<concat destfile="${rsrc}/allpay.properties">version=${allpay.version}</concat>
 	</target>
 	
 	<target name="compile" depends="allpay">

@@ -11,5 +11,7 @@ test.sh
 /lib
 /.eclipse-build
 /junit
+# This file is auto-generated on build
+resources/allpay.properties
 # A bunch of stuff that I don't want in the repository goes here
 /misc
