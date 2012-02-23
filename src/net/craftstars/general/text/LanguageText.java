@@ -75,6 +75,7 @@ public enum LanguageText {
 	INFO_TIME("info.time","{gold} -{yellow} Time: {white}{time}"),
 	INFO_XP("info.xp","{gold} -{yellow} Experience: {xp} ({percent}% to next level)"),
 	INFO_LEVEL("info.lvl","{gold} -{yellow} Level: {lvl}"),
+	INFO_FOOD("info.food","{gold} -{yellow} Food: {food} (saturation {sat}, exhaustion {ex})"),
 	// Messages relating to /clear
 	CLEAR_INVALID("clear.invalid", "{rose}Invalid option."),
 	CLEAR_SELF("clear.self", "{green}You have cleared your {inventory}."),

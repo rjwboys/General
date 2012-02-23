@@ -27,12 +27,12 @@ import net.craftstars.general.util.Toolbox;
 import static net.craftstars.general.command.info.whoCommand.Property.*;
 
 public class whoCommand extends CommandBase {
-	enum Property {UNAME, DNAME, HEALTH, LOC, HOME, WORLD, IP, STATUS, TITLE, LEVEL}
+	enum Property {UNAME, DNAME, HEALTH, LOC, HOME, WORLD, IP, STATUS, TITLE, LEVEL, HUNGER}
 	private final Set<Property> defaultMask;
 	
 	public whoCommand(General instance) {
 		super(instance);
-		Set<Property> mask = EnumSet.of(TITLE, UNAME, DNAME, STATUS, LEVEL);
+		Set<Property> mask = EnumSet.of(TITLE, UNAME, DNAME, STATUS, LEVEL, HUNGER);
 		if(Option.SHOW_HEALTH.get()) mask.add(HEALTH);
 		if(Option.SHOW_COORDS.get()) mask.addAll(EnumSet.of(LOC, HOME));
 		if(Option.SHOW_WORLD.get()) mask.add(WORLD);
@@ -67,6 +67,12 @@ public class whoCommand extends CommandBase {
 			float percent = (float)(rint(ofWhom.getExp() * 1000)) / 10.0f;
 			Messaging.send(toWhom, LanguageText.INFO_LEVEL.value("lvl", ofWhom.getLevel(), "percent", percent));
 			Messaging.send(toWhom, LanguageText.INFO_XP.value("xp", ofWhom.getTotalExperience(), "percent", percent));
+		}
+		if(mask.contains(HUNGER)) {
+			int hunger = ofWhom.getFoodLevel();
+			float saturate = ofWhom.getSaturation();
+			float exhaust = ofWhom.getExhaustion();
+			Messaging.send(toWhom, LanguageText.INFO_FOOD.value("food", hunger, "sat", saturate, "ex", exhaust));
 		}
 		if(mask.contains(LOC)) {
 			Location loc = ofWhom.getLocation();
@@ -103,7 +109,7 @@ public class whoCommand extends CommandBase {
 		if(mask.contains(UNAME))
 			Messaging.send(toWhom, LanguageText.INFO_USERNAME.value("name", ofWhom.getName()));
 		if(mask.contains(DNAME))
-			Messaging.send(toWhom, LanguageText.INFO_DISPLAYNAME.value("name", "Server");
+			Messaging.send(toWhom, LanguageText.INFO_DISPLAYNAME.value("name", Bukkit.getServerName()));
 		Set<Property> healthloc = EnumSet.of(HEALTH, LOC, HOME);
 		if(mask.containsAll(healthloc))
 			Messaging.send(toWhom, LanguageText.INFO_VERSION.value("version", Bukkit.getVersion()));
@@ -159,6 +165,8 @@ public class whoCommand extends CommandBase {
 				if(Toolbox.equalsOne(args[0], "all", "world", "worldname")) mask.add(WORLD);
 				if(Toolbox.equalsOne(args[0], "all", "ip", "address")) mask.add(IP);
 				if(Toolbox.equalsOne(args[0], "all", "status", "away")) mask.add(STATUS);
+				if(Toolbox.equalsOne(args[0], "all", "xp", "exp", "experience", "lvl", "level")) mask.add(LEVEL);
+				if(Toolbox.equalsOne(args[0], "all", "hunger", "food")) mask.add(HUNGER);
 			} else mask = defaultMask;
 			// If they're not allowed to override, mask out disabled values
 			if(!Option.ALLOW_OVERRIDE.get()) mask.retainAll(defaultMask);
