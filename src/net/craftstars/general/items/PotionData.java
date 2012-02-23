@@ -1,12 +1,16 @@
 package net.craftstars.general.items;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.entity.Player;
 import org.bukkit.potion.Potion;
 
 public class PotionData extends ItemData {
+	@SuppressWarnings("hiding")
+	private enum Suffix {SPLASH, EXTEND, IMPROVE, NONE_THIS_LOOP}
 	private static final int SPLASH = 0x4000, EXTEND = 0x40, IMPROVE = 0x20, BASIC = 0x2000;
 
 	protected PotionData() {}
@@ -74,48 +78,48 @@ public class PotionData extends ItemData {
 		List<String> improve = Items.variantNames("potion.mod.strength");
 		if(improve == null) improve = Arrays.asList("2","II","(II)");
 		improve = allToLower(improve);
-		int status = 0;
+		Set<Suffix> status = EnumSet.noneOf(Suffix.class);
 		// Try splash prefix first
 		for(String prefix : splash) {
 			if(name.startsWith(prefix)) {
 				data |= SPLASH;
-				status = 1;
+				status.add(Suffix.SPLASH);
 				name = name.replace(prefix, "");
 				break;
 			}
 		}
-		while((status & 8) == 0) {
-			status |= 8; // means "no suffix found"
+		while(!status.contains(Suffix.NONE_THIS_LOOP)) {
+			status.add(Suffix.NONE_THIS_LOOP);
 			// Splash suffix first
-			if((status & 1) == 0)
+			if(!status.contains(Suffix.SPLASH))
 				for(String suffix : splash) {
 					if(name.endsWith(suffix)) {
 						data |= SPLASH;
 						data &= ~BASIC;
-						status |= 1;
-						status &= ~8;
+						status.add(Suffix.SPLASH);
+						status.remove(Suffix.NONE_THIS_LOOP);
 						name = name.replace(suffix, "");
 						break;
 					}
 				}
 			// Improve suffix
-			if((status & 2) == 0)
+			if(!status.contains(Suffix.IMPROVE))
 				for(String suffix : improve) {
 					if(name.endsWith(suffix)) {
 						data |= IMPROVE;
-						status |= 2;
-						status &= ~8;
+						status.add(Suffix.IMPROVE);
+						status.remove(Suffix.NONE_THIS_LOOP);
 						name = name.replace(suffix, "");
 						break;
 					}
 				}
 			// Extend suffix
-			if((status & 4) == 0)
+			if(!status.contains(Suffix.EXTEND))
 				for(String suffix : extend) {
 					if(name.endsWith(suffix)) {
 						data |= EXTEND;
-						status |= 4;
-						status &= ~8;
+						status.add(Suffix.EXTEND);
+						status.remove(Suffix.NONE_THIS_LOOP);
 						name = name.replace(suffix, "");
 						break;
 					}
