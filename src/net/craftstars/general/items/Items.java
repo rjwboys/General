@@ -215,23 +215,20 @@ public final class Items {
 			General.logger.warn(LanguageText.LOG_ITEM_BAD_NAMES.value());
 		} else {
 			for(String id : keys) {
-				if(!id.startsWith("item")) {
-					if(!id.startsWith("ench")) {
-						lastInvalid = id;
-						invalids++;
-					}
+				if(!id.matches("potions|(item|ench)[0-9]+")) {
+					lastInvalid = id;
+					invalids++;
 					continue;
 				}
+				if(!id.startsWith("item")) continue;
 				int num;
 				ItemID key;
 				String name;
 				try {
 					num = Integer.valueOf(id.substring(4));
 				} catch(NumberFormatException x) {
-					if(!id.equals("potions")) {
-						lastInvalid = id;
-						invalids++;
-					}
+					lastInvalid = id;
+					invalids++;
 					continue;
 				}
 				String path = "names." + id;
@@ -244,7 +241,7 @@ public final class Items {
 					Set<String> list = config.getConfigurationSection(path).getKeys(false);
 					for(String data : list) {
 						name = config.getString(path + "." + data);
-						if(data.matches("data[0-9][0-9]?")) {
+						if(data.matches("data[0-9]+")) {
 							int d = Integer.parseInt(data.substring(4));
 							key = new ItemID(num, d);
 							names.put(key, name);
