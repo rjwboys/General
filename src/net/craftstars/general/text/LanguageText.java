@@ -261,7 +261,8 @@ public enum LanguageText {
 	LOG_ITEM_BAD_KEY("log.item.bad-key", "Invalid item alias assignment for '{alias}'."),
 	LOG_ITEM_NO_NAMES("log.item.no-names", "Names of items are missing."),
 	LOG_ITEM_BAD_NAMES("log.item.bad-names", "The names section of items.yml is missing or invalid."),
-	LOG_ITEM_BAD_NAME("log.item.bad-name", "Invalid keys in the names section of items.yml (eg {name})"),
+	LOG_ITEM_BAD_NAME("log.item.bad-name", "Invalid keys in the names section of items.yml " +
+			"(eg {name}; {count} bad keys in total)"),
 	LOG_KIT_BAD_METHOD("log.kit.bad-method", "Invalid method for kit costing; falling back to default of " +
 		"'individual'"),
 	LOG_KIT_NO_ITEMS("log.kit.no-items", "Kit '{kit}' has no items and has been skipped."),

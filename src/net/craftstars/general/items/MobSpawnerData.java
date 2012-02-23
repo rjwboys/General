@@ -11,6 +11,8 @@ public class MobSpawnerData extends ItemData {
 	public boolean validate(int data) {
 		MobType mob = MobType.byId(data);
 		if(mob != null) return true;
+		CreatureType creature = CreatureType.fromId(data);
+		if(creature != null) return true;
 		return super.validate(data);
 	}
 

@@ -12,7 +12,6 @@ public class PotionData extends ItemData {
 	
 	@Override
 	public boolean validate(int data) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 	

@@ -9,7 +9,7 @@ public class StoneBrickData extends ItemData {
 	
 	@Override
 	public boolean validate(int data) {
-		if(data <= 2) return true;
+		if(new IntRange(0,2).contains(data)) return true;
 		return super.validate(data);
 	}
 	

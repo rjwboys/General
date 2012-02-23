@@ -2,6 +2,7 @@ package net.craftstars.general.items;
 
 import org.bukkit.TreeSpecies;
 
+import net.craftstars.general.General;
 import net.craftstars.general.util.Toolbox;
 import net.craftstars.general.util.range.IntRange;
 
@@ -10,7 +11,7 @@ final public class TreeData extends ItemData {
 	
 	@Override
 	public boolean validate(int data) {
-		if(data > 2 || data < 0) return false;
+		if(new IntRange(0,2).contains(data)) return true;
 		return super.validate(data);
 	}
 	

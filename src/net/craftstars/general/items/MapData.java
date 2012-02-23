@@ -12,7 +12,7 @@ public class MapData extends ItemData {
 	
 	@Override
 	public boolean validate(int data) {
-		if(new IntRange(90000,90005).contains(data)) return true; // new maps
+		if(new IntRange(90001,90005).contains(data)) return true; // new maps
 		MapView map = Bukkit.getMap((short)data);
 		return map != null;
 	}
@@ -34,7 +34,7 @@ public class MapData extends ItemData {
 	
 	@Override
 	public int init(int data, Player who) {
-		if(data < 90000) return super.init(data, who);
+		if(data <= 90000) return super.init(data, who);
 		// Create a new map with the given zoom scale!
 		MapView map = Bukkit.createMap(who.getWorld());
 		map.setCenterX(who.getLocation().getBlockX());

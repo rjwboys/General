@@ -229,8 +229,8 @@ public final class Items {
 					num = Integer.valueOf(id.substring(4));
 				} catch(NumberFormatException x) {
 					if(!id.equals("potions")) {
-					lastInvalid = id;
-					invalids++;
+						lastInvalid = id;
+						invalids++;
 					}
 					continue;
 				}
@@ -257,7 +257,7 @@ public final class Items {
 			}
 		}
 		if(invalids > 0)
-			General.logger.warn(LanguageText.LOG_ITEM_BAD_NAME.value("name", lastInvalid));
+			General.logger.warn(LanguageText.LOG_ITEM_BAD_NAME.value("count", invalids, "name", lastInvalid));
 	}
 	
 	public static String name(Material item) {
@@ -305,7 +305,7 @@ public final class Items {
 				return Toolbox.formatItemName(item.toString());
 			}
 		}
-		
+
 		return longKey.toString();
 	}
 	

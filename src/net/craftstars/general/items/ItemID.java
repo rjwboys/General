@@ -2,6 +2,7 @@ package net.craftstars.general.items;
 
 import java.util.Map;
 
+import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.Toolbox;
@@ -118,7 +119,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 	}
 	
 	public String getVariant() {
-		return dataType.getName(data);
+		return Toolbox.formatItemName(dataType.getName(data));
 	}
 	
 	@Override

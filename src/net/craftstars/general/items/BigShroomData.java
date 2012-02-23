@@ -2,14 +2,14 @@ package net.craftstars.general.items;
 
 import java.util.Arrays;
 
-import org.apache.commons.lang.math.IntRange;
+import net.craftstars.general.util.range.IntRange;
 
 public class BigShroomData extends ItemData {
 	protected BigShroomData() {}
 	
 	@Override
 	public boolean validate(int data) {
-		if(new IntRange(0, 10).containsDouble(data)) return true;
+		if(new IntRange(0,10).contains(data)) return true;
 		return super.validate(data);
 	}
 
