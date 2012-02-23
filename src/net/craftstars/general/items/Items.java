@@ -215,7 +215,7 @@ public final class Items {
 			General.logger.warn(LanguageText.LOG_ITEM_BAD_NAMES.value());
 		} else {
 			for(String id : keys) {
-				if(!id.matches("potions|(item|ench)[0-9]+")) {
+				if(!id.matches("xp|potions|(item|ench)[0-9]+")) {
 					lastInvalid = id;
 					invalids++;
 					continue;
@@ -255,6 +255,10 @@ public final class Items {
 		}
 		if(invalids > 0)
 			General.logger.warn(LanguageText.LOG_ITEM_BAD_NAME.value("count", invalids, "name", lastInvalid));
+	}
+	
+	public static String name() {
+		return config.getString("names.xp", "xp");
 	}
 	
 	public static String name(Material item) {
@@ -432,6 +436,13 @@ public final class Items {
 				}
 			}
 		}
+		if(ret == null) {
+			// It might be xp
+			List<String> xp = variantNames("xp");
+			for(String name : xp) {
+				if(name.equalsIgnoreCase(item)) return ItemID.experience();
+			}
+		}
 		return ret;
 	}
 	
@@ -440,6 +451,10 @@ public final class Items {
 	}
 	
 	public static void giveItem(Player who, ItemID x, Integer amount, Map<Enchantment,Integer> ench) {
+		if(x.getId() == ItemID.EXP) {
+			who.giveExp(amount);
+			return;
+		}
 		PlayerInventory i = who.getInventory();
 		HashMap<Integer, ItemStack> excess = i.addItem(x.getStack(amount, who, ench));
 		for(ItemStack leftover : excess.values())

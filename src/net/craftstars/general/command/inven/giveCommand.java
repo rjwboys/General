@@ -91,23 +91,25 @@ public class giveCommand extends CommandBase {
 			return null;
 		}
 		Map<Enchantment, Integer> enchantments = new HashMap<Enchantment, Integer>();
-		ItemData data = ItemData.enchanting(item.getMaterial());
-		for(String ench : enchArgs) {
-			String[] split = ench.split("=");
-			int id = data.fromName(split[0]);
-			Enchantment magic = Enchantment.getById(id);
-			if(!data.validate(id)) throw new InvalidItemException(LanguageText.GIVE_BAD_ENCH,
-				"item", item.getName(null), "ench", split[0]);
-			int power;
-			try {
-				power = Integer.parseInt(split[1]);
-			} catch(IndexOutOfBoundsException e) {
-				power = magic.getMaxLevel();
-			} catch(NumberFormatException e) {
-				throw new InvalidItemException(e, LanguageText.GIVE_BAD_LEVEL, "level", split[1], ench, magic.getName());
+		if(item.getId() != ItemID.EXP) {
+			ItemData data = ItemData.enchanting(item.getMaterial());
+			for(String ench : enchArgs) {
+				String[] split = ench.split("=");
+				int id = data.fromName(split[0]);
+				Enchantment magic = Enchantment.getById(id);
+				if(!data.validate(id)) throw new InvalidItemException(LanguageText.GIVE_BAD_ENCH,
+					"item", item.getName(null), "ench", split[0]);
+				int power;
+				try {
+					power = Integer.parseInt(split[1]);
+				} catch(IndexOutOfBoundsException e) {
+					power = magic.getMaxLevel();
+				} catch(NumberFormatException e) {
+					throw new InvalidItemException(e, LanguageText.GIVE_BAD_LEVEL, "level", split[1], ench, magic.getName());
+				}
+				if(power == 0) power = magic.getMaxLevel();
+				enchantments.put(magic, power);
 			}
-			if(power == 0) power = magic.getMaxLevel();
-			enchantments.put(magic, power);
 		}
 		// Fill params and go!
 		params.put("player", who);
@@ -149,7 +151,7 @@ public class giveCommand extends CommandBase {
 	
 	private void doGive(Player who, ItemID item, int amount, boolean isGift, Map<Enchantment,Integer> ench) {
 		if(amount == 0) { // give one stack
-			amount = Items.maxStackSize(item.getId());
+			amount = item.getId() == ItemID.EXP ? Toolbox.toNextLevel(who) : Items.maxStackSize(item.getId());
 		}
 		
 		Items.giveItem(who, item, amount, ench);

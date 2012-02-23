@@ -207,7 +207,7 @@ public final class Toolbox {
 	}
 
 	public static String formatLocation(Location loc) {
-		return LanguageText.MISC_LOCATION.value("x", loc.getX(), "y", loc.getY(), "z", loc.getZ(), 
+		return LanguageText.MISC_LOCATION.value("x", loc.getX(), "y", loc.getY(), "z", loc.getZ(),
 			"yaw", loc.getYaw(), "pitch", loc.getPitch());
 	}
 	
@@ -282,5 +282,11 @@ public final class Toolbox {
 			}
 		}
 		return romanString.toString();
+	}
+
+	public static int toNextLevel(Player who) {
+		int totalXP = who.getTotalExperience();
+		int level = who.getLevel() - 1;
+		return totalXP - (7 + (level * 7) / 2);
 	}
 }

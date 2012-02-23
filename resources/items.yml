@@ -1,5 +1,6 @@
 
 names:
+  xp: Experience Points
   item0: Air
   item1: Stone
   item2: Grass
@@ -466,6 +467,7 @@ variants:
     ranges: [2, 10-17, 20, 40-41, 50-63, 90-98, 120, 200]
 
 special:
+  xp: [xp, exp]
   tree:
     type0: [oak]
     type1: [pine, red, redwood, spruce]

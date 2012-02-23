@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemID implements Cloneable, Comparable<ItemID> {
+	public static final int EXP = -1;
 	private int ID;
 	private ItemData dataType;
 	private int data;
@@ -21,6 +22,10 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 	static ItemID bare(int id, Integer data) {
 		// Returns an ItemID without its dataType set, to avoid circular dependencies
 		return new ItemID(true, id, data);
+	}
+	
+	public static ItemID experience() {
+		return bare(EXP, null);
 	}
 	
 	private ItemID(@SuppressWarnings("unused") boolean dummy, int id, Integer d) {
@@ -70,6 +75,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 	
 	@Override
 	public String toString() {
+		if(ID == EXP) return "xp";
 		if(dataMatters) return Integer.toString(ID) + "/" + Integer.toString(data);
 		return Integer.toString(ID);
 	}
@@ -98,6 +104,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 	}
 
 	public String getName(Map<Enchantment,Integer> enchantments) {
+		if(ID == EXP) return Items.name();
 		StringBuilder name = new StringBuilder();
 		if(dataType.isNameCustom()) name.append(dataType.getDisplayName());
 		else name.append(Items.name(this));
@@ -182,7 +189,7 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 	}
 	
 	public boolean canGive(CommandSender who) {
-		String itemNode = Material.getMaterial(ID).toString();
+		String itemNode = ID == EXP ? "xp" : Material.getMaterial(ID).toString();
 		itemNode = "general.give.item." + itemNode.toLowerCase().replace('_', '-');
 		boolean hasPermission = who.hasPermission(itemNode);
 		if(!hasPermission)
@@ -191,14 +198,15 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 	}
 
 	public void validateId() {
+		if(ID == EXP) return;
 		Material check = Material.getMaterial(getId());
 		if(check == null) throw new InvalidItemException(LanguageText.GIVE_BAD_ID);
 	}
 
 	public void validateData() {
-		if(!dataType.validate(data))
-			throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data", dataType.getParsed(),
-				"item", getName(null));
+		boolean valid = ID == EXP ? getData() == null : dataType.validate(data);
+		if(!valid) throw new InvalidItemException(LanguageText.GIVE_BAD_DATA, "data", dataType.getParsed(),
+			"item", getName(null));
 	}
 	
 	public ItemData getDataType() {
