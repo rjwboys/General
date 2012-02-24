@@ -90,8 +90,9 @@ public enum LanguageText {
 	CLEAR_EXCEPTARMOUR("clear.inventory", "inventory"),
 	// Messages relating to /give
 	GIVE_BAD_AMOUNT("give.error.amount", "{rose}The amount must be an integer."),
-	GIVE_BAD_ENCH("give.error.enchant", "{white}{ench}{rose} is not a valid enchantment for {white}{item}{rose}."),
-	GIVE_BAD_LEVEL("give.error.enchant", "{white}{level}{rose} is not a valid level for {white}{ench}{rose}."),
+	GIVE_BAD_ENCH("give.error.enchant.bad", "{white}{ench}{rose} is not a valid enchantment."),
+	GIVE_WRONG_ENCH("give.error.enchant.wrong", "{white}{ench}{rose} is not a valid enchantment for {white}{item}{rose}."),
+	GIVE_BAD_LEVEL("give.error.enchant.level", "{white}{level}{rose} is not a valid level for {white}{ench}{rose}."),
 	GIVE_BAD_ID("give.error.id", "{rose}Invalid item."),
 	GIVE_BAD_DATA("give.error.data", "{white}{data}{rose} is not a valid data type for {white}{item}{rose}."),
 	GIVE_GIFT("give.gift", "{green}Gave {white}{amount,choice,-1#infinite|0#{amount}}{green} of " +
@@ -293,7 +294,7 @@ public enum LanguageText {
 	LOG_DISABLED("log.disabled", "Plugin disabled!"),
 	LOG_NO_ECONOMY("log.economy.none", "Economy is disabled in the config file; no economy will be used."),
 	LOG_MISSING_ECONOMY("log.economy.missing", "You've enabled economy, but have no economy system installed! " +
-			"You must either install an economy plugin or choose a currency item in order to use economy."),
+		"You must either install an economy plugin or choose a currency item in order to use economy."),
 	LOG_ECONOMY_ERROR("log.economy.error", "Error loading AllPay: {msg}"),
 	// Messages relating to missing permissions
 	PERMISSION_LACK("permissions.lacking", "{rose}You don't have permission to {action}. ({permission})"),

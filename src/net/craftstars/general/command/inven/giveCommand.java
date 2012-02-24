@@ -8,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
@@ -112,17 +113,20 @@ public class giveCommand extends CommandBase {
 				String[] split = ench.split("=");
 				int id = data.fromName(split[0]);
 				Enchantment magic = Enchantment.getById(id);
-				if(!data.validate(id)) throw new InvalidItemException(LanguageText.GIVE_BAD_ENCH,
-					"item", item.getName(null), "ench", split[0]);
+				if(!data.validate(id)) throw new InvalidItemException((magic == null ? LanguageText.GIVE_BAD_ENCH
+					: LanguageText.GIVE_WRONG_ENCH), "item", item.getName(null), "ench", split[0]);
 				int power;
 				try {
 					power = Integer.parseInt(split[1]);
 				} catch(IndexOutOfBoundsException e) {
 					power = magic.getMaxLevel();
 				} catch(NumberFormatException e) {
-					throw new InvalidItemException(e, LanguageText.GIVE_BAD_LEVEL, "level", split[1], ench, magic.getName());
+					Messaging.invalidNumber(sender, split[1]);
+					return null;
 				}
 				if(power == 0) power = magic.getMaxLevel();
+				if(power > magic.getMaxLevel()) throw new InvalidItemException(LanguageText.GIVE_BAD_LEVEL, "level",
+					power, "ench", Items.name(magic));
 				enchantments.put(magic, power);
 			}
 		}
