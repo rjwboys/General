@@ -5,13 +5,14 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-import static org.bukkit.event.EventPriority.MONITOR;
+import static org.bukkit.event.EventPriority.*;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import net.craftstars.general.text.LanguageText;
@@ -22,6 +23,7 @@ import net.craftstars.general.util.Option;
 public final class PlayerManager implements Listener {
 	private HashMap<String, String> playersAway = new HashMap<String, String>();
 	private HashMap<String,String> lastMessager = new HashMap<String, String>();
+	private boolean reject = false;
 
 	public boolean isAway(Player who) {
 		return playersAway.containsKey(who.getName());
@@ -70,12 +72,13 @@ public final class PlayerManager implements Listener {
 		}
 	}
 	
-	@EventHandler(priority=MONITOR)
+	@EventHandler(priority=HIGH)
 	public void onPlayerLogin(PlayerLoginEvent event) {
+		if(reject) event.disallow(Result.KICK_OTHER, LanguageText.MISC_STOPPING.value());
 		lastMessager.remove(event.getPlayer().getName());
 	}
 	
-	@EventHandler(priority=MONITOR)
+	@EventHandler(priority=LOW)
 	public void onChangeWorld(PlayerTeleportEvent event) {
 		if(event.getFrom().getWorld().equals(event.getTo().getWorld())) return;
 		final Player player = event.getPlayer();
@@ -86,5 +89,9 @@ public final class PlayerManager implements Listener {
 						player.setGameMode(mode);
 			}
 		});
+	}
+
+	public void reject() {
+		reject = true;
 	}
 }

@@ -119,6 +119,10 @@ commands:
     #permission: general.kick
     description: Kicks a player off the server
     usage: /<command> player [reason]
+  admin.shutdown:
+    #permission: general.stop
+    description: Kicks off all players and shuts down the server.
+    usage: /<command> [delay] [reason]
 permissions:
   # Wildcard syntax for backwards compatibility
   general.*: {children: {general.unlimited: true}}
@@ -281,6 +285,9 @@ permissions:
         default: op
       general.ban:
         description: Gives permission to ban people from the server.
+        default: op
+      general.stop:
+        description: Gives permission to shut down the server.
         default: op
       general.pardon:
         description: Gives permission to pardon banned people on the server.
