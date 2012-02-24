@@ -64,7 +64,20 @@ public class takeCommand extends CommandBase {
 				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT);
 				return null;
 			}
-		break;
+		break; // /take <player> <item> <amount> <data> (amount can be : to imply 1)
+		case 4:
+			try {
+				amount = args[2].equals(":") ? 1 : Integer.valueOf(args[2]);
+			} catch(NumberFormatException e) {
+				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT);
+				return null;
+			}
+			who = Toolbox.matchPlayer(args[0]);
+			if(who == null) {
+				Messaging.invalidPlayer(sender, args[2]);
+				return null;
+			}
+			item = Items.validate(args[1] + "/" + args[3]);
 		default:
 			return null;
 		}
