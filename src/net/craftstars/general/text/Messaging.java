@@ -51,8 +51,8 @@ public final class Messaging {
 	public static void save() {
 		try {
 			config.save(new File(General.plugin.getDataFolder(), langFile));
-		} catch(IOException e) { // TODO: LanguageText
-			General.logger.warn("Error saving config.yml: " + e.getMessage());
+		} catch(IOException e) {
+			General.logger.warn(LanguageText.LOG_CONFIG_SAVE_ERROR.value("msg", e.getMessage()));
 		}
 	}
 	

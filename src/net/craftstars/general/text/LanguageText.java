@@ -255,6 +255,7 @@ public enum LanguageText {
 	LOG_CONFIG_DEFAULT("log.config.default", "Configuration file {file} does not exist. " +
 		"Attempting to create default one..."),
 	LOG_CONFIG_ERROR("log.config.error", "Could not read and/or write {file}! Continuing with default values!"),
+	LOG_CONFIG_SAVE_ERROR("log.config.nosave", "Error saving config.yml: {msg}"),
 	LOG_CONFIG_SUCCESS("log.config.success", "Default configuration created successfully! You can now "
 		+ "stop the server and edit plugins/General/config.yml."),
 	LOG_ITEM_NO_HOOKS("log.item.no-hooks", "Hooks are missing."),
@@ -291,6 +292,7 @@ public enum LanguageText {
 	LOG_NO_ECONOMY("log.economy.none", "Economy is disabled in the config file; no economy will be used."),
 	LOG_MISSING_ECONOMY("log.economy.missing", "You've enabled economy, but have no economy system installed! " +
 			"You must either install an economy plugin or choose a currency item in order to use economy."),
+	LOG_ECONOMY_ERROR("log.economy.error", "Error loading AllPay: {msg}"),
 	// Messages relating to missing permissions
 	PERMISSION_LACK("permissions.lacking", "{rose}You don't have permission to {action}. ({permission})"),
 	PERMISSION_ERROR("permissions.error", "{rose}Error checking permissions."),

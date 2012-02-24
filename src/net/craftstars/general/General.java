@@ -77,8 +77,8 @@ public class General extends JavaPlugin {
 			Kits.save();
 			try {
 				config.save(configFile);
-			} catch(IOException e) { // TODO: LanguageText
-				logger.warn("Error saving config.yml: " + e.getMessage());
+			} catch(IOException e) {
+				logger.warn(LanguageText.LOG_CONFIG_SAVE_ERROR.value("msg", e.getMessage()));
 			}
 		}
 		General.logger.info(LanguageText.LOG_DISABLED.value());

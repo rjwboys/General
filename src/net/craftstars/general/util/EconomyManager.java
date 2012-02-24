@@ -27,8 +27,7 @@ public class EconomyManager {
 			allpay = new AllPay(General.plugin, "General [" + General.codename + "] ");
 			economy = allpay.loadEconPlugin();
 		} catch(Exception e) {
-			// TODO: LanguageText
-			General.logger.warn("Error loading AllPay: " + e.getMessage(), e);
+			General.logger.warn(LanguageText.LOG_ECONOMY_ERROR.value("msg", e.getMessage()), e);
 			return;
 		}
 		if(Option.NO_ECONOMY.get()) General.logger.info(LanguageText.LOG_NO_ECONOMY.value());

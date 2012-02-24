@@ -11,6 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import net.craftstars.general.General;
+import net.craftstars.general.text.LanguageText;
 
 public abstract class Option<T> {
 	// Misc settings
@@ -112,10 +113,10 @@ public abstract class Option<T> {
 	public static void save() {
 		try {
 			((FileConfiguration)config).save(General.plugin.configFile);
-		} catch(IOException e) { // TODO: LanguageText
-			General.logger.warn("Error saving config.yml: " + e.getMessage());
-		} catch(ClassCastException e) { // TODO: LanguageText
-			General.logger.warn("Error saving config.yml: " + e.getMessage());
+		} catch(IOException e) {
+			General.logger.warn(LanguageText.LOG_CONFIG_SAVE_ERROR.value("msg", e.getMessage()));
+		} catch(ClassCastException e) {
+			General.logger.warn(LanguageText.LOG_CONFIG_SAVE_ERROR.value("msg", e.getMessage()));
 		}
 	}
 }
