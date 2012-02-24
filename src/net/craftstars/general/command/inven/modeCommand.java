@@ -1,9 +1,18 @@
 package net.craftstars.general.command.inven;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -59,13 +68,23 @@ public class modeCommand extends CommandBase {
 			try {
 				mode = GameMode.getByValue(Integer.parseInt(args[0]));
 				if(mode == null) mode = Toolbox.enumValue(GameMode.class, args[1].toUpperCase());
+				params.put("world", false);
 				Player player = Toolbox.matchPlayer(args[0]);
 				if(player == null) {
-					Messaging.invalidPlayer(sender, args[0]);
-					return null;
-				}
+					final World world = Toolbox.matchWorld(args[0]);
+					if(world == null) {
+						Messaging.invalidPlayer(sender, args[0]);
+						return null;
+					}
+					List<Player> online = new ArrayList<Player>(Arrays.asList(Bukkit.getOnlinePlayers()));
+					params.put("who", Collections2.filter(online, new Predicate<Player>(){
+						@Override public boolean apply(Player who) {
+							return who.getWorld().equals(world);
+						}
+					}));
+					params.put("world", true);
+				} else params.put("who", Collections.singletonList(player));
 				setCommand("set");
-				params.put("who", player);
 				params.put("mode", mode);
 			} catch(RuntimeException e) {
 				if(!(e instanceof IllegalArgumentException || e instanceof NumberFormatException)) throw e;
@@ -81,24 +100,32 @@ public class modeCommand extends CommandBase {
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String,Object> args) {
-		Player who = (Player)args.get("who");
 		if(command.equals("view")) {
+			Player who = (Player)args.get("who");
 			if(!sender.hasPermission("general.gamemode.view"))
 				return Messaging.lacksPermission(sender, "general.gamemode.view");
 			String modeName = Toolbox.formatItemName(who.getGameMode().toString());
 			Messaging.send(sender, LanguageText.MISC_IN_MODE.value("player", who.getDisplayName(), "mode", modeName));
 		} else if(command.equals("set")) {
-			if(who.equals(sender)) {
-				if(!sender.hasPermission("general.gamemode.set"))
-					return Messaging.lacksPermission(sender, "general.gamemode.set");
-			} else if(!sender.hasPermission("general.gamemode.set.other"))
-				return Messaging.lacksPermission(sender, "general.gamemode.set.other");
-			GameMode mode = (GameMode)args.get("mode");
-			String modeName = Toolbox.formatItemName(mode.toString());
-			who.setGameMode(mode);
-			if(who.equals(sender))
-				Messaging.send(sender, LanguageText.MISC_SET_OWN_MODE.value("mode", modeName));
-			else Messaging.send(sender, LanguageText.MISC_SET_MODE.value("player", who.getDisplayName(), "mode", modeName));
+			@SuppressWarnings("unchecked")
+			List<Player> players = (List<Player>)args.get("who");
+			boolean world = (Boolean)args.get("world");
+			for(Player who : players) {
+				if(world) {
+					if(!sender.hasPermission("general.gamemode.set.world"))
+						return Messaging.lacksPermission(sender, "general.gamemode.set.world");
+				} else if(who.equals(sender)) {
+					if(!sender.hasPermission("general.gamemode.set"))
+						return Messaging.lacksPermission(sender, "general.gamemode.set");
+				} else if(!sender.hasPermission("general.gamemode.set.other"))
+					return Messaging.lacksPermission(sender, "general.gamemode.set.other");
+				GameMode mode = (GameMode)args.get("mode");
+				String modeName = Toolbox.formatItemName(mode.toString());
+				who.setGameMode(mode);
+				if(who.equals(sender))
+					Messaging.send(sender, LanguageText.MISC_SET_OWN_MODE.value("mode", modeName));
+				else Messaging.send(sender, LanguageText.MISC_SET_MODE.value("player", who.getDisplayName(), "mode", modeName));
+			}
 		} else return false;
 		return true;
 	}

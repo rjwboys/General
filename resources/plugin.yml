@@ -140,6 +140,14 @@ permissions:
   general.clear.*: {children: {general.clear.other: true}}
   general.take.*: {children: {general.take.other: true, general.take.mass: true}}
   general.gamemode.*: {children: {general.gamemode: true}}
+  general.gamemode.force.survival:
+    description: Forces your gamemode to survival.
+    children:
+      general.gamemode.set: false
+  general.gamemode.force.creative:
+    description: Forces your gamemode to creative.
+    children:
+      general.gamemode.set: false
   # Actual permissions start here
   general.admin:
     description: Gives all General permissions.
@@ -167,11 +175,14 @@ permissions:
             children:
               general.gamemode.view:
                 description: Lets you view the game mode of other people.
-              general.gamemode.set.other:
-                description: Lets you set anyone's game mode.
+              general.gamemode.set.world:
+                description: Lets you set the game mode of everyone in a world.
                 children:
-                  general.gamemode.set:
-                    description: Lets you set your own game mode.
+                  general.gamemode.set.other:
+                    description: Lets you set anyone's game mode.
+                    children:
+                      general.gamemode.set:
+                        description: Lets you set your own game mode.
           general.clear.other:
             description: Lets you clear the inventory of others.
             children:

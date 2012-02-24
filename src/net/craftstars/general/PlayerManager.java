@@ -2,6 +2,8 @@ package net.craftstars.general;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import static org.bukkit.event.EventPriority.MONITOR;
 
@@ -10,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.MessageOfTheDay;
@@ -70,5 +73,18 @@ public final class PlayerManager implements Listener {
 	@EventHandler(priority=MONITOR)
 	public void onPlayerLogin(PlayerLoginEvent event) {
 		lastMessager.remove(event.getPlayer().getName());
+	}
+	
+	@EventHandler(priority=MONITOR)
+	public void onChangeWorld(PlayerTeleportEvent event) {
+		if(event.getFrom().getWorld().equals(event.getTo().getWorld())) return;
+		final Player player = event.getPlayer();
+		Bukkit.getScheduler().scheduleSyncDelayedTask(General.plugin, new Runnable(){
+			@Override public void run() {
+				for(GameMode mode : GameMode.values())
+					if(player.hasPermission("general.gamemode.force." + mode.toString().toLowerCase()))
+						player.setGameMode(mode);
+			}
+		});
 	}
 }
