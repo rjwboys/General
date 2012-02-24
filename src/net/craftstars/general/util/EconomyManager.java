@@ -15,7 +15,7 @@ import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 
 public class EconomyManager {
-	private static Double lastPrice;
+	private final static double[] lastPrice = new double[1];
 	private static GenericBank economy;
 	private static AllPay allpay;
 	private enum AccountStatus {FROZEN, INSUFFICIENT, SUFFICIENT, BYPASS}
@@ -40,15 +40,15 @@ public class EconomyManager {
 		if(sender.hasPermission("general.no-money") || sender instanceof ConsoleCommandSender)
 			return AccountStatus.BYPASS;
 		Player player = (Player) sender;
-		lastPrice = 0.0;
+		lastPrice[0] = 0.0;
 		for(String permission : permissions)
 			if(permission.startsWith("$"))
-				lastPrice += Double.parseDouble(permission.substring(1));
+				lastPrice[0] += Double.parseDouble(permission.substring(1));
 			else if(permission.startsWith("%"))
-				lastPrice *= Double.parseDouble(permission.substring(1)) / 100.0;
-			else lastPrice += Option.ECONOMY_COST(permission).get() * quantity;
+				lastPrice[0] *= Double.parseDouble(permission.substring(1)) / 100.0;
+			else lastPrice[0] += Option.ECONOMY_COST(permission).get() * quantity;
 		if(CommandBase.isFrozen(player)) return AccountStatus.FROZEN;
-		if(economy.hasEnough(player, lastPrice, Option.ECONOMY_ITEM.get()))
+		if(economy.hasEnough(player, lastPrice[0], Option.ECONOMY_ITEM.get()))
 			return AccountStatus.SUFFICIENT;
 		return AccountStatus.INSUFFICIENT;
 	}
@@ -72,7 +72,7 @@ public class EconomyManager {
 				return false;
 			case SUFFICIENT: // TODO: I think take() prints its own message, so this may cause double messages
 				Messaging.showPayment(player);
-				economy.take(player, lastPrice, Option.ECONOMY_ITEM.get());
+				economy.take(player, lastPrice[0], Option.ECONOMY_ITEM.get());
 			}
 			return true;
 		}
@@ -91,7 +91,7 @@ public class EconomyManager {
 	}
 	
 	public static double getLastPrice() {
-		return lastPrice;
+		return lastPrice[0];
 	}
 	
 	public static String formatCost(Player player, double price) {
