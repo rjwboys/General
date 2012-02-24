@@ -26,6 +26,8 @@ public abstract class Option<T> {
 	public static Option<Boolean> EXPORT_PERMISSIONS_CHILDREN = new OptionBoolean("export-permissions-children", false);
 	public static Option<String> BAN_KICK = new OptionString("ban-kick-msg", "You have been banned from this server!");
 	public static Option<Boolean> HEAL_HUNGER = new OptionBoolean("heal-hunger", true);
+	public static Option<String> DEFAULT_AWAY_MSG = new OptionString("default-away-msg", "Generic away reason");
+	public static Option<Boolean> AWAY_DEFAULTS = new OptionBoolean("away-defaults", true);
 	// Playerlist settings
 	public static Option<Boolean> SHOW_WORLD = new OptionBoolean("playerlist.show-world", false);
 	public static Option<Boolean> SHOW_HEALTH = new OptionBoolean("playerlist.show-health", true);

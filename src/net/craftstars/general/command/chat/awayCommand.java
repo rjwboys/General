@@ -13,6 +13,7 @@ import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
+import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class awayCommand extends CommandBase {
@@ -31,7 +32,10 @@ public class awayCommand extends CommandBase {
 				General.players.unAway(who);
 				Messaging.send(sender, LanguageText.AWAY_BACK);
 			} else {
-				Messaging.send(sender, LanguageText.AWAY_HERE);
+				if(Option.AWAY_DEFAULTS.get()) {
+					Messaging.send(sender, LanguageText.AWAY_SET);
+					General.players.goAway(who, Option.DEFAULT_AWAY_MSG.get());
+				} else Messaging.send(sender, LanguageText.AWAY_HERE);
 			}
 		} else {
 			if(General.players.isAway(who)) {
