@@ -15,6 +15,8 @@ import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.DumperOptions.ScalarStyle;
 import org.yaml.snakeyaml.Yaml;
 
+import net.craftstars.general.General;
+
 public enum LanguageText {
 	// Server log messages
 	// Messages related to /away
@@ -181,7 +183,7 @@ public enum LanguageText {
 	// Messages related to /setspawn
 	SETHOME("setspawn.home", "{yellow}Home position of player '{white}{player}{yellow}' changed to " +
 		"{white}({x},{y},{z})"),
-	SETSPAWN("setspawn.no-world", "{yellow}Spawn position changed to {white}({x],{y},{z})"),
+	SETSPAWN("setspawn.no-world", "{yellow}Spawn position changed to {white}({x},{y},{z})"),
 	SETSPAWN_WORLD("setspawn.world", "{yellow}Spawn position in world '{white}{world}{yellow}' changed to " +
 		"{white}({x},{y},{z})"),
 	SETSPAWN_HERE("setspawn.here", "{yellow}Spawn position changed to where you are standing."),
@@ -440,12 +442,19 @@ public enum LanguageText {
 	}
 	
 	public String value(Object... params) {
-		return Messaging.format(getFormat(), params);
+		try {
+			return Messaging.format(getFormat(), params);
+		} catch(IllegalArgumentException e) {
+			General.logger.warn("Error formatting language string " + node + ": " + e.getLocalizedMessage());
+			return "There was an error formatting a string. See the console log for details.";
+		}
 	}
 
 	public String getFormat() {
 		if(config == null) return fmt;
-		return config.getString(language + "." + node, fmt);
+		String str = config.getString(language + "." + node);
+		if(str == null) config.set(language + "." + node, fmt);
+		return config.getString(language + "." + node);
 	}
 	
 	public static YamlConfiguration setLanguage(String lang, File folder, String file) {
