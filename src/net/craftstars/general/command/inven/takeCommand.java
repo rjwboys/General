@@ -28,10 +28,18 @@ public class takeCommand extends CommandBase {
 	@Override
 	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
 		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("inHand", false);
 		Player who = null;
 		ItemID item = null;
 		int amount = 0;
 		switch(args.length) {
+		case 0: // /take
+			if(!isPlayer) return null;
+			who = (Player) sender;
+			item = new ItemID(who.getItemInHand());
+			amount = who.getItemInHand().getAmount();
+			params.put("inHand", true);
+		break;
 		case 1: // /take <item>[:<data>]
 			if(!isPlayer) return null;
 			who = (Player) sender;
@@ -100,32 +108,37 @@ public class takeCommand extends CommandBase {
 			return Messaging.lacksPermission(sender, "general.take.other");
 		sell = sell && Option.NO_ECONOMY.get();
 		sell = sell && Option.ECONOMY_TAKE_SELL.get().equalsIgnoreCase("sell");
-		amount = doTake(who, item, amount, sell);
+		amount = doTake(who, item, amount, sell, (Boolean)args.get("inHand"));
 		if(!sender.equals(who)) Messaging.send(sender, LanguageText.TAKE_THEFT.value("item", item.getName(null),
 			"amount", amount, "player", who.getName()));
 		return true;
 	}
 	
-	private int doTake(Player who, ItemID item, int amount, boolean sell) {
+	private int doTake(Player who, ItemID item, int amount, boolean sell, boolean inHand) {
 		int removed = 0;
 		PlayerInventory i = who.getInventory();
-		Map<Integer, ? extends ItemStack> items = i.all(item.getId());
-		for(int x : items.keySet()) {
-			ItemStack stk = items.get(x);
-			int n, d;
-			n = stk.getAmount();
-			d = stk.getDurability();
-			if(!Items.dataEquiv(item, d)) continue;
-			if(amount > 0 && n > amount) {
-				stk.setAmount(n - amount);
-				removed += amount;
-				amount = 0;
-				break;
-			} else if(n <= amount) {
-				amount -= n;
-				removed += n;
-				i.setItem(x, null);
-			} else if(amount <= 0) i.setItem(x, null);
+		if(inHand) {
+			removed = who.getItemInHand().getAmount();
+			who.setItemInHand(null);
+		} else {
+			Map<Integer, ? extends ItemStack> items = i.all(item.getId());
+			for(int x : items.keySet()) {
+				ItemStack stk = items.get(x);
+				int n, d;
+				n = stk.getAmount();
+				d = stk.getDurability();
+				if(!Items.dataEquiv(item, d)) continue;
+				if(amount > 0 && n > amount) {
+					stk.setAmount(n - amount);
+					removed += amount;
+					amount = 0;
+					break;
+				} else if(n <= amount) {
+					amount -= n;
+					removed += n;
+					i.setItem(x, null);
+				} else if(amount <= 0) i.setItem(x, null);
+			}
 		}
 		Messaging.send(who, LanguageText.TAKE_TOOK.value("item", item.getName(null),
 			"amount", removed <= amount ? removed : 0));
