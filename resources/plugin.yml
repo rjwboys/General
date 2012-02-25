@@ -144,6 +144,7 @@ permissions:
   general.clear.*: {children: {general.clear.other: true}}
   general.take.*: {children: {general.take.other: true, general.take.mass: true}}
   general.gamemode.*: {children: {general.gamemode: true}}
+  # Actual permissions start here
   general.gamemode.force.survival:
     description: Forces your gamemode to survival.
     children:
@@ -152,7 +153,6 @@ permissions:
     description: Forces your gamemode to creative.
     children:
       general.gamemode.set: false
-  # Actual permissions start here
   general.admin:
     description: Gives all General permissions.
     default: op
