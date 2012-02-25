@@ -92,6 +92,8 @@ public enum LanguageText {
 	GIVE_BAD_AMOUNT("give.error.amount", "{rose}The amount must be an integer."),
 	GIVE_BAD_ENCH("give.error.enchant.bad", "{white}{ench}{rose} is not a valid enchantment."),
 	GIVE_WRONG_ENCH("give.error.enchant.wrong", "{white}{ench}{rose} is not a valid enchantment for {white}{item}{rose}."),
+	GIVE_ENCH_CONFLICT("give.error.enchant.conflict", "{rose}The {white}{ench1}{rose} and {white}{ench2}{rose} " +
+			"enchantments conflict and cannot be put on the same item."),
 	GIVE_BAD_LEVEL("give.error.enchant.level", "{white}{level}{rose} is not a valid level for {white}{ench}{rose}."),
 	GIVE_BAD_ID("give.error.id", "{rose}Invalid item."),
 	GIVE_BAD_DATA("give.error.data", "{white}{data}{rose} is not a valid data type for {white}{item}{rose}."),

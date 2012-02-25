@@ -8,7 +8,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
@@ -130,6 +129,9 @@ public class giveCommand extends CommandBase {
 				enchantments.put(magic, power);
 			}
 		}
+		if(enchantments.containsKey(Enchantment.SILK_TOUCH) && enchantments.containsKey(Enchantment.LOOT_BONUS_BLOCKS))
+			throw new InvalidItemException(LanguageText.GIVE_ENCH_CONFLICT, "ench1", Items.name(Enchantment.SILK_TOUCH),
+				"ench2", Items.name(Enchantment.LOOT_BONUS_BLOCKS));
 		// Fill params and go!
 		params.put("player", who);
 		params.put("item", item);
