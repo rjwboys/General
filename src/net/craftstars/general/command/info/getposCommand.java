@@ -14,9 +14,9 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class getposCommand extends CommandBase {
@@ -94,7 +94,7 @@ public class getposCommand extends CommandBase {
 		} else if(Toolbox.equalsOne(command, "brief", "pos", "where", "short")) {
 			String msg = LanguageText.GETPOS_POS.value("player", player, "x", whose.getLocation().getX(),
 				"y", whose.getLocation().getY(), "z", whose.getLocation().getZ());
-			if(Option.SHOW_WORLD.get())
+			if(Options.SHOW_WORLD.get())
 				msg += LanguageText.GETPOS_WORLD.value("world", whose.getWorld().getName());
 			Messaging.send(sender, msg);
 		} else if(Toolbox.equalsOne(command, "rotation", "rot", "facing")) {
@@ -106,7 +106,7 @@ public class getposCommand extends CommandBase {
 		} else if(Toolbox.equalsOne(command, "long", "full")) {
 			String msg = LanguageText.GETPOS_POS.value("player", player, "x", whose.getLocation().getX(),
 				"y", whose.getLocation().getY(), "z", whose.getLocation().getZ());
-			if(Option.SHOW_WORLD.get())
+			if(Options.SHOW_WORLD.get())
 				msg += LanguageText.GETPOS_WORLD.value("world", whose.getWorld().getName());
 			msg += "\n" + LanguageText.GETPOS_ROTATION.value("player", player,
 				"yaw", whose.getLocation().getYaw(), "pitch", whose.getLocation().getPitch());

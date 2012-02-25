@@ -17,10 +17,10 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.EconomyManager;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
 
@@ -249,7 +249,7 @@ public class weatherCommand extends CommandBase {
 			Messaging.inCooldown(sender, cooldownPerm, LanguageText.COOLDOWN_THUNDER, "world", world.getName());
 			return;
 		}
-		Toolbox.cooldown(sender, cooldownPerm, permission + ".instant", Option.COOLDOWN("thunder").get());
+		Toolbox.cooldown(sender, cooldownPerm, permission + ".instant", Options.COOLDOWN("thunder").get());
 		if(!EconomyManager.canPay(sender, 1, "economy.weather.thunder")) return;
 		boolean state = duration != 0;
 		boolean hasThunder = world.isThundering();
@@ -277,7 +277,7 @@ public class weatherCommand extends CommandBase {
 			Messaging.inCooldown(sender, cooldownPerm, LanguageText.COOLDOWN_WEATHER, "world", world.getName());
 			return;
 		}
-		Toolbox.cooldown(sender, cooldownPerm, permission + ".instant", Option.COOLDOWN("storm").get());
+		Toolbox.cooldown(sender, cooldownPerm, permission + ".instant", Options.COOLDOWN("storm").get());
 		if(!EconomyManager.canPay(sender, 1, "economy.weather.storm")) return;
 		boolean state = duration != 0;
 		boolean hasStorm = world.hasStorm();
@@ -302,7 +302,7 @@ public class weatherCommand extends CommandBase {
 			Messaging.inCooldown(sender, cooldownPerm, LanguageText.COOLDOWN_LIGHTNING, "world", world.getName());
 			return;
 		}
-		Toolbox.cooldown(sender, cooldownPerm, permission + ".instant", Option.COOLDOWN("lightning").get());
+		Toolbox.cooldown(sender, cooldownPerm, permission + ".instant", Options.COOLDOWN("lightning").get());
 		if(!EconomyManager.canPay(sender, 1, "economy.weather.zap")) return;
 		else {
 			int x, y, z;
@@ -312,7 +312,7 @@ public class weatherCommand extends CommandBase {
 			Block block = world.getBlockAt(x, y, z);
 			while(block.getType() == Material.AIR)
 				block = block.getRelative(BlockFace.DOWN);
-			int range = Option.LIGHTNING_RANGE.get();
+			int range = Options.LIGHTNING_RANGE.get();
 			x += lightning.nextInt(range * 2) - range;
 			y = block.getLocation().getBlockY();
 			z += lightning.nextInt(range * 2) - range;

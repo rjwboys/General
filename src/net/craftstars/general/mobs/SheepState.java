@@ -6,8 +6,8 @@ import java.util.Random;
 import net.craftstars.general.items.InvalidItemException;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
+import net.craftstars.general.option.Option;
 import net.craftstars.general.text.LanguageText;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.DyeColor;

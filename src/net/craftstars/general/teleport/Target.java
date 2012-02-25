@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.craftstars.general.mobs.MobType;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Bukkit;
@@ -152,7 +152,7 @@ public class Target {
 		}
 		if(teleporter != null) {
 			// Is it a special keyword?
-			int range = Option.SUMMON_RANGE.get();
+			int range = Options.SUMMON_RANGE.get();
 			if(Toolbox.equalsOne(targ, "near", "$near")) {
 				List<Entity> near = teleporter.getNearbyEntities(range, range, range);
 				ArrayList<LivingEntity> players = new ArrayList<LivingEntity>();

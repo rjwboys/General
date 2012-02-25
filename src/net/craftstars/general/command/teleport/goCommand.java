@@ -12,11 +12,11 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.teleport.*;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.EconomyManager;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class goCommand extends CommandBase {
@@ -46,7 +46,7 @@ public class goCommand extends CommandBase {
 
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
-		int warmup = Option.TELEPORT_WARMUP.get();
+		int warmup = Options.TELEPORT_WARMUP.get();
 		if(warmup > 0) {
 			if(Toolbox.inCooldown(sender, "general.teleport"))
 				return Messaging.inCooldown(sender, "general.teleport", LanguageText.COOLDOWN_TELEPORT);

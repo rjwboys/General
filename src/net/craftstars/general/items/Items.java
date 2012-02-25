@@ -26,9 +26,9 @@ import org.bukkit.potion.Potion.Tier;
 import org.bukkit.potion.PotionType;
 
 import net.craftstars.general.General;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 import net.craftstars.general.util.range.IntRange;
 import net.craftstars.general.util.range.Range;
@@ -550,12 +550,12 @@ public final class Items {
 				bad.add(item);
 			}
 		}
-		Option.GROUP(groupName).set(items);
+		Options.GROUP(groupName).set(items);
 		return bad;
 	}
 
 	public static List<Integer> groupItems(String groupName) {
-		return Option.GROUP(groupName).get();
+		return Options.GROUP(groupName).get();
 	}
 
 	public static boolean addGroupItem(String groupName, String item) {
@@ -566,7 +566,7 @@ public final class Items {
 		} catch(InvalidItemException e) {
 			return false;
 		}
-		Option.GROUP(groupName).set(group);
+		Options.GROUP(groupName).set(group);
 		return true;
 	}
 
@@ -578,7 +578,7 @@ public final class Items {
 		} catch(InvalidItemException e) {
 			return false;
 		}
-		Option.GROUP(groupName).set(group);
+		Options.GROUP(groupName).set(group);
 		return true;
 	}
 

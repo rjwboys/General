@@ -21,9 +21,9 @@ import net.craftstars.general.items.Kit;
 import net.craftstars.general.mobs.MobAlignment;
 import net.craftstars.general.mobs.MobData;
 import net.craftstars.general.mobs.MobType;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.teleport.DestinationType;
 import net.craftstars.general.teleport.TargetType;
-import net.craftstars.general.util.Option;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -55,7 +55,7 @@ public class PermissionManager implements Listener {
 	
 	public static void refreshItemGroups() {
 		Permission perm = Bukkit.getPluginManager().getPermission("general.give.groupless");
-		perm.setDefault(Option.OTHERS4ALL.get() ? TRUE : FALSE);
+		perm.setDefault(Options.OTHERS4ALL.get() ? TRUE : FALSE);
 	}
 	
 	@EventHandler(priority=MONITOR)
@@ -90,7 +90,7 @@ public class PermissionManager implements Listener {
 				// general.give.groupless
 				Map<String,Boolean> groupless = new HashMap<String,Boolean>();
 				// Two nested loops; first Material, then groups
-				Set<String> groupNames = Option.ITEM_GROUPS.get();
+				Set<String> groupNames = Options.ITEM_GROUPS.get();
 				for(Material material : Material.values()) {
 					String itemName = material.toString().toLowerCase().replace('_', '-');
 					String itemPerm = "general.give.item." + itemName;
@@ -98,7 +98,7 @@ public class PermissionManager implements Listener {
 					//register(itemPerm, "Gives permission to give " + itemName);
 					boolean gotGroup = false;
 					for(String group : groupNames) {
-						List<Integer> groupItems = Option.GROUP(group).get();
+						List<Integer> groupItems = Options.GROUP(group).get();
 						if(groupItems.contains(material.getId())) {
 							gotGroup = true;
 							if(!groups.containsKey(group)) groups.put(group, new HashMap<String,Boolean>());
@@ -118,7 +118,7 @@ public class PermissionManager implements Listener {
 					allGroups.put(permission, true);
 				}
 				register("general.give.groupless", "Gives permission to give items not assigned to a group.",
-					Option.OTHERS4ALL.get(), groupless);
+					Options.OTHERS4ALL.get(), groupless);
 				register("general.give.groups", "Gives permission to give items from any item group.", allGroups);
 			}
 		},
@@ -187,7 +187,7 @@ public class PermissionManager implements Listener {
 			@Override
 			public void build() {
 				Map<String, Boolean> basics = new HashMap<String, Boolean>();
-				for(String node : Option.TELEPORT_BASICS.get())
+				for(String node : Options.TELEPORT_BASICS.get())
 					basics.put("general.teleport.self.to." + node, true);
 				register("general.teleport.basic","Gives basic teleport permissions.",basics);
 			}
@@ -339,7 +339,7 @@ public class PermissionManager implements Listener {
 		private static PrintWriter file = null;
 		
 		public static void init() {
-			if(!Option.EXPORT_PERMISSIONS.get()) return;
+			if(!Options.EXPORT_PERMISSIONS.get()) return;
 			try {
 				file = new PrintWriter(new File(General.plugin.getDataFolder(), "allpermissions.txt"));
 			} catch(FileNotFoundException e) {
@@ -352,7 +352,7 @@ public class PermissionManager implements Listener {
 				Collections.sort(ymlPerms, new PermissionsCompare());
 				for(Permission perm : ymlPerms) {
 					file.println(perm.getName());
-					if(Option.EXPORT_PERMISSIONS_CHILDREN.get())
+					if(Options.EXPORT_PERMISSIONS_CHILDREN.get())
 						file.println("    " + perm.getChildren());
 				}
 				file.close();
@@ -397,7 +397,7 @@ public class PermissionManager implements Listener {
 			Bukkit.getPluginManager().addPermission(perm);
 			if(file != null) {
 				file.println(name);
-				if(Option.EXPORT_PERMISSIONS_CHILDREN.get())
+				if(Options.EXPORT_PERMISSIONS_CHILDREN.get())
 					file.println("    " + perm.getChildren());
 			}
 		}

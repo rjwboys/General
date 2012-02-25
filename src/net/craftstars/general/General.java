@@ -10,12 +10,13 @@ import java.util.Scanner;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.items.Kits;
 import net.craftstars.general.mobs.MobType;
+import net.craftstars.general.option.Option;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.HelpHandler;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.CommandManager;
 import net.craftstars.general.util.EconomyManager;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.PermissionManager;
 import net.craftstars.general.util.PluginLogger;
 
@@ -54,7 +55,7 @@ public class General extends JavaPlugin {
 
 	public void loadAllConfigs() {
 		// The load order here is very delicate, as LanguageText is used nearly everywhere
-		// and Messaging.load uses Option.
+		// and Messaging.load uses Options.
 		File dataFolder = this.getDataFolder();
 		if(!dataFolder.exists()) dataFolder.mkdirs();
 		LanguageText.setLanguage("en", getDataFolder(), "messages_en.yml"); // Make sure we have a default language!
@@ -73,7 +74,7 @@ public class General extends JavaPlugin {
 	public void onDisable() {
 		Items.save();
 		Messaging.save();
-		if(Option.AUTO_SAVE.get()) {
+		if(Options.AUTO_SAVE.get()) {
 			Kits.save();
 			try {
 				config.save(configFile);

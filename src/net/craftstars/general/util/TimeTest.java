@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import net.craftstars.general.option.Option;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.util.Time.TimeFormat;
 
 public class TimeTest {
@@ -24,7 +26,7 @@ public class TimeTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		Option.SHOW_TICKS.set(true);
+		Options.SHOW_TICKS.set(true);
 	}
 	
 	@After
@@ -39,7 +41,7 @@ public class TimeTest {
 		assertEquals("6:00pm (12000)", Time.formatTime(12000, TimeFormat.TWELVE_HOUR)); // Dusk
 		assertEquals("7:48pm (13800)", Time.formatTime(13800, TimeFormat.TWELVE_HOUR)); // Night
 		assertEquals("12:00am (18000)", Time.formatTime(18000, TimeFormat.TWELVE_HOUR)); // Midnight
-		Option.SHOW_TICKS.set(false);
+		Options.SHOW_TICKS.set(false);
 		assertEquals("6:00am", Time.formatTime(0, TimeFormat.TWELVE_HOUR));
 	}
 	
@@ -61,7 +63,7 @@ public class TimeTest {
 		assertEquals("18:00h (12000)", Time.formatTime(12000, TimeFormat.TWENTY_FOUR_HOUR)); // Dusk
 		assertEquals("19:48h (13800)", Time.formatTime(13800, TimeFormat.TWENTY_FOUR_HOUR)); // Night
 		assertEquals("00:00h (18000)", Time.formatTime(18000, TimeFormat.TWENTY_FOUR_HOUR)); // Midnight
-		Option.SHOW_TICKS.set(false);
+		Options.SHOW_TICKS.set(false);
 		assertEquals("19:48h", Time.formatTime(13800, TimeFormat.TWENTY_FOUR_HOUR));
 	}
 	

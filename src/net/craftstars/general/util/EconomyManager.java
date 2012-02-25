@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.items.ItemID;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 
@@ -30,8 +31,8 @@ public class EconomyManager {
 			General.logger.warn(LanguageText.LOG_ECONOMY_ERROR.value("msg", e.getMessage()), e);
 			return;
 		}
-		if(Option.NO_ECONOMY.get()) General.logger.info(LanguageText.LOG_NO_ECONOMY.value());
-		else if(economy instanceof ItemBank && Option.ECONOMY_ITEM.get() <= 0)
+		if(Options.NO_ECONOMY.get()) General.logger.info(LanguageText.LOG_NO_ECONOMY.value());
+		else if(economy instanceof ItemBank && Options.ECONOMY_ITEM.get() <= 0)
 			General.logger.warn(LanguageText.LOG_MISSING_ECONOMY.value());
 	}
 	
@@ -45,15 +46,15 @@ public class EconomyManager {
 				lastPrice[0] += Double.parseDouble(permission.substring(1));
 			else if(permission.startsWith("%"))
 				lastPrice[0] *= Double.parseDouble(permission.substring(1)) / 100.0;
-			else lastPrice[0] += Option.ECONOMY_COST(permission).get() * quantity;
+			else lastPrice[0] += Options.ECONOMY_COST(permission).get() * quantity;
 		if(CommandBase.isFrozen(player)) return AccountStatus.FROZEN;
-		if(economy.hasEnough(player, lastPrice[0], Option.ECONOMY_ITEM.get()))
+		if(economy.hasEnough(player, lastPrice[0], Options.ECONOMY_ITEM.get()))
 			return AccountStatus.SUFFICIENT;
 		return AccountStatus.INSUFFICIENT;
 	}
 	
 	public static boolean canPay(CommandSender sender, int quantity, String... permissions) {
-		if(Option.NO_ECONOMY.get()) return true;
+		if(Options.NO_ECONOMY.get()) return true;
 		if(sender instanceof ConsoleCommandSender) return true;
 		if(!(sender instanceof Player)) return false;
 		Player player = (Player) sender;
@@ -71,22 +72,22 @@ public class EconomyManager {
 				return false;
 			case SUFFICIENT: // TODO: I think take() prints its own message, so this may cause double messages
 				Messaging.showPayment(player);
-				economy.take(player, lastPrice[0], Option.ECONOMY_ITEM.get());
+				economy.take(player, lastPrice[0], Options.ECONOMY_ITEM.get());
 			}
 			return true;
 		}
 	}
 
 	public static double sellItem(ItemID item, int amount) {
-		if(Option.NO_ECONOMY.get()) return 0;
+		if(Options.NO_ECONOMY.get()) return 0;
 		String node = "economy.give.item" + item.toString();
-		double percent = Option.ECONOMY_SELL.get() / 100.0;
-		return Option.ECONOMY_COST(node).get() * amount * percent;
+		double percent = Options.ECONOMY_SELL.get() / 100.0;
+		return Options.ECONOMY_COST(node).get() * amount * percent;
 	}
 
 	public static void giveMoney(Player who, double revenue) {
-		if(Option.NO_ECONOMY.get()) return;
-		economy.give(who, revenue, Option.ECONOMY_ITEM.get());
+		if(Options.NO_ECONOMY.get()) return;
+		economy.give(who, revenue, Options.ECONOMY_ITEM.get());
 	}
 	
 	public static double getLastPrice() {
@@ -94,10 +95,10 @@ public class EconomyManager {
 	}
 	
 	public static String formatCost(Player player, double price) {
-		return economy.getFormattedAmount(player, price, Option.ECONOMY_ITEM.get());
+		return economy.getFormattedAmount(player, price, Options.ECONOMY_ITEM.get());
 	}
 
 	public static double getBalance(Player sender) {
-		return economy.getBalance(sender, Option.ECONOMY_ITEM.get());
+		return economy.getBalance(sender, Options.ECONOMY_ITEM.get());
 	}
 }

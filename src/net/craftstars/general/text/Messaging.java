@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import net.craftstars.general.General;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.util.EconomyManager;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
 
@@ -37,7 +37,7 @@ public final class Messaging {
 	public static void load() {
 		File dataFolder = General.plugin.getDataFolder();
 		if(!dataFolder.exists()) dataFolder.mkdirs();
-		String lang = Option.LANGUAGE.get();
+		String lang = Options.LANGUAGE.get();
 		langFile = "messages_" + lang + ".yml";
 		config = LanguageText.setLanguage(lang, dataFolder, langFile);
 		List<String> names = config.getStringList("colours");
@@ -175,13 +175,13 @@ public final class Messaging {
 	}
 
 	public static void showCost(Player sender) {
-		if(Option.NO_ECONOMY.get()) return;
+		if(Options.NO_ECONOMY.get()) return;
 		String cost = EconomyManager.formatCost(sender, EconomyManager.getLastPrice());
 		send(sender, LanguageText.ECONOMY_SHOW_COST.value("cost", cost));
 	}
 	
 	public static void showPayment(Player sender) {
-		if(Option.NO_ECONOMY.get()) return;
+		if(Options.NO_ECONOMY.get()) return;
 		if(EconomyManager.getLastPrice() > 0) {
 			String cost = EconomyManager.formatCost(sender, EconomyManager.getLastPrice());
 			send(sender, LanguageText.ECONOMY_PAY.value("cost", cost));
@@ -189,7 +189,7 @@ public final class Messaging {
 	}
 
 	public static void earned(Player who, double revenue) {
-		if(Option.NO_ECONOMY.get()) return;
+		if(Options.NO_ECONOMY.get()) return;
 		send(who, LanguageText.ECONOMY_EARN.value("income", revenue));
 	}
 }

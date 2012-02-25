@@ -10,10 +10,10 @@ import net.craftstars.general.General;
 import net.craftstars.general.items.InvalidItemException;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.EconomyManager;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
@@ -72,8 +72,8 @@ public class masstakeCommand extends CommandBase {
 		@SuppressWarnings("unchecked")
 		ArrayList<ItemID> items = (ArrayList<ItemID>) args.get("items");
 		boolean sell = who.equals(sender);
-		sell = sell && Option.NO_ECONOMY.get();
-		sell = sell && Option.ECONOMY_TAKE_SELL.get().equalsIgnoreCase("sell");
+		sell = sell && Options.NO_ECONOMY.get();
+		sell = sell && Options.ECONOMY_TAKE_SELL.get().equalsIgnoreCase("sell");
 		StringBuilder itemsText = new StringBuilder();
 		int amount = doTake(who, items, sell, itemsText);
 		if(!sender.equals(who))

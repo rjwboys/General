@@ -6,10 +6,10 @@ import java.util.Map;
 
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.General;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.EconomyManager;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
 
@@ -35,7 +35,7 @@ public class timeCommand extends CommandBase {
 			 // No arguments, assuming get current time for current/default world.
 			world = getWorld(sender, isPlayer);
 			setCommand("showtime");
-//			showTime(sender, world);	
+//			showTime(sender, world);
 		break;
 		case 1: // /time <world> OR /time <time>
 			// This mega-if is to ensure that "no such world" messages are not displayed on valid input
@@ -101,7 +101,7 @@ public class timeCommand extends CommandBase {
 		String cooldownPerm = permission + "." + world.getName();
 		if(Toolbox.inCooldown(sender, cooldownPerm))
 			return Messaging.inCooldown(sender, cooldownPerm, LanguageText.COOLDOWN_TIME, "world", world.getName());
-		Toolbox.cooldown(sender, cooldownPerm, permission + ".instant", Option.COOLDOWN("time").get());
+		Toolbox.cooldown(sender, cooldownPerm, permission + ".instant", Options.COOLDOWN("time").get());
 		LanguageText timeName;
 		int timeTicks;
 		if(timeStr.equalsIgnoreCase("day")) { // 6am

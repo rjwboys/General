@@ -18,10 +18,10 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.teleport.Destination;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import static net.craftstars.general.command.info.whoCommand.Property.*;
@@ -33,10 +33,10 @@ public class whoCommand extends CommandBase {
 	public whoCommand(General instance) {
 		super(instance);
 		Set<Property> mask = EnumSet.of(TITLE, UNAME, DNAME, STATUS, LEVEL, HUNGER);
-		if(Option.SHOW_HEALTH.get()) mask.add(HEALTH);
-		if(Option.SHOW_COORDS.get()) mask.addAll(EnumSet.of(LOC, HOME));
-		if(Option.SHOW_WORLD.get()) mask.add(WORLD);
-		if(Option.SHOW_IP.get()) mask.add(IP);
+		if(Options.SHOW_HEALTH.get()) mask.add(HEALTH);
+		if(Options.SHOW_COORDS.get()) mask.addAll(EnumSet.of(LOC, HOME));
+		if(Options.SHOW_WORLD.get()) mask.add(WORLD);
+		if(Options.SHOW_IP.get()) mask.add(IP);
 		defaultMask = mask;
 	}
 	
@@ -169,7 +169,7 @@ public class whoCommand extends CommandBase {
 				if(Toolbox.equalsOne(args[0], "all", "hunger", "food")) mask.add(HUNGER);
 			} else mask = defaultMask;
 			// If they're not allowed to override, mask out disabled values
-			if(!Option.ALLOW_OVERRIDE.get()) mask.retainAll(defaultMask);
+			if(!Options.ALLOW_OVERRIDE.get()) mask.retainAll(defaultMask);
 			params.put("mask", mask);
 			params.put("who", sender);
 		} else {

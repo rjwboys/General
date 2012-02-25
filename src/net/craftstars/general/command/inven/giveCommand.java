@@ -15,10 +15,10 @@ import net.craftstars.general.items.InvalidItemException;
 import net.craftstars.general.items.ItemData;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.EconomyManager;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class giveCommand extends CommandBase {
@@ -149,7 +149,7 @@ public class giveCommand extends CommandBase {
 		int amount = (Integer) args.get("amount");
 		if(amount < 0 && !sender.hasPermission("general.give.infinite"))
 			return Messaging.lacksPermission(sender, "general.give.infinite");
-		int maxAmount = Option.GIVE_MASS.get();
+		int maxAmount = Options.GIVE_MASS.get();
 		if(amount > maxAmount && !sender.hasPermission("general.give.mass"))
 			return Messaging.lacksPermission(sender, "general.give.mass");
 		ItemID item = (ItemID) args.get("item");

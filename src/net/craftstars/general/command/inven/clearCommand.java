@@ -7,10 +7,10 @@ import java.util.Map;
 import net.craftstars.general.command.CommandBase;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.General;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.EconomyManager;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.command.Command;
@@ -85,7 +85,7 @@ public class clearCommand extends CommandBase {
 		if(option == null) {
 			Messaging.send(sender, LanguageText.CLEAR_INVALID);
 			return false;
-		} 
+		}
 		Player who = Toolbox.matchPlayer(name);
 		if(who == null) {
 			Messaging.invalidPlayer(sender, name);
@@ -100,8 +100,8 @@ public class clearCommand extends CommandBase {
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(!sender.hasPermission("general.clear"))
 			return Messaging.lacksPermission(sender, "general.clear");
-		boolean sell = Option.NO_ECONOMY.get();
-		sell = sell && Option.ECONOMY_CLEAR_SELL.get().equalsIgnoreCase("sell");
+		boolean sell = Options.NO_ECONOMY.get();
+		sell = sell && Options.ECONOMY_CLEAR_SELL.get().equalsIgnoreCase("sell");
 		Player player = (Player) args.get("player");
 		CleanType option = (CleanType) args.get("option");
 		doClean(player, sender, option, sell);

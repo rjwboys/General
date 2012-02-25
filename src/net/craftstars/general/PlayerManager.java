@@ -15,10 +15,10 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.MessageOfTheDay;
 import net.craftstars.general.text.Messaging;
-import net.craftstars.general.util.Option;
 
 public final class PlayerManager implements Listener {
 	private HashMap<String, String> playersAway = new HashMap<String, String>();
@@ -31,13 +31,13 @@ public final class PlayerManager implements Listener {
 	
 	public void goAway(Player who, String reason) {
 		playersAway.put(who.getName(), reason);
-		if(Option.AWAY_SLEEP.get())
+		if(Options.AWAY_SLEEP.get())
 			who.setSleepingIgnored(true);
 	}
 	
 	public void unAway(Player who) {
 		playersAway.remove(who.getName());
-		if(Option.AWAY_SLEEP.get())
+		if(Options.AWAY_SLEEP.get())
 			who.setSleepingIgnored(false);
 	}
 	
@@ -56,7 +56,7 @@ public final class PlayerManager implements Listener {
 	
 	@EventHandler(priority=MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if(!Option.SHOW_MOTD.get()) return;
+		if(!Options.SHOW_MOTD.get()) return;
 		MessageOfTheDay.showMotD(event.getPlayer());
 	}
 	
@@ -64,7 +64,7 @@ public final class PlayerManager implements Listener {
 	public void onPlayerChat(PlayerChatEvent event) {
 		String tag = event.getMessage().split("\\s+")[0];
 		for(String who : playersAway.keySet()) {
-			if(tag.equalsIgnoreCase(Option.TAG_FORMAT.get().replace("name", who))) {
+			if(tag.equalsIgnoreCase(Options.TAG_FORMAT.get().replace("name", who))) {
 				Messaging.send(event.getPlayer(), LanguageText.AWAY_BRIEF.value("name", who,
 					"reason", playersAway.get(who)));
 				break;

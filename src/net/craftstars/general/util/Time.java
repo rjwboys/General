@@ -6,6 +6,7 @@ import java.util.Formatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.LanguageText;
 
 public final class Time {
@@ -16,7 +17,7 @@ public final class Time {
 	
 	public static String formatTime(long time) {
 		TimeFormat currentFormat = TimeFormat.TWELVE_HOUR;
-		boolean in24hr = Option.TIME_FORMAT.get();
+		boolean in24hr = Options.TIME_FORMAT.get();
 		if(in24hr) currentFormat = TimeFormat.TWENTY_FOUR_HOUR;
 		return formatTime(time, currentFormat);
 	}
@@ -49,7 +50,7 @@ public final class Time {
 		}
 		formatString += ":%02d%s";
 		Formatter fmtr = new Formatter();
-		if(Option.SHOW_TICKS.get())
+		if(Options.SHOW_TICKS.get())
 			return fmtr.format(formatString + " (%d)", time, minutes, suffix, ticks).toString();
 		else return fmtr.format(formatString, time, minutes, suffix).toString();
 	}

@@ -10,8 +10,8 @@ import java.util.Scanner;
 import java.util.Set;
 
 import net.craftstars.general.General;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.util.EconomyManager;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Time;
 import net.craftstars.general.util.Toolbox;
 
@@ -73,7 +73,7 @@ public final class MessageOfTheDay {
 	}
 	
 	private static String getCurrency(CommandSender sender) {
-		if(Option.NO_ECONOMY.get()) return "none";
+		if(Options.NO_ECONOMY.get()) return "none";
 		Player player = sender instanceof Player ? (Player)sender : null;
 		String zero = EconomyManager.formatCost(player, 0);
 		String currency = zero.replaceAll("\\d+(\\.\\d+)?", "");
@@ -86,7 +86,7 @@ public final class MessageOfTheDay {
 	}
 	
 	private static String getBalance(CommandSender sender) {
-		if(Option.NO_ECONOMY.get() || !(sender instanceof Player)) return "0";
+		if(Options.NO_ECONOMY.get() || !(sender instanceof Player)) return "0";
 		return Double.toString(EconomyManager.getBalance((Player) sender));
 	}
 	

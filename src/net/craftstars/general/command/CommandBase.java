@@ -8,9 +8,9 @@ import java.util.Set;
 import net.craftstars.general.General;
 import net.craftstars.general.items.InvalidItemException;
 import net.craftstars.general.mobs.InvalidMobException;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.HelpHandler;
 import net.craftstars.general.text.LanguageText;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 import org.bukkit.Bukkit;
@@ -44,9 +44,9 @@ public abstract class CommandBase implements CommandExecutor {
 	public synchronized boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		String cmdStr = commandLabel + " " + Toolbox.join(args);
 		String senderName = sender.getName();
-		boolean commandResult = Option.SHOW_USAGE.get();
+		boolean commandResult = Options.SHOW_USAGE.get();
 		FailurePlace error = FailurePlace.NONE, at = FailurePlace.INIT;
-		if(Option.LOG_COMMANDS.get())
+		if(Options.LOG_COMMANDS.get())
 			General.logger.info(LanguageText.LOG_COMMAND_USED.value("sender", senderName, "command", cmdStr));
 		try {
 			if(isHelpCommand(command, commandLabel, args)) {
@@ -75,7 +75,7 @@ public abstract class CommandBase implements CommandExecutor {
 			e.printStackTrace();
 			commandResult = false;
 		}
-		commandResult = commandResult || Option.SHOW_USAGE.get();
+		commandResult = commandResult || Options.SHOW_USAGE.get();
 		return commandResult;
 	}
 	
@@ -160,7 +160,7 @@ public abstract class CommandBase implements CommandExecutor {
 			String[] args = cmd.getField("args").split(" ");
 			Command command = plugin.getCommand(commandLabel);
 			FailurePlace error = FailurePlace.NONE, at = FailurePlace.INIT;
-			if(Option.LOG_COMMANDS.get())
+			if(Options.LOG_COMMANDS.get())
 				General.logger.info(LanguageText.LOG_COMMAND_USED.value("sender", senderName, "command", cmdStr));
 			try {
 				IRCReturnSender sender = new IRCReturnSender(cmd);

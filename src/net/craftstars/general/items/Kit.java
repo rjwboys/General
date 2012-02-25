@@ -8,10 +8,10 @@ import java.util.Map;
 import org.bukkit.command.CommandSender;
 
 import net.craftstars.general.General;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.EconomyManager;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class Kit implements Iterable<ItemID> {
@@ -65,7 +65,7 @@ public class Kit implements Iterable<ItemID> {
 	
 	private void calculateCost() {
 		// First, determine method of costing; then, calculate actual cost.
-		String method = Option.KIT_METHOD.get();
+		String method = Options.KIT_METHOD.get();
 		if(Toolbox.equalsOne(method, "cumulative", "discount")) {
 			// Linked-list for constant-time add
 			LinkedList<String> econNodes = new LinkedList<String>();
@@ -74,7 +74,7 @@ public class Kit implements Iterable<ItemID> {
 				while(quantity-- > 0) econNodes.add("general.economy.give.item" + item.toString());
 			}
 			if(method.equalsIgnoreCase("discount"))
-				econNodes.add("%" + Option.KIT_DISCOUNT.get());
+				econNodes.add("%" + Options.KIT_DISCOUNT.get());
 			cost = econNodes.toArray(new String[0]);
 		} else {
 			if(!method.equalsIgnoreCase("individual"))

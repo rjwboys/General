@@ -3,8 +3,8 @@ package net.craftstars.general.mobs;
 
 import java.util.HashMap;
 
+import net.craftstars.general.option.Option;
 import net.craftstars.general.text.LanguageText;
-import net.craftstars.general.util.Option;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;

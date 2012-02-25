@@ -22,6 +22,8 @@ import net.craftstars.general.items.Kits;
 import net.craftstars.general.mobs.InvalidMobException;
 import net.craftstars.general.mobs.MobData;
 import net.craftstars.general.mobs.MobType;
+import net.craftstars.general.option.Option;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.teleport.DestinationType;
 import net.craftstars.general.teleport.TargetType;
 import net.craftstars.general.text.HelpHandler;
@@ -29,7 +31,6 @@ import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.MessageOfTheDay;
 import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.EconomyManager;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.PermissionManager;
 import net.craftstars.general.util.Toolbox;
 
@@ -246,7 +247,7 @@ public class generalCommand extends CommandBase {
 			kit.setSavedCost(cost);
 			String displayCost = Double.toString(cost);
 			Player player = sender instanceof Player ? (Player)sender : null;
-			if(!Option.NO_ECONOMY.get())
+			if(!Options.NO_ECONOMY.get())
 				displayCost = EconomyManager.formatCost(player, cost);
 			Messaging.send(sender, LanguageText.KIT_COST.value("kit", kitName, "cost", displayCost));
 			return true;
@@ -495,7 +496,7 @@ public class generalCommand extends CommandBase {
 					}
 				}
 			}
-			Option.ECONOMY_COST(path).set(value);
+			Options.ECONOMY_COST(path).set(value);
 			Messaging.send(sender, LanguageText.ADMIN_ECON_SET.value("path", path, "value", value));
 			return true;
 		}
@@ -509,14 +510,14 @@ public class generalCommand extends CommandBase {
 		Object value = null;
 		if(args.length != 2) return false;
 		if(args[0].equalsIgnoreCase("others-for-all")) {
-			node = Option.OTHERS4ALL;
+			node = Options.OTHERS4ALL;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("give-mass")) {
-			node = Option.GIVE_MASS;
+			node = Options.GIVE_MASS;
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -524,77 +525,77 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("show-health")) {
-			node = Option.SHOW_HEALTH;
+			node = Options.SHOW_HEALTH;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-coords")) {
-			node = Option.SHOW_COORDS;
+			node = Options.SHOW_COORDS;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-world")) {
-			node = Option.SHOW_WORLD;
+			node = Options.SHOW_WORLD;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-ip")) {
-			node = Option.SHOW_IP;
+			node = Options.SHOW_IP;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-motd")) {
-			node = Option.SHOW_MOTD;
+			node = Options.SHOW_MOTD;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("24-hour")) {
-			node = Option.TIME_FORMAT;
+			node = Options.TIME_FORMAT;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("show-ticks")) {
-			node = Option.SHOW_TICKS;
+			node = Options.SHOW_TICKS;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("economy-take")) {
-			node = Option.ECONOMY_TAKE_SELL;
+			node = Options.ECONOMY_TAKE_SELL;
 			if(!Toolbox.equalsOne(args[1], "trash", "sell")) {
 				Messaging.send(sender, LanguageText.ADMIN_VAR_ECONTAKE);
 				return true;
 			}
 			value = args[1];
 		} else if(args[0].equalsIgnoreCase("economy-clear")) {
-			node = Option.ECONOMY_CLEAR_SELL;
+			node = Options.ECONOMY_CLEAR_SELL;
 			if(!Toolbox.equalsOne(args[1], "trash", "sell")) {
 				Messaging.send(sender, LanguageText.ADMIN_VAR_ECONCLEAR);
 				return true;
 			}
 			value = args[1];
 		} else if(args[0].equalsIgnoreCase("economy-kits")) {
-			node = Option.KIT_METHOD;
+			node = Options.KIT_METHOD;
 			if(!Toolbox.equalsOne(args[1], "individual", "cumulative", "discount")) {
 				Messaging.send(sender, LanguageText.ADMIN_VAR_ECONKIT);
 				return true;
 			}
 			value = args[1];
 		} else if(args[0].equalsIgnoreCase("economy-sell")) {
-			node = Option.ECONOMY_SELL;
+			node = Options.ECONOMY_SELL;
 			try {
 				value = Double.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -602,7 +603,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("kits-discount")) {
-			node = Option.KIT_DISCOUNT;
+			node = Options.KIT_DISCOUNT;
 			try {
 				value = Double.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -610,24 +611,24 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("chat-tag")) {
-			node = Option.TAG_FORMAT;
+			node = Options.TAG_FORMAT;
 			value = args[1];
 		} else if(args[0].equalsIgnoreCase("log-commands")) {
-			node = Option.LOG_COMMANDS;
+			node = Options.LOG_COMMANDS;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("auto-save")) {
-			node = Option.AUTO_SAVE;
+			node = Options.AUTO_SAVE;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
 			}
 			value = Boolean.valueOf(args[1]);
 		} else if(args[0].equalsIgnoreCase("lightning-range")) {
-			node = Option.LIGHTNING_RANGE;
+			node = Options.LIGHTNING_RANGE;
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -635,7 +636,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("teleport-warmup")) {
-			node = Option.TELEPORT_WARMUP;
+			node = Options.TELEPORT_WARMUP;
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -643,7 +644,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("time-cooldown")) {
-			node = Option.COOLDOWN("time");
+			node = Options.COOLDOWN("time");
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -651,7 +652,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("storm-cooldown")) {
-			node = Option.COOLDOWN("storm");
+			node = Options.COOLDOWN("storm");
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -659,7 +660,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("thunder-cooldown")) {
-			node = Option.COOLDOWN("thunder");
+			node = Options.COOLDOWN("thunder");
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -667,7 +668,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("lighting-cooldown")) {
-			node = Option.COOLDOWN("lightning");
+			node = Options.COOLDOWN("lightning");
 			try {
 				value = Integer.valueOf(args[1]);
 			} catch(NumberFormatException e) {
@@ -675,7 +676,7 @@ public class generalCommand extends CommandBase {
 				return true;
 			}
 		} else if(args[0].equalsIgnoreCase("show-usage")) {
-			node = Option.SHOW_USAGE;
+			node = Options.SHOW_USAGE;
 			if(!Toolbox.equalsOne(args[1], "true", "false")) {
 				Messaging.send(sender, LanguageText.ADMIN_VAR_BOOL);
 				return true;
@@ -785,7 +786,7 @@ public class generalCommand extends CommandBase {
 					if(!Option.nodeExists("give.groups." + groupName))
 						Messaging.send(sender, LanguageText.ADMIN_ITEM_GROUP_EMPTY.value("group", groupName));
 					else {
-						Option.GROUP(groupName).remove();
+						Options.GROUP(groupName).remove();
 						Messaging.send(sender, LanguageText.ADMIN_ITEM_GROUP_REMOVE.value("group", groupName));
 					}
 				} else switch(args[2].charAt(0)) {

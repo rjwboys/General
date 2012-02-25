@@ -13,9 +13,9 @@ import org.bukkit.entity.Player;
 
 import net.craftstars.general.General;
 import net.craftstars.general.command.CommandBase;
+import net.craftstars.general.option.Options;
 import net.craftstars.general.text.LanguageText;
 import net.craftstars.general.text.Messaging;
-import net.craftstars.general.util.Option;
 import net.craftstars.general.util.Toolbox;
 
 public class banCommand extends CommandBase {
@@ -51,7 +51,7 @@ public class banCommand extends CommandBase {
 			player.setBanned(true);
 			if(player.isOnline()) {
 				Player online = (Player)player;
-				online.kickPlayer(Option.BAN_KICK.get());
+				online.kickPlayer(Options.BAN_KICK.get());
 			}
 			Messaging.send(sender, LanguageText.MISC_BANNED.value("player", player.getName()));
 		}
