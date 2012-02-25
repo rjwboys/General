@@ -30,15 +30,18 @@ public class masstakeCommand extends CommandBase {
 	@Override
 	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
 		if(args.length < (isPlayer ? 1 : 2)) return null;
-		HashMap<String,Object> params = new HashMap<String,Object>();
-		Player who = Toolbox.matchPlayer(args[args.length-1]);
-		if(who == null) {
-			if(isPlayer) who = (Player) sender;
-			else {
-				Messaging.invalidPlayer(sender, args[args.length-1]);
+		Player target = null;
+		if(args.length > 2 && args[args.length-2].equals("<-")) {
+			String name = args[args.length-1];
+			target = Toolbox.matchPlayer(name);
+			if(target == null) {
+				Messaging.invalidPlayer(sender, name);
 				return null;
 			}
-		} else args = dropLastArg(args);
+			args = dropLastArg(dropLastArg(args));
+		}
+		if(target == null && isPlayer) target = (Player) sender;
+		if(target == null) return null;
 		ArrayList<ItemID> items = new ArrayList<ItemID>();
 		ArrayList<String> bad = new ArrayList<String>();
 		for(String item : args) {
@@ -52,7 +55,8 @@ public class masstakeCommand extends CommandBase {
 				}
 			}
 		}
-		params.put("player", who);
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("player", target);
 		params.put("items", items);
 		params.put("bad", bad);
 		return params;

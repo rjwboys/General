@@ -29,21 +29,16 @@ public class itemsCommand extends CommandBase {
 		if(!sender.hasPermission("general.give.mass"))
 			return Messaging.lacksPermission(sender, "general.give.mass");
 		Player toWhom = (Player) args.get("player");
-		String[] items = (String[]) args.get("items");
 		ArrayList<String> display = new ArrayList<String>();
-		ArrayList<String> bad = new ArrayList<String>();
-		for(String item : items) {
-			ItemID what;
-			try {
-				what = Items.validate(item);
-			} catch(InvalidItemException e) {
-				bad.add(item);
-				continue;
-			}
-			if(!what.canGive(sender)) continue;
-			if(!EconomyManager.canPay(sender, 1, "economy.give.item" + item.toString())) continue;
-			display.add(what.getName(null));
-			Items.giveItem(toWhom, what, what.getId() == ItemID.EXP ? Toolbox.toNextLevel(toWhom) : 1, null);
+		@SuppressWarnings("unchecked")
+		ArrayList<ItemID> items = (ArrayList<ItemID>)args.get("items");
+		@SuppressWarnings("unchecked")
+		ArrayList<String> bad = (ArrayList<String>)args.get("bad");
+		for(ItemID item : items) {
+			if(!item.canGive(sender)) continue;
+			if(!EconomyManager.canPay(sender, 1, "economy.give.item" + item.getMaterial().toString())) continue;
+			display.add(item.getName(null));
+			Items.giveItem(toWhom, item, item.getId() == ItemID.EXP ? Toolbox.toNextLevel(toWhom) : 1, null);
 		}
 		String text = Toolbox.join(display.toArray(new String[0]), LanguageText.ITEMS_JOINER.value());
 		if(toWhom == sender) {
@@ -60,16 +55,34 @@ public class itemsCommand extends CommandBase {
 	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
 		if(args.length < (isPlayer ? 1 : 2)) return null;
 		Player target = null;
-		if(args.length > 1) {
+		if(args.length > 2 && args[args.length-2].equals("->")) {
 			String name = args[args.length-1];
 			target = Toolbox.matchPlayer(name);
-			if(target != null) args = dropLastArg(args);
+			if(target == null) {
+				Messaging.invalidPlayer(sender, name);
+				return null;
+			}
+			args = dropLastArg(dropLastArg(args));
 		}
 		if(target == null && isPlayer) target = (Player) sender;
 		if(target == null) return null;
+		ArrayList<ItemID> items = new ArrayList<ItemID>();
+		ArrayList<String> bad = new ArrayList<String>();
+		for(String item : args) {
+			if(item != null){
+				ItemID itemid;
+				try {
+					itemid = Items.validate(item);
+					items.add(itemid);
+				} catch(InvalidItemException e) {
+					bad.add(item);
+				}
+			}
+		}
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put("player", target);
-		params.put("items", args);
+		params.put("items", items);
+		params.put("bad", bad);
 		return params;
 	}
 }
