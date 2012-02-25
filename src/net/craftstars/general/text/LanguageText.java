@@ -362,6 +362,8 @@ public enum LanguageText {
 	LACK_KICK("permissions.kick", "kick players"),
 	LACK_BAN("permissions.ban", "ban players"),
 	LACK_PARDON("permissions.pardon", "pardon banned players"),
+	LACK_STOP("permissions.stop", "stop the server"),
+	LACK_STOP_NOW("permissions.stop_now", "stop the server without a delay"),
 	// Cooldown-related messages
 	IN_COOLDOWN("misc.cooldown.in", "{rose}Please wait {duration} before trying to {action} again."),
 	COOLDOWN_WEATHER("misc.cooldown.weather", "change the weather in {world}"),

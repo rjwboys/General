@@ -286,9 +286,12 @@ permissions:
       general.ban:
         description: Gives permission to ban people from the server.
         default: op
+      general.stop.now
+        description: Gives permission to stop the server without a grace delay.
+        default: op
+        children:
       general.stop:
         description: Gives permission to shut down the server.
-        default: op
       general.pardon:
         description: Gives permission to pardon banned people on the server.
         default: op

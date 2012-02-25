@@ -41,8 +41,12 @@ public class shutdownCommand extends CommandBase {
 	
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String,Object> args) {
+		if(!sender.hasPermission("general.stop"))
+			return Messaging.lacksPermission(sender, "general.stop");
 		long delay = (Long)args.get("delay");
 		final boolean now = delay < 100 || Bukkit.getOnlinePlayers().length == 0;
+		if(now && !sender.hasPermission("general.stop.now"))
+			return Messaging.lacksPermission(sender, "general.stop.now");
 		final String message = (String)args.get("msg");
 		if(delay > 0) Messaging.broadcast(LanguageText.MISC_STOPPING_SOON.value("when", Time.formatDuration(delay),
 			"player", sender.getName()));
