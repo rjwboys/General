@@ -288,7 +288,8 @@ public final class Toolbox {
 
 	public static int toNextLevel(Player who) {
 		int totalXP = who.getTotalExperience();
-		int level = who.getLevel() - 1;
-		return totalXP - (7 + (level * 7) / 2);
+		double level = who.getLevel() + 1;
+		int needXP = (int)(1.75 * level * level + 5 * level + 0.25);
+		return needXP - totalXP;
 	}
 }

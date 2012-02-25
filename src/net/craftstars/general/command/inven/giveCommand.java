@@ -106,7 +106,6 @@ public class giveCommand extends CommandBase {
 		}
 		Map<Enchantment, Integer> enchantments = new HashMap<Enchantment, Integer>();
 		if(item.getId() != ItemID.EXP) {
-			// TODO: Validate that enchantments don't conflict with each other?
 			ItemData data = ItemData.enchanting(item.getMaterial());
 			for(String ench : enchArgs) {
 				String[] split = ench.split("=");
