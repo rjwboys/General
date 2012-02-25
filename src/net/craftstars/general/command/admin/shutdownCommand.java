@@ -42,6 +42,7 @@ public class shutdownCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String,Object> args) {
 		long delay = (Long)args.get("delay");
+		final boolean now = delay < 100 || Bukkit.getOnlinePlayers().length == 0;
 		final String message = (String)args.get("msg");
 		if(delay > 0) Messaging.broadcast(LanguageText.MISC_STOPPING_SOON.value("when", Time.formatDuration(delay),
 			"player", sender.getName()));
@@ -54,7 +55,7 @@ public class shutdownCommand extends CommandBase {
 					@Override public void run() {
 						Bukkit.shutdown();
 					}
-				}, 300);
+				}, now ? 0 : 300);
 			}
 		}, delay);
 		return true;
