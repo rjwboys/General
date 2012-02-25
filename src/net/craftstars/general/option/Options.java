@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public abstract class Options {
+public final class Options {
 	// Misc settings
 	public static Option<Boolean> AWAY_SLEEP = new OptionBoolean("away-sleep", true);
 	public static Option<Boolean> SHOW_USAGE = new OptionBoolean("show-usage-on-fail", true);
