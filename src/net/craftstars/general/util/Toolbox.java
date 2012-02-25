@@ -172,12 +172,18 @@ public final class Toolbox {
 		List<String> players = new ArrayList<String>();
 		
 		for(Player who : onlinePlayers) {
-			if(viewer != null && !viewer.canSee(who)) continue;
+			if(!canSee(viewer, who)) continue;
 			if(world == null || who.getWorld().equals(world))
 				players.add(who.getName());
 		}
 		
 		return players;
+	}
+
+	public static boolean canSee(Player viewer, Player viewee) {
+		if(viewer == null || viewee == null) return true;
+		if(!viewer.canSee(viewee)) return viewer.hasPermission("general.invisible-info");
+		return true;
 	}
 	
 	public static void showFile(CommandSender sender, Scanner f, boolean motd) {

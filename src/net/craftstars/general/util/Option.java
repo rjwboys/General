@@ -34,6 +34,7 @@ public abstract class Option<T> {
 	public static Option<Boolean> SHOW_COORDS = new OptionBoolean("playerlist.show-coords", true);
 	public static Option<Boolean> SHOW_IP = new OptionBoolean("playerlist.show-ip", false);
 	public static Option<Boolean> ALLOW_OVERRIDE = new OptionBoolean("playerlist.allow-all", false);
+	public static Option<Boolean> SHOW_INVISIBLE = new OptionBoolean("playerlist.show-invisible", false);
 	// Economy settings
 	public static Option<Boolean> NO_ECONOMY = new OptionBoolean("economy.disable", true);
 	public static Option<Integer> ECONOMY_ITEM = new OptionInteger("economy.item", -1);

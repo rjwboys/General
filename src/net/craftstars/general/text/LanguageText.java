@@ -43,6 +43,7 @@ public enum LanguageText {
 	GETPOS_WORLD("getpos.world", "{yellow} in '{white}{world}{yellow}'"),
 	GETPOS_POS("getpos.pos", "{yellow}Pos X: {white}{x}{yellow} Y: {white}{y}{yellow} Z: {white}{z}{yellow}"),
 	GETPOS_DIR("getpos.dir", "{yellow}Direction: {white}{direction}"),
+	GETPOS_INVISIBLE("getpos.invisible", "{yellow}Location unknown."),
 	// Messages relating to /online
 	ONLINE_ALL("online.all","{yellow}Online Players ({count}):"),
 	ONLINE_WORLD("online.world","{yellow}Online Players in world '{world}' ({count}):"),
@@ -362,6 +363,7 @@ public enum LanguageText {
 	LACK_KICK("permissions.kick", "kick players"),
 	LACK_BAN("permissions.ban", "ban players"),
 	LACK_PARDON("permissions.pardon", "pardon banned players"),
+	LACK_INVISIBLE("permissions.invisible-info", "see info for invisible players"),
 	LACK_STOP("permissions.stop", "stop the server"),
 	LACK_STOP_NOW("permissions.stop_now", "stop the server without a delay"),
 	// Cooldown-related messages

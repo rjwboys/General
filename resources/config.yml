@@ -25,6 +25,7 @@ playerlist:
   show-coords: false
   show-world: false
   show-ip: false
+  show-invisible: false
 
 # If true, show the message of the day on login.
 show-motd: true

@@ -290,8 +290,8 @@ permissions:
         description: Gives permission to stop the server without a grace delay.
         default: op
         children:
-      general.stop:
-        description: Gives permission to shut down the server.
+          general.stop:
+            description: Gives permission to shut down the server.
       general.pardon:
         description: Gives permission to pardon banned people on the server.
         default: op
@@ -300,6 +300,8 @@ permissions:
         children:
           general.no-money:
             description: Allows you to use things free of cost that normally require money.
+          general.invisible-info:
+            Description: Allows you to use info commands on invisible players.
           general.kit-now: true # Defined dynamically
           general.teleport.instant: true # Defined dynamically
           general.time.instant:

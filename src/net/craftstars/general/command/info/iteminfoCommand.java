@@ -85,6 +85,8 @@ public class iteminfoCommand extends CommandBase {
 		if(!sender.equals(inspected)) permission = "general.iteminfo.other";
 		if(!sender.hasPermission(permission))
 			return Messaging.lacksPermission(sender, permission);
+		if(sender instanceof Player && !Toolbox.canSee((Player)sender, inspected))
+			return Messaging.lacksPermission(sender, "general.invisible-info");
 		ItemStack item = (ItemStack)args.get("item");
 		Map<Enchantment, Integer> enchMap = item.getEnchantments();
 		StringBuilder ench = new StringBuilder();

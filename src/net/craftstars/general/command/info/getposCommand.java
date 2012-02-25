@@ -85,7 +85,10 @@ public class getposCommand extends CommandBase {
 		double compass = getCompass(whose);
 		String player = whose.getName();
 		General.logger.debug(command);
-		if(Toolbox.equalsOne(command, "dir", "direction")) {
+		if(sender instanceof Player && !Toolbox.canSee((Player)sender, whose)) {
+			Messaging.send(sender, LanguageText.GETPOS_INVISIBLE);
+			Messaging.lacksPermission(sender, "general.invisible-info");
+		} else if(Toolbox.equalsOne(command, "dir", "direction")) {
 			Messaging.send(sender, LanguageText.GETPOS_DIR.value("player", player,
 				"direction", this.getDirection(degrees)));
 		} else if(Toolbox.equalsOne(command, "brief", "pos", "where", "short")) {
@@ -95,7 +98,7 @@ public class getposCommand extends CommandBase {
 				msg += LanguageText.GETPOS_WORLD.value("world", whose.getWorld().getName());
 			Messaging.send(sender, msg);
 		} else if(Toolbox.equalsOne(command, "rotation", "rot", "facing")) {
-			Messaging.send(sender, LanguageText.GETPOS_ROTATION.value("player", player, 
+			Messaging.send(sender, LanguageText.GETPOS_ROTATION.value("player", player,
 				"yaw", whose.getLocation().getYaw(), "pitch", whose.getLocation().getPitch()));
 		} else if(Toolbox.equalsOne(command, "compass", "pointing")) {
 			Messaging.send(sender, LanguageText.GETPOS_COMPASS.value("player", player,
@@ -105,7 +108,7 @@ public class getposCommand extends CommandBase {
 				"y", whose.getLocation().getY(), "z", whose.getLocation().getZ());
 			if(Option.SHOW_WORLD.get())
 				msg += LanguageText.GETPOS_WORLD.value("world", whose.getWorld().getName());
-			msg += "\n" + LanguageText.GETPOS_ROTATION.value("player", player, 
+			msg += "\n" + LanguageText.GETPOS_ROTATION.value("player", player,
 				"yaw", whose.getLocation().getYaw(), "pitch", whose.getLocation().getPitch());
 			msg += "\n" + LanguageText.GETPOS_DIR.value("player", player,
 				"direction", this.getDirection(degrees));

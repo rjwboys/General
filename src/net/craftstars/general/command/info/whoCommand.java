@@ -189,6 +189,8 @@ public class whoCommand extends CommandBase {
 		CommandSender who = (CommandSender) args.get("who");
 		if(!who.equals(sender) && !sender.hasPermission("general.who"))
 			return Messaging.lacksPermission(sender, "general.who");
+		if(sender instanceof Player && who instanceof Player && !Toolbox.canSee((Player)sender, (Player)who))
+			return Messaging.lacksPermission(sender, "general.invisible-info");
 		@SuppressWarnings("unchecked")
 		Set<Property> mask = (Set<Property>) args.get("mask");
 		if(who instanceof Player) showInfo((Player) who, sender, mask);
