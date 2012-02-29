@@ -9,11 +9,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 
 import net.craftstars.general.General;
+import net.craftstars.general.items.Kit.Key;
 import net.craftstars.general.text.LanguageText;
 
 public final class Kits {
@@ -39,6 +42,8 @@ public final class Kits {
 			for(Object id : itemsNode) {
 				String itemName;
 				int amount = 1;
+				Map<Enchantment,Integer> ench = null;
+				Map<?,?> parseEnch = null;
 				if(id instanceof String)
 					itemName = (String) id;
 				else if(id instanceof Integer)
@@ -57,7 +62,9 @@ public final class Kits {
 						continue;
 					}
 					if(values[0] instanceof Integer) amount = (Integer) values[0];
-					else {
+					else if(values[0] instanceof Map) {
+						parseEnch = (Map<?,?>)values[0];
+					} else {
 						warnMalformed(key, id);
 						continue;
 					}
@@ -72,14 +79,49 @@ public final class Kits {
 					General.logger.warn(LanguageText.LOG_KIT_BAD_ITEM.value("kit", key, "item", id));
 					continue;
 				}
-				kit.add(item, amount);
+				if(parseEnch != null) {
+					ench = new HashMap<Enchantment,Integer>();
+					ItemData enchData = ItemData.enchanting(item.getMaterial());
+					for(Entry<?,?> oo : parseEnch.entrySet()) {
+						if(!(oo.getKey() instanceof String || oo.getKey() instanceof Integer)) {
+							warnMalformed(key, oo.getKey()); // TODO?
+							continue;
+						}
+						String enchName = String.valueOf(oo.getKey());
+						int enchID = enchData.fromName(enchName);
+						Enchantment magic = Enchantment.getById(enchID);
+						if(!enchData.validate(enchID)) {
+							General.logger.warn(LanguageText.LOG_KIT_BAD_ENCH.value("kit", key, "ench", enchName,
+								"item", id));
+							continue;
+						}
+						int power = 1;
+						if(oo.getValue() instanceof Integer) power = (Integer) oo.getValue();
+						else if(oo.getValue() != null) {
+							warnMalformed(key, oo.getValue()); // TODO?
+							continue;
+						}
+						if(power == 0) power = magic.getMaxLevel();
+						if(power > magic.getMaxLevel()) {
+							General.logger.warn(LanguageText.LOG_KIT_BAD_ENCH.value("kit", key, "ench", enchName,
+								"item", id));
+							continue;
+						}
+						ench.put(magic, power);
+					}
+				}
+				try {
+					kit.add(item, amount, ench);
+				} catch(IllegalArgumentException e) {
+					warnMalformed(key, id); // TODO?
+				}
 			}
 			kits.put(key, kit);
 		}
 	}
 
 	private static void warnMalformed(String kit, Object id) {
-		General.logger.warn(LanguageText.LOG_KIT_BAD.value("kit", kit, "item", id.toString()));
+		General.logger.warn(LanguageText.LOG_KIT_BAD.value("kit", kit, "item", String.valueOf(id)));
 	}
 	
 	public static void save() {
@@ -91,11 +133,17 @@ public final class Kits {
 			yaml.put("delay", kit.delay);
 			yaml.put("cost", kit.getCost());
 			ArrayList<Object> items = new ArrayList<Object>();
-			for(ItemID item : kit) {
-				String itemName = Items.getPersistentName(item);
-				if(kit.get(item) != 1)
-					items.add(Collections.singletonMap(itemName, kit.get(item)));
-				else items.add(itemName);
+			for(Key entry : kit.keySet()) {
+				String itemName = Items.getPersistentName(entry.item);
+				if(kit.get(entry) != 1)
+					items.add(Collections.singletonMap(itemName, kit.get(entry)));
+				else if(entry.ench != null) {
+					Map<String,Integer> enchantments = new HashMap<String,Integer>();
+					ItemData enchant = ItemData.enchanting(entry.item.getMaterial());
+					for(Entry<Enchantment,Integer> ench : entry.ench.entrySet())
+						enchantments.put(enchant.getName(ench.getKey().getId()), ench.getValue());
+					items.add(Collections.singletonMap(itemName, enchantments));
+				} else items.add(itemName);
 			}
 			yaml.put("items", items);
 			kitsYml.set(key, yaml);

@@ -4,8 +4,10 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 
 import net.craftstars.general.General;
 import net.craftstars.general.option.Options;
@@ -14,8 +16,8 @@ import net.craftstars.general.text.Messaging;
 import net.craftstars.general.util.EconomyManager;
 import net.craftstars.general.util.Toolbox;
 
-public class Kit implements Iterable<ItemID> {
-	private Map<ItemID, Integer> items;
+public class Kit implements Iterable<Kit.Entry> {
+	private Map<Key, Integer> items;
 	public int delay;
 	private double savedCost;
 	private String[] cost;
@@ -24,7 +26,7 @@ public class Kit implements Iterable<ItemID> {
 	@SuppressWarnings("hiding")
 	public Kit(String name, int delay, double cost) {
 		this.name = name;
-		this.items = new LinkedHashMap<ItemID, Integer>();
+		this.items = new LinkedHashMap<Key, Integer>();
 		this.delay = delay;
 		this.savedCost = cost;
 		calculateCost();
@@ -69,9 +71,17 @@ public class Kit implements Iterable<ItemID> {
 		if(Toolbox.equalsOne(method, "cumulative", "discount")) {
 			// Linked-list for constant-time add
 			LinkedList<String> econNodes = new LinkedList<String>();
-			for(ItemID item : items.keySet()) {
-				int quantity = items.get(item);
-				while(quantity-- > 0) econNodes.add("general.economy.give.item" + item.toString());
+			for(Key entry : items.keySet()) {
+				int quantity = items.get(entry);
+				while(quantity-- > 0) econNodes.add("general.economy.give.item" + entry.item.toString());
+				if(entry.ench != null) {
+					ItemData enchant = ItemData.enchanting(entry.item.getMaterial());
+					for(Enchantment ench : entry.ench.keySet()) {
+						quantity = items.get(entry);
+						while(quantity-- > 0)
+							econNodes.add("general.economy.give.enchant" + enchant.getName(ench.getId()).toString());
+					}
+				}
 			}
 			if(method.equalsIgnoreCase("discount"))
 				econNodes.add("%" + Options.KIT_DISCOUNT.get());
@@ -93,23 +103,105 @@ public class Kit implements Iterable<ItemID> {
 	}
 
 	@Override
-	public Iterator<ItemID> iterator() {
-		return items.keySet().iterator();
+	public Iterator<Entry> iterator() {
+		return new KitIterator();
 	}
 
-	public void add(ItemID item, int amount) {
+	public void add(ItemID item, int amount, Map<Enchantment,Integer> ench) {
+		Key key = new Key(item, ench);
 		int current = 0;
-		if(items.containsKey(item)) current = items.get(item);
+		if(items.containsKey(key)) current = items.get(key);
 		amount += current;
-		if(amount <= 0) items.remove(item);
-		else items.put(item, amount);
+		if(amount <= 0) items.remove(key);
+		else items.put(key, amount);
 	}
 
 	public int get(ItemID item) {
-		return items.get(item);
+		return get(new Key(item,null));
+	}
+
+	public int get(ItemID item, Map<Enchantment,Integer> enchantments) {
+		return get(new Key(item,enchantments));
+	}
+
+	public int get(Key entry) {
+		return items.get(entry);
 	}
 
 	public boolean contains(ItemID item) {
 		return items.containsKey(item);
+	}
+	
+	public Set<Key> keySet() {
+		return items.keySet();
+	}
+	
+	public class Entry implements Map.Entry<ItemID,Map<Enchantment,Integer>> {
+		ItemID key;
+		Map<Enchantment,Integer> val;
+		
+		public Entry(Key pair) {
+			key = pair.item;
+			val = pair.ench;
+		}
+
+		@Override
+		public ItemID getKey() {
+			return key;
+		}
+
+		@Override
+		public Map<Enchantment,Integer> getValue() {
+			return val;
+		}
+
+		@Override
+		public Map<Enchantment,Integer> setValue(Map<Enchantment,Integer> value) {
+			// TODO: Implement this!
+			throw new UnsupportedOperationException("Can't set kit item enchantments yet!");
+		}
+	}
+	
+	public class KitIterator implements Iterator<Entry> {
+		private Iterator<Map.Entry<Key,Integer>> iter = items.entrySet().iterator();
+		private Key current;
+		private int leftToDispense = 0;
+		@Override
+		public boolean hasNext() {
+			return leftToDispense > 0 || iter.hasNext();
+		}
+
+		@Override
+		public Entry next() {
+			if(leftToDispense > 0) leftToDispense--;
+			else {
+				Map.Entry<Key,Integer> next = iter.next();
+				leftToDispense = next.getValue();
+				current = next.getKey();
+			}
+			return new Entry(current);
+		}
+
+		@Override
+		public void remove() {
+			// TODO: Implement this!
+			throw new UnsupportedOperationException("Can't remove items from kits yet.");
+		}
+	}
+	
+	public class Key {
+		public ItemID item;
+		public Map<Enchantment,Integer> ench;
+		
+		@SuppressWarnings("hiding")
+		public Key(ItemID item, Map<Enchantment,Integer> ench) {
+			this.item = item;
+			this.ench = ench;
+		}
+
+		@Override
+		public int hashCode() {
+			return item.hashCode() + ench.hashCode();
+		}
 	}
 }

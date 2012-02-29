@@ -89,8 +89,8 @@ public class kitCommand extends CommandBase {
 	}
 	
 	private void getKit(Player sender, Kit kit) {
-		for(ItemID x : kit) {
-			Items.giveItem(sender, x, kit.get(x), null); // TODO: Account for enchantments
+		for(Kit.Entry x : kit) {
+			Items.giveItem(sender, x.getKey(), 1, x.getValue());
 		}
 		Messaging.send(sender, LanguageText.KIT_GIVE.value("kit", kit.getName()));
 	}

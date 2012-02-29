@@ -277,6 +277,8 @@ public enum LanguageText {
 		"'individual'"),
 	LOG_KIT_NO_ITEMS("log.kit.no-items", "Kit '{kit}' has no items and has been skipped."),
 	LOG_KIT_BAD_ITEM("log.kit.bad-item", "Kit '{kit}' has an invalid item '{item}' which has been skipped."),
+	LOG_KIT_BAD_ENCH("log.kit.bad-item", "Kit '{kit}' has an invalid enchantment '{ench}' which has been " +
+		"skipped on the item '{item}'."),
 	LOG_KIT_BAD("log.kit.error", "Kit '{kit}' has a malformed entry: \"{item}\""),
 	LOG_MOB_BAD("log.mob.error", "Mob ID {mob} has a malformed entry: \"{name}\""),
 	LOG_COMMAND_NO_ALIASES("log.cmd.no-aliases","No command aliases defined; did you forget to copy the aliases section " +
