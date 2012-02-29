@@ -149,6 +149,7 @@ names:
     data0: Stone Brick
     data1: Mossy Stone Brick
     data2: Crumbling Stone Brick
+    data3: Circle Stone Brick
     generic: Stone Brick
   item99:
     data0: Huge Brown Mushroom Interior
@@ -459,7 +460,7 @@ variants:
   item44:
     max: 5
   item98:
-    max: 2
+    max: 3
   item351:
     max: 15
   item373:
@@ -516,6 +517,7 @@ special:
     type0: [normal, regular, intact]
     type1: [mossy]
     type2: [cracked, crumbling]
+    type3: [circle]
   shroom:
     north: [north, n]
     south: [south, s]
