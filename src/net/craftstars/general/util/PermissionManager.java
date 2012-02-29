@@ -129,7 +129,6 @@ public class PermissionManager implements Listener {
 				Map<String, Boolean> instants = new HashMap<String,Boolean>();
 				for(Kit kit : Kits.all()) {
 					String perm = "general.kit." + kit.getName();
-					register(perm, "Gives access to the '" + kit.getName() + "' kit.");
 					allKits.put(perm, true);
 					Map<String,Boolean> instant = new HashMap<String,Boolean>();
 					String instantPerm = perm + ".instant";
