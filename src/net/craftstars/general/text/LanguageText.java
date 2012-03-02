@@ -88,6 +88,7 @@ public enum LanguageText {
 	CLEAR_QUICKBAR("clear.quick-bar", "quick-bar"),
 	CLEAR_PACK("clear.pack", "pack"),
 	CLEAR_ARMOUR("clear.armour", "armour"),
+	CLEAR_XP("clear.xp", "experience"),
 	CLEAR_EXCEPTARMOUR("clear.inventory", "inventory"),
 	// Messages relating to /give
 	GIVE_BAD_AMOUNT("give.error.amount", "{rose}The amount must be an integer."),

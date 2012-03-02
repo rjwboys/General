@@ -21,7 +21,12 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class clearCommand extends CommandBase {
 	private enum CleanType {
-		FULL("inventory"), QUICKBAR("quick-bar"), PACK("pack"), ARMOUR("armour"), EXCEPTARMOUR("inventory");
+		FULL("inventory"),
+		QUICKBAR("quick-bar"),
+		PACK("pack"),
+		ARMOUR("armour"),
+		EXCEPTARMOUR("inventory"),
+		EXPERIENCE("xp");
 		private String name;
 		
 		private CleanType(String nm) {
@@ -43,6 +48,8 @@ public class clearCommand extends CommandBase {
 				return CleanType.ARMOUR;
 			} else if(Toolbox.equalsOne(name, "all", "full")) {
 				return CleanType.FULL;
+			} else if(Toolbox.equalsOne(name, "xp", "exp", "experience", "lvl" ,"level")) {
+				return CleanType.EXPERIENCE;
 			}
 			return null;
 		}
@@ -141,6 +148,9 @@ public class clearCommand extends CommandBase {
 				if(i.getItem(j) != null) revenue += EconomyManager.sellItem(new ItemID(i.getItem(j)), i.getItem(j).getAmount());
 			clearPack(i);
 		break;
+		case EXPERIENCE:
+			if(sell) revenue += EconomyManager.sellItem(ItemID.experience(), who.getTotalExperience());
+			Toolbox.resetExperience(who);
 		}
 		String inven = howMuch.getName();
 		if(selfClear) {
