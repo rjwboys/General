@@ -81,7 +81,7 @@
 			dest="${lib}/economy/MultiCurrency.jar" usetimestamp="true"/>
 		<!-- Other dependencies -->
 		<get src="http://taylorkelly.me/plugins/Help/Help.jar" dest="${lib}" usetimestamp="true"/>
-		<get src="http://dev.bukkit.org/media/files/577/194/CraftIRC.jar" dest="${lib}" usetimestamp="true"/>
+		<get src="http://ci.kitteh.org/job/CraftIRC3/14/artifact/target/CraftIRC.jar" dest="${lib}" usetimestamp="true"/>
 		<get src="http://cfapi.lukegb.com/dl/bookworm/" dest="${lib}/BookWorm.jar" usetimestamp="true"/>
 	</target>
 	
