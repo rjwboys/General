@@ -26,7 +26,8 @@ public class clearCommand extends CommandBase {
 		PACK("pack"),
 		ARMOUR("armour"),
 		EXCEPTARMOUR("inventory"),
-		EXPERIENCE("xp");
+		EXPERIENCE("xp"),
+		CHAT("chat");
 		private String name;
 		
 		private CleanType(String nm) {
@@ -50,6 +51,8 @@ public class clearCommand extends CommandBase {
 				return CleanType.FULL;
 			} else if(Toolbox.equalsOne(name, "xp", "exp", "experience", "lvl" ,"level")) {
 				return CleanType.EXPERIENCE;
+			} else if(name.equalsIgnoreCase("chat")) {
+				return CleanType.CHAT;
 			}
 			return null;
 		}
@@ -126,6 +129,10 @@ public class clearCommand extends CommandBase {
 		sell = sell && selfClear;
 		PlayerInventory i = who.getInventory();
 		switch(howMuch) {
+		case CHAT:
+			int n = 20;
+			while(n-- > 0) who.sendMessage("");
+			return true;
 		case FULL:
 		case EXCEPTARMOUR:
 			if(sell) for(ItemStack item : i.getContents())

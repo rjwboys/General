@@ -90,6 +90,7 @@ public enum LanguageText {
 	CLEAR_ARMOUR("clear.armour", "armour"),
 	CLEAR_XP("clear.xp", "experience"),
 	CLEAR_EXCEPTARMOUR("clear.inventory", "inventory"),
+	CLEAR_CHAT("clear.chat", "chat"),
 	// Messages relating to /give
 	GIVE_BAD_AMOUNT("give.error.amount", "{rose}The amount must be an integer."),
 	GIVE_BAD_ENCH("give.error.enchant.bad", "{white}{ench}{rose} is not a valid enchantment."),
