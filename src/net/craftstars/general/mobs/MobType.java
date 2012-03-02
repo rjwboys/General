@@ -23,37 +23,37 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 
 public enum MobType {
-	BLAZE(NoData.class, MobAlignment.ENEMY, CreatureType.BLAZE, 61),
-	CAVE_SPIDER(NoData.class, MobAlignment.ENEMY, CreatureType.CAVE_SPIDER, 59),
-	CHICKEN(AnimalData.class, MobAlignment.FRIENDLY, CreatureType.CHICKEN, 93),
-	COW(AnimalData.class, MobAlignment.FRIENDLY, CreatureType.COW, 92),
-	CREEPER(CreeperState.class, MobAlignment.ENEMY, CreatureType.CREEPER, 50),
-	ENDER_DRAGON(NoData.class, MobAlignment.ENEMY, CreatureType.ENDER_DRAGON, 63),
-	ENDERMAN(EnderBlock.class, MobAlignment.NEUTRAL, CreatureType.ENDERMAN, 58),
-	GHAST(NoData.class, MobAlignment.ENEMY, CreatureType.GHAST, 56),
-	GIANT_ZOMBIE(NoData.class, MobAlignment.ENEMY, CreatureType.GIANT, 53),
-	MAGMA_CUBE(SlimeSize.class, MobAlignment.ENEMY, CreatureType.MAGMA_CUBE, 62),
-	MUSHROOM_COW(AnimalData.class, MobAlignment.FRIENDLY, CreatureType.MUSHROOM_COW, 96),
-	PIG(PigState.class, MobAlignment.FRIENDLY, CreatureType.PIG, 90),
-	PIG_ZOMBIE(PigZombieAttitude.class, MobAlignment.NEUTRAL, CreatureType.PIG_ZOMBIE, 57),
-	SHEEP(SheepState.class, MobAlignment.FRIENDLY, CreatureType.SHEEP, 91),
-	SILVERFISH(NoData.class, MobAlignment.ENEMY, CreatureType.SILVERFISH, 60),
-	SKELETON(NoData.class, MobAlignment.ENEMY, CreatureType.SKELETON, 51),
-	SLIME(SlimeSize.class, MobAlignment.ENEMY, CreatureType.SLIME, 55),
-	SNOWMAN(NoData.class, MobAlignment.FRIENDLY, CreatureType.SNOWMAN, 97),
-	SPIDER(NoData.class, MobAlignment.ENEMY, CreatureType.SPIDER, 52),
-	SQUID(NoData.class, MobAlignment.FRIENDLY, CreatureType.SQUID, 94),
-	VILLAGER(VillagerRole.class, MobAlignment.FRIENDLY, CreatureType.VILLAGER, 120),
-	WOLF(WolfAttitude.class, MobAlignment.NEUTRAL, CreatureType.WOLF, 95),
-	ZOMBIE(NoData.class, MobAlignment.ENEMY, CreatureType.ZOMBIE, 54);
+	BLAZE(NoData.class, MobAlignment.ENEMY, EntityType.BLAZE, 61),
+	CAVE_SPIDER(NoData.class, MobAlignment.ENEMY, EntityType.CAVE_SPIDER, 59),
+	CHICKEN(AnimalData.class, MobAlignment.FRIENDLY, EntityType.CHICKEN, 93),
+	COW(AnimalData.class, MobAlignment.FRIENDLY, EntityType.COW, 92),
+	CREEPER(CreeperState.class, MobAlignment.ENEMY, EntityType.CREEPER, 50),
+	ENDER_DRAGON(NoData.class, MobAlignment.ENEMY, EntityType.ENDER_DRAGON, 63),
+	ENDERMAN(EnderBlock.class, MobAlignment.NEUTRAL, EntityType.ENDERMAN, 58),
+	GHAST(NoData.class, MobAlignment.ENEMY, EntityType.GHAST, 56),
+	GIANT_ZOMBIE(NoData.class, MobAlignment.ENEMY, EntityType.GIANT, 53),
+	MAGMA_CUBE(SlimeSize.class, MobAlignment.ENEMY, EntityType.MAGMA_CUBE, 62),
+	MUSHROOM_COW(AnimalData.class, MobAlignment.FRIENDLY, EntityType.MUSHROOM_COW, 96),
+	PIG(PigState.class, MobAlignment.FRIENDLY, EntityType.PIG, 90),
+	PIG_ZOMBIE(PigZombieAttitude.class, MobAlignment.NEUTRAL, EntityType.PIG_ZOMBIE, 57),
+	SHEEP(SheepState.class, MobAlignment.FRIENDLY, EntityType.SHEEP, 91),
+	SILVERFISH(NoData.class, MobAlignment.ENEMY, EntityType.SILVERFISH, 60),
+	SKELETON(NoData.class, MobAlignment.ENEMY, EntityType.SKELETON, 51),
+	SLIME(SlimeSize.class, MobAlignment.ENEMY, EntityType.SLIME, 55),
+	SNOWMAN(NoData.class, MobAlignment.FRIENDLY, EntityType.SNOWMAN, 97),
+	SPIDER(NoData.class, MobAlignment.ENEMY, EntityType.SPIDER, 52),
+	SQUID(NoData.class, MobAlignment.FRIENDLY, EntityType.SQUID, 94),
+	VILLAGER(VillagerRole.class, MobAlignment.FRIENDLY, EntityType.VILLAGER, 120),
+	WOLF(WolfAttitude.class, MobAlignment.NEUTRAL, EntityType.WOLF, 95),
+	ZOMBIE(NoData.class, MobAlignment.ENEMY, EntityType.ZOMBIE, 54);
 	private MobAlignment alignment;
-	private CreatureType ctype;
+	private EntityType ctype;
 	private String[] aliases;
 	private int id;
 	private String singular, plural;
 	private static HashMap<String, MobType> namesToEnumMapping = new HashMap<String, MobType>();
 	private static HashMap<Integer, MobType> idToEnumMapping = new HashMap<Integer, MobType>();
-	private static EnumMap<CreatureType, MobType> ctToEnumMapping = new EnumMap<CreatureType, MobType>(CreatureType.class);
+	private static EnumMap<EntityType, MobType> ctToEnumMapping = new EnumMap<EntityType, MobType>(EntityType.class);
 	private Class<? extends MobData> data;
 	private static FileConfiguration yml;
 	private static File configFile;
@@ -71,7 +71,7 @@ public enum MobType {
 		namesToEnumMapping.clear();
 		for(MobType mob : values()) {
 			namesToEnumMapping.put(mob.name().toLowerCase(), mob);
-			List<Object> names = yml.getList("mobs.mob" + mob.id);
+			List<?> names = yml.getList("mobs.mob" + mob.id);
 			if(names == null) continue;
 			boolean gotBase = false;
 			ArrayList<String> aliases = new ArrayList<String>();
@@ -134,7 +134,7 @@ public enum MobType {
 		General.logger.warn(LanguageText.LOG_MOB_BAD.value("mob", id, "name", mob.toString()));
 	}
 	
-	private MobType(Class<? extends MobData> clz, MobAlignment align, CreatureType type, int cboxId) {
+	private MobType(Class<? extends MobData> clz, MobAlignment align, EntityType type, int cboxId) {
 		this.data = clz;
 		this.alignment = align;
 		this.ctype = type;
@@ -166,12 +166,12 @@ public enum MobType {
 		return idToEnumMapping.get(id);
 	}
 	
-	public static MobType fromBukkitType(CreatureType type) {
+	public static MobType fromBukkitType(EntityType type) {
 		return ctToEnumMapping.get(type);
 	}
 	
 	public static MobType fromEntity(LivingEntity entity) {
-		return fromBukkitType(getCreatureType(entity));
+		return fromBukkitType(entity.getType());
 	}
 	
 	public static MobType getMob(String string) {
@@ -269,27 +269,6 @@ public enum MobType {
 		List<String> list = yml.getStringList(node);
 		if(list == null) return new String[]{dflt};
 		return list.toArray(new String[0]);
-	}
-	
-	private static CreatureType getCreatureType(LivingEntity entity) {
-		if(entity instanceof Pig) return CreatureType.PIG;
-		else if(entity instanceof Sheep) return CreatureType.SHEEP;
-		else if(entity instanceof Cow) return CreatureType.COW;
-		else if(entity instanceof Chicken) return CreatureType.CHICKEN;
-		else if(entity instanceof Creeper) return CreatureType.CREEPER;
-		else if(entity instanceof Wolf) return CreatureType.WOLF;
-		else if(entity instanceof Squid) return CreatureType.SQUID;
-		else if(entity instanceof Skeleton) return CreatureType.SKELETON;
-		else if(entity instanceof Slime) return CreatureType.SLIME;
-		else if(entity instanceof CaveSpider) return CreatureType.CAVE_SPIDER;
-		else if(entity instanceof Spider) return CreatureType.SPIDER;
-		else if(entity instanceof Ghast) return CreatureType.GHAST;
-		else if(entity instanceof Giant) return CreatureType.GIANT;
-		else if(entity instanceof PigZombie) return CreatureType.PIG_ZOMBIE;
-		else if(entity instanceof Zombie) return CreatureType.ZOMBIE;
-		else if(entity instanceof Enderman) return CreatureType.ENDERMAN;
-		else if(entity instanceof Silverfish) return CreatureType.SILVERFISH;
-		return null;
 	}
 
 	public static List<MobType> byAlignment(MobAlignment align) {

@@ -23,7 +23,7 @@
 	<property name="MultiCurrency" value="economy/MultiCurrency.jar"/>
 	<property name="EconXP" value="economy/EconXP.jar"/>
 	<property name="BookWorm" value="BookWorm.jar"/>
-	<property name="CraftIRC" value="CraftIRC.jar"/>
+	<property name="CraftIRC" value="irc/CraftIRC.jar"/>
 	
 	<loadfile srcFile="${rsrc}/plugin.yml" property="version">
 		<filterchain>

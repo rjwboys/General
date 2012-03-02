@@ -43,7 +43,7 @@ public final class CommandManager {
 		PluginDescriptionFile plug = General.plugin.getDescription();
 		try {
 			@SuppressWarnings({"unchecked", "rawtypes"})
-			Map<String,Map> commands = (Map<String, Map>) plug.getCommands();
+			Map<String,Map<String,Object>> commands = (Map<String,Map<String,Object>>) plug.getCommands();
 			for(String key : commands.keySet()) {
 				PluginCommand generalCommand = General.plugin.getCommand(key);
 				//General.logger.debug("Registering aliases for command: " + key);
@@ -82,8 +82,7 @@ public final class CommandManager {
 				} catch(NoSuchMethodException e) {
 					General.logger.error(LanguageText.LOG_COMMAND_REG_ERROR.value("command", generalCommand.getName()),e);
 				}
-				@SuppressWarnings("unchecked")
-				List<String> aliases = config.getList("aliases." + key, null);
+				List<String> aliases = config.getStringList("aliases." + key);
 				if(aliases == null) {
 					//General.logger.warn("No aliases defined for " + key + " command; skipping.");
 					continue;
