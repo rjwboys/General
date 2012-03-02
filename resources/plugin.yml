@@ -3,7 +3,7 @@ main: net.craftstars.general.General
 authors:
   - Celtic Minstrel
   - Plutonium239
-version: 4.1
+version: 4.2
 softdepend:
   - BOSEconomy
   - iConomy
@@ -286,7 +286,7 @@ permissions:
       general.ban:
         description: Gives permission to ban people from the server.
         default: op
-      general.stop.now
+      general.stop.now:
         description: Gives permission to stop the server without a grace delay.
         default: op
         children:
