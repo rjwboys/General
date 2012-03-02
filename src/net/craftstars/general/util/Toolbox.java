@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import net.craftstars.general.General;
 import net.craftstars.general.text.LanguageText;
@@ -110,6 +111,14 @@ public final class Toolbox {
 		StringBuilder tst = new StringBuilder();
 		for(int j = 0; j < i; j++) {
 			tst.append(c);
+		}
+		return tst.toString();
+	}
+	
+	public static String repeat(String str, int i) {
+		StringBuilder tst = new StringBuilder();
+		for(int j = 0; j < i; j++) {
+			tst.append(str);
 		}
 		return tst.toString();
 	}
@@ -309,5 +318,11 @@ public final class Toolbox {
 		who.setExp(0);
 		who.setTotalExperience(0);
 		who.setLevel(0);
+	}
+	
+	private static final Pattern ipv4 = Pattern.compile(repeat("\\.\\d{1,3}", 4).substring(2));
+	private static final Pattern ipv6 = Pattern.compile(repeat(":[0-9a-fA-F]{1,3}", 8).substring(1));
+	public static boolean isIP(String name) {
+		return ipv4.matcher(name).matches() || ipv6.matcher(name).matches();
 	}
 }

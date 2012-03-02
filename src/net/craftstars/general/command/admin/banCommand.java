@@ -1,7 +1,7 @@
 package net.craftstars.general.command.admin;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,8 +27,13 @@ public class banCommand extends CommandBase {
 	public Map<String,Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
 		if(args.length < 1) return null;
 		List<OfflinePlayer> players = new ArrayList<OfflinePlayer>();
+		List<String> ips = new ArrayList<String>();
 		boolean missing = false;
 		for(String name : args) {
+			if(Toolbox.isIP(name)) {
+				ips.add(name);
+				continue;
+			}
 			OfflinePlayer player = Toolbox.matchPlayer(name);
 			if(player == null) {
 				Messaging.invalidPlayer(sender, name);
@@ -38,7 +43,10 @@ public class banCommand extends CommandBase {
 			players.add(player);
 		}
 		if(missing) Messaging.send(sender, LanguageText.MISC_BAN_ANYWAY);
-		return Collections.singletonMap("players", (Object)players);
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("ips", ips);
+		params.put("players", players);
+		return params;
 	}
 	
 	@Override
@@ -54,6 +62,12 @@ public class banCommand extends CommandBase {
 				online.kickPlayer(Options.BAN_KICK.get());
 			}
 			Messaging.send(sender, LanguageText.MISC_BANNED.value("player", player.getName()));
+		}
+		@SuppressWarnings("unchecked")
+		List<String> ips = (List<String>)args.get("ips");
+		for(String ip : ips) {
+			Bukkit.banIP(ip);
+			Messaging.send(sender, LanguageText.MISC_BANNED.value("player", ip));
 		}
 		return true;
 	}
