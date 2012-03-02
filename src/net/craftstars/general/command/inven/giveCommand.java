@@ -156,7 +156,7 @@ public class giveCommand extends CommandBase {
 		// Make sure this player is allowed this particular item
 		if(!item.canGive(sender)) return true;
 		// Make sure the player has enough money for this item
-		if(!EconomyManager.canPay(sender, amount, "economy.give.item" + item.toString())) return true;
+		if(!EconomyManager.canPay(sender, amount, "economy.give.item" + item.econName())) return true;
 		@SuppressWarnings("unchecked")
 		Map<Enchantment, Integer> enchantments = (Map<Enchantment,Integer>)args.get("ench");
 		

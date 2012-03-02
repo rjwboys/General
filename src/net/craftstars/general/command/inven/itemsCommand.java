@@ -36,7 +36,7 @@ public class itemsCommand extends CommandBase {
 		ArrayList<String> bad = (ArrayList<String>)args.get("bad");
 		for(ItemID item : items) {
 			if(!item.canGive(sender)) continue;
-			if(!EconomyManager.canPay(sender, 1, "economy.give.item" + item.getMaterial().toString())) continue;
+			if(!EconomyManager.canPay(sender, 1, "economy.give.item" + item.econName())) continue;
 			display.add(item.getName(null));
 			Items.giveItem(toWhom, item, item.getId() == ItemID.EXP ? Toolbox.toNextLevel(toWhom) : 1, null);
 		}

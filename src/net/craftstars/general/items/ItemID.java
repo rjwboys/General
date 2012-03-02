@@ -212,4 +212,8 @@ public class ItemID implements Cloneable, Comparable<ItemID> {
 	public ItemData getDataType() {
 		return dataType;
 	}
+
+	public String econName() {
+		return toString().split("/")[0];
+	}
 }
