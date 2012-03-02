@@ -1,7 +1,6 @@
 
 package net.craftstars.general.command.info;
 
-
 import static java.lang.Math.rint;
 
 import java.util.EnumSet;
@@ -152,27 +151,29 @@ public class whoCommand extends CommandBase {
 
 	@Override
 	public Map<String, Object> parse(CommandSender sender, Command command, String label, String[] args, boolean isPlayer) {
-		if(args.length > 1) return null;
 		HashMap<String, Object> params = new HashMap<String,Object>();
 		if(label.equalsIgnoreCase("whoami") || args.length == 0) {
 			Set<Property> mask = EnumSet.noneOf(Property.class);
-			if(args.length == 1) {
-				if(Toolbox.equalsOne(args[0], "all", "uname", "name", "username")) mask.add(UNAME);
-				if(Toolbox.equalsOne(args[0], "all", "dname", "name", "displayname", "nick", "nickname")) mask.add(DNAME);
-				if(Toolbox.equalsOne(args[0], "all", "health", "hp", "version")) mask.add(HEALTH);
-				if(Toolbox.equalsOne(args[0], "all", "loc", "location", "pos", "position", "coords")) mask.add(LOC);
-				if(Toolbox.equalsOne(args[0], "all", "home", "spawn", "bed")) mask.add(HOME);
-				if(Toolbox.equalsOne(args[0], "all", "world", "worldname")) mask.add(WORLD);
-				if(Toolbox.equalsOne(args[0], "all", "ip", "address")) mask.add(IP);
-				if(Toolbox.equalsOne(args[0], "all", "status", "away")) mask.add(STATUS);
-				if(Toolbox.equalsOne(args[0], "all", "xp", "exp", "experience", "lvl", "level")) mask.add(LEVEL);
-				if(Toolbox.equalsOne(args[0], "all", "hunger", "food")) mask.add(HUNGER);
-			} else mask = defaultMask;
+			if(args.length == 0) mask = defaultMask;
+			else for(String arg : args) {
+				if(arg.equalsIgnoreCase("all")) mask.add(TITLE);
+				if(Toolbox.equalsOne(arg, "notitle", "bare")) mask.remove(TITLE);
+				if(Toolbox.equalsOne(arg, "all", "uname", "name", "username")) mask.add(UNAME);
+				if(Toolbox.equalsOne(arg, "all", "dname", "name", "displayname", "nick", "nickname")) mask.add(DNAME);
+				if(Toolbox.equalsOne(arg, "all", "health", "hp", "version")) mask.add(HEALTH);
+				if(Toolbox.equalsOne(arg, "all", "loc", "location", "pos", "position", "coords")) mask.add(LOC);
+				if(Toolbox.equalsOne(arg, "all", "home", "spawn", "bed")) mask.add(HOME);
+				if(Toolbox.equalsOne(arg, "all", "world", "worldname")) mask.add(WORLD);
+				if(Toolbox.equalsOne(arg, "all", "ip", "address")) mask.add(IP);
+				if(Toolbox.equalsOne(arg, "all", "status", "away")) mask.add(STATUS);
+				if(Toolbox.equalsOne(arg, "all", "xp", "exp", "experience", "lvl", "level")) mask.add(LEVEL);
+				if(Toolbox.equalsOne(arg, "all", "hunger", "food")) mask.add(HUNGER);
+			}
 			// If they're not allowed to override, mask out disabled values
 			if(!Options.ALLOW_OVERRIDE.get()) mask.retainAll(defaultMask);
 			params.put("mask", mask);
 			params.put("who", sender);
-		} else {
+		} else if(args.length == 1) {
 			Player who = Toolbox.matchPlayer(args[0]);
 			if(who == null) {
 				Messaging.invalidPlayer(sender, args[0]);
@@ -180,7 +181,7 @@ public class whoCommand extends CommandBase {
 			}
 			params.put("mask", defaultMask);
 			params.put("who", who);
-		}
+		} else return null;
 		return params;
 	}
 
