@@ -111,6 +111,7 @@ public enum LanguageText {
 	ITEMS_JOINER("give.items.join", "{green}, {white}"),
 	// Messages relating to /kit
 	KIT_INVALID("kit.invalid", "{rose}Kit by the name of {yellow}{kit}{rose} does not exist!"),
+	KIT_NONE("kit.none", "{yellow}No kits found!"),
 	KIT_LIST("kit.list", "{yellow}Kits available: "),
 	KIT_COOLDOWN("kit.cooldown", "{rose}You may not get this again kit so soon! Try again in " +
 		"{yellow}{time}{rose} seconds."),

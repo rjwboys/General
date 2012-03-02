@@ -18,6 +18,7 @@ import net.craftstars.general.General;
 import net.craftstars.general.items.ItemID;
 import net.craftstars.general.items.Items;
 import net.craftstars.general.items.Kit;
+import net.craftstars.general.items.Kit.Entry;
 import net.craftstars.general.items.Kits;
 import net.craftstars.general.mobs.InvalidMobException;
 import net.craftstars.general.mobs.MobData;
@@ -201,7 +202,7 @@ public class generalCommand extends CommandBase {
 				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT);
 				return true;
 			}
-			kit.add(item, amount);
+			kit.add(item, amount, null);
 			Messaging.send(sender, LanguageText.KIT_NEW.value("amount", amount, "item", item.getName(null), "kit", kitName));
 			return true;
 		} else if(args[1].equalsIgnoreCase("remove")) {
@@ -219,7 +220,7 @@ public class generalCommand extends CommandBase {
 				Messaging.send(sender, LanguageText.GIVE_BAD_AMOUNT);
 				return true;
 			}
-			kit.add(item, -amount);
+			kit.add(item, -amount, null);
 			if(!kit.contains(item)) amount = 0;
 			Messaging.send(sender, LanguageText.KIT_REMOVE.value("kit",kitName,"item",item.getName(null),"amount",amount));
 			return true;
@@ -258,7 +259,7 @@ public class generalCommand extends CommandBase {
 		} else if(args[1].equalsIgnoreCase("list")) {
 			Kit kit = Kits.get(kitName);
 			ArrayList<String> names = new ArrayList<String>();
-			for(ItemID item : kit) names.add(kit.get(item) + "x " + item.getName(null));
+			for(Entry entry : kit) names.add(kit.get(entry.getKey()) + "x " + entry.getKey().getName(null));
 			String items = Toolbox.join(names.toArray(new String[0]), LanguageText.ITEMS_JOINER.value());
 			Messaging.send(sender, LanguageText.KIT_CONTAINS.value("kit", kitName, "items", items));
 			Messaging.send(sender, LanguageText.KIT_INFO.value("kit",kitName,"delay",kit.delay,"cost",kit.getCost()));

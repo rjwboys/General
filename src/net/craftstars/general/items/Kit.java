@@ -173,12 +173,13 @@ public class Kit implements Iterable<Kit.Entry> {
 
 		@Override
 		public Entry next() {
-			if(leftToDispense > 0) leftToDispense--;
-			else {
+			if(leftToDispense <= 0) {
 				Map.Entry<Key,Integer> next = iter.next();
+				General.logger.debug("Kit amount: " + next.getValue());
 				leftToDispense = next.getValue();
 				current = next.getKey();
 			}
+			leftToDispense--;
 			return new Entry(current);
 		}
 
@@ -201,7 +202,7 @@ public class Kit implements Iterable<Kit.Entry> {
 
 		@Override
 		public int hashCode() {
-			return item.hashCode() + ench.hashCode();
+			return item.hashCode() + (ench == null ? 0 : ench.hashCode());
 		}
 	}
 }

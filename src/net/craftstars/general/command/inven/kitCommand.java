@@ -60,16 +60,18 @@ public class kitCommand extends CommandBase {
 	@Override
 	public boolean execute(CommandSender sender, String command, Map<String, Object> args) {
 		if(command.equals("listkits")) {
+			if(!sender.hasPermission("general.kit"))
+				return Messaging.lacksPermission(sender, "general.kit");
 			String msg = LanguageText.KIT_LIST.value();
 			boolean foundKit = false;
 			for(Kit thisKit : Kits.all()) {
 				if(thisKit.canGet(sender)) {
-					msg += thisKit + " ";
+					msg += thisKit.getName() + " ";
 					foundKit = true;
 				}
 			}
 			if(foundKit) Messaging.send(sender, msg);
-			else return Messaging.lacksPermission(sender, "general.kit");
+			else Messaging.send(sender, LanguageText.KIT_NONE);
 		} else {
 			Player who = (Player) args.get("player");
 			Kit kit = (Kit) args.get("kit");
