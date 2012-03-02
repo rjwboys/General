@@ -2,6 +2,7 @@ package net.craftstars.general.command.inven;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -61,13 +62,18 @@ public class modeCommand extends CommandBase {
 			}
 			if(!isPlayer) return null;
 			setCommand("set");
-			params.put("who", sender);
+			params.put("who", Collections.singletonList(sender));
+			params.put("world", false);
 			params.put("mode", mode);
 			break;
 		case 2: // /mode <player> <mode>
 			try {
-				mode = GameMode.getByValue(Integer.parseInt(args[0]));
-				if(mode == null) mode = Toolbox.enumValue(GameMode.class, args[1].toUpperCase());
+				try {
+					mode = GameMode.getByValue(Integer.parseInt(args[1]));
+				} catch(NumberFormatException e) {
+					mode = null;
+				}
+				if(mode == null) mode = GameMode.valueOf(args[1].toUpperCase());
 				params.put("world", false);
 				Player player = Toolbox.matchPlayer(args[0]);
 				if(player == null) {
@@ -86,8 +92,7 @@ public class modeCommand extends CommandBase {
 				} else params.put("who", Collections.singletonList(player));
 				setCommand("set");
 				params.put("mode", mode);
-			} catch(RuntimeException e) {
-				if(!(e instanceof IllegalArgumentException || e instanceof NumberFormatException)) throw e;
+			} catch(IllegalArgumentException e) {
 				Messaging.send(sender, LanguageText.MISC_BAD_MODE);
 				return null;
 			}
@@ -108,7 +113,7 @@ public class modeCommand extends CommandBase {
 			Messaging.send(sender, LanguageText.MISC_IN_MODE.value("player", who.getDisplayName(), "mode", modeName));
 		} else if(command.equals("set")) {
 			@SuppressWarnings("unchecked")
-			List<Player> players = (List<Player>)args.get("who");
+			Collection<Player> players = (Collection<Player>)args.get("who");
 			boolean world = (Boolean)args.get("world");
 			for(Player who : players) {
 				if(world) {
