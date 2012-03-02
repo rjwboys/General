@@ -84,7 +84,6 @@ public class getposCommand extends CommandBase {
 		double degrees = getRotation(whose);
 		double compass = getCompass(whose);
 		String player = whose.getName();
-		General.logger.debug(command);
 		if(sender instanceof Player && !Toolbox.canSee((Player)sender, whose)) {
 			Messaging.send(sender, LanguageText.GETPOS_INVISIBLE);
 			Messaging.lacksPermission(sender, "general.invisible-info");
@@ -126,7 +125,7 @@ public class getposCommand extends CommandBase {
 	
 	private double getCompass(Player whose) {
 		Location player = whose.getLocation(), compass = whose.getCompassTarget();
-		Location northOfPlayer = player.add(-5, 0, 0);
+		Location northOfPlayer = player.clone().add(-5, 0, 0);
 		// c^2 = a^2 + b^2 + 2ab*cosC
 		// cosC = (c^2 - a^2 - b^2) / 2ab
 		double a = player.distance(northOfPlayer);
