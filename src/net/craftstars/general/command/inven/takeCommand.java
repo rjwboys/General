@@ -1,6 +1,8 @@
 
 package net.craftstars.general.command.inven;
 
+import static java.lang.Math.min;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -120,6 +122,12 @@ public class takeCommand extends CommandBase {
 		if(inHand) {
 			removed = who.getItemInHand().getAmount();
 			who.setItemInHand(null);
+		} else if(item.getId() == ItemID.EXP) {
+			int currentXP = who.getTotalExperience();
+			removed = amount == 0 ? currentXP : min(amount, currentXP);
+			int newXP = currentXP - removed;
+			Toolbox.resetExperience(who);
+			who.giveExp(newXP);
 		} else {
 			Map<Integer, ? extends ItemStack> items = i.all(item.getId());
 			for(int x : items.keySet()) {

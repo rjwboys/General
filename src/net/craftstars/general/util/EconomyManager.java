@@ -80,7 +80,7 @@ public class EconomyManager {
 
 	public static double sellItem(ItemID item, int amount) {
 		if(Options.NO_ECONOMY.get()) return 0;
-		String node = "economy.give.item" + item.toString();
+		String node = "economy.give.item" + item.econName();
 		double percent = Options.ECONOMY_SELL.get() / 100.0;
 		return Options.ECONOMY_COST(node).get() * amount * percent;
 	}

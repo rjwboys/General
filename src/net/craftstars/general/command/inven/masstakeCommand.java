@@ -3,6 +3,8 @@ package net.craftstars.general.command.inven;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 
 import net.craftstars.general.command.CommandBase;
@@ -93,15 +95,28 @@ public class masstakeCommand extends CommandBase {
 		for(int j = 0; j < invenItems.length; j++) {
 			if(invenItems[j] == null) continue;
 			int d = invenItems[j].getDurability();
-			for(ItemID id : items)
+			for(Iterator<ItemID> iter = items.iterator(); iter.hasNext(); ) {
+				ItemID id = iter.next();
 				if(id.getId() == invenItems[j].getTypeId() && Items.dataEquiv(id, d)) {
 					int amount = i.getItem(j).getAmount();
 					removed += amount;
 					if(sell) revenue += EconomyManager.sellItem(id, amount);
 					i.setItem(j, null);
+					iter.remove();
 				}
+			}
 		}
-		ArrayList<String> display = new ArrayList<String>();
+		int levels = 0;
+		for(ItemID id : items) {
+			if(id.getId() == ItemID.EXP) levels++;
+		}
+		if(levels > 0) {
+			if(sell) revenue += EconomyManager.sellItem(ItemID.experience(), who.getTotalExperience());
+			int newXP = Toolbox.toPrevLevel(who, levels);
+			Toolbox.resetExperience(who);
+			who.giveExp(newXP);
+		}
+		HashSet<String> display = new HashSet<String>();
 		for(ItemID item : items) display.add(item.getName(null));
 		itemsText.append(Toolbox.join(display.toArray(new String[0]), LanguageText.ITEMS_JOINER.value()));
 		Messaging.send(who, LanguageText.MASSTAKE_TOOK.value("items", itemsText.toString(), "amount", removed));

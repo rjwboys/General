@@ -298,4 +298,16 @@ public final class Toolbox {
 		int needXP = (int)(1.75 * level * level + 5 * level + 0.25);
 		return needXP - totalXP;
 	}
+
+	public static int toPrevLevel(Player who, int levels) {
+		double level = who.getLevel() - levels;
+		int needXP = (int)(1.75 * level * level + 5 * level + 1.25);
+		return needXP;
+	}
+
+	public static void resetExperience(Player who) {
+		who.setExp(0);
+		who.setTotalExperience(0);
+		who.setLevel(0);
+	}
 }
